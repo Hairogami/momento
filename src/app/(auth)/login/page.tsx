@@ -9,11 +9,7 @@ import HeroAnimation from "@/components/HeroAnimation";
 export default function LoginPage() {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-
-      {/* Animation 3D en fond */}
       <HeroAnimation />
-
-      {/* Contenu par-dessus */}
       <div className="relative z-10 w-full max-w-sm px-4">
         <Card className="bg-white/10 backdrop-blur-md border-white/20 shadow-2xl">
           <CardHeader className="text-center">
@@ -58,23 +54,6 @@ export default function LoginPage() {
               <Label className="text-white/80">Email (lien magique)</Label>
               <Input name="email" type="email" placeholder="toi@exemple.com" required className="bg-white/10 border-white/20 text-white placeholder:text-white/40" />
               <Button className="w-full" type="submit">Recevoir un lien</Button>
-            </form>
-
-            <div className="flex items-center gap-2 my-1">
-              <Separator className="flex-1 bg-white/20" />
-              <span className="text-xs text-white/50">ou</span>
-              <Separator className="flex-1 bg-white/20" />
-            </div>
-
-            <form action={async (formData: FormData) => {
-              "use server";
-              await signIn("credentials", { email: formData.get("email"), password: formData.get("password"), redirectTo: "/dashboard" });
-            }} className="space-y-2">
-              <Label className="text-white/80">Email</Label>
-              <Input name="email" type="email" placeholder="toi@exemple.com" required className="bg-white/10 border-white/20 text-white placeholder:text-white/40" />
-              <Label className="text-white/80">Mot de passe</Label>
-              <Input name="password" type="password" placeholder="••••••••" required className="bg-white/10 border-white/20 text-white placeholder:text-white/40" />
-              <Button className="w-full" variant="secondary" type="submit">Se connecter</Button>
             </form>
 
           </CardContent>
