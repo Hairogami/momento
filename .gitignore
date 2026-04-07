@@ -47,3 +47,5 @@ next-env.d.ts
 *.db-shm
 *.db-wal
 dev.db
+
+.vercel
