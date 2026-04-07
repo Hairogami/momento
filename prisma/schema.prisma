@@ -1,0 +1,233 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts  Account[]
+  sessions  Session[]
+  workspace Workspace?
+  vendor    Vendor?
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── WORKSPACE CLIENT ────────────────────────────────────────────────────────
+
+model Workspace {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  eventName String   @default("Mon événement")
+  eventDate DateTime?
+  location  String?
+  budget    Float?
+  guestCount Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks     Task[]
+  budgetItems BudgetItem[]
+  guests    Guest[]
+  bookings  Booking[]
+}
+
+// ─── TÂCHES / CHECKLIST ──────────────────────────────────────────────────────
+
+model Task {
+  id          String    @id @default(cuid())
+  workspaceId String
+  title       String
+  description String?
+  dueDate     DateTime?
+  completed   Boolean   @default(false)
+  category    String?   // "venue", "catering", "music", "photo", "deco", "admin"
+  aiGenerated Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── BUDGET ──────────────────────────────────────────────────────────────────
+
+model BudgetItem {
+  id          String   @id @default(cuid())
+  workspaceId String
+  category    String
+  label       String
+  estimated   Float
+  actual      Float?
+  paid        Boolean  @default(false)
+  vendorId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  vendor    Vendor?   @relation(fields: [vendorId], references: [id])
+}
+
+// ─── INVITÉS ─────────────────────────────────────────────────────────────────
+
+model Guest {
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  email       String?
+  phone       String?
+  rsvp        String   @default("pending") // "yes", "no", "pending"
+  plusOne     Boolean  @default(false)
+  tableNumber Int?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── PRESTATAIRES ────────────────────────────────────────────────────────────
+
+model Vendor {
+  id          String   @id @default(cuid())
+  userId      String?  @unique
+  name        String
+  slug        String   @unique
+  category    String   // "dj", "catering", "photo", "video", "venue", "deco", "makeup", "music"
+  description String?
+  city        String?
+  region      String?
+  priceMin    Float?
+  priceMax    Float?
+  phone       String?
+  email       String?
+  website     String?
+  verified    Boolean  @default(false)
+  featured    Boolean  @default(false)
+  rating      Float?
+  reviewCount Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User?               @relation(fields: [userId], references: [id])
+  verification VendorVerification?
+  packages     Package[]
+  bookings     Booking[]
+  budgetItems  BudgetItem[]
+  media        VendorMedia[]
+}
+
+// ─── VÉRIFICATION RÉSEAUX SOCIAUX ────────────────────────────────────────────
+
+model VendorVerification {
+  id              String   @id @default(cuid())
+  vendorId        String   @unique
+  instagramUrl    String?
+  instagramHandle String?
+  facebookUrl     String?
+  facebookHandle  String?
+  instagramOk     Boolean  @default(false)
+  facebookOk      Boolean  @default(false)
+  followersCount  Int?
+  lastChecked     DateTime?
+  verifiedAt      DateTime?
+  notes           String?
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+}
+
+model VendorMedia {
+  id        String   @id @default(cuid())
+  vendorId  String
+  url       String
+  type      String   @default("image") // "image", "video"
+  caption   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+}
+
+// ─── PACKS PRESTATAIRES ──────────────────────────────────────────────────────
+
+model Package {
+  id          String   @id @default(cuid())
+  vendorId    String
+  name        String
+  description String?
+  price       Float
+  duration    String?  // ex: "8h", "journée complète"
+  includes    String?  // JSON stringifié : liste des inclus
+  maxGuests   Int?
+  available   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vendor   Vendor    @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+}
+
+// ─── RÉSERVATIONS ────────────────────────────────────────────────────────────
+
+model Booking {
+  id          String   @id @default(cuid())
+  workspaceId String
+  vendorId    String
+  packageId   String?
+  status      String   @default("inquiry") // "inquiry", "confirmed", "cancelled"
+  eventDate   DateTime?
+  totalPrice  Float?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  vendor    Vendor    @relation(fields: [vendorId], references: [id])
+  package   Package?  @relation(fields: [packageId], references: [id])
+}
