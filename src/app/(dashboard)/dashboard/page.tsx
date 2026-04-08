@@ -6,8 +6,26 @@ import DashboardWidgets from "@/components/DashboardWidgets";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { C } from "@/lib/colors";
+import { IS_DEV, MOCK_DASHBOARD_DATA, MOCK_NEEDED_CATEGORIES, MOCK_WORKSPACE } from "@/lib/devMock";
 
 export default async function DashboardPage() {
+  // ── DEV MOCK (local only, never runs in production) ──────────────────────
+  if (IS_DEV) {
+    const daysUntil = Math.max(0, Math.ceil(
+      (new Date(MOCK_WORKSPACE.eventDate!).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    ))
+    return (
+      <DashboardContent
+        data={MOCK_DASHBOARD_DATA}
+        eventName={MOCK_WORKSPACE.eventName}
+        eventDate={MOCK_WORKSPACE.eventDate}
+        daysUntil={daysUntil}
+        neededCategories={MOCK_NEEDED_CATEGORIES}
+      />
+    )
+  }
+
+  // ── PRODUCTION ────────────────────────────────────────────────────────────
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -53,7 +71,6 @@ export default async function DashboardPage() {
   }
 
   const firstName = user?.firstName ?? user?.name?.split(" ")[0] ?? null;
-  const hasEvent = !!workspace.eventDate || workspace.eventName !== "Mon événement";
 
   const data: DashboardData = {
     firstName,
@@ -75,22 +92,40 @@ export default async function DashboardPage() {
     unreadCount,
   };
 
-  // Resilient: neededCategories may not exist in DB yet
   let neededCategories: string[] = [];
   try {
     const raw = await prisma.$queryRaw<{ neededCategories: string }[]>`
       SELECT "neededCategories" FROM "Workspace" WHERE "userId" = ${session.user.id} LIMIT 1
     `;
-    if (raw[0]?.neededCategories) {
-      neededCategories = JSON.parse(raw[0].neededCategories);
-    }
-  } catch {
-    // Column doesn't exist yet — migration pending
-  }
+    if (raw[0]?.neededCategories) neededCategories = JSON.parse(raw[0].neededCategories);
+  } catch { /* migration pending */ }
+
+  return (
+    <DashboardContent
+      data={data}
+      eventName={workspace.eventName}
+      eventDate={workspace.eventDate ? workspace.eventDate.toISOString() : null}
+      daysUntil={daysUntil}
+      neededCategories={neededCategories}
+    />
+  );
+}
+
+// ── Shared UI ────────────────────────────────────────────────────────────────
+
+function DashboardContent({
+  data, eventName, eventDate, daysUntil, neededCategories,
+}: {
+  data: DashboardData
+  eventName: string
+  eventDate: string | null
+  daysUntil: number | null
+  neededCategories: string[]
+}) {
+  const hasEvent = !!eventDate || eventName !== "Mon événement"
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-
       {hasEvent ? (
         <div className="rounded-2xl px-6 py-5 flex items-center justify-between"
           style={{ backgroundColor: "var(--bg-card)", border: `1px solid var(--border)` }}>
@@ -98,11 +133,11 @@ export default async function DashboardPage() {
             <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: C.terra }}>
               ✦ Votre événement
             </p>
-            <h1 className="text-2xl font-bold" style={{ color: C.white }}>{workspace.eventName}</h1>
-            {workspace.eventDate && (
+            <h1 className="text-2xl font-bold" style={{ color: C.white }}>{eventName}</h1>
+            {eventDate && (
               <p className="text-sm flex items-center gap-1.5 mt-1" style={{ color: C.mist }}>
                 <Calendar size={13} />
-                {new Date(workspace.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                {new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
                 {daysUntil !== null && daysUntil > 0 && (
                   <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full"
                     style={{ backgroundColor: `${C.terra}25`, color: C.terra }}>
@@ -131,11 +166,9 @@ export default async function DashboardPage() {
             ✦ Mes Événements ✦
           </p>
           <h1 className="text-2xl font-bold mb-2" style={{ color: C.white }}>
-            {firstName ? `Bonjour, ${firstName}` : "Bienvenue sur Momento"}
+            {data.firstName ? `Bonjour, ${data.firstName}` : "Bienvenue sur Momento"}
           </h1>
-          <p className="text-sm mb-5" style={{ color: C.mist }}>
-            Créez votre premier événement pour commencer.
-          </p>
+          <p className="text-sm mb-5" style={{ color: C.mist }}>Créez votre premier événement pour commencer.</p>
           <Link href="/event/new"
             className="flex items-center gap-2 text-sm font-bold px-6 py-3 rounded-xl transition hover:opacity-90"
             style={{ backgroundColor: C.terra, color: "#fff" }}>
@@ -146,5 +179,5 @@ export default async function DashboardPage() {
 
       <DashboardWidgets data={data} neededCategories={neededCategories} />
     </div>
-  );
+  )
 }

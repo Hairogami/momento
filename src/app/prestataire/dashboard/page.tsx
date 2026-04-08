@@ -167,11 +167,23 @@ export default function VendorDashboard() {
   }, [router]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    // DEV MOCK — bypass auth in local development
+    if (process.env.NODE_ENV === "development") {
+      const mock: VendorSession = {
+        id: "prestige-photo", name: "Prestige Photo", category: "Photographe",
+        city: "Rabat", email: "contact@prestigephoto.ma", phone: "+212 6 00 00 00 00",
+        rating: 4.9, reviewCount: 47, plan: "pro", description: "Studio photo professionnel spécialisé mariages & événements.",
+        priceFrom: 3500,
+      }
+      setVendor(mock)
+      setProfileForm({ name: mock.name, category: mock.category, city: mock.city, phone: mock.phone, email: mock.email, description: mock.description, priceFrom: String(mock.priceFrom) })
+      return
+    }
+
     if (status === "unauthenticated") { router.push("/login?next=/prestataire/dashboard"); return }
     if (status === "loading") return
     if (!session?.user) return
 
-    // Build vendor info from session user
     const u = session.user as { name?: string | null; email?: string | null; image?: string | null; vendorSlug?: string }
     const vendorData: VendorSession = {
       id: u.vendorSlug ?? "",
