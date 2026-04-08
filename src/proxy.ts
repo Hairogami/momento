@@ -11,16 +11,6 @@ const AUTH_ONLY          = ["/login", "/signup"]
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
 
-  // ── COMING SOON GATE ─────────────────────────────────────────────────────
-  if (process.env.PREVIEW_KEY) {
-    const isExempt  = COMING_SOON_EXEMPT.some(p => path.startsWith(p))
-    const hasBypass = !!request.cookies.get("momento_bypass")?.value
-
-    if (!hasBypass && !isExempt) {
-      return NextResponse.redirect(new URL("/coming-soon", request.url))
-    }
-  }
-
   // ── AUTH GATE ─────────────────────────────────────────────────────────────
   // Check session cookie directly — do NOT call auth() here.
   // PrismaAdapter uses database sessions which require Node.js runtime,
