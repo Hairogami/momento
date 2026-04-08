@@ -276,8 +276,7 @@ function GuestMenu({ mobile = false }: { mobile?: boolean }) {
           onMouseEnter={e => (e.currentTarget.style.boxShadow = "rgba(0,0,0,0.12) 0px 2px 8px")}
           onMouseLeave={e => { if (!open) e.currentTarget.style.boxShadow = "none" }}
         >
-          <Menu size={16} strokeWidth={2.5} />
-          <span className="w-8 h-8 rounded-full flex items-center justify-center text-lg">🌍</span>
+          <Menu size={18} strokeWidth={2} />
         </button>
 
         {open && (
