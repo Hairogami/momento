@@ -105,7 +105,7 @@ const STEPS = [
 ]
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  "DJ": "https://images.unsplash.com/photo-1571266028243-d220c6a18571?w=400&h=400&fit=crop&q=80",
+  "DJ": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&q=80",
   "Photographe": "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=400&fit=crop&q=80",
   "Vidéaste": "https://images.unsplash.com/photo-1601506521793-dc748fc80b67?w=400&h=400&fit=crop&q=80",
   "Traiteur": "https://images.unsplash.com/photo-1555244162-803834f70033?w=400&h=400&fit=crop&q=80",
@@ -205,9 +205,9 @@ export default function Landing() {
         <HeroOrbs />
         <div className="relative z-10 max-w-3xl mx-auto">
           {/* Hero badge logo — just the mark, no text */}
-          <div className="flex justify-center mb-10">
-            <Image src="/logo-badge-dark.png" alt="Momento" width={200} height={200} className="dark:hidden" style={{ objectFit: "contain" }} priority />
-            <Image src="/logo-badge-light.png" alt="Momento" width={200} height={200} className="hidden dark:block" style={{ objectFit: "contain" }} priority />
+          <div className="flex justify-center mb-5">
+            <Image src="/logo-badge-dark.png" alt="Momento" width={90} height={90} className="dark:hidden" style={{ objectFit: "contain" }} priority />
+            <Image src="/logo-badge-light.png" alt="Momento" width={90} height={90} className="hidden dark:block" style={{ objectFit: "contain" }} priority />
           </div>
           <p className="text-xs font-semibold tracking-widest uppercase mb-6" style={{ color: C.terra }}>
             La plateforme événementielle du Maroc
@@ -302,7 +302,7 @@ export default function Landing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {MAJOR_CATS_HOME.map(cat => (
               <div key={cat.slug}
-                className="rounded-2xl overflow-hidden"
+                className="rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#C4532A] ring-2 ring-transparent"
                 style={{ backgroundColor: C.anthracite, border: `1px solid ${C.steel}` }}>
 
                 {/* En-tête de la catégorie majeure */}
@@ -362,7 +362,7 @@ export default function Landing() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {TOP_VENDORS.map(v => (
               <Link href={`/vendor/${v.id}`} key={v.id}
-                className="rounded-2xl overflow-hidden transition-all hover:-translate-y-0.5 block"
+                className="rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#C4532A] ring-2 ring-transparent block"
                 style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}` }}>
                 <div className="relative h-24 sm:h-32 overflow-hidden"
                   style={{ backgroundColor: C.anthracite }}>
@@ -372,6 +372,7 @@ export default function Landing() {
                     fill
                     sizes="(max-width:768px) 50vw, 25vw"
                     className="object-cover"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE }}
                   />
                 </div>
                 <div className="p-3 sm:p-4">

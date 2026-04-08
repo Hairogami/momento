@@ -1,27 +1,20 @@
 "use client"
 
-import React, { useState, useMemo, useEffect, Suspense } from "react"
+import React, { useState, useMemo, useEffect, useRef, Suspense } from "react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { useSearchParams } from "next/navigation"
 import { Search, MapPin, Star, X, ChevronDown, ChevronLeft, ChevronRight, Plus, Check, Heart, SlidersHorizontal, Map } from "lucide-react"
+import { MomentoLogo } from "@/components/MomentoLogo"
 import NavAuthButtons from "@/components/NavAuthButtons"
+import { DarkModeToggle } from "@/components/DarkModeToggle"
+import Footer from "@/components/Footer"
 import { useSession } from "next-auth/react"
 import { VENDOR_BASIC, VENDORS_WITH_PHOTO } from "@/lib/vendorData"
+import { VENDOR_DETAILS } from "@/lib/vendorDetails"
+import { C } from "@/lib/colors"
 
 const ExploreMap = dynamic(() => import("@/components/ExploreMap"), { ssr: false })
-
-const C = {
-  ink:       "#F5EDD6",
-  dark:      "#EDE4CC",
-  anthracite:"#DDD4BC",
-  steel:     "#9A907A",
-  mist:      "#6A5F4A",
-  silver:    "#3A2E1E",
-  white:     "#1A1208",
-  accent:    "#2C1A0E",
-  terra:     "#C4532A",
-}
 
 // Category cover images (Unsplash)
 const CAT_IMAGES: Record<string, string> = {
@@ -105,21 +98,78 @@ const EVENT_CATS: Record<string, string[]> = {
   "Corporate":     ["Photo & Vidéo", "Traiteur", "Décor & Lumières", "Planification"],
 }
 
-// Catégories filtrables (groupées)
-const FILTER_CATS = [
-  { slug: "musique-dj",     icon: "🎧", label: "Musique & DJ",        match: ["DJ", "Chanteur / chanteuse", "Orchestre", "Violoniste", "Dekka Marrakchia / Issawa"] },
-  { slug: "traiteur",       icon: "🍽️", label: "Traiteur",            match: ["Traiteur", "Pâtissier / Cake designer", "Service de bar / mixologue"] },
-  { slug: "photo-video",    icon: "📸", label: "Photo & Vidéo",       match: ["Photographe", "Vidéaste"] },
-  { slug: "lieu",           icon: "🏛️", label: "Lieu",                match: ["Lieu de réception", "Structures événementielles"] },
-  { slug: "decor-lumieres", icon: "✨", label: "Décor & Lumières",    match: ["Décorateur", "Fleuriste événementiel", "Créateur d'ambiance lumineuse"] },
-  { slug: "beaute",         icon: "💄", label: "Beauté",              match: ["Hairstylist", "Makeup Artist", "Robes de mariés", "Spa / soins esthétiques"] },
-  { slug: "neggafa",        icon: "👑", label: "Neggafa",             match: ["Neggafa"] },
-  { slug: "planification",  icon: "📋", label: "Planification",       match: ["Event planner", "Wedding planner"] },
-  { slug: "animation",      icon: "🎪", label: "Animation",           match: ["Animateur enfants", "Magicien", "Structures gonflables", "Jeux & animations enfants"] },
-  { slug: "transport",      icon: "🚗", label: "Transport",           match: ["Location de voiture de mariage", "VTC / Transport invités"] },
-  { slug: "securite",       icon: "🛡️", label: "Sécurité",           match: ["Sécurité événementielle"] },
-  { slug: "cadeaux",        icon: "🎁", label: "Cadeaux & Papeterie", match: ["Créateur de cadeaux invités", "Créateur de faire-part"] },
+// Catégories majeures avec sous-catégories
+const MAJOR_CATS = [
+  {
+    slug: "musique-son",
+    icon: "🎵",
+    label: "Musique & Son",
+    sub: ["DJ", "Chanteur / chanteuse", "Orchestre", "Violoniste", "Dekka Marrakchia / Issawa"],
+  },
+  {
+    slug: "gastronomie",
+    icon: "🍽️",
+    label: "Gastronomie",
+    sub: ["Traiteur", "Pâtissier / Cake designer", "Service de bar / mixologue"],
+  },
+  {
+    slug: "photo-video",
+    icon: "📸",
+    label: "Photo & Vidéo",
+    sub: ["Photographe", "Vidéaste"],
+  },
+  {
+    slug: "lieu-espace",
+    icon: "🏛️",
+    label: "Lieu & Espace",
+    sub: ["Lieu de réception", "Structures événementielles"],
+  },
+  {
+    slug: "decor-ambiance",
+    icon: "✨",
+    label: "Décor & Ambiance",
+    sub: ["Décorateur", "Fleuriste événementiel", "Créateur d'ambiance lumineuse"],
+  },
+  {
+    slug: "beaute-style",
+    icon: "💄",
+    label: "Beauté & Style",
+    sub: ["Hairstylist", "Makeup Artist", "Neggafa", "Robes de mariés", "Spa / soins esthétiques"],
+  },
+  {
+    slug: "planification",
+    icon: "📋",
+    label: "Planification",
+    sub: ["Event planner", "Wedding planner"],
+  },
+  {
+    slug: "animation",
+    icon: "🎪",
+    label: "Animation",
+    sub: ["Animateur enfants", "Magicien", "Structures gonflables", "Jeux & animations enfants"],
+  },
+  {
+    slug: "transport",
+    icon: "🚗",
+    label: "Transport",
+    sub: ["Location de voiture de mariage", "VTC / Transport invités"],
+  },
+  {
+    slug: "securite",
+    icon: "🛡️",
+    label: "Sécurité",
+    sub: ["Sécurité événementielle"],
+  },
+  {
+    slug: "cadeaux-papeterie",
+    icon: "🎁",
+    label: "Cadeaux & Papeterie",
+    sub: ["Créateur de cadeaux invités", "Créateur de faire-part"],
+  },
 ]
+
+// Flat FILTER_CATS kept for backward-compat (used in filtered logic)
+const FILTER_CATS = MAJOR_CATS.map(m => ({ slug: m.slug, icon: m.icon, label: m.label, match: m.sub }))
 
 const CITIES = ["Toutes les villes", "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Meknès", "Agadir", "Kénitra", "El Jadida", "Mohammedia", "Oujda", "Tétouan", "Salé", "Béni Mellal", "Essaouira", "Khémisset", "Laâyoune", "Dakhla", "Settat", "Nador", "Ouarzazate", "Safi", "Tiznit", "Khouribga", "Errachidia", "Guelmim", "Berkane", "Al Hoceima", "Ifrane", "Chefchaouen", "Taroudant", "Azrou", "Figuig", "Témara", "Skhirat", "Asilah", "Ourika", "Bouznika", "Martil", "Saïdia"]
 
@@ -132,8 +182,14 @@ const EXTRA_PHOTOS = [
   "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=600&fit=crop&q=80",
 ]
 
-
-function getCatPhotos(cat: string): string[] {
+function getVendorPhotos(vendorId: string, cat: string): string[] {
+  const detail = VENDOR_DETAILS[vendorId]
+  if (detail?.photos?.length) {
+    // Use real vendor photos + fill to 3 if needed
+    const photos = detail.photos.slice(0, 3)
+    while (photos.length < 3) photos.push(CAT_IMAGES[cat] ?? EXTRA_PHOTOS[0])
+    return photos
+  }
   const main = CAT_IMAGES[cat]
   return [main ?? EXTRA_PHOTOS[0], EXTRA_PHOTOS[0], EXTRA_PHOTOS[1]]
 }
@@ -152,7 +208,7 @@ function VendorCard({
 }) {
   const [imgIdx, setImgIdx] = useState(0)
   const [hovered, setHovered] = useState(false)
-  const photos = getCatPhotos(v.category)
+  const photos = getVendorPhotos(v.id, v.category)
   const isCoupDeCoeur = v.rating === 5
 
   function prev(e: React.MouseEvent) {
@@ -165,16 +221,17 @@ function VendorCard({
   }
 
   return (
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} className="group">
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} className="group transition-transform duration-200 hover:-translate-y-0.5">
 
       {/* ── Image ── */}
-      <div className="relative aspect-square rounded-2xl overflow-hidden mb-3">
+      <div className="relative aspect-square rounded-2xl overflow-hidden mb-3 ring-2 ring-transparent group-hover:ring-[#C4532A] transition-all duration-200">
         <Link href={`/vendor/${v.id}`} className="block w-full h-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={photos[imgIdx]} alt={v.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
+            onError={e => { const t = e.currentTarget; if (!t.dataset.fallback) { t.dataset.fallback = "1"; t.src = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=600&fit=crop&q=80" } }}
           />
         </Link>
 
@@ -195,7 +252,7 @@ function VendorCard({
         {isCoupDeCoeur && (
           <button onClick={onCoupDeCoeur}
             className="absolute bottom-3 left-3 z-10 text-xs font-bold px-3 py-1.5 rounded-full shadow-md transition-transform hover:scale-105"
-            style={{ backgroundColor: "#fff", color: C.white }}>
+            style={{ backgroundColor: C.dark, color: C.white, border: `1px solid ${C.anthracite}` }}>
             ✦ Coup de cœur
           </button>
         )}
@@ -274,13 +331,35 @@ function ExploreContent() {
 
   const [search, setSearch] = useState("")
   const categoryParam = searchParams.get("category") ?? ""
-  const [activeGroup, setActiveGroup] = useState(() => {
-    if (categoryParam) return categoryParam
+  const subParam = searchParams.get("sub") ?? ""
+  // activeMajor = slug of major category; activeSub = specific sub-category label (or "")
+  const [activeMajor, setActiveMajor] = useState(() => {
+    // sub param takes priority — find which major contains this sub
+    if (subParam) {
+      const found = MAJOR_CATS.find(m => m.sub.includes(subParam))
+      return found ? found.slug : ""
+    }
+    if (categoryParam) {
+      const found = MAJOR_CATS.find(m => m.label === categoryParam || m.slug === categoryParam)
+      return found ? found.slug : ""
+    }
     const recommended = EVENT_CATS[eventParam]
-    return recommended ? recommended[0] : ""
+    if (recommended) {
+      const found = MAJOR_CATS.find(m => recommended.some(r => m.label.includes(r) || r.includes(m.label)))
+      return found ? found.slug : ""
+    }
+    return ""
   })
+  const [activeSub, setActiveSub] = useState(() => subParam || "")
+  // For backward compat with filtering logic, derive activeGroup from activeMajor/activeSub
+  const activeGroup = activeSub
+    ? MAJOR_CATS.find(m => m.slug === activeMajor)?.label ?? ""
+    : activeMajor
+      ? MAJOR_CATS.find(m => m.slug === activeMajor)?.label ?? ""
+      : ""
   const [activeCity, setActiveCity] = useState("Toutes les villes")
   const [activeDate, setActiveDate] = useState("")
+  const dateInputRef = useRef<HTMLInputElement>(null)
   const [showFilterPanel, setShowFilterPanel] = useState(false)
   const [sortBy, setSortBy] = useState("rating")
   const [photoFilter, setPhotoFilter] = useState<"all" | "avec" | "sans">("all")
@@ -333,9 +412,13 @@ function ExploreContent() {
         const q = search.toLowerCase()
         if (!v.name.toLowerCase().includes(q) && !v.category.toLowerCase().includes(q) && !v.city.toLowerCase().includes(q)) return false
       }
-      if (activeGroup) {
-        const group = FILTER_CATS.find(g => g.label === activeGroup)
-        if (group && !group.match.includes(v.category)) return false
+      if (activeSub) {
+        // Filter by specific sub-category
+        if (v.category !== activeSub) return false
+      } else if (activeMajor) {
+        // Filter by major category (all subs)
+        const major = MAJOR_CATS.find(m => m.slug === activeMajor)
+        if (major && !major.sub.includes(v.category)) return false
       }
       if (activeCity !== "Toutes les villes" && v.city !== activeCity) return false
       if (photoFilter === "avec" && !VENDORS_WITH_PHOTO.has(v.id)) return false
@@ -345,9 +428,9 @@ function ExploreContent() {
     if (sortBy === "rating") list = [...list].sort((a, b) => b.rating - a.rating)
     if (sortBy === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name))
     return list
-  }, [search, activeGroup, activeCity, sortBy, photoFilter])
+  }, [search, activeMajor, activeSub, activeCity, sortBy, photoFilter])
 
-  const hasFilters = !!(search || activeGroup || activeCity !== "Toutes les villes" || activeDate || photoFilter !== "all")
+  const hasFilters = !!(search || activeMajor || activeSub || activeCity !== "Toutes les villes" || activeDate || photoFilter !== "all")
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: C.ink, color: C.white }}>
@@ -356,9 +439,7 @@ function ExploreContent() {
       <nav className="sticky top-0 z-40 border-b" style={{ backgroundColor: `${C.ink}F8`, backdropFilter: "blur(16px)", borderColor: C.anthracite }}>
         <div className="w-full px-4 sm:px-6 py-3 grid items-center" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
 
-          <Link href="/" className="justify-self-start shrink-0">
-            <span className="font-bold tracking-[0.2em] uppercase text-sm" style={{ color: C.white }}>Momento</span>
-          </Link>
+          <MomentoLogo iconSize={30} className="justify-self-start" />
 
           {/* ── Search pill — dimensions Airbnb ── */}
           <div
@@ -383,15 +464,29 @@ function ExploreContent() {
               />
             </label>
 
-            {/* Section 2 — Date */}
-            <label className="hidden sm:flex flex-col justify-center px-6 cursor-pointer border-r h-full" style={{ borderColor: "#ddd" }}>
-              <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Date</span>
+            {/* Section 2 — Date (custom styled) */}
+            <div className="relative hidden sm:flex items-center border-r h-full" style={{ borderColor: "#ddd" }}>
+              <button
+                type="button"
+                className="flex flex-col justify-center px-6 h-full cursor-pointer"
+                onClick={() => dateInputRef.current?.showPicker?.()}
+              >
+                <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Date</span>
+                <span className="leading-none" style={{ color: activeDate ? C.white : C.steel, fontSize: 14 }}>
+                  {activeDate
+                    ? new Date(activeDate + "T00:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+                    : "Choisir une date"}
+                </span>
+              </button>
               <input
-                type="date" value={activeDate} onChange={e => setActiveDate(e.target.value)}
-                className="bg-transparent outline-none cursor-pointer leading-none"
-                style={{ color: activeDate ? C.white : C.steel, fontSize: 14, colorScheme: "light" }}
+                ref={dateInputRef}
+                type="date"
+                value={activeDate}
+                onChange={e => setActiveDate(e.target.value)}
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                style={{ colorScheme: "light" }}
               />
-            </label>
+            </div>
 
             {/* Section 3 — Filtres */}
             <button
@@ -399,8 +494,8 @@ function ExploreContent() {
               className="hidden sm:flex flex-col justify-center px-6 h-full border-r text-left transition-colors"
               style={{ borderColor: "#ddd", backgroundColor: showFilterPanel ? C.dark : "transparent" }}>
               <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Filtres</span>
-              <span className="leading-none" style={{ color: activeGroup || activeCity !== "Toutes les villes" ? C.white : C.steel, fontSize: 14 }}>
-                {activeGroup || (activeCity !== "Toutes les villes" ? activeCity : "Ajouter des filtres")}
+              <span className="leading-none" style={{ color: activeSub || activeMajor || activeCity !== "Toutes les villes" ? C.white : C.steel, fontSize: 14 }}>
+                {activeSub || (activeMajor ? MAJOR_CATS.find(m => m.slug === activeMajor)?.label : "") || (activeCity !== "Toutes les villes" ? activeCity : "Ajouter des filtres")}
               </span>
             </button>
 
@@ -420,6 +515,7 @@ function ExploreContent() {
               style={{ backgroundColor: showFilterPanel ? C.terra : C.dark, borderColor: showFilterPanel ? C.terra : C.anthracite, color: showFilterPanel ? "#fff" : C.white }}>
               <SlidersHorizontal size={15} />
             </button>
+            <DarkModeToggle />
             <NavAuthButtons />
           </div>
         </div>
@@ -462,7 +558,7 @@ function ExploreContent() {
             </div>
 
             {hasFilters && (
-              <button onClick={() => { setSearch(""); setActiveGroup(""); setActiveCity("Toutes les villes"); setActiveDate(""); setPhotoFilter("all") }}
+              <button onClick={() => { setSearch(""); setActiveMajor(""); setActiveSub(""); setActiveCity("Toutes les villes"); setActiveDate(""); setPhotoFilter("all") }}
                 className="flex items-center gap-1 text-xs" style={{ color: C.terra }}>
                 <X size={11} /> Tout effacer
               </button>
@@ -470,35 +566,79 @@ function ExploreContent() {
           </div>
         )}
 
-        {/* ── Barre de catégories — centrée, compteurs au-dessus ── */}
-        <div className="border-t flex overflow-x-auto sm:flex-wrap sm:justify-center gap-0 px-2 sm:px-4 py-2 scrollbar-hide" style={{ borderColor: C.anthracite }}>
+        {/* ── Barre de catégories majeures ── */}
+        <div className="border-t overflow-x-auto scrollbar-hide" style={{ borderColor: C.anthracite }}>
+          <div className="flex gap-0 px-2 sm:px-4 py-2 w-max mx-auto">
           {/* Tout */}
-          <Link
-            href="/explore"
-            className="shrink-0 flex flex-col items-center gap-0.5 px-3 sm:px-4 py-2 rounded-xl transition-all hover:bg-black/5 group"
+          <button
+            onClick={() => { setActiveMajor(""); setActiveSub("") }}
+            className="shrink-0 flex flex-col items-center gap-0.5 px-3 sm:px-4 py-2 rounded-xl transition-all hover:opacity-80 group"
             style={{ minWidth: 64 }}
           >
             <span className="text-[11px] font-bold tabular-nums" style={{ color: C.terra }}>{VENDORS.length}</span>
             <span className="text-2xl leading-none">🌟</span>
-            <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: C.mist }}>Tout</span>
-          </Link>
+            <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: !activeMajor ? C.white : C.mist }}>Tout</span>
+            {!activeMajor && <span className="block h-0.5 w-4 rounded-full mt-0.5" style={{ backgroundColor: C.terra }} />}
+          </button>
 
-          {FILTER_CATS.map(cat => {
-            const count = VENDORS.filter(v => cat.match.includes(v.category)).length
+          {MAJOR_CATS.map(cat => {
+            const count = VENDORS.filter(v => cat.sub.includes(v.category)).length
+            const isActive = activeMajor === cat.slug
             return (
-              <Link
+              <button
                 key={cat.slug}
-                href={`/explore/${cat.slug}`}
-                className="shrink-0 flex flex-col items-center gap-0.5 px-3 sm:px-4 py-2 rounded-xl transition-all hover:bg-black/5 group"
+                onClick={() => { setActiveMajor(isActive ? "" : cat.slug); setActiveSub("") }}
+                className="shrink-0 flex flex-col items-center gap-0.5 px-3 sm:px-4 py-2 rounded-xl transition-all hover:opacity-80 group"
                 style={{ minWidth: 64 }}
               >
                 <span className="text-[11px] font-bold tabular-nums" style={{ color: C.terra }}>{count}</span>
                 <span className="text-2xl leading-none">{cat.icon}</span>
-                <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: C.mist }}>{cat.label}</span>
-              </Link>
+                <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: isActive ? C.white : C.mist }}>{cat.label}</span>
+                {isActive && <span className="block h-0.5 w-4 rounded-full mt-0.5" style={{ backgroundColor: C.terra }} />}
+              </button>
             )
           })}
+          </div>
         </div>
+
+        {/* ── Sous-catégories (pills) — apparaît quand une majeure est active ── */}
+        {activeMajor && (() => {
+          const major = MAJOR_CATS.find(m => m.slug === activeMajor)
+          if (!major || major.sub.length <= 1) return null
+          return (
+            <div className="border-t flex overflow-x-auto gap-2 px-4 py-2.5 scrollbar-hide" style={{ borderColor: C.anthracite, backgroundColor: `${C.dark}99` }}>
+              <button
+                onClick={() => setActiveSub("")}
+                className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
+                style={{
+                  backgroundColor: !activeSub ? C.terra : C.anthracite,
+                  color: !activeSub ? "#fff" : C.mist,
+                  border: `1px solid ${!activeSub ? C.terra : C.steel}`,
+                }}
+              >
+                Tous ({VENDORS.filter(v => major.sub.includes(v.category)).length})
+              </button>
+              {major.sub.map(sub => {
+                const count = VENDORS.filter(v => v.category === sub).length
+                const isActive = activeSub === sub
+                return (
+                  <button
+                    key={sub}
+                    onClick={() => setActiveSub(isActive ? "" : sub)}
+                    className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all whitespace-nowrap"
+                    style={{
+                      backgroundColor: isActive ? C.terra : C.anthracite,
+                      color: isActive ? "#fff" : C.mist,
+                      border: `1px solid ${isActive ? C.terra : C.steel}`,
+                    }}
+                  >
+                    {CAT_ICONS[sub] ?? ""} {sub} ({count})
+                  </button>
+                )
+              })}
+            </div>
+          )
+        })()}
       </nav>
 
       {/* ── Toast ── */}
@@ -626,7 +766,7 @@ function ExploreContent() {
               <p className="text-4xl mb-4">🔍</p>
               <p className="font-bold text-lg mb-2" style={{ color: C.white }}>Aucun résultat</p>
               <p className="text-sm mb-6" style={{ color: C.mist }}>Essayez d&apos;autres filtres.</p>
-              <button onClick={() => { setSearch(""); setActiveGroup(""); setActiveCity("Toutes les villes"); setActiveDate("") }}
+              <button onClick={() => { setSearch(""); setActiveMajor(""); setActiveSub(""); setActiveCity("Toutes les villes"); setActiveDate("") }}
                 className="px-6 py-3 rounded-xl font-bold text-sm" style={{ backgroundColor: C.terra, color: "#fff" }}>
                 Réinitialiser
               </button>
@@ -650,10 +790,11 @@ function ExploreContent() {
         )}
 
         {/* Footer note */}
-        <p className="text-center text-xs mt-12 pb-6" style={{ color: C.steel }}>
+        <p className="text-center text-xs mt-12 pb-4" style={{ color: C.steel }}>
           {Object.keys(VENDOR_BASIC).length} prestataires référencés · 41+ villes · 31 catégories · Maroc
         </p>
       </div>
+      <Footer />
     </div>
   )
 }
