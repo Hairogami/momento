@@ -1,26 +1,50 @@
-import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
+// Paths always allowed through regardless of gates
+const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon"]
+const PROTECTED          = ["/dashboard", "/profile", "/planner", "/favorites",
+                             "/budget", "/guests", "/messages", "/notifications",
+                             "/prestataire/dashboard"]
+const AUTH_ONLY          = ["/login", "/signup"]
 
-export async function proxy(request: NextRequest) {
-  const session = await auth();
-  const { pathname } = request.nextUrl;
+export function proxy(request: NextRequest) {
+  const path = request.nextUrl.pathname
 
-  const publicPaths = ["/", "/login", "/api/auth"];
-  const isPublic = publicPaths.some((p) => pathname.startsWith(p));
+  // ── COMING SOON GATE ─────────────────────────────────────────────────────
+  if (process.env.PREVIEW_KEY) {
+    const isExempt  = COMING_SOON_EXEMPT.some(p => path.startsWith(p))
+    const hasBypass = !!request.cookies.get("momento_bypass")?.value
 
-  if (!session && !isPublic) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    if (!hasBypass && !isExempt) {
+      return NextResponse.redirect(new URL("/coming-soon", request.url))
+    }
   }
 
-  if (session && pathname === "/login") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  // ── AUTH GATE ─────────────────────────────────────────────────────────────
+  // Check session cookie directly — do NOT call auth() here.
+  // PrismaAdapter uses database sessions which require Node.js runtime,
+  // but proxy runs in Edge. Calling auth() here breaks the OAuth callback.
+  const sessionCookie =
+    request.cookies.get("authjs.session-token")?.value ||
+    request.cookies.get("__Secure-authjs.session-token")?.value
+
+  const isProtected = PROTECTED.some(p => path.startsWith(p))
+  const isAuthPage  = AUTH_ONLY.some(p => path.startsWith(p))
+
+  if (isProtected && !sessionCookie) {
+    const url = new URL("/login", request.url)
+    url.searchParams.set("next", path)
+    return NextResponse.redirect(url)
   }
 
-  return NextResponse.next();
+  if (isAuthPage && sessionCookie) {
+    return NextResponse.redirect(new URL("/dashboard", request.url))
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
-};
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.ico$).*)"],
+}

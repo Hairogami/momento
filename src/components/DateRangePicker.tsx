@@ -2,16 +2,7 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-
-const C = {
-  ink:        "#F5EDD6",
-  dark:       "#EDE4CC",
-  anthracite: "#DDD4BC",
-  steel:      "#9A907A",
-  mist:       "#6A5F4A",
-  white:      "#1A1208",
-  terra:      "#C4532A",
-}
+import { C } from "@/lib/colors"
 
 const MONTHS_FULL = [
   "Janvier","Février","Mars","Avril","Mai","Juin",

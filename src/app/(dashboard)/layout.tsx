@@ -2,58 +2,131 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   Users,
   Wallet,
   Store,
   Settings,
+  MessageSquare,
+  Heart,
+  CalendarDays,
+  Bell,
+  ChevronRight,
+  User,
 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { C } from "@/lib/colors"
+import { DarkModeToggle } from "@/components/DarkModeToggle"
+import { MomentoLogo } from "@/components/MomentoLogo"
 
-const nav = [
-  { href: "/dashboard", label: "Accueil", icon: LayoutDashboard },
-  { href: "/vendors", label: "Prestataires", icon: Store },
-  { href: "/budget", label: "Budget", icon: Wallet },
-  { href: "/guests", label: "Invités", icon: Users },
-  { href: "/settings", label: "Paramètres", icon: Settings },
+const NAV = [
+  { href: "/dashboard",     label: "Accueil",        icon: LayoutDashboard },
+  { href: "/prestataires",  label: "Prestataires",   icon: Store },
+  { href: "/planner",       label: "Planning",        icon: CalendarDays },
+  { href: "/budget",        label: "Budget",          icon: Wallet },
+  { href: "/guests",        label: "Invités",         icon: Users },
+  { href: "/favorites",     label: "Favoris",         icon: Heart },
+  { href: "/messages",      label: "Messages",        icon: MessageSquare },
+  { href: "/notifications", label: "Notifications",   icon: Bell },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const BOTTOM_NAV = [
+  { href: "/profile",  label: "Mon profil",  icon: User },
+  { href: "/settings", label: "Paramètres",  icon: Settings },
+];
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  function isActive(href: string) {
+    if (href === "/dashboard") return pathname === "/dashboard";
+    return pathname.startsWith(href);
+  }
+
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen" style={{ backgroundColor: C.ink }}>
       {/* Sidebar */}
-      <aside className="w-56 border-r bg-card flex flex-col py-6 px-3 gap-1">
-        <div className="px-3 mb-4">
-          <span className="text-xl font-bold tracking-tight">momento</span>
-        </div>
-        <Separator className="mb-3" />
-        {nav.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-              pathname === href
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <Icon className="h-4 w-4" />
-            {label}
+      <aside
+        className="w-56 flex flex-col py-5 px-3 sticky top-0 h-screen"
+        style={{ backgroundColor: C.dark, borderRight: `1px solid ${C.anthracite}` }}
+      >
+        {/* Logo + Dark mode toggle */}
+        <div className="px-2 mb-6 flex items-center justify-between">
+          <Link href="/" className="flex items-center">
+            <MomentoLogo iconSize={30} />
           </Link>
-        ))}
+          <DarkModeToggle />
+        </div>
+
+        {/* Main nav */}
+        <nav className="flex-1 flex flex-col gap-0.5">
+          {NAV.map(({ href, label, icon: Icon }) => {
+            const active = isActive(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: active ? C.terra : "transparent",
+                  color: active ? "#fff" : C.mist,
+                }}
+              >
+                <span className="flex items-center gap-2.5">
+                  <Icon size={16} />
+                  {label}
+                </span>
+                {active && <ChevronRight size={14} />}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Divider */}
+        <div className="mx-2 my-3 h-px" style={{ backgroundColor: C.anthracite }} />
+
+        {/* Bottom nav */}
+        <nav className="flex flex-col gap-0.5">
+          {BOTTOM_NAV.map(({ href, label, icon: Icon }) => {
+            const active = isActive(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: active ? C.terra : "transparent",
+                  color: active ? "#fff" : C.mist,
+                }}
+              >
+                <Icon size={16} />
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Espace Prestataire */}
+        <div className="mt-3 px-1">
+          <Link
+            href="/prestataire/dashboard"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:opacity-90"
+            style={{
+              backgroundColor: `${C.terra}18`,
+              color: C.terra,
+              border: `1px solid ${C.terra}40`,
+            }}
+          >
+            <Store size={13} />
+            Espace Prestataire →
+          </Link>
+        </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 overflow-auto">{children}</main>
+      {/* Main content */}
+      <main className="flex-1 overflow-auto" style={{ backgroundColor: C.ink }}>
+        {children}
+      </main>
     </div>
   );
 }

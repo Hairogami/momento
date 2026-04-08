@@ -2,18 +2,9 @@
 
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Check, Star, TrendingUp, Shield, Clock } from "lucide-react"
-
-const C = {
-  ink:       "#F5EDD6",
-  dark:      "#EDE4CC",
-  anthracite:"#DDD4BC",
-  steel:     "#9A907A",
-  mist:      "#6A5F4A",
-  silver:    "#3A2E1E",
-  white:     "#1A1208",
-  accent:    "#2C1A0E",
-  terra:     "#C4532A",
-}
+import { MomentoLogo } from "@/components/MomentoLogo"
+import { DarkModeToggle } from "@/components/DarkModeToggle"
+import { C } from "@/lib/colors"
 
 const BENEFITS = [
   { icon: <TrendingUp size={22} />, title: "Plus de visibilité", desc: "Votre profil vu par des milliers d'organisateurs d'événements au Maroc." },
@@ -46,11 +37,12 @@ export default function PrestatairesPage() {
       {/* NAV */}
       <nav className="sticky top-0 z-40 border-b px-6 h-16 flex items-center justify-between"
         style={{ backgroundColor: `${C.ink}F5`, backdropFilter: "blur(16px)", borderColor: C.anthracite }}>
-        <Link href="/" className="flex items-center gap-2 text-sm font-medium" style={{ color: C.mist }}>
-          <ArrowLeft size={16} />
-          <span className="font-bold tracking-[0.2em] uppercase text-base" style={{ color: C.white }}>Momento</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/" style={{ color: C.mist }}><ArrowLeft size={16} /></Link>
+          <MomentoLogo iconSize={28} />
+        </div>
         <div className="flex items-center gap-3">
+          <DarkModeToggle />
           <Link href="/prestataire" className="text-sm font-medium px-4 py-2 transition-opacity hover:opacity-70" style={{ color: C.mist }}>
             Déjà inscrit →
           </Link>

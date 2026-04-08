@@ -10,31 +10,33 @@ datasource db {
 // ─── AUTH (NextAuth compatible) ───────────────────────────────────────────────
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  image         String?
-  emailVerified DateTime?
-  passwordHash  String?
-  role          String    @default("client") // client | vendor | admin
-  firstName     String?
-  lastName      String?
-  phone         String?
-  location      String?
-  companyName   String?
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  image          String?
+  emailVerified  DateTime?
+  passwordHash   String?
+  role           String    @default("client") // client | vendor | admin
+  firstName      String?
+  lastName       String?
+  phone          String?
+  location       String?
+  companyName    String?
   vendorCategory String?
-  vendorSlug    String?
-  username      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  vendorSlug     String?
+  username       String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  accounts           Account[]
-  sessions           Session[]
-  workspace          Workspace?
-  vendor             Vendor?
-  vendorProfile      VendorProfile?
-  planners           Planner[]
-  emailVerifications EmailVerification[]
+  accounts            Account[]
+  sessions            Session[]
+  workspace           Workspace?
+  vendor              Vendor?
+  vendorProfile       VendorProfile?
+  planners            Planner[]
+  emailVerifications  EmailVerification[]
+  clientConversations Conversation[]      @relation("ClientConversations")
+  sentMessages        Message[]           @relation("SentMessages")
 }
 
 model Account {
@@ -97,7 +99,7 @@ model Workspace {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks       Task[]
   budgetItems BudgetItem[]
   guests      Guest[]
@@ -166,7 +168,7 @@ model Vendor {
   lng         Float?
   priceMin    Float?
   priceMax    Float?
-  priceRange  String?  // budget | mid | premium
+  priceRange  String? // budget | mid | premium
   phone       String?
   email       String?
   website     String?
@@ -295,34 +297,34 @@ model ContactRequest {
 // ─── PLANNER (organisation étape par étape) ───────────────────────────────────
 
 model Planner {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   title       String
   coupleNames String
   weddingDate DateTime?
   budget      Float?
   location    String?
-  coverColor  String    @default("#f9a8d4")
+  coverColor  String         @default("#f9a8d4")
   userId      String?
-  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   steps       Step[]
   events      PlannerEvent[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 }
 
 model Step {
-  id          String    @id @default(cuid())
+  id          String       @id @default(cuid())
   title       String
   description String?
-  status      String    @default("todo") // todo | in_progress | done
-  category    String    @default("general") // venue | catering | flowers | music | photo | dress | other
+  status      String       @default("todo") // todo | in_progress | done
+  category    String       @default("general") // venue | catering | flowers | music | photo | dress | other
   dueDate     DateTime?
-  order       Int       @default(0)
+  order       Int          @default(0)
   plannerId   String
-  planner     Planner   @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+  planner     Planner      @relation(fields: [plannerId], references: [id], onDelete: Cascade)
   vendors     StepVendor[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model StepVendor {
@@ -346,4 +348,29 @@ model PlannerEvent {
   plannerId String
   planner   Planner   @relation(fields: [plannerId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
+}
+
+// ─── MESSAGERIE ───────────────────────────────────────────────────────────────
+
+model Conversation {
+  id         String    @id @default(cuid())
+  clientId   String
+  vendorSlug String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  client     User      @relation("ClientConversations", fields: [clientId], references: [id], onDelete: Cascade)
+  messages   Message[]
+
+  @@unique([clientId, vendorSlug])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  read           Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
 }

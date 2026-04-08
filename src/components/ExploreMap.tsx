@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { VENDOR_COORDS } from "@/lib/vendorCoords"
 
 const CITY_COORDS: Record<string, [number, number]> = {
   "Casablanca":  [33.5731, -7.5898],
@@ -124,15 +125,18 @@ export default function ExploreMap({ vendors, activeCity, activeCategory, onCity
         // ── Individual pins per vendor, colored by category ──────────────────
         const shown = vendors.slice(0, 120) // cap for perf
         shown.forEach(v => {
-          const coords = CITY_COORDS[v.city]
-          if (!coords) return
+          // Use per-vendor coords from VENDOR_COORDS if available, else city center
+          const vendorCoord = VENDOR_COORDS[v.id]
+          const cityCoords = CITY_COORDS[v.city]
+          if (!vendorCoord && !cityCoords) return
 
           const color = getCatColor(v.category)
-          // Slight random offset to avoid exact overlap in same city
-          const jitter: [number, number] = [
-            coords[0] + (Math.random() - 0.5) * 0.04,
-            coords[1] + (Math.random() - 0.5) * 0.04,
-          ]
+          const jitter: [number, number] = vendorCoord
+            ? [vendorCoord.lat, vendorCoord.lng]
+            : [
+                cityCoords![0] + (Math.random() - 0.5) * 0.04,
+                cityCoords![1] + (Math.random() - 0.5) * 0.04,
+              ]
 
           const icon = L.divIcon({
             className: "",
@@ -165,7 +169,11 @@ export default function ExploreMap({ vendors, activeCity, activeCategory, onCity
 
         // Fit bounds to shown markers
         const validCoords = shown
-          .map(v => CITY_COORDS[v.city])
+          .map(v => {
+            const vc = VENDOR_COORDS[v.id]
+            if (vc) return [vc.lat, vc.lng] as [number, number]
+            return CITY_COORDS[v.city]
+          })
           .filter(Boolean) as [number, number][]
         if (validCoords.length > 0) {
           try { map.fitBounds(validCoords, { padding: [40, 40], maxZoom: 8 }) } catch {}
