@@ -774,6 +774,81 @@ export const VENDOR_BASIC: Record<string, { name: string; category: string; city
   "ourika-transport-a":         { name: "PRESTIGE CARS OURIKA",             category: "Location de voiture de mariage",city: "Ourika",       rating: 4.7 , instagram: "https://www.instagram.com/moroccoprestigecars/" },
   "bouznika-lieu-a":            { name: "ATLANTIQUE PALACE BOUZNIKA",       category: "Lieu de réception",             city: "Bouznika",     rating: 4.8 , instagram: "https://www.instagram.com/palmpalacebouznika/", facebook: "https://www.facebook.com/p/Palm-Palace-Bouznika-61580983077186/" },
   "marra-lieu-luxury2":         { name: "AMANJENA RESORT EVENTS",           category: "Lieu de réception",             city: "Marrakech",    rating: 5.0 , instagram: "https://www.instagram.com/amanjena/", facebook: "https://www.facebook.com/AmanjenaMarrakech/" },
+
+  // ── Zafaf.net additions ────────────────────────────────────────────────────
+
+  // Photographes
+  "studio-lorenzo-salemi":      { name: "STUDIO LORENZO SALEMI",            category: "Photographe",                   city: "Marrakech",    rating: 4.8 },
+  "jalal-photography":          { name: "JALAL PHOTOGRAPHY",                category: "Photographe",                   city: "Casablanca",   rating: 4.7 },
+  "yassine-daoudi-photo":       { name: "YASSINE DAOUDI PHOTOGRAPHE",       category: "Photographe",                   city: "Casablanca",   rating: 4.7 },
+  "driss-benmalek":             { name: "DRISS BENMALEK",                   category: "Photographe",                   city: "Casablanca",   rating: 4.6 },
+  "agence-photo-genie":         { name: "AGENCE PHOTO GÉNIE (APG)",         category: "Photographe",                   city: "Casablanca",   rating: 4.7 },
+  "toufike-photography":        { name: "TOUFIKE PHOTOGRAPHY",              category: "Photographe",                   city: "Casablanca",   rating: 4.6 },
+  "studio-bouregreg":           { name: "STUDIO BOUREGREG",                 category: "Photographe",                   city: "Rabat",        rating: 4.6 },
+  "production-company-morocco": { name: "PRODUCTION COMPANY MOROCCO",       category: "Vidéaste",                      city: "Casablanca",   rating: 4.7 },
+
+  // Traiteurs
+  "salma-sekkat-traiteur":      { name: "SALMA SEKKAT TRAITEUR",            category: "Traiteur",                      city: "Casablanca",   rating: 4.7 },
+  "alhambra-traiteur":          { name: "ALHAMBRA TRAITEUR",                category: "Traiteur",                      city: "Casablanca",   rating: 4.6 },
+  "el-ghali-traiteur":          { name: "EL GHALI TRAITEUR",               category: "Traiteur",                      city: "Marrakech",    rating: 4.7 },
+  "cherkaoui-traiteur":         { name: "CHERKAOUI TRAITEUR",              category: "Traiteur",                      city: "Casablanca",   rating: 4.6 },
+  "ribat-alafrah":              { name: "RIBAT ALAFRAH",                   category: "Traiteur",                      city: "Rabat",        rating: 4.5 },
+  "yacout-traiteur":            { name: "YACOUT TRAITEUR",                 category: "Traiteur",                      city: "Marrakech",    rating: 4.8 },
+  "afrah-serri":                { name: "STE AFRAH SERRI",                 category: "Traiteur",                      city: "Casablanca",   rating: 4.5 },
+  "zemrani-traiteur":           { name: "ZEMRANI TRAITEUR",                category: "Traiteur",                      city: "Casablanca",   rating: 4.6 },
+
+  // Wedding planners
+  "les-mariages-comtesse":      { name: "LES MARIAGES DE LA COMTESSE",      category: "Wedding planner",               city: "Marrakech",    rating: 4.8 },
+  "cocoon-events-luxury":       { name: "COCOON EVENTS & LUXURY",           category: "Wedding planner",               city: "Casablanca",   rating: 4.7 },
+  "annabelle-romain-events":    { name: "ANNABELLE ROMAIN EVENTS",          category: "Wedding planner",               city: "Marrakech",    rating: 4.8 },
+  "nadav-event-management":     { name: "NADAV EVENT MANAGEMENT",           category: "Wedding planner",               city: "Marrakech",    rating: 4.7 },
+  "golden-palms-events":        { name: "GOLDEN PALMS EVENTS",              category: "Wedding planner",               city: "Marrakech",    rating: 4.8 },
+  "marrakech-weddings":         { name: "MARRAKECH WEDDINGS",               category: "Wedding planner",               city: "Marrakech",    rating: 4.9 },
+  "layali-el-farah":            { name: "LAYALI EL FARAH",                  category: "Event planner",                 city: "Casablanca",   rating: 4.6 },
+  "dar-houria-mariages":        { name: "DAR HOURIA MARIAGES",              category: "Wedding planner",               city: "Rabat",        rating: 4.7 },
+
+  // Lieux de réception
+  "le-palace-danfa":            { name: "LE PALACE D'ANFA",                 category: "Lieu de réception",             city: "Casablanca",   rating: 4.9 },
+  "mazagan-beach-resort":       { name: "MAZAGAN BEACH RESORT",             category: "Lieu de réception",             city: "El Jadida",    rating: 5.0 },
+  "la-sultana-marrakech":       { name: "LA SULTANA MARRAKECH",             category: "Lieu de réception",             city: "Marrakech",    rating: 5.0 },
+  "palais-mehdi":               { name: "PALAIS MEHDI",                     category: "Lieu de réception",             city: "Marrakech",    rating: 4.9 },
+  "la-mamounia":                { name: "LA MAMOUNIA",                      category: "Lieu de réception",             city: "Marrakech",    rating: 5.0 },
+  "ksar-char-bagh":             { name: "KSAR CHAR BAGH",                   category: "Lieu de réception",             city: "Marrakech",    rating: 5.0 },
+  "sofitel-rabat":              { name: "SOFITEL RABAT JARDIN DES ROSES",   category: "Lieu de réception",             city: "Rabat",        rating: 4.9 },
+  "villa-des-ambassadors":      { name: "VILLA DES AMBASSADORS",            category: "Lieu de réception",             city: "Casablanca",   rating: 4.8 },
+
+  // Robes de mariés
+  "mhala-bridal":               { name: "MHALA BRIDAL",                     category: "Robes de mariés",               city: "Casablanca",   rating: 4.8 },
+  "demetrios-maroc":            { name: "DEMETRIOS MAROC",                  category: "Robes de mariés",               city: "Casablanca",   rating: 4.7 },
+  "dressia-mariage":            { name: "DRESSIA",                          category: "Robes de mariés",               city: "Casablanca",   rating: 4.7 },
+  "lala-mollati":               { name: "LALA MOLLATI",                     category: "Robes de mariés",               city: "Casablanca",   rating: 4.7 },
+  "les-mariees-lahlou":         { name: "LES MARIÉES MADAME LAHLOU",        category: "Robes de mariés",               city: "Casablanca",   rating: 4.8 },
+  "jour-j-by-lahlou":           { name: "JOUR J BY LAHLOU",                 category: "Robes de mariés",               city: "Casablanca",   rating: 4.8 },
+
+  // Fleuristes
+  "sarah-fleurs":               { name: "SARAH FLEURS",                     category: "Fleuriste événementiel",        city: "Casablanca",   rating: 4.7 },
+  "nina-beni-fleuriste":        { name: "NINA BENI FLEURISTE",              category: "Fleuriste événementiel",        city: "Casablanca",   rating: 4.6 },
+  "mon-amie-la-rose":           { name: "MON AMIE LA ROSE",                 category: "Fleuriste événementiel",        city: "Casablanca",   rating: 4.7 },
+  "jardin-sucre":               { name: "JARDIN SUCRÉ",                     category: "Fleuriste événementiel",        city: "Casablanca",   rating: 4.6 },
+  "mille-et-une-roses":         { name: "MILLE ET UNE ROSES",               category: "Fleuriste événementiel",        city: "Marrakech",    rating: 4.7 },
+
+  // Pâtissiers / Cake designers
+  "cake-up-maroc":              { name: "CAKE UP",                          category: "Pâtissier / Cake designer",     city: "Casablanca",   rating: 4.8 },
+  "safaa-cake-design":          { name: "SAFAA'S CAKE DESIGN",              category: "Pâtissier / Cake designer",     city: "Casablanca",   rating: 4.7 },
+  "lou-cake-factory":           { name: "LOU CAKE FACTORY",                 category: "Pâtissier / Cake designer",     city: "Casablanca",   rating: 4.7 },
+  "lolitta-cake-design":        { name: "LOLITTA CAKE DESIGN",              category: "Pâtissier / Cake designer",     city: "Casablanca",   rating: 4.7 },
+
+  // Location de voiture
+  "maroc-limousines":           { name: "MAROC LIMOUSINES",                 category: "Location de voiture de mariage",city: "Casablanca",   rating: 4.7 },
+  "rs-limousine":               { name: "RS LIMOUSINE",                     category: "Location de voiture de mariage",city: "Casablanca",   rating: 4.6 },
+  "city-gold-prestige":         { name: "CITY GOLD PRESTIGE",               category: "Location de voiture de mariage",city: "Casablanca",   rating: 4.7 },
+  "summit-rent-maroc":          { name: "SUMMIT RENT",                      category: "Location de voiture de mariage",city: "Casablanca",   rating: 4.6 },
+
+  // Créateurs de faire-part
+  "kameleon-design":            { name: "KAMELEON",                         category: "Créateur de faire-part",        city: "Casablanca",   rating: 4.7 },
+  "inna-design":                { name: "INNA DESIGN",                      category: "Créateur de faire-part",        city: "Casablanca",   rating: 4.7 },
+  "printerz-inc":               { name: "PRINTERZ INC.",                    category: "Créateur de faire-part",        city: "Casablanca",   rating: 4.6 },
+  "web2print-ma":               { name: "WEB2PRINT.MA",                     category: "Créateur de faire-part",        city: "Casablanca",   rating: 4.5 },
 }
 
 export const VENDOR_COUNT = Object.keys(VENDOR_BASIC).length
@@ -788,4 +863,19 @@ export const VENDORS_WITH_PHOTO = new Set([
   "abidi-events","celeste","cocktails-wedding","allo-limousine",
   "diaa-lahmamsi","anass-hairestyle","crystal-photo","pidho-le-magicien",
   "karim-groupe",
+  // Zafaf.net additions
+  "jalal-photography","studio-lorenzo-salemi","yassine-daoudi-photo","driss-benmalek",
+  "agence-photo-genie","toufike-photography","studio-bouregreg","production-company-morocco",
+  "salma-sekkat-traiteur","alhambra-traiteur","el-ghali-traiteur","cherkaoui-traiteur",
+  "ribat-alafrah","yacout-traiteur","afrah-serri","zemrani-traiteur",
+  "les-mariages-comtesse","cocoon-events-luxury","annabelle-romain-events","nadav-event-management",
+  "golden-palms-events","marrakech-weddings","layali-el-farah","dar-houria-mariages",
+  "le-palace-danfa","mazagan-beach-resort","la-sultana-marrakech","palais-mehdi",
+  "la-mamounia","ksar-char-bagh","sofitel-rabat","villa-des-ambassadors",
+  "mhala-bridal","demetrios-maroc","dressia-mariage","lala-mollati",
+  "les-mariees-lahlou","jour-j-by-lahlou",
+  "sarah-fleurs","nina-beni-fleuriste","mon-amie-la-rose","jardin-sucre","mille-et-une-roses",
+  "cake-up-maroc","safaa-cake-design","lou-cake-factory","lolitta-cake-design",
+  "maroc-limousines","rs-limousine","city-gold-prestige","summit-rent-maroc",
+  "kameleon-design","inna-design","printerz-inc","web2print-ma",
 ])

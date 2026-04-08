@@ -209,16 +209,6 @@ export default function Landing() {
 
       {/* ── HERO — typographic, rotating event type ── */}
       <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 px-4 sm:px-6 text-center overflow-x-clip" style={{ backgroundColor: C.ink }}>
-        {/* Hero background photo — subtle overlay */}
-        <div className="absolute inset-0 z-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&h=900&fit=crop&q=50"
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0" style={{ backgroundColor: `${C.ink}E0` }} />
-        </div>
         {/* Animated 3D orbs background */}
         <HeroOrbs />
         <div className="relative z-10 max-w-3xl mx-auto">
