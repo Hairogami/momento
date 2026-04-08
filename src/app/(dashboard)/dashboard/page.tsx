@@ -70,7 +70,6 @@ export default async function DashboardPage() {
     user?.name?.split(" ")[0] ??
     null;
 
-  // Serialize data for client component (Dates → strings)
   const data: DashboardData = {
     firstName,
     eventName: workspace.eventName,
