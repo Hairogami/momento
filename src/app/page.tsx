@@ -32,6 +32,7 @@ const MAJOR_CATS_HOME = [
     slug: "musique-son",
     icon: "🎵",
     label: "Musique & Son",
+    img: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=600&h=400&fit=crop&q=75",
     href: "/explore?category=musique-son",
     sub: [
       { icon: "🎧", label: "DJ",                           href: "/explore?sub=DJ" },
@@ -45,6 +46,7 @@ const MAJOR_CATS_HOME = [
     slug: "gastronomie",
     icon: "🍽️",
     label: "Gastronomie",
+    img: "https://images.unsplash.com/photo-1555244162-803834f70033?w=600&h=400&fit=crop&q=75",
     href: "/explore?category=gastronomie",
     sub: [
       { icon: "🍽️", label: "Traiteur",                    href: "/explore?sub=Traiteur" },
@@ -56,6 +58,7 @@ const MAJOR_CATS_HOME = [
     slug: "photo-video",
     icon: "📸",
     label: "Photo & Vidéo",
+    img: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=600&h=400&fit=crop&q=75",
     href: "/explore?category=photo-video",
     sub: [
       { icon: "📸", label: "Photographe",                 href: "/explore?sub=Photographe" },
@@ -66,6 +69,7 @@ const MAJOR_CATS_HOME = [
     slug: "decor-ambiance",
     icon: "✨",
     label: "Décor & Ambiance",
+    img: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&h=400&fit=crop&q=75",
     href: "/explore?category=decor-ambiance",
     sub: [
       { icon: "✨", label: "Décorateur",                  href: "/explore?sub=D%C3%A9corateur" },
@@ -77,6 +81,7 @@ const MAJOR_CATS_HOME = [
     slug: "beaute-style",
     icon: "💄",
     label: "Beauté & Style",
+    img: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&h=400&fit=crop&q=75",
     href: "/explore?category=beaute-style",
     sub: [
       { icon: "💇", label: "Hairstylist",                 href: "/explore?sub=Hairstylist" },
@@ -90,6 +95,7 @@ const MAJOR_CATS_HOME = [
     slug: "planification",
     icon: "📋",
     label: "Planification",
+    img: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=400&fit=crop&q=75",
     href: "/explore?category=planification",
     sub: [
       { icon: "📋", label: "Event planner",               href: "/explore?sub=Event+planner" },
@@ -128,10 +134,12 @@ const CATEGORY_IMAGES: Record<string, string> = {
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop&q=80"
 
 const TOP_VENDORS = [
-  { id: "prestige-photo",    name: "Prestige Photo",      cat: "Photographe",       city: "Rabat",      rating: 5.0 },
-  { id: "afrah-darna-prestige", name: "Afrah Darna Prestige", cat: "Traiteur",       city: "Marrakech",  rating: 4.0 },
-  { id: "la-perle-events",   name: "La Perle Events",     cat: "Event Planner",     city: "Marrakech",  rating: 4.0 },
-  { id: "dj-azz",            name: "DJ AZZ",              cat: "DJ",                city: "Marrakech",  rating: 4.0 },
+  { id: "prestige-photo",       name: "Prestige Photo",       cat: "Photographe",             city: "Rabat",       rating: 5.0 },
+  { id: "afrah-darna-prestige", name: "Afrah Darna Prestige", cat: "Traiteur",                city: "Marrakech",   rating: 4.0 },
+  { id: "la-perle-events",      name: "La Perle Events",      cat: "Event Planner",           city: "Marrakech",   rating: 4.0 },
+  { id: "dj-azz",               name: "DJ AZZ",               cat: "DJ",                      city: "Marrakech",   rating: 4.0 },
+  { id: "orient-decor",         name: "Orient Décor",         cat: "Décorateur",              city: "Casablanca",  rating: 4.5 },
+  { id: "makeup-sara",          name: "Makeup by Sara",       cat: "Makeup Artist",           city: "Rabat",       rating: 5.0 },
 ]
 
 export default function Landing() {
@@ -201,6 +209,16 @@ export default function Landing() {
 
       {/* ── HERO — typographic, rotating event type ── */}
       <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 px-4 sm:px-6 text-center overflow-x-clip" style={{ backgroundColor: C.ink }}>
+        {/* Hero background photo — subtle overlay */}
+        <div className="absolute inset-0 z-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&h=900&fit=crop&q=50"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0" style={{ backgroundColor: `${C.ink}E0` }} />
+        </div>
         {/* Animated 3D orbs background */}
         <HeroOrbs />
         <div className="relative z-10 max-w-3xl mx-auto">
@@ -298,37 +316,28 @@ export default function Landing() {
             </h2>
           </div>
 
-          {/* Grid de catégories majeures + carousels de sous-catégories */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {/* Grid catégories — grandes tiles photo style Airbnb */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             {MAJOR_CATS_HOME.map(cat => (
-              <div key={cat.slug}
-                className="rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#C4532A] ring-2 ring-transparent"
-                style={{ backgroundColor: C.anthracite, border: `1px solid ${C.steel}` }}>
-
-                {/* En-tête de la catégorie majeure */}
-                <Link href={cat.href}
-                  className="flex items-center justify-between px-4 py-3 transition-opacity hover:opacity-80">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">{cat.icon}</span>
-                    <span className="font-bold text-sm" style={{ color: C.white }}>{cat.label}</span>
+              <Link href={cat.href} key={cat.slug}
+                className="relative aspect-[4/3] rounded-2xl overflow-hidden group ring-2 ring-transparent hover:ring-[#C4532A] transition-all duration-300 hover:-translate-y-1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={cat.img}
+                  alt={cat.label}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(26,18,8,0.88) 0%, rgba(26,18,8,0.3) 55%, transparent 100%)" }} />
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                  <div className="text-xl sm:text-2xl mb-1">{cat.icon}</div>
+                  <div className="font-bold text-sm sm:text-base" style={{ color: "#fff" }}>{cat.label}</div>
+                  <div className="text-xs mt-0.5 flex items-center gap-1" style={{ color: "rgba(255,255,255,0.65)" }}>
+                    {cat.sub.length} spécialités <ArrowRight size={10} />
                   </div>
-                  <span className="text-xs font-semibold flex items-center gap-1" style={{ color: C.terra }}>
-                    Voir tout <ArrowRight size={12} />
-                  </span>
-                </Link>
-
-                {/* Carousel horizontal de sous-catégories */}
-                <div className="flex overflow-x-auto gap-2 px-4 pb-4 scrollbar-hide">
-                  {cat.sub.map(sub => (
-                    <Link key={sub.label} href={sub.href}
-                      className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:opacity-80 whitespace-nowrap"
-                      style={{ backgroundColor: C.ink, color: C.silver, border: `1px solid ${C.steel}` }}>
-                      <span>{sub.icon}</span>
-                      <span>{sub.label}</span>
-                    </Link>
-                  ))}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -359,31 +368,32 @@ export default function Landing() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
             {TOP_VENDORS.map(v => (
               <Link href={`/vendor/${v.id}`} key={v.id}
-                className="rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#C4532A] ring-2 ring-transparent block"
+                className="rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:ring-2 hover:ring-[#C4532A] ring-2 ring-transparent block group"
                 style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}` }}>
-                <div className="relative h-24 sm:h-32 overflow-hidden"
+                <div className="relative h-44 sm:h-52 overflow-hidden"
                   style={{ backgroundColor: C.anthracite }}>
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={CATEGORY_IMAGES[v.cat] ?? FALLBACK_IMAGE}
                     alt={v.cat}
-                    fill
-                    sizes="(max-width:768px) 50vw, 25vw"
-                    className="object-cover"
-                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_IMAGE }}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    onError={e => { const t = e.currentTarget; if (!t.dataset.f) { t.dataset.f = "1"; t.src = FALLBACK_IMAGE } }}
                   />
+                  <div className="absolute bottom-3 left-3">
+                    <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: `${C.terra}`, color: "#fff" }}>{v.cat}</span>
+                  </div>
                 </div>
-                <div className="p-3 sm:p-4">
-                  <h3 className="font-bold text-xs sm:text-sm truncate mb-0.5" style={{ color: C.white }}>{v.name}</h3>
-                  <p className="text-xs mb-2" style={{ color: C.terra }}>{v.cat}</p>
+                <div className="p-4">
+                  <h3 className="font-bold text-sm truncate mb-1" style={{ color: C.white }}>{v.name}</h3>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs flex items-center gap-0.5" style={{ color: C.mist }}>
-                      <MapPin size={9} /> {v.city}
+                    <span className="text-xs flex items-center gap-1" style={{ color: C.mist }}>
+                      <MapPin size={10} /> {v.city}
                     </span>
-                    <span className="text-xs font-bold flex items-center gap-0.5" style={{ color: C.white }}>
-                      <Star size={10} fill={C.terra} style={{ color: C.terra }} /> {v.rating}
+                    <span className="text-xs font-bold flex items-center gap-1" style={{ color: C.white }}>
+                      <Star size={11} fill={C.terra} style={{ color: C.terra }} /> {v.rating.toFixed(1)}
                     </span>
                   </div>
                 </div>
