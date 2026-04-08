@@ -86,6 +86,244 @@
   --chart-5: #1A1208;
 }
 
+/* ── Momento design tokens (respond to .dark and .palette-* on <html>) ── */
+:root {
+  --bg: #F5EDD6;
+  --bg-card: #EDE4CC;
+  --text: #1A1208;
+  --text-muted: #6A5F4A;
+  --border: #DDD4BC;
+  --accent: #C4532A;
+
+  /* Named tokens — used via lib/colors.ts */
+  --momento-ink:        #F5EDD6;
+  --momento-terra:      #C4532A;
+  --momento-white:      #1A1208;
+  --momento-anthracite: #DDD4BC;
+  --momento-mist:       #6A5F4A;
+  --momento-dark:       #EDE4CC;
+  --momento-steel:      #9A907A;
+  --momento-silver:     #3A2E1E;
+  --momento-accent:     #2C1A0E;
+}
+.dark {
+  --bg: #1A1208;
+  --bg-card: #2C1A0E;
+  --text: #F5EDD6;
+  --text-muted: #D4C9B4;
+  --border: #3A2E1E;
+  --accent: #C4532A;
+  color-scheme: dark;
+
+  /* Named tokens dark overrides */
+  --momento-ink:        #1A1208;
+  --momento-terra:      #D96B3A;
+  --momento-white:      #F5EDD6;
+  --momento-anthracite: #3A2E1E;
+  --momento-mist:       #D4C9B4;
+  --momento-dark:       #2C1A0E;
+  --momento-steel:      #A89880;
+  --momento-silver:     #E2D8C8;
+  --momento-accent:     #F5EDD6;
+  --background:           #1A1208;
+  --foreground:           #F5EDD6;
+  --card:                 #2C1A0E;
+  --card-foreground:      #F5EDD6;
+  --popover:              #2C1A0E;
+  --popover-foreground:   #F5EDD6;
+  --primary:              #F5EDD6;
+  --primary-foreground:   #1A1208;
+  --secondary:            #3A2E1E;
+  --secondary-foreground: #F5EDD6;
+  --muted:                #2C1A0E;
+  --muted-foreground:     #9A907A;
+  --accent:               #C4532A;
+  --accent-foreground:    #F5EDD6;
+  --destructive:          oklch(0.577 0.245 27.325);
+  --border:               #3A2E1E;
+  --input:                #3A2E1E;
+  --ring:                 #C4532A;
+  --sidebar:              #2C1A0E;
+  --sidebar-foreground:   #F5EDD6;
+  --sidebar-primary:      #C4532A;
+  --sidebar-primary-foreground: #F5EDD6;
+  --sidebar-accent:       #3A2E1E;
+  --sidebar-accent-foreground: #F5EDD6;
+  --sidebar-border:       #3A2E1E;
+  --sidebar-ring:         #C4532A;
+}
+
+/* ── Ocean palette ── */
+.palette-ocean {
+  --bg: #EEF4FA;
+  --bg-card: #DDE9F5;
+  --text: #0A1628;
+  --text-muted: #4A6A8A;
+  --border: #B8D0E8;
+  --accent: #1A6BAD;
+  --background: #EEF4FA;
+  --foreground: #0A1628;
+  --card: #DDE9F5;
+  --card-foreground: #0A1628;
+  --primary: #1A6BAD;
+  --primary-foreground: #EEF4FA;
+  --muted: #DDE9F5;
+  --muted-foreground: #4A6A8A;
+  --input: #B8D0E8;
+  --ring: #1A6BAD;
+  /* Momento tokens */
+  --momento-ink:        #EEF4FA;
+  --momento-terra:      #1A6BAD;
+  --momento-white:      #0A1628;
+  --momento-anthracite: #B8D0E8;
+  --momento-mist:       #4A6A8A;
+  --momento-dark:       #DDE9F5;
+  --momento-steel:      #7A9AB8;
+  --momento-silver:     #B8D0E8;
+  --momento-accent:     #0A1628;
+}
+.palette-ocean.dark {
+  --bg: #0A1628;
+  --bg-card: #132240;
+  --text: #EEF4FA;
+  --text-muted: #7A9AB8;
+  --border: #1E3558;
+  --background: #0A1628;
+  --foreground: #EEF4FA;
+  --card: #132240;
+  --card-foreground: #EEF4FA;
+  --primary: #4A9DE0;
+  --primary-foreground: #0A1628;
+  --muted: #132240;
+  --muted-foreground: #7A9AB8;
+  --input: #1E3558;
+  --ring: #4A9DE0;
+  /* Momento tokens */
+  --momento-ink:        #0A1628;
+  --momento-terra:      #4A9DE0;
+  --momento-white:      #EEF4FA;
+  --momento-anthracite: #1E3558;
+  --momento-mist:       #7A9AB8;
+  --momento-dark:       #132240;
+  --momento-steel:      #4A6A8A;
+  --momento-silver:     #7A9AB8;
+  --momento-accent:     #EEF4FA;
+}
+
+/* ── Forest palette ── */
+.palette-forest {
+  --bg: #EEF3EE;
+  --bg-card: #DDE8DD;
+  --text: #0E1E0E;
+  --text-muted: #4A6A4A;
+  --border: #B8D0B8;
+  --accent: #2D7A3A;
+  --background: #EEF3EE;
+  --foreground: #0E1E0E;
+  --card: #DDE8DD;
+  --card-foreground: #0E1E0E;
+  --primary: #2D7A3A;
+  --primary-foreground: #EEF3EE;
+  --muted: #DDE8DD;
+  --muted-foreground: #4A6A4A;
+  --input: #B8D0B8;
+  --ring: #2D7A3A;
+  /* Momento tokens */
+  --momento-ink:        #EEF3EE;
+  --momento-terra:      #2D7A3A;
+  --momento-white:      #0E1E0E;
+  --momento-anthracite: #B8D0B8;
+  --momento-mist:       #4A6A4A;
+  --momento-dark:       #DDE8DD;
+  --momento-steel:      #7A9A7A;
+  --momento-silver:     #B8D0B8;
+  --momento-accent:     #0E1E0E;
+}
+.palette-forest.dark {
+  --bg: #0E1E0E;
+  --bg-card: #162816;
+  --text: #EEF3EE;
+  --text-muted: #7A9A7A;
+  --border: #1E3A1E;
+  --background: #0E1E0E;
+  --foreground: #EEF3EE;
+  --card: #162816;
+  --card-foreground: #EEF3EE;
+  --primary: #4AAD5A;
+  --primary-foreground: #0E1E0E;
+  --muted: #162816;
+  --muted-foreground: #7A9A7A;
+  --input: #1E3A1E;
+  --ring: #4AAD5A;
+  /* Momento tokens */
+  --momento-ink:        #0E1E0E;
+  --momento-terra:      #4AAD5A;
+  --momento-white:      #EEF3EE;
+  --momento-anthracite: #1E3A1E;
+  --momento-mist:       #7A9A7A;
+  --momento-dark:       #162816;
+  --momento-steel:      #4A6A4A;
+  --momento-silver:     #7A9A7A;
+  --momento-accent:     #EEF3EE;
+}
+
+/* ── Midnight palette ── */
+.palette-midnight {
+  --bg: #F0EEF8;
+  --bg-card: #E0DCF2;
+  --text: #14102A;
+  --text-muted: #5A5080;
+  --border: #C8C0E8;
+  --accent: #6A3DAD;
+  --background: #F0EEF8;
+  --foreground: #14102A;
+  --card: #E0DCF2;
+  --card-foreground: #14102A;
+  --primary: #6A3DAD;
+  --primary-foreground: #F0EEF8;
+  --muted: #E0DCF2;
+  --muted-foreground: #5A5080;
+  --input: #C8C0E8;
+  --ring: #6A3DAD;
+  /* Momento tokens */
+  --momento-ink:        #F0EEF8;
+  --momento-terra:      #6A3DAD;
+  --momento-white:      #14102A;
+  --momento-anthracite: #C8C0E8;
+  --momento-mist:       #5A5080;
+  --momento-dark:       #E0DCF2;
+  --momento-steel:      #9A90C8;
+  --momento-silver:     #C8C0E8;
+  --momento-accent:     #14102A;
+}
+.palette-midnight.dark {
+  --bg: #14102A;
+  --bg-card: #221A42;
+  --text: #F0EEF8;
+  --text-muted: #9A90C8;
+  --border: #2E2458;
+  --background: #14102A;
+  --foreground: #F0EEF8;
+  --card: #221A42;
+  --card-foreground: #F0EEF8;
+  --primary: #9A6DE0;
+  --primary-foreground: #14102A;
+  --muted: #221A42;
+  --muted-foreground: #9A90C8;
+  --input: #2E2458;
+  --ring: #9A6DE0;
+  /* Momento tokens */
+  --momento-ink:        #14102A;
+  --momento-terra:      #9A6DE0;
+  --momento-white:      #F0EEF8;
+  --momento-anthracite: #2E2458;
+  --momento-mist:       #9A90C8;
+  --momento-dark:       #221A42;
+  --momento-steel:      #5A5080;
+  --momento-silver:     #9A90C8;
+  --momento-accent:     #F0EEF8;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -114,3 +352,43 @@
 .animate-spin-slow-reverse {
   animation: spin-slow 60s linear infinite reverse;
 }
+
+/* ── Hero 3D floating cards ── */
+@keyframes float-a {
+  0%, 100% { transform: perspective(600px) rotateY(15deg) rotateX(5deg) translateY(0px); }
+  50%       { transform: perspective(600px) rotateY(15deg) rotateX(5deg) translateY(-12px); }
+}
+@keyframes float-b {
+  0%, 100% { transform: perspective(600px) rotateY(-12deg) rotateX(8deg) translateY(0px); }
+  50%       { transform: perspective(600px) rotateY(-12deg) rotateX(8deg) translateY(-16px); }
+}
+@keyframes float-c {
+  0%, 100% { transform: perspective(600px) rotateY(-8deg) rotateX(-5deg) translateY(0px); }
+  50%       { transform: perspective(600px) rotateY(-8deg) rotateX(-5deg) translateY(-10px); }
+}
+
+/* ── Shimmer badge (Top Prestataire) ── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.badge-shimmer {
+  background: linear-gradient(90deg, #C4532A 0%, #F5C842 40%, #C4532A 60%, #F5C842 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Fade in up (general utility) ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.6s ease both;
+}
+.animate-fade-up-delay-1 { animation: fade-up 0.6s ease 0.1s both; }
+.animate-fade-up-delay-2 { animation: fade-up 0.6s ease 0.2s both; }
+.animate-fade-up-delay-3 { animation: fade-up 0.6s ease 0.3s both; }
