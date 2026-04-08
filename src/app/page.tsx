@@ -466,6 +466,59 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── TÉMOIGNAGES ── */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6" style={{ backgroundColor: C.ink }}>
+        <div className="max-w-5xl mx-auto">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-3 text-center" style={{ color: C.terra }}>
+            Ils nous font confiance
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-center" style={{ color: C.white }}>
+            Ce que disent nos organisateurs
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Salma B.",
+                event: "Mariage — Marrakech",
+                photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&h=80&fit=crop&q=75",
+                text: "Grâce à Momento j'ai trouvé notre DJ et notre photographe en moins d'une heure. Tout était parfait le jour J.",
+                stars: 5,
+              },
+              {
+                name: "Youssef A.",
+                event: "Corporate — Casablanca",
+                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&q=75",
+                text: "Plateforme intuitive, prestataires réactifs. Notre soirée d'entreprise a dépassé toutes les attentes.",
+                stars: 5,
+              },
+              {
+                name: "Nadia M.",
+                event: "Fiançailles — Rabat",
+                photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=80&h=80&fit=crop&q=75",
+                text: "Le traiteur recommandé par Momento était exceptionnel. Je recommande à toutes mes amies !",
+                stars: 5,
+              },
+            ].map(({ name, event, photo, text, stars }) => (
+              <div key={name} className="rounded-2xl p-6 flex flex-col gap-4 ring-2 ring-transparent hover:ring-[#C4532A] transition-all duration-200 hover:-translate-y-0.5" style={{ backgroundColor: C.dark }}>
+                <div className="flex gap-1">
+                  {Array.from({ length: stars }).map((_, i) => (
+                    <Star key={i} size={14} fill="#C4532A" stroke="none" />
+                  ))}
+                </div>
+                <p className="text-sm leading-relaxed flex-1" style={{ color: C.mist }}>&ldquo;{text}&rdquo;</p>
+                <div className="flex items-center gap-3 pt-2 border-t" style={{ borderColor: C.anthracite }}>
+                  <img src={photo} alt={name} className="w-10 h-10 rounded-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&h=80&fit=crop" }} />
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: C.white }}>{name}</p>
+                    <p className="text-xs" style={{ color: C.terra }}>{event}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── FINAL CTA ── */}
       <section className="py-20 sm:py-28 px-4 sm:px-6 text-center" style={{ backgroundColor: C.dark }}>
         <div className="max-w-2xl mx-auto">
