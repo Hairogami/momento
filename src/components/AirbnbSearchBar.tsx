@@ -4,16 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
 import DateRangePicker from "@/components/DateRangePicker"
-
-const C = {
-  white:     "#1A1208",
-  mist:      "#6A5F4A",
-  steel:     "#9A907A",
-  anthracite:"#DDD4BC",
-  dark:      "#EDE4CC",
-  ink:       "#F5EDD6",
-  terra:     "#C4532A",
-}
+import { C } from "@/lib/colors"
 
 const CITIES = ["Casablanca","Rabat","Marrakech","Fès","Tanger","Agadir","Meknès","Oujda","Kénitra","El Jadida","Mohammedia","Tétouan","Salé","Béni Mellal","Essaouira","Laâyoune","Dakhla","Settat","Nador","Ouarzazate","Safi","Tiznit","Khouribga","Errachidia","Guelmim","Berkane","Al Hoceima","Ifrane","Chefchaouen","Taroudant","Azrou","Figuig","Témara","Skhirat","Asilah","Ourika","Bouznika","Martil","Saïdia"]
 
@@ -195,7 +186,7 @@ export default function AirbnbSearchBar() {
       {/* Panel Ville */}
       {active === "ville" && (
         <div
-          className="absolute top-full left-0 mt-3 rounded-2xl p-4 z-50 w-72"
+          className="absolute top-full left-0 mt-3 rounded-2xl p-4 z-50 w-72 max-h-72 overflow-y-auto"
           style={{ backgroundColor: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.15)", border: "1px solid #e0d8c8" }}
         >
           <p className="text-xs font-bold mb-3" style={{ color: C.mist }}>VILLES POPULAIRES</p>
@@ -237,7 +228,7 @@ export default function AirbnbSearchBar() {
       {/* Panel Filtres */}
       {active === "filtres" && (
         <div
-          className="absolute top-full right-0 mt-3 rounded-2xl p-4 z-50 w-80"
+          className="absolute top-full right-0 mt-3 rounded-2xl p-4 z-50 w-80 max-h-96 overflow-y-auto"
           style={{ backgroundColor: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.15)", border: "1px solid #e0d8c8" }}
         >
           <p className="text-xs font-bold mb-3" style={{ color: C.mist }}>CATÉGORIE DE PRESTATAIRE</p>

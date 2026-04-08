@@ -1,23 +1,17 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { ArrowRight, Menu, X, Calendar, Users, Zap, Star, MapPin } from "lucide-react"
 import NavAuthButtons from "@/components/NavAuthButtons"
 import AirbnbSearchBar from "@/components/AirbnbSearchBar"
+import { DarkModeToggle } from "@/components/DarkModeToggle"
+import HeroOrbs from "@/components/HeroOrbs"
+import Footer from "@/components/Footer"
 import { VENDOR_COUNT } from "@/lib/vendorData"
-
-const C = {
-  ink:       "#F5EDD6",
-  dark:      "#EDE4CC",
-  anthracite:"#DDD4BC",
-  steel:     "#9A907A",
-  mist:      "#6A5F4A",
-  silver:    "#3A2E1E",
-  white:     "#1A1208",
-  accent:    "#2C1A0E",
-  terra:     "#C4532A",
-}
+import { C } from "@/lib/colors"
+import { MomentoLogo } from "@/components/MomentoLogo"
 
 const EVENTS = ["Mariage", "Anniversaire", "Fiançailles", "Baby shower", "Soutenance", "Cérémonie", "Fête privée", "Corporate"]
 
@@ -32,19 +26,76 @@ const EVENT_COLORS: Record<string, string> = {
   "Corporate":    "#0EA5E9",
 }
 
-const CATEGORIES = [
-  { icon: "🎵", label: "Musique & DJ",          href: "/explore?category=Musique+%26+DJ" },
-  { icon: "🍽️", label: "Traiteur",              href: "/explore?category=Traiteur" },
-  { icon: "🎂", label: "Pâtissier",             href: "/explore?category=Traiteur" },
-  { icon: "📸", label: "Photo & Vidéo",         href: "/explore?category=Photo+%26+Vid%C3%A9o" },
-  { icon: "🏛️", label: "Lieu",                 href: "/explore?category=Lieu" },
-  { icon: "✨", label: "Décor & Lumières",     href: "/explore?category=D%C3%A9cor+%26+Lumi%C3%A8res" },
-  { icon: "💄", label: "Beauté",               href: "/explore?category=Beaut%C3%A9" },
-  { icon: "📋", label: "Planification",        href: "/explore?category=Planification" },
-  { icon: "🎪", label: "Animation",            href: "/explore?category=Animation" },
-  { icon: "🚗", label: "Transport",            href: "/explore?category=Transport" },
-  { icon: "🛡️", label: "Sécurité",            href: "/explore?category=S%C3%A9curit%C3%A9" },
-  { icon: "🎁", label: "Cadeaux & Faire-part", href: "/explore?category=Cadeaux+%26+Papeterie" },
+// Major categories with sub-categories for the homepage carousel
+const MAJOR_CATS_HOME = [
+  {
+    slug: "musique-son",
+    icon: "🎵",
+    label: "Musique & Son",
+    href: "/explore?category=musique-son",
+    sub: [
+      { icon: "🎧", label: "DJ",                           href: "/explore?sub=DJ" },
+      { icon: "🎤", label: "Chanteur / chanteuse",         href: "/explore?sub=Chanteur+%2F+chanteuse" },
+      { icon: "🎺", label: "Orchestre",                    href: "/explore?sub=Orchestre" },
+      { icon: "🎻", label: "Violoniste",                   href: "/explore?sub=Violoniste" },
+      { icon: "🥁", label: "Dekka / Issawa",               href: "/explore?sub=Dekka+Marrakchia+%2F+Issawa" },
+    ],
+  },
+  {
+    slug: "gastronomie",
+    icon: "🍽️",
+    label: "Gastronomie",
+    href: "/explore?category=gastronomie",
+    sub: [
+      { icon: "🍽️", label: "Traiteur",                    href: "/explore?sub=Traiteur" },
+      { icon: "🎂", label: "Pâtissier / Cake designer",   href: "/explore?sub=P%C3%A2tissier+%2F+Cake+designer" },
+      { icon: "🍹", label: "Bar / mixologue",             href: "/explore?sub=Service+de+bar+%2F+mixologue" },
+    ],
+  },
+  {
+    slug: "photo-video",
+    icon: "📸",
+    label: "Photo & Vidéo",
+    href: "/explore?category=photo-video",
+    sub: [
+      { icon: "📸", label: "Photographe",                 href: "/explore?sub=Photographe" },
+      { icon: "🎬", label: "Vidéaste",                    href: "/explore?sub=Vid%C3%A9aste" },
+    ],
+  },
+  {
+    slug: "decor-ambiance",
+    icon: "✨",
+    label: "Décor & Ambiance",
+    href: "/explore?category=decor-ambiance",
+    sub: [
+      { icon: "✨", label: "Décorateur",                  href: "/explore?sub=D%C3%A9corateur" },
+      { icon: "💐", label: "Fleuriste événementiel",      href: "/explore?sub=Fleuriste+%C3%A9v%C3%A9nementiel" },
+      { icon: "💡", label: "Ambiance lumineuse",          href: "/explore?sub=Cr%C3%A9ateur+d%27ambiance+lumineuse" },
+    ],
+  },
+  {
+    slug: "beaute-style",
+    icon: "💄",
+    label: "Beauté & Style",
+    href: "/explore?category=beaute-style",
+    sub: [
+      { icon: "💇", label: "Hairstylist",                 href: "/explore?sub=Hairstylist" },
+      { icon: "💄", label: "Makeup Artist",               href: "/explore?sub=Makeup+Artist" },
+      { icon: "👑", label: "Neggafa",                     href: "/explore?sub=Neggafa" },
+      { icon: "👗", label: "Robes de mariés",             href: "/explore?sub=Robes+de+mari%C3%A9s" },
+      { icon: "🧖", label: "Spa / soins esthétiques",     href: "/explore?sub=Spa+%2F+soins+esth%C3%A9tiques" },
+    ],
+  },
+  {
+    slug: "planification",
+    icon: "📋",
+    label: "Planification",
+    href: "/explore?category=planification",
+    sub: [
+      { icon: "📋", label: "Event planner",               href: "/explore?sub=Event+planner" },
+      { icon: "💍", label: "Wedding planner",             href: "/explore?sub=Wedding+planner" },
+    ],
+  },
 ]
 
 const STEPS = [
@@ -52,6 +103,29 @@ const STEPS = [
   { n: "02", icon: <Users size={18} />,    t: "Parcourez les prestataires", d: `${VENDOR_COUNT} pros filtrés par ville, catégorie et budget.` },
   { n: "03", icon: <Zap size={18} />,      t: "Réservez directement", d: "Envoyez une demande, confirmez. C'est tout." },
 ]
+
+const CATEGORY_IMAGES: Record<string, string> = {
+  "DJ": "https://images.unsplash.com/photo-1571266028243-d220c6a18571?w=400&h=400&fit=crop&q=80",
+  "Photographe": "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=400&fit=crop&q=80",
+  "Vidéaste": "https://images.unsplash.com/photo-1601506521793-dc748fc80b67?w=400&h=400&fit=crop&q=80",
+  "Traiteur": "https://images.unsplash.com/photo-1555244162-803834f70033?w=400&h=400&fit=crop&q=80",
+  "Décorateur": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=400&fit=crop&q=80",
+  "Fleuriste événementiel": "https://images.unsplash.com/photo-1487530811015-780b63e1b5a7?w=400&h=400&fit=crop&q=80",
+  "Wedding planner": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop&q=80",
+  "Makeup Artist": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&h=400&fit=crop&q=80",
+  "Hairstylist": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop&q=80",
+  "Orchestre": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&q=80",
+  "Chanteur / chanteuse": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=400&fit=crop&q=80",
+  "Lieu de réception": "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop&q=80",
+  "Pâtissier / Cake designer": "https://images.unsplash.com/photo-1535141192574-5f39a5847d0a?w=400&h=400&fit=crop&q=80",
+  "Neggafa": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&h=400&fit=crop&q=80",
+  "Event Planner": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop&q=80",
+  "Event planner": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop&q=80",
+  "Violoniste": "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=400&h=400&fit=crop&q=80",
+  "Magicien": "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=400&h=400&fit=crop&q=80",
+}
+
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop&q=80"
 
 const TOP_VENDORS = [
   { id: "prestige-photo",    name: "Prestige Photo",      cat: "Photographe",       city: "Rabat",      rating: 5.0 },
@@ -88,9 +162,8 @@ export default function Landing() {
         } : {}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
 
-          <Link href="/" className="font-bold tracking-[0.22em] uppercase text-base sm:text-lg" style={{ color: C.white }}>
-            Momento
-          </Link>
+          {/* Logo */}
+          <MomentoLogo iconSize={34} />
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ color: C.mist }}>
@@ -100,14 +173,18 @@ export default function Landing() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <DarkModeToggle />
             <NavAuthButtons />
           </div>
 
-          {/* Mobile burger */}
-          <button className="md:hidden p-2 rounded-lg" onClick={() => setMenuOpen(o => !o)}
-            style={{ color: C.white }}>
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          {/* Mobile */}
+          <div className="md:hidden flex items-center gap-2">
+            <DarkModeToggle />
+            <button className="p-2 rounded-lg" onClick={() => setMenuOpen(o => !o)}
+              style={{ color: C.white }}>
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
@@ -123,8 +200,15 @@ export default function Landing() {
       </nav>
 
       {/* ── HERO — typographic, rotating event type ── */}
-      <section className="pt-32 pb-20 sm:pt-40 sm:pb-28 px-4 sm:px-6 text-center" style={{ backgroundColor: C.ink }}>
-        <div className="max-w-3xl mx-auto">
+      <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 px-4 sm:px-6 text-center overflow-x-clip" style={{ backgroundColor: C.ink }}>
+        {/* Animated 3D orbs background */}
+        <HeroOrbs />
+        <div className="relative z-10 max-w-3xl mx-auto">
+          {/* Hero badge logo — just the mark, no text */}
+          <div className="flex justify-center mb-10">
+            <Image src="/logo-badge-dark.png" alt="Momento" width={200} height={200} className="dark:hidden" style={{ objectFit: "contain" }} priority />
+            <Image src="/logo-badge-light.png" alt="Momento" width={200} height={200} className="hidden dark:block" style={{ objectFit: "contain" }} priority />
+          </div>
           <p className="text-xs font-semibold tracking-widest uppercase mb-6" style={{ color: C.terra }}>
             La plateforme événementielle du Maroc
           </p>
@@ -151,6 +235,38 @@ export default function Landing() {
               style={{ backgroundColor: C.anthracite, color: C.white }}>
               Explorer les prestataires
             </Link>
+          </div>
+        </div>
+
+        {/* Floating 3D event cards */}
+        <div className="absolute left-4 top-1/3 hidden lg:block" style={{ transform: "perspective(600px) rotateY(15deg) rotateX(5deg)" }}>
+          <div className="px-4 py-3 rounded-2xl text-xs font-semibold shadow-lg" style={{
+            backgroundColor: C.dark,
+            border: `1px solid ${C.anthracite}`,
+            color: C.mist,
+            animation: "float-a 6s ease-in-out infinite",
+          }}>
+            📸 Photographe · Rabat
+          </div>
+        </div>
+        <div className="absolute right-6 top-1/4 hidden lg:block" style={{ transform: "perspective(600px) rotateY(-12deg) rotateX(8deg)" }}>
+          <div className="px-4 py-3 rounded-2xl text-xs font-semibold shadow-lg" style={{
+            backgroundColor: C.dark,
+            border: `1px solid ${C.anthracite}`,
+            color: C.mist,
+            animation: "float-b 7s ease-in-out infinite",
+          }}>
+            🎵 DJ · Marrakech
+          </div>
+        </div>
+        <div className="absolute right-10 bottom-16 hidden lg:block" style={{ transform: "perspective(600px) rotateY(-8deg) rotateX(-5deg)" }}>
+          <div className="px-4 py-3 rounded-2xl text-xs font-semibold shadow-lg" style={{
+            backgroundColor: C.dark,
+            border: `1px solid ${C.anthracite}`,
+            color: C.mist,
+            animation: "float-c 8s ease-in-out infinite",
+          }}>
+            🍽️ Traiteur · Casablanca
           </div>
         </div>
       </section>
@@ -181,15 +297,47 @@ export default function Landing() {
               Chaque prestataire dont vous avez besoin
             </h2>
           </div>
-          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-6 gap-2 sm:gap-3">
-            {CATEGORIES.map(c => (
-              <Link href={c.href} key={c.label}
-                className="flex flex-col items-center gap-2 p-3 sm:p-4 rounded-2xl transition-all hover:-translate-y-0.5 text-center"
+
+          {/* Grid de catégories majeures + carousels de sous-catégories */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {MAJOR_CATS_HOME.map(cat => (
+              <div key={cat.slug}
+                className="rounded-2xl overflow-hidden"
                 style={{ backgroundColor: C.anthracite, border: `1px solid ${C.steel}` }}>
-                <span className="text-2xl sm:text-3xl">{c.icon}</span>
-                <span className="text-xs font-medium leading-tight" style={{ color: C.silver }}>{c.label}</span>
-              </Link>
+
+                {/* En-tête de la catégorie majeure */}
+                <Link href={cat.href}
+                  className="flex items-center justify-between px-4 py-3 transition-opacity hover:opacity-80">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">{cat.icon}</span>
+                    <span className="font-bold text-sm" style={{ color: C.white }}>{cat.label}</span>
+                  </div>
+                  <span className="text-xs font-semibold flex items-center gap-1" style={{ color: C.terra }}>
+                    Voir tout <ArrowRight size={12} />
+                  </span>
+                </Link>
+
+                {/* Carousel horizontal de sous-catégories */}
+                <div className="flex overflow-x-auto gap-2 px-4 pb-4 scrollbar-hide">
+                  {cat.sub.map(sub => (
+                    <Link key={sub.label} href={sub.href}
+                      className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:opacity-80 whitespace-nowrap"
+                      style={{ backgroundColor: C.ink, color: C.silver, border: `1px solid ${C.steel}` }}>
+                      <span>{sub.icon}</span>
+                      <span>{sub.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link href="/explore"
+              className="inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-2xl transition-all hover:opacity-80"
+              style={{ backgroundColor: C.anthracite, color: C.white, border: `1px solid ${C.steel}` }}>
+              Voir toutes les catégories <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
       </section>
@@ -216,9 +364,15 @@ export default function Landing() {
               <Link href={`/vendor/${v.id}`} key={v.id}
                 className="rounded-2xl overflow-hidden transition-all hover:-translate-y-0.5 block"
                 style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}` }}>
-                <div className="h-24 sm:h-32 flex items-center justify-center text-3xl sm:text-4xl"
+                <div className="relative h-24 sm:h-32 overflow-hidden"
                   style={{ backgroundColor: C.anthracite }}>
-                  {v.cat === "Photographe" ? "📸" : v.cat === "Traiteur" ? "🍽️" : v.cat === "Event Planner" ? "📋" : "🎧"}
+                  <Image
+                    src={CATEGORY_IMAGES[v.cat] ?? FALLBACK_IMAGE}
+                    alt={v.cat}
+                    fill
+                    sizes="(max-width:768px) 50vw, 25vw"
+                    className="object-cover"
+                  />
                 </div>
                 <div className="p-3 sm:p-4">
                   <h3 className="font-bold text-xs sm:text-sm truncate mb-0.5" style={{ color: C.white }}>{v.name}</h3>
@@ -330,17 +484,7 @@ export default function Landing() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="px-4 sm:px-6 py-8 border-t" style={{ borderColor: C.anthracite, backgroundColor: C.ink }}>
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-sm font-bold tracking-[0.2em] uppercase" style={{ color: C.silver }}>Momento</span>
-          <p className="text-xs" style={{ color: C.steel }}>© 2026 Momento · Maroc · Tous droits réservés.</p>
-          <div className="flex gap-5 text-xs" style={{ color: C.steel }}>
-            <a href="#" className="hover:opacity-80 transition-opacity">Confidentialité</a>
-            <a href="#" className="hover:opacity-80 transition-opacity">Conditions</a>
-            <Link href="/prestataire" className="hover:opacity-80 transition-opacity">Espace prestataire</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
     </div>
   )
