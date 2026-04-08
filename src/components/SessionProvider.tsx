@@ -12,6 +12,7 @@ type SessionUser = {
   name?: string | null;
   image?: string | null;
   role?: string;
+  provider?: string;
   firstName?: string | null;
   lastName?: string | null;
   username?: string | null;
@@ -30,7 +31,8 @@ function SessionUserBridge({ children }: { children: React.ReactNode }) {
         firstName: session.user.name?.split(" ")[0] ?? null,
         lastName: session.user.name?.split(" ").slice(1).join(" ") ?? null,
         username: session.user.email?.split("@")[0] ?? null,
-        role: (session.user as { role?: string }).role ?? "client",
+        role: (session.user as { role?: string; provider?: string }).role ?? "client",
+        provider: (session.user as { role?: string; provider?: string }).provider ?? undefined,
       }
     : null;
 

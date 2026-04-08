@@ -27,8 +27,8 @@ export function DarkModeToggle({ className = "" }: { className?: string }) {
       title={isDark ? "Mode clair" : "Bonne nuit 🌙"}
       className={`relative w-14 h-7 rounded-full transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${className}`}
       style={{
-        backgroundColor: isDark ? "#1A1208" : "#DDD4BC",
-        border: `1.5px solid ${isDark ? "#3A2E1E" : "#C4B99A"}`,
+        backgroundColor: isDark ? "var(--bg)" : "var(--momento-anthracite)",
+        border: `1.5px solid var(--border)`,
         boxShadow: isDark
           ? "0 0 12px rgba(255,220,100,0.15), inset 0 1px 3px rgba(0,0,0,0.4)"
           : "0 0 8px rgba(255,180,0,0.1), inset 0 1px 3px rgba(0,0,0,0.1)",
@@ -48,7 +48,7 @@ export function DarkModeToggle({ className = "" }: { className?: string }) {
         className="absolute top-0.5 w-6 h-6 rounded-full flex items-center justify-center text-sm transition-all duration-500"
         style={{
           left: isDark ? "calc(100% - 1.75rem)" : "2px",
-          backgroundColor: isDark ? "#2C1A0E" : "#fff",
+          backgroundColor: isDark ? "var(--bg-card)" : "var(--bg)",
           boxShadow: isDark
             ? "0 2px 8px rgba(0,0,0,0.5), 0 0 6px rgba(255,200,50,0.2)"
             : "0 2px 6px rgba(0,0,0,0.15)",

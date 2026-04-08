@@ -59,17 +59,17 @@ export default function ComingSoonPage() {
       {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full opacity-20"
-          style={{ background: "radial-gradient(circle, #C4532A 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, var(--momento-terra) 0%, transparent 70%)" }} />
         <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, #C4532A 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, var(--momento-terra) 0%, transparent 70%)" }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5"
-          style={{ background: "radial-gradient(circle, #C4532A 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, var(--momento-terra) 0%, transparent 70%)" }} />
       </div>
 
       <div className="relative z-10 text-center max-w-lg w-full">
 
         {/* Logo */}
-        <p className="text-xs font-semibold tracking-[0.4em] uppercase mb-8" style={{ color: "#C4532A" }}>
+        <p className="text-xs font-semibold tracking-[0.4em] uppercase mb-8" style={{ color: "var(--momento-terra)" }}>
           ✦ Momento ✦
         </p>
 
@@ -87,7 +87,7 @@ export default function ComingSoonPage() {
 
         <div className="flex items-center justify-center gap-4 mb-8">
           <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: "#DDD4BC" }} />
-          <span style={{ color: "#C4532A" }}>✦</span>
+          <span style={{ color: "var(--momento-terra)" }}>✦</span>
           <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: "#DDD4BC" }} />
         </div>
 
@@ -138,21 +138,21 @@ export default function ComingSoonPage() {
               className="flex-1 px-4 py-3 rounded-xl text-sm outline-none"
               style={{
                 backgroundColor: "#F5EDD6",
-                border: `1.5px solid ${error ? "#C4532A" : "#DDD4BC"}`,
+                border: `1.5px solid ${error ? "var(--momento-terra)" : "#DDD4BC"}`,
                 color: "#1A1208",
               }}
             />
             <button
               onClick={handleUnlock}
               className="px-5 py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90"
-              style={{ backgroundColor: "#C4532A", color: "#fff" }}
+              style={{ backgroundColor: "var(--momento-terra)", color: "#fff" }}
             >
               →
             </button>
           </div>
 
           {error && (
-            <p className="text-xs mt-2" style={{ color: "#C4532A" }}>
+            <p className="text-xs mt-2" style={{ color: "var(--momento-terra)" }}>
               Code incorrect. Réessayez.
             </p>
           )}

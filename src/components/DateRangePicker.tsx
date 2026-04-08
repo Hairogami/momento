@@ -78,13 +78,13 @@ function CalMonth({ year, month, startDate, endDate, hoverDate, onPick, onHover,
           let stripBg = "transparent"
           let stripBorderRadius = "0"
           if (start && (endDate || (hoverDate && hoverDate > date))) {
-            stripBg = `${C.terra}1A`
+            stripBg = "rgba(var(--momento-terra-rgb),0.1)"
             stripBorderRadius = "50% 0 0 50%"
           } else if (end && startDate) {
-            stripBg = `${C.terra}1A`
+            stripBg = "rgba(var(--momento-terra-rgb),0.1)"
             stripBorderRadius = "0 50% 50% 0"
           } else if (range) {
-            stripBg = `${C.terra}1A`
+            stripBg = "rgba(var(--momento-terra-rgb),0.1)"
             stripBorderRadius = "0"
           }
 
@@ -99,7 +99,7 @@ function CalMonth({ year, month, startDate, endDate, hoverDate, onPick, onHover,
                 className="relative z-10 w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium"
                 style={{
                   backgroundColor: isSelected ? C.terra : "transparent",
-                  color: isSelected ? "#fff" : disabled ? C.anthracite : C.white,
+                  color: isSelected ? "var(--bg)" : disabled ? C.steel : C.white,
                   cursor: disabled ? "not-allowed" : "pointer",
                   fontWeight: isSelected || isToday ? "700" : "400",
                   outline: isToday && !isSelected ? `2px solid ${C.terra}` : "none",
@@ -168,7 +168,7 @@ export default function DateRangePicker({ startDate, endDate, onSelect, onClear,
   return (
     <div
       style={{
-        backgroundColor: "#fff",
+        backgroundColor: C.dark,
         border: `1px solid ${C.anthracite}`,
         borderRadius: 20,
         boxShadow: "0 16px 56px rgba(0,0,0,0.18)",
@@ -186,7 +186,7 @@ export default function DateRangePicker({ startDate, endDate, onSelect, onClear,
             <span className="text-sm font-bold px-4 py-1.5 rounded-xl"
               style={{
                 backgroundColor: startDate ? C.terra : C.anthracite,
-                color: startDate ? "#fff" : C.steel,
+                color: startDate ? "var(--bg)" : C.steel,
               }}>
               {startDate ? formatDate(startDate) : "—"}
             </span>
@@ -198,7 +198,7 @@ export default function DateRangePicker({ startDate, endDate, onSelect, onClear,
             <span className="text-sm font-bold px-4 py-1.5 rounded-xl"
               style={{
                 backgroundColor: endDate ? C.terra : C.anthracite,
-                color: endDate ? "#fff" : C.steel,
+                color: endDate ? "var(--bg)" : C.steel,
               }}>
               {endDate ? formatDate(endDate) : "—"}
             </span>
@@ -273,7 +273,7 @@ export default function DateRangePicker({ startDate, endDate, onSelect, onClear,
             <button
               onClick={onApply}
               className="text-sm font-bold px-5 py-2 rounded-xl transition hover:opacity-90"
-              style={{ backgroundColor: C.terra, color: "#fff" }}
+              style={{ backgroundColor: C.terra, color: "var(--bg)" }}
             >
               {endDate ? "Confirmer" : "Date unique"}
             </button>

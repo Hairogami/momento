@@ -95,7 +95,7 @@ export default function AccountTab() {
         <PasswordField label="Confirmer le nouveau mot de passe" id="conf-pw" value={confirmPw} onChange={setConfirmPw} />
 
         {pwError && (
-          <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(196,83,42,0.1)", color: C.terra }}>{pwError}</p>
+          <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.1)", color: C.terra }}>{pwError}</p>
         )}
         {pwSuccess && (
           <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(44,180,100,0.12)", color: "#2c8c52" }}>✓ Mot de passe modifié.</p>
@@ -112,7 +112,7 @@ export default function AccountTab() {
       </div>
 
       {/* Danger zone */}
-      <div className="rounded-2xl p-6 sm:p-8 flex flex-col gap-4" style={{ backgroundColor: C.dark, border: `1.5px solid rgba(196,83,42,0.3)` }}>
+      <div className="rounded-2xl p-6 sm:p-8 flex flex-col gap-4" style={{ backgroundColor: C.dark, border: `1.5px solid rgba(var(--momento-terra-rgb),0.3)` }}>
         <h2 className="text-base font-bold" style={{ color: C.terra }}>Zone de danger</h2>
         <p className="text-sm" style={{ color: C.mist }}>
           La suppression de votre compte est irréversible. Toutes vos données seront définitivement effacées.
@@ -127,7 +127,7 @@ export default function AccountTab() {
             Supprimer mon compte
           </button>
         ) : (
-          <div className="rounded-xl p-5" style={{ backgroundColor: "rgba(196,83,42,0.08)", border: `1px solid rgba(196,83,42,0.2)` }}>
+          <div className="rounded-xl p-5" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.08)", border: `1px solid rgba(var(--momento-terra-rgb),0.2)` }}>
             <p className="text-sm font-semibold mb-4" style={{ color: C.white }}>
               Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.
             </p>

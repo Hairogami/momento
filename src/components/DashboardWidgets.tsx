@@ -191,7 +191,7 @@ function BudgetWidget({ data }: { data: DashboardData }) {
           className="h-full rounded-full transition-all"
           style={{
             width: `${pct}%`,
-            backgroundColor: pct > 90 ? C.terra : "#C4532A99",
+            backgroundColor: pct > 90 ? C.terra : "rgba(var(--momento-terra-rgb),0.6)",
           }}
         />
       </div>

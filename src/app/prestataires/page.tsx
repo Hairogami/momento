@@ -68,7 +68,7 @@ export default function PrestatairesPage() {
           </p>
           <Link href="/prestataire"
             className="inline-flex items-center gap-2 font-bold text-base px-10 py-4 rounded-2xl transition-all hover:opacity-90 hover:-translate-y-0.5"
-            style={{ backgroundColor: C.terra, color: "#fff", boxShadow: "0 8px 40px rgba(196,83,42,0.25)" }}>
+            style={{ backgroundColor: C.terra, color: "#fff", boxShadow: "0 8px 40px rgba(var(--momento-terra-rgb),0.25)" }}>
             Créer mon profil prestataire <ArrowRight size={17} />
           </Link>
         </div>

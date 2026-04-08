@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
   Users,
   Wallet,
   Store,
@@ -14,13 +13,14 @@ import {
   Bell,
   ChevronRight,
   User,
+  Sparkles,
 } from "lucide-react";
 import { C } from "@/lib/colors"
 import { DarkModeToggle } from "@/components/DarkModeToggle"
 import { MomentoLogo } from "@/components/MomentoLogo"
 
 const NAV = [
-  { href: "/dashboard",     label: "Accueil",        icon: LayoutDashboard },
+  { href: "/dashboard",     label: "Mes Événements", icon: Sparkles },
   { href: "/prestataires",  label: "Prestataires",   icon: Store },
   { href: "/planner",       label: "Planning",        icon: CalendarDays },
   { href: "/budget",        label: "Budget",          icon: Wallet },

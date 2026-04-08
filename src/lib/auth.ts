@@ -31,6 +31,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       Google({
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        allowDangerousEmailAccountLinking: true,
+        authorization: {
+          params: {
+            scope: "openid email profile https://www.googleapis.com/auth/calendar.readonly",
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
       }),
     ] : []),
     ...(process.env.FACEBOOK_CLIENT_ID ? [
@@ -76,6 +84,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: { signIn: "/login" },
   callbacks: {
     async jwt({ token, user, account }) {
+      if (account) {
+        token.provider = account.provider
+        if (account.access_token) token.accessToken = account.access_token
+        if (account.refresh_token) token.refreshToken = account.refresh_token
+      }
       if (user) {
         token.id = user.id;
         // OAuth → toujours 30 jours
@@ -103,7 +116,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
-        (session.user as { id: string; role?: string }).role = token.role as string | undefined;
+        (session.user as { id: string; role?: string; provider?: string }).role = token.role as string | undefined;
+        (session.user as { id: string; role?: string; provider?: string; accessToken?: string }).provider = token.provider as string | undefined;
+        (session.user as { id: string; role?: string; provider?: string; accessToken?: string }).accessToken = token.accessToken as string | undefined;
       }
       return session;
     },

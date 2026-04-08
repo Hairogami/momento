@@ -106,7 +106,7 @@ export default function ForgotPasswordPage() {
                 {error && (
                   <p
                     className="text-sm px-4 py-3 rounded-xl"
-                    style={{ backgroundColor: "rgba(196,83,42,0.1)", color: C.terra }}
+                    style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.1)", color: C.terra }}
                   >
                     {error}
                   </p>
@@ -138,7 +138,7 @@ export default function ForgotPasswordPage() {
             <div className="text-center py-4">
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
-                style={{ backgroundColor: "rgba(196,83,42,0.12)" }}
+                style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.12)" }}
               >
                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                   <path d="M5 14L11 20L23 8" stroke={C.terra} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />

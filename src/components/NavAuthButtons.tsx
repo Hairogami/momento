@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Menu } from "lucide-react"
+import { signOut } from "next-auth/react"
+import { Menu, LayoutDashboard, Heart, User, Settings, Briefcase, HelpCircle, Bell, MessageSquare, LogOut, CalendarDays, Users } from "lucide-react"
 import { useSessionUser } from "@/components/SessionProvider"
 import { useState, useEffect, useRef } from "react"
 import { ThemeToggle } from "@/components/ThemeProvider"
@@ -16,17 +17,19 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
   const [avatar, setAvatar] = useState<string | null>(null)
   const ref = useRef<HTMLDivElement>(null)
 
+  const isOAuth = user?.provider && user.provider !== "credentials"
+
   useEffect(() => {
-    const stored = localStorage.getItem("momento_avatar")
-    if (stored) {
-      setAvatar(stored)
-    } else if (user?.image) {
-      // Seed from OAuth provider image (Discord/GitHub/Google)
+    if (!user) return
+    if (isOAuth && user.image) {
       setAvatar(user.image)
       localStorage.setItem("momento_avatar", user.image)
+    } else if (!isOAuth) {
+      const stored = localStorage.getItem("momento_avatar")
+      setAvatar(stored ?? null)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.image])
+  }, [user?.image, user?.provider])
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -38,28 +41,52 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
 
   async function handleLogout() {
     setOpen(false)
-    await fetch("/api/auth/logout", { method: "POST" })
-    router.push("/")
-    router.refresh()
+    await signOut({ redirectTo: "/" })
   }
 
   if (user) {
-    const displayName = user.username ?? user.firstName ?? user.email.split("@")[0]
+    const displayName = user.name ?? user.username ?? user.firstName ?? user.email.split("@")[0]
     const initials = displayName[0].toUpperCase()
+
+    const AvatarEl = () => avatar ? (
+      <img src={avatar} alt={initials} className="w-8 h-8 rounded-full object-cover" />
+    ) : (
+      <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+        style={{ backgroundColor: C.terra, color: "var(--bg)" }}>
+        {initials}
+      </span>
+    )
 
     if (mobile) {
       return (
         <div className="flex flex-col gap-2 pt-1">
-          <Link href="/dashboard" onClick={() => setOpen(false)}
-            className="text-sm font-medium py-2.5 px-4 rounded-xl"
-            style={{ backgroundColor: C.anthracite, color: C.white }}>
-            Mes projets
-          </Link>
-          <Link href="/favorites" onClick={() => setOpen(false)}
-            className="text-sm font-medium py-2.5 px-4 rounded-xl"
-            style={{ backgroundColor: C.anthracite, color: C.white }}>
-            Mes favoris
-          </Link>
+          {/* User header */}
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ backgroundColor: C.anthracite }}>
+            <AvatarEl />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold truncate" style={{ color: C.white }}>{displayName}</p>
+              <p className="text-xs truncate" style={{ color: C.mist }}>{user.email}</p>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          {[
+            { href: "/dashboard",        label: "Tableau de bord" },
+            { href: "/dashboard/vendors", label: "Mes prestataires" },
+            { href: "/dashboard/budget",  label: "Mon budget" },
+            { href: "/dashboard/guests",  label: "Mes invités" },
+            { href: "/favorites",         label: "Mes favoris" },
+            { href: "/messages",          label: "Messages" },
+            { href: "/notifications",     label: "Notifications" },
+          ].map(({ href, label }) => (
+            <Link key={href} href={href} onClick={() => setOpen(false)}
+              className="text-sm font-medium py-2.5 px-4 rounded-xl"
+              style={{ backgroundColor: C.anthracite, color: C.white }}>
+              {label}
+            </Link>
+          ))}
+
+          {/* Profile & settings */}
           <Link href="/profile" onClick={() => setOpen(false)}
             className="text-sm font-medium py-2.5 px-4 rounded-xl"
             style={{ backgroundColor: C.anthracite, color: C.white }}>
@@ -70,15 +97,22 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
             style={{ backgroundColor: C.anthracite, color: C.white }}>
             Paramètres
           </Link>
+
+          {/* Theme */}
+          <div className="rounded-xl px-4 py-3" style={{ backgroundColor: C.anthracite }}>
+            <PaletteSelector />
+          </div>
+          <div className="flex items-center justify-between px-4 py-2.5 rounded-xl" style={{ backgroundColor: C.anthracite }}>
+            <span className="text-sm font-medium" style={{ color: C.white }}>Mode sombre</span>
+            <ThemeToggle />
+          </div>
+
+          {/* Partner & logout */}
           <Link href="/prestataire/dashboard" onClick={() => setOpen(false)}
             className="text-sm font-medium py-2.5 px-4 rounded-xl"
             style={{ backgroundColor: C.anthracite, color: C.terra }}>
             Espace partenaire
           </Link>
-          <div className="flex items-center justify-between px-4 py-2.5 rounded-xl" style={{ backgroundColor: C.anthracite }}>
-            <span className="text-sm font-medium" style={{ color: C.white }}>Mode sombre</span>
-            <ThemeToggle />
-          </div>
           <button onClick={handleLogout}
             className="text-sm font-medium py-2.5 px-4 rounded-xl text-left"
             style={{ backgroundColor: C.anthracite, color: C.terra }}>
@@ -90,16 +124,14 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
 
     return (
       <div className="flex items-center gap-3">
-        {/* Mes projets */}
-        <Link
-          href="/dashboard"
-          className="hidden sm:block text-sm font-semibold px-3 py-2 rounded-lg transition-all hover:opacity-70"
-          style={{ color: C.white }}
-        >
-          Mes projets
+        {/* Mes Événements — même style que "Créer un événement" guest */}
+        <Link href="/dashboard"
+          className="hidden sm:block text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90"
+          style={{ backgroundColor: C.terra, color: "var(--bg)" }}>
+          Mes Événements
         </Link>
 
-        {/* Airbnb-style pill — border, shadow on hover */}
+        {/* Pill avatar */}
         <div className="relative" ref={ref}>
           <button
             onClick={() => setOpen(o => !o)}
@@ -114,83 +146,106 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
             onMouseLeave={e => { if (!open) e.currentTarget.style.boxShadow = "none" }}
           >
             <Menu size={16} strokeWidth={2.5} />
-            {avatar ? (
-              <img
-                src={avatar}
-                alt={initials}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            ) : (
-              <span
-                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-                style={{ backgroundColor: "#717171", color: "#fff" }}
-              >
-                {initials}
-              </span>
-            )}
+            <AvatarEl />
           </button>
 
           {open && (
             <div
               className="absolute right-0 top-full mt-2 z-50 rounded-2xl overflow-hidden shadow-xl"
-              style={{
-                backgroundColor: C.ink,
-                border: `1px solid ${C.anthracite}`,
-                minWidth: 220,
-              }}
+              style={{ backgroundColor: C.ink, border: `1px solid ${C.anthracite}`, minWidth: 240 }}
             >
-              {/* Top section — high-traffic */}
-              <Link href="/messages" onClick={() => setOpen(false)}
-                className="flex items-center justify-between px-4 py-3.5 text-sm font-semibold hover:bg-black/5 transition-colors"
+              {/* User header */}
+              <div className="flex items-center gap-3 px-4 py-3.5" style={{ borderBottom: `1px solid ${C.anthracite}` }}>
+                <AvatarEl />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold truncate" style={{ color: C.white }}>{displayName}</p>
+                  <p className="text-xs truncate" style={{ color: C.mist }}>{user.email}</p>
+                </div>
+              </div>
+
+              {/* Dashboard */}
+              <Link href="/dashboard" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-sm font-semibold hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
-                Messages
+                <LayoutDashboard size={15} /> Tableau de bord
+              </Link>
+              <Link href="/dashboard/vendors" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
+                style={{ color: C.white }}>
+                <Briefcase size={15} /> Mes prestataires
+              </Link>
+              <Link href="/dashboard/budget" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
+                style={{ color: C.white }}>
+                <CalendarDays size={15} /> Mon budget
+              </Link>
+              <Link href="/dashboard/guests" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
+                style={{ color: C.white }}>
+                <Users size={15} /> Mes invités
+              </Link>
+
+              <div style={{ height: 1, backgroundColor: C.anthracite, margin: "4px 0" }} />
+
+              {/* Social */}
+              <Link href="/messages" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
+                style={{ color: C.white }}>
+                <MessageSquare size={15} /> Messages
               </Link>
               <Link href="/notifications" onClick={() => setOpen(false)}
-                className="flex items-center px-4 py-3.5 text-sm font-semibold hover:bg-black/5 transition-colors"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
-                Notifications
+                <Bell size={15} /> Notifications
+              </Link>
+              <Link href="/favorites" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
+                style={{ color: C.white }}>
+                <Heart size={15} /> Mes favoris
               </Link>
 
               <div style={{ height: 1, backgroundColor: C.anthracite, margin: "4px 0" }} />
 
-              {/* Mid section — account */}
-              <Link href="/favorites" onClick={() => setOpen(false)}
-                className="flex items-center px-4 py-3 text-sm hover:bg-black/5 transition-colors"
-                style={{ color: C.white }}>
-                Mes favoris
-              </Link>
+              {/* Account */}
               <Link href="/profile" onClick={() => setOpen(false)}
-                className="flex items-center px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
-                Mon profil
+                <User size={15} /> Mon profil
               </Link>
               <Link href="/profile?tab=compte" onClick={() => setOpen(false)}
-                className="flex items-center px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
-                Paramètres
+                <Settings size={15} /> Paramètres
               </Link>
 
               <div style={{ height: 1, backgroundColor: C.anthracite, margin: "4px 0" }} />
 
-              {/* Bottom section */}
-              <Link href="/prestataire/dashboard" onClick={() => setOpen(false)}
-                className="flex items-center px-4 py-3 text-sm font-semibold hover:bg-black/5 transition-colors"
-                style={{ color: C.terra }}>
-                Espace partenaire
-              </Link>
-              <Link href="/help" onClick={() => setOpen(false)}
-                className="flex items-center px-4 py-3 text-sm hover:bg-black/5 transition-colors"
-                style={{ color: C.white }}>
-                Aide
-              </Link>
-              <div className="flex items-center justify-between px-4 py-3 text-sm hover:bg-black/5 transition-colors">
+              {/* Appearance */}
+              <div className="px-4 py-3">
+                <PaletteSelector />
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 text-sm hover:bg-black/5 transition-colors">
                 <span style={{ color: C.white }}>Mode sombre</span>
                 <ThemeToggle />
               </div>
-              <button onClick={handleLogout}
-                className="w-full flex items-center px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+
+              <div style={{ height: 1, backgroundColor: C.anthracite, margin: "4px 0" }} />
+
+              {/* Partner + help */}
+              <Link href="/prestataire/dashboard" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold hover:bg-black/5 transition-colors"
                 style={{ color: C.terra }}>
-                Déconnexion
+                <Briefcase size={15} /> Espace partenaire
+              </Link>
+              <Link href="/help" onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
+                style={{ color: C.white }}>
+                <HelpCircle size={15} /> Aide
+              </Link>
+              <button onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                style={{ color: C.terra }}>
+                <LogOut size={15} /> Déconnexion
               </button>
             </div>
           )}
@@ -199,7 +254,6 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
     )
   }
 
-  // Not logged in — hamburger menu accessible à tous
   return <GuestMenu mobile={mobile} />
 }
 
@@ -241,7 +295,7 @@ function GuestMenu({ mobile = false }: { mobile?: boolean }) {
           <Link href="/login" className="flex-1 text-sm font-medium text-center py-2.5 rounded-xl" style={{ backgroundColor: C.anthracite, color: C.white }}>
             Connexion
           </Link>
-          <Link href="/event/new" className="flex-1 text-sm font-bold text-center py-2.5 rounded-xl" style={{ backgroundColor: C.terra, color: "#fff" }}>
+          <Link href="/event/new" className="flex-1 text-sm font-bold text-center py-2.5 rounded-xl" style={{ backgroundColor: C.terra, color: "var(--bg)" }}>
             Commencer →
           </Link>
         </div>
@@ -258,11 +312,10 @@ function GuestMenu({ mobile = false }: { mobile?: boolean }) {
       </Link>
       <Link href="/event/new"
         className="text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90"
-        style={{ backgroundColor: C.terra, color: "#fff" }}>
+        style={{ backgroundColor: C.terra, color: "var(--bg)" }}>
         Créer un événement
       </Link>
 
-      {/* Hamburger menu — visible même sans compte */}
       <div className="relative" ref={ref}>
         <button
           onClick={() => setOpen(o => !o)}
@@ -307,7 +360,6 @@ function GuestMenu({ mobile = false }: { mobile?: boolean }) {
 
             <div style={{ height: 1, backgroundColor: C.anthracite, margin: "4px 0" }} />
 
-            {/* Palette + dark mode */}
             <div className="px-4 py-3">
               <PaletteSelector />
             </div>

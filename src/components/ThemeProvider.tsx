@@ -45,12 +45,12 @@ function applyTheme(theme: Theme, palette: Palette) {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light")
+  const [theme, setTheme] = useState<Theme>("dark")
   const [palette, setPaletteState] = useState<Palette>("creme")
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const savedTheme = (localStorage.getItem("momento_theme") as Theme) ?? "light"
+    const savedTheme = (localStorage.getItem("momento_theme") as Theme) ?? "dark"
     const savedPalette = (localStorage.getItem("momento_palette") as Palette) ?? "creme"
     setTheme(savedTheme)
     setPaletteState(savedPalette)

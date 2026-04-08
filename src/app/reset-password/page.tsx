@@ -51,7 +51,7 @@ function ResetForm() {
         <div className="w-full max-w-md rounded-3xl p-8 sm:p-10" style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}`, boxShadow: "0 8px 48px rgba(26,18,8,0.08)" }}>
           {done ? (
             <div className="text-center py-4">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "rgba(196,83,42,0.12)" }}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.12)" }}>
                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14L11 20L23 8" stroke={C.terra} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </div>
               <h2 className="font-display italic text-3xl font-normal mb-3" style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif", color: C.accent }}>
@@ -88,7 +88,7 @@ function ResetForm() {
                 ))}
 
                 {error && (
-                  <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(196,83,42,0.1)", color: C.terra }}>
+                  <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.1)", color: C.terra }}>
                     {error}
                   </p>
                 )}

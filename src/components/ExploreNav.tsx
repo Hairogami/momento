@@ -6,6 +6,7 @@ import { Search, MapPin, ChevronDown, SlidersHorizontal, X } from "lucide-react"
 import NavAuthButtons from "./NavAuthButtons"
 import { DarkModeToggle } from "./DarkModeToggle"
 import { C } from "@/lib/colors"
+import { useTheme } from "@/components/ThemeProvider"
 
 const FILTER_CATS = [
   { slug: "musique-dj",     icon: "🎧", label: "Musique & DJ" },
@@ -65,6 +66,8 @@ export default function ExploreNav({
   totalCount?: number
   categoryCounts?: Record<string, number>
 }) {
+  const { theme } = useTheme()
+  const isDark = theme === "dark"
   const [showFilterPanel, setShowFilterPanel] = useState(false)
 
   const filtersActive = activeCity !== "Toutes les villes" || photoFilter !== "all"
@@ -91,7 +94,7 @@ export default function ExploreNav({
           className="flex items-center rounded-full overflow-hidden"
           style={{
             backgroundColor: C.ink,
-            border: "1px solid #ddd",
+            border: `1px solid ${C.anthracite}`,
             boxShadow: "rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.1) 0px 8px 24px 0px",
             height: 66,
             width: "100%",
@@ -101,7 +104,7 @@ export default function ExploreNav({
           {/* Section 1 — Prestataire */}
           <label
             className="flex-1 flex flex-col justify-center px-6 cursor-text h-full"
-            style={{ borderRight: "1px solid #ddd" }}
+            style={{ borderRight: `1px solid ${C.anthracite}` }}
           >
             <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>
               Prestataire
@@ -120,7 +123,7 @@ export default function ExploreNav({
           {onDateChange && (
             <label
               className="hidden sm:flex flex-col justify-center px-6 cursor-pointer h-full"
-              style={{ borderRight: "1px solid #ddd" }}
+              style={{ borderRight: `1px solid ${C.anthracite}` }}
             >
               <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Date</span>
               <input
@@ -128,7 +131,7 @@ export default function ExploreNav({
                 value={activeDate}
                 onChange={e => onDateChange(e.target.value)}
                 className="bg-transparent outline-none cursor-pointer leading-none"
-                style={{ color: activeDate ? C.white : C.steel, fontSize: 14, colorScheme: "light" }}
+                style={{ color: activeDate ? C.white : C.steel, fontSize: 14, colorScheme: isDark ? "dark" : "light" }}
               />
             </label>
           )}
@@ -137,7 +140,7 @@ export default function ExploreNav({
           <button
             onClick={() => setShowFilterPanel(f => !f)}
             className="hidden sm:flex flex-col justify-center px-6 h-full text-left transition-colors"
-            style={{ borderRight: "1px solid #ddd", backgroundColor: showFilterPanel ? C.dark : "transparent" }}
+            style={{ borderRight: `1px solid ${C.anthracite}`, backgroundColor: showFilterPanel ? C.dark : "transparent" }}
           >
             <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Filtres</span>
             <span className="leading-none" style={{ color: filtersActive ? C.white : C.steel, fontSize: 14 }}>

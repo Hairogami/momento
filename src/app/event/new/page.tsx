@@ -45,25 +45,25 @@ export default function NewEventPage() {
     setForm(f => ({ ...f, [field]: value }))
   }
 
-  function handleSubmit() {
-    // Sauvegarde l'événement en localStorage
-    const event = {
-      id: Date.now().toString(),
-      type: form.type,
-      name: form.name || `Mon ${form.type}`,
-      date: form.date,
-      guestCount: form.guestCount,
-      budget: form.budget,
-      location: form.location,
-      createdAt: new Date().toISOString(),
+  async function handleSubmit() {
+    const payload: Record<string, unknown> = {
+      eventName: form.name || `Mon ${form.type}`,
     }
-    // Ajoute aux événements existants
-    const existing = JSON.parse(localStorage.getItem(`momento_events${keySuffix}`) ?? "[]")
-    existing.unshift(event)
-    localStorage.setItem(`momento_events${keySuffix}`, JSON.stringify(existing))
-    localStorage.setItem(`momento_current_event${keySuffix}`, JSON.stringify(event))
-    // Redirige vers la marketplace avec le contexte
-    router.push(`/explore?event=${encodeURIComponent(form.type)}`)
+    if (form.date) payload.eventDate = form.date
+    if (form.guestCount) payload.guestCount = parseInt(form.guestCount)
+    if (form.budget) payload.budget = parseFloat(form.budget)
+    if (form.location) payload.location = form.location
+
+    try {
+      await fetch("/api/workspace", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+    } catch {
+      // continue even if save fails
+    }
+    router.push("/dashboard")
   }
 
   const canGoStep2 = !!form.type

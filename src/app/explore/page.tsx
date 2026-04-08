@@ -224,7 +224,7 @@ function VendorCard({
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} className="group transition-transform duration-200 hover:-translate-y-0.5">
 
       {/* ── Image ── */}
-      <div className="relative aspect-square rounded-2xl overflow-hidden mb-3 ring-2 ring-transparent group-hover:ring-[#C4532A] transition-all duration-200">
+      <div className="relative aspect-square rounded-2xl overflow-hidden mb-3 ring-2 ring-transparent group-hover:ring-[var(--momento-terra)] transition-all duration-200">
         <Link href={`/vendor/${v.id}`} className="block w-full h-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

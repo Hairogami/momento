@@ -33,7 +33,6 @@ export default function AirbnbSearchBar() {
   const [endDate, setEndDate] = useState<Date | null>(null)
   const barRef = useRef<HTMLDivElement>(null)
 
-  // Ferme le panel au clic extérieur
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (barRef.current && !barRef.current.contains(e.target as Node)) setActive(null)
@@ -63,154 +62,142 @@ export default function AirbnbSearchBar() {
 
   const catLabel = category ? FILTER_CATS.find(f => f.slug === category)?.label ?? "" : ""
 
-  // Compute per-field visual state
   function fieldStyle(field: ActiveField) {
-    const isActive = active === field
+    const isActive  = active === field
     const isHovered = !active && hover === field
-    const isDimmed = !!active && active !== field
+    const isDimmed  = !!active && active !== field
 
     return {
       backgroundColor: isActive
-        ? "#ffffff"
+        ? "var(--bg)"
         : isHovered
-        ? "#f2ece0"
-        : isDimmed
-        ? "#f5efe3"
-        : "#ffffff",
-      opacity: isDimmed ? 0.72 : 1,
-      transform: isActive ? "scale(1.04)" : isDimmed ? "scale(0.98)" : "scale(1)",
-      boxShadow: isActive
-        ? "0 6px 28px rgba(0,0,0,0.18), 0 0 0 2px #C4532A"
-        : isHovered
-        ? "0 2px 12px rgba(0,0,0,0.10)"
-        : "none",
-      borderRadius: isActive ? "16px" : "0px",
-      zIndex: isActive ? 10 : 1,
+        ? "var(--bg)"
+        : "var(--bg-card)",
+      opacity: isDimmed ? 0.6 : 1,
       transition: "all 0.2s cubic-bezier(0.25,0.46,0.45,0.94)",
+      outline: isActive ? `1.5px solid ${C.terra}` : "none",
+      outlineOffset: "-1px",
     }
   }
 
   return (
     <div ref={barRef} className="relative w-full max-w-3xl mx-auto mt-8">
-      {/* Barre principale */}
+
+      {/* ── Barre principale ── */}
       <div
-        className="flex items-stretch rounded-2xl overflow-visible"
+        className="flex items-stretch"
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: "var(--bg-card)",
+          border: `0.5px solid ${active ? C.terra : "var(--border)"}`,
           boxShadow: active
-            ? "0 12px 48px rgba(0,0,0,0.18)"
-            : hover
-            ? "0 4px 24px rgba(0,0,0,0.13)"
-            : "0 2px 16px rgba(0,0,0,0.09)",
-          border: "1px solid #e0d8c8",
-          transition: "box-shadow 0.2s ease",
+            ? `0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(var(--momento-terra-rgb),0.13)`
+            : "0 4px 24px rgba(0,0,0,0.3)",
+          transition: "border-color 0.2s, box-shadow 0.2s",
         }}
       >
         {/* Champ Ville */}
         <button
-          className="flex-1 flex flex-col items-start px-5 py-3.5 rounded-l-2xl text-left relative"
+          className="flex-1 flex flex-col items-start px-5 py-4 text-left"
           style={fieldStyle("ville")}
           onClick={() => setActive(a => a === "ville" ? null : "ville")}
           onMouseEnter={() => setHover("ville")}
           onMouseLeave={() => setHover(null)}
         >
-          <span className="text-xs font-bold" style={{ color: C.white }}>Où</span>
-          <span className="text-sm" style={{ color: ville ? C.white : C.steel }}>
-            {ville || "Rechercher une ville"}
+          <span className="text-xs font-semibold tracking-widest uppercase mb-0.5"
+            style={{ color: C.steel, letterSpacing: "0.18em" }}>Où</span>
+          <span className="text-sm" style={{ color: ville ? C.white : C.mist }}>
+            {ville || "Ville"}
           </span>
         </button>
 
-        <div style={{
-          width: 1,
-          backgroundColor: active || hover ? "transparent" : "#e0d8c8",
-          alignSelf: "stretch",
-          margin: "8px 0",
-          transition: "background-color 0.2s ease",
-        }} />
+        <div style={{ width: "0.5px", backgroundColor: "var(--border)", alignSelf: "stretch", margin: "8px 0" }} />
 
         {/* Champ Date */}
         <button
-          className="flex-1 flex flex-col items-start px-5 py-3.5 text-left"
+          className="flex-1 flex flex-col items-start px-5 py-4 text-left"
           style={fieldStyle("date")}
           onClick={() => setActive(a => a === "date" ? null : "date")}
           onMouseEnter={() => setHover("date")}
           onMouseLeave={() => setHover(null)}
         >
-          <span className="text-xs font-bold" style={{ color: C.white }}>Quand</span>
-          <span className="text-sm" style={{ color: dateLabel ? C.white : C.steel }}>
-            {dateLabel || "Ajouter des dates"}
+          <span className="text-xs font-semibold tracking-widest uppercase mb-0.5"
+            style={{ color: C.steel, letterSpacing: "0.18em" }}>Quand</span>
+          <span className="text-sm" style={{ color: dateLabel ? C.white : C.mist }}>
+            {dateLabel || "Date"}
           </span>
         </button>
 
-        <div style={{
-          width: 1,
-          backgroundColor: active || hover ? "transparent" : "#e0d8c8",
-          alignSelf: "stretch",
-          margin: "8px 0",
-          transition: "background-color 0.2s ease",
-        }} />
+        <div style={{ width: "0.5px", backgroundColor: "var(--border)", alignSelf: "stretch", margin: "8px 0" }} />
 
         {/* Champ Filtres */}
         <button
-          className="flex-1 flex flex-col items-start px-5 py-3.5 text-left"
+          className="flex-1 flex flex-col items-start px-5 py-4 text-left"
           style={fieldStyle("filtres")}
           onClick={() => setActive(a => a === "filtres" ? null : "filtres")}
           onMouseEnter={() => setHover("filtres")}
           onMouseLeave={() => setHover(null)}
         >
-          <span className="text-xs font-bold" style={{ color: C.white }}>Filtres</span>
-          <span className="text-sm" style={{ color: catLabel ? C.white : C.steel }}>
+          <span className="text-xs font-semibold tracking-widest uppercase mb-0.5"
+            style={{ color: C.steel, letterSpacing: "0.18em" }}>Filtres</span>
+          <span className="text-sm" style={{ color: catLabel ? C.white : C.mist }}>
             {catLabel || "Catégorie"}
           </span>
         </button>
 
         {/* Bouton recherche */}
-        <div className="flex items-center pr-2 pl-1">
-          <button
-            onClick={handleSearch}
-            className="flex items-center gap-2 font-bold text-sm px-5 py-3 rounded-xl"
-            style={{
-              backgroundColor: C.terra,
-              color: "#fff",
-              transition: "transform 0.15s ease, opacity 0.15s ease",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
-            onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <Search size={16} />
-            <span className="hidden sm:inline">Rechercher</span>
-          </button>
-        </div>
+        <button
+          onClick={handleSearch}
+          className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-5 py-4 transition-opacity hover:opacity-85"
+          style={{
+            backgroundColor: C.terra,
+            color: "var(--bg)",
+            letterSpacing: "0.16em",
+            flexShrink: 0,
+          }}
+        >
+          <Search size={15} />
+          <span className="hidden sm:inline">Rechercher</span>
+        </button>
       </div>
 
-      {/* Panel Ville */}
+      {/* ── Panel Ville ── */}
       {active === "ville" && (
         <div
-          className="absolute top-full left-0 mt-3 rounded-2xl p-4 z-50 w-72 max-h-72 overflow-y-auto"
-          style={{ backgroundColor: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.15)", border: "1px solid #e0d8c8" }}
+          className="absolute top-full left-0 mt-2 p-3 z-50 w-72 max-h-72 overflow-y-auto"
+          style={{
+            backgroundColor: "var(--bg-card)",
+            border: `0.5px solid var(--border)`,
+            boxShadow: "0 12px 40px rgba(0,0,0,0.4)",
+          }}
         >
-          <p className="text-xs font-bold mb-3" style={{ color: C.mist }}>VILLES POPULAIRES</p>
-          <div className="flex flex-col gap-1">
+          <p className="text-xs tracking-widest uppercase mb-3 px-2"
+            style={{ color: C.steel, letterSpacing: "0.2em" }}>
+            Villes populaires
+          </p>
+          <div className="flex flex-col">
             {CITIES.map(c => (
               <button key={c}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition hover:opacity-80"
+                className="flex items-center gap-3 px-3 py-2.5 text-sm text-left transition-colors"
                 style={{
-                  backgroundColor: ville === c ? `${C.terra}15` : "transparent",
-                  color: C.white,
-                  fontWeight: ville === c ? "700" : "400",
+                  backgroundColor: ville === c ? "rgba(var(--momento-terra-rgb),0.13)" : "transparent",
+                  color: ville === c ? C.white : C.mist,
+                  borderLeft: ville === c ? `2px solid ${C.terra}` : "2px solid transparent",
                 }}
+                onMouseEnter={e => { if (ville !== c) (e.currentTarget as HTMLButtonElement).style.backgroundColor = "var(--bg)" }}
+                onMouseLeave={e => { if (ville !== c) (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent" }}
                 onClick={() => { setVille(c); setActive("date") }}
               >
-                <span className="text-base">📍</span> {c}
+                <span className="text-sm">📍</span>
+                <span>{c}</span>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Panel Date — DateRangePicker */}
+      {/* ── Panel Date ── */}
       {active === "date" && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50">
           <DateRangePicker
             startDate={startDate}
             endDate={endDate}
@@ -225,32 +212,41 @@ export default function AirbnbSearchBar() {
         </div>
       )}
 
-      {/* Panel Filtres */}
+      {/* ── Panel Filtres ── */}
       {active === "filtres" && (
         <div
-          className="absolute top-full right-0 mt-3 rounded-2xl p-4 z-50 w-80 max-h-96 overflow-y-auto"
-          style={{ backgroundColor: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.15)", border: "1px solid #e0d8c8" }}
+          className="absolute top-full right-0 mt-2 p-4 z-50 w-80"
+          style={{
+            backgroundColor: "var(--bg-card)",
+            border: `0.5px solid var(--border)`,
+            boxShadow: "0 12px 40px rgba(0,0,0,0.4)",
+          }}
         >
-          <p className="text-xs font-bold mb-3" style={{ color: C.mist }}>CATÉGORIE DE PRESTATAIRE</p>
-          <div className="grid grid-cols-2 gap-1.5">
+          <p className="text-xs tracking-widest uppercase mb-3"
+            style={{ color: C.steel, letterSpacing: "0.2em" }}>
+            Catégorie de prestataire
+          </p>
+          <div className="grid grid-cols-2 gap-1">
             {FILTER_CATS.map(f => (
               <button key={f.slug}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-left transition"
+                className="flex items-center gap-2 px-3 py-2.5 text-sm text-left transition-colors"
                 style={{
-                  backgroundColor: category === f.slug ? `${C.terra}18` : "transparent",
-                  color: C.white,
-                  fontWeight: category === f.slug ? "700" : "400",
-                  border: category === f.slug ? `1px solid ${C.terra}40` : "1px solid transparent",
+                  backgroundColor: category === f.slug ? "rgba(var(--momento-terra-rgb),0.13)" : "transparent",
+                  color: category === f.slug ? C.white : C.mist,
+                  border: `0.5px solid ${category === f.slug ? "rgba(var(--momento-terra-rgb),0.38)" : "transparent"}`,
                 }}
+                onMouseEnter={e => { if (category !== f.slug) (e.currentTarget as HTMLButtonElement).style.backgroundColor = "var(--bg)" }}
+                onMouseLeave={e => { if (category !== f.slug) (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent" }}
                 onClick={() => setCategory(c => c === f.slug ? "" : f.slug)}
               >
-                <span>{f.icon}</span> {f.label}
+                <span>{f.icon}</span>
+                <span>{f.label}</span>
               </button>
             ))}
           </div>
           <button onClick={handleSearch}
-            className="w-full mt-4 py-3 rounded-xl text-sm font-bold transition hover:opacity-90"
-            style={{ backgroundColor: C.terra, color: "#fff" }}>
+            className="w-full mt-4 py-3 text-xs font-semibold tracking-widest uppercase transition-opacity hover:opacity-85"
+            style={{ backgroundColor: C.terra, color: "var(--bg)", letterSpacing: "0.16em" }}>
             Rechercher
           </button>
         </div>

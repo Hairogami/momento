@@ -225,7 +225,7 @@ export default function SignupPage() {
               )}
 
               {error && (
-                <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(196,83,42,0.1)", color: C.terra }}>
+                <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.1)", color: C.terra }}>
                   {error}
                 </p>
               )}

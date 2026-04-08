@@ -96,6 +96,7 @@
   --accent: #C4532A;
 
   /* Named tokens — used via lib/colors.ts */
+  --momento-terra-rgb:  196, 83, 42;
   --momento-ink:        #F5EDD6;
   --momento-terra:      #C4532A;
   --momento-white:      #1A1208;
@@ -107,6 +108,7 @@
   --momento-accent:     #2C1A0E;
 }
 .dark {
+  --momento-terra-rgb:  217, 107, 58;
   --bg: #1A1208;
   --bg-card: #2C1A0E;
   --text: #F5EDD6;
@@ -155,6 +157,7 @@
 
 /* ── Ocean palette ── */
 .palette-ocean {
+  --momento-terra-rgb:  26, 107, 173;
   --bg: #EEF4FA;
   --bg-card: #DDE9F5;
   --text: #0A1628;
@@ -183,6 +186,7 @@
   --momento-accent:     #0A1628;
 }
 .palette-ocean.dark {
+  --momento-terra-rgb:  74, 157, 224;
   --bg: #0A1628;
   --bg-card: #132240;
   --text: #EEF4FA;
@@ -212,6 +216,7 @@
 
 /* ── Forest palette ── */
 .palette-forest {
+  --momento-terra-rgb:  45, 122, 58;
   --bg: #EEF3EE;
   --bg-card: #DDE8DD;
   --text: #0E1E0E;
@@ -240,6 +245,7 @@
   --momento-accent:     #0E1E0E;
 }
 .palette-forest.dark {
+  --momento-terra-rgb:  74, 173, 90;
   --bg: #0E1E0E;
   --bg-card: #162816;
   --text: #EEF3EE;
@@ -269,6 +275,7 @@
 
 /* ── Ardoise palette (anthracite) ── */
 .palette-ardoise {
+  --momento-terra-rgb:  58, 58, 58;
   --bg: #EFEFEF;
   --bg-card: #E2E2E2;
   --text: #111111;
@@ -297,6 +304,7 @@
   --momento-accent:     #111111;
 }
 .palette-ardoise.dark {
+  --momento-terra-rgb:  154, 154, 154;
   --bg: #1A1A1A;
   --bg-card: #252525;
   --text: #F0F0F0;
@@ -392,3 +400,36 @@
 .animate-fade-up-delay-1 { animation: fade-up 0.6s ease 0.1s both; }
 .animate-fade-up-delay-2 { animation: fade-up 0.6s ease 0.2s both; }
 .animate-fade-up-delay-3 { animation: fade-up 0.6s ease 0.3s both; }
+
+/* ── Ticker (horizontal scroll band) ── */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker-scroll 32s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+
+/* ── Category card bottom-line hover ── */
+.cat-card-hover {
+  position: relative;
+  overflow: hidden;
+}
+.cat-card-hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--momento-terra);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.cat-card-hover:hover::after { transform: scaleX(1); }
+
+/* ── Vendor featured card ── */
+.vendor-featured { grid-row: span 2; }
+@media (max-width: 640px) { .vendor-featured { grid-row: span 1; } }

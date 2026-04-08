@@ -76,12 +76,12 @@ export default function VoiceToggle() {
       aria-label={enabled ? "Désactiver la voix" : "Activer la voix"}
       className="fixed bottom-5 right-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full shadow-xl transition-all duration-300 text-sm font-semibold select-none"
       style={{
-        backgroundColor: enabled ? "#C4532A" : "rgba(30,26,20,0.92)",
+        backgroundColor: enabled ? "var(--momento-terra)" : "rgba(30,26,20,0.92)",
         color: "#fff",
         border: "1.5px solid rgba(255,255,255,0.12)",
         backdropFilter: "blur(10px)",
         boxShadow: enabled
-          ? "0 0 18px rgba(196,83,42,0.45), 0 4px 16px rgba(0,0,0,0.35)"
+          ? "0 0 18px rgba(var(--momento-terra-rgb),0.45), 0 4px 16px rgba(0,0,0,0.35)"
           : "0 4px 16px rgba(0,0,0,0.35)",
       }}
     >

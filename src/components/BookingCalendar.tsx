@@ -3,6 +3,7 @@
 import { useState, useRef } from "react"
 import { Clock, Tag, ChevronLeft, ChevronRight, Send, Loader2 } from "lucide-react"
 import { C } from "@/lib/colors"
+import { useTheme } from "@/components/ThemeProvider"
 
 interface BookingCalendarProps {
   vendorName: string
@@ -58,6 +59,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent }: BookingCalendarProps) {
+  const { theme } = useTheme()
+  const isDark = theme === "dark"
   const today = new Date()
   const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
@@ -153,11 +156,11 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
         <h2 className="text-base font-bold" style={{ color: C.white }}>Vérifier les disponibilités</h2>
         <div className="flex flex-wrap gap-2 justify-end">
           <span className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full"
-            style={{ backgroundColor: "#D1FAE5", color: "#065F46" }}>
+            style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.15)", color: C.terra }}>
             <Clock size={10} /> Réponse sous 24h
           </span>
           <span className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full"
-            style={{ backgroundColor: "rgba(196,83,42,0.15)", color: C.terra }}>
+            style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.15)", color: C.terra }}>
             <Tag size={10} /> Tarif sur devis
           </span>
         </div>
@@ -199,7 +202,7 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
               className="text-center text-xs font-bold py-2"
               style={{
                 color: d.weekend ? C.terra : C.steel,
-                backgroundColor: d.weekend ? `${C.terra}0A` : "transparent",
+                backgroundColor: d.weekend ? "rgba(var(--momento-terra-rgb),0.04)" : "transparent",
               }}>
               {d.label}
             </div>
@@ -231,12 +234,12 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
                 style={{
                   backgroundColor:
                     isSelected   ? C.terra :
-                    isToday      ? `${C.terra}25` :
-                    isWeekend && !disabled ? `${C.terra}08` :
+                    isToday      ? "rgba(var(--momento-terra-rgb),0.15)" :
+                    isWeekend && !disabled ? "rgba(var(--momento-terra-rgb),0.03)" :
                     "transparent",
                   color:
-                    isSelected ? "#fff" :
-                    isPast     ? C.anthracite :
+                    isSelected ? "var(--bg)" :
+                    isPast     ? C.steel :
                     isBooked   ? C.steel :
                     isWeekend  ? C.terra :
                     C.white,
@@ -244,7 +247,7 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
                   opacity: disabled ? 0.45 : 1,
                   cursor: disabled ? "not-allowed" : "pointer",
                   textDecoration: isBooked ? "line-through" : "none",
-                  border: isToday && !isSelected ? `1px solid ${C.terra}60` : "1px solid transparent",
+                  border: isToday && !isSelected ? "1px solid rgba(var(--momento-terra-rgb),0.6)" : "1px solid transparent",
                 }}>
                 {day}
                 {isBooked && (
@@ -266,11 +269,11 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
             Sélectionné
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: C.anthracite }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: C.steel }} />
             Indisponible
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: `${C.terra}30`, border: `1px solid ${C.terra}` }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.19)", border: `1px solid ${C.terra}` }} />
             Aujourd&apos;hui
           </span>
         </div>
@@ -280,7 +283,7 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
           <div ref={calRef} className="px-5 pb-5 pt-4" style={{ borderTop: `1px solid ${C.anthracite}` }}>
             {/* Date pill */}
             <div className="flex items-center gap-2 mb-4 p-3 rounded-xl"
-              style={{ backgroundColor: `${C.terra}12`, border: `1px solid ${C.terra}30` }}>
+              style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.07)", border: "1px solid rgba(var(--momento-terra-rgb),0.19)" }}>
               <span className="text-lg">📅</span>
               <div>
                 <p className="text-xs font-semibold" style={{ color: C.terra }}>Date sélectionnée</p>
@@ -307,7 +310,7 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
                     onChange={e => setForm(f => ({ ...f, time: e.target.value }))}
                     type="time"
                     className="w-full text-sm px-3 py-2.5 rounded-xl outline-none"
-                    style={{ backgroundColor: C.anthracite, border: `1px solid ${C.steel}40`, color: C.white, colorScheme: "light" }}
+                    style={{ backgroundColor: C.anthracite, border: `1px solid ${C.steel}40`, color: C.white, colorScheme: isDark ? "dark" : "light" }}
                   />
                 </Field>
               </div>
@@ -339,7 +342,7 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
               </Field>
 
               {error && (
-                <p className="text-xs px-3 py-2 rounded-lg" style={{ backgroundColor: `${C.terra}15`, color: C.terra }}>
+                <p className="text-xs px-3 py-2 rounded-lg" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.08)", color: C.terra }}>
                   {error}
                 </p>
               )}
@@ -366,7 +369,7 @@ export default function BookingCalendar({ vendorName, vendorSlug, onRequestSent 
         {sent && (
           <div ref={calRef} className="px-5 pb-6 pt-5 text-center" style={{ borderTop: `1px solid ${C.anthracite}` }}>
             <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mx-auto mb-3"
-              style={{ backgroundColor: "#D1FAE5" }}>
+              style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.15)" }}>
               ✅
             </div>
             <p className="text-sm font-bold mb-1" style={{ color: C.white }}>Demande envoyée !</p>

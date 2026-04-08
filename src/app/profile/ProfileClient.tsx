@@ -130,7 +130,7 @@ export default function ProfileClient({ user: initialUser, planners }: { user: U
             <div className="flex items-center gap-3">
               <span
                 className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                style={{ backgroundColor: user.role === "vendor" ? "rgba(196,83,42,0.12)" : "rgba(44,26,14,0.08)", color: user.role === "vendor" ? C.terra : C.mist }}
+                style={{ backgroundColor: user.role === "vendor" ? "rgba(var(--momento-terra-rgb),0.12)" : "rgba(44,26,14,0.08)", color: user.role === "vendor" ? C.terra : C.mist }}
               >
                 {user.role === "vendor" ? "Prestataire" : "Organisateur"}
               </span>

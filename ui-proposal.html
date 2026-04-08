@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momento — Proposition UI</title>
+<style>
+  /* ── TOKENS ─────────────────────────────────────── */
+  :root {
+    --cream:      #F5EDD6;
+    --cream-dark: #EDE2C4;
+    --ink:        #1A1208;
+    --ink-light:  #3D2E18;
+    --terra:      #C4532A;
+    --terra-pale: #E8C4B3;
+    --gold:       #B8975A;
+    --white:      #FEFAF2;
+
+    --font-display: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;
+    --font-label:   'Didact Gothic', 'Gill Sans', 'Futura', sans-serif;
+
+    --line-thin:  0.5px;
+    --line-mid:   1px;
+    --radius:     2px;
+
+    --space-xs:   0.5rem;
+    --space-sm:   1rem;
+    --space-md:   2rem;
+    --space-lg:   4rem;
+    --space-xl:   8rem;
+  }
+
+  /* ── RESET ─────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-display);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ── UTILITY ─────────────────────────────────────── */
+  .label {
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+  .label--terra { color: var(--terra); }
+  .thin-rule {
+    border: none;
+    border-top: var(--line-thin) solid var(--ink);
+    opacity: 0.25;
+  }
+  .thin-rule--terra {
+    border-color: var(--terra);
+    opacity: 0.5;
+  }
+
+  /* ── NAV ─────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(245, 237, 214, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: var(--line-thin) solid rgba(26,18,8,0.15);
+  }
+  .nav__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .nav__monogram {
+    width: 36px; height: 36px;
+    border: var(--line-mid) solid var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .nav__wordmark {
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav__links a {
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    transition: color 0.2s;
+  }
+  .nav__links a:hover { color: var(--terra); }
+  .nav__cta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .btn-ghost {
+    font-family: var(--font-label);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border: var(--line-thin) solid var(--ink);
+    padding: 0.5rem 1.25rem;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+    background: transparent;
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--cream); }
+  .btn-primary {
+    font-family: var(--font-label);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--terra);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-xl) var(--space-lg) var(--space-xl) 3rem;
+    position: relative;
+    z-index: 2;
+  }
+  .hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .hero__eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 48px;
+    height: var(--line-thin);
+    background: var(--terra);
+  }
+  .hero__title {
+    font-size: clamp(3.5rem, 6vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 2rem;
+  }
+  .hero__title em {
+    font-style: italic;
+    color: var(--terra);
+    font-weight: 300;
+  }
+  .hero__subtitle {
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    line-height: 1.9;
+    max-width: 340px;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+  }
+  .hero__search {
+    display: flex;
+    gap: 0;
+    max-width: 480px;
+    border: var(--line-mid) solid var(--ink);
+  }
+  .hero__search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0.85rem 1.25rem;
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .hero__search input::placeholder { color: rgba(26,18,8,0.4); }
+  .hero__search button {
+    background: var(--ink);
+    border: none;
+    color: var(--cream);
+    padding: 0.85rem 1.5rem;
+    font-family: var(--font-label);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .hero__search button:hover { background: var(--terra); }
+
+  .hero__stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: var(--line-thin) solid rgba(26,18,8,0.15);
+  }
+  .hero__stat {}
+  .hero__stat-num {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .hero__stat-num span { color: var(--terra); font-style: italic; }
+  .hero__stat-label {
+    font-family: var(--font-label);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-top: 0.3rem;
+  }
+
+  .hero__right {
+    position: relative;
+    overflow: hidden;
+  }
+  /* Decorative grid image mosaic */
+  .hero__mosaic {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 3px;
+    padding: 5rem 2rem 2rem;
+  }
+  .hero__mosaic-cell {
+    background: var(--cream-dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero__mosaic-cell:first-child {
+    grid-row: span 2;
+  }
+  .mosaic-label {
+    position: absolute;
+    bottom: 0.75rem; left: 0.75rem;
+    font-family: var(--font-label);
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.85);
+    background: rgba(26,18,8,0.5);
+    padding: 0.25rem 0.5rem;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Placeholder image via gradient */
+  .img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #d4c9a8 0%, #c4b896 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .img-placeholder.p1 { background: linear-gradient(145deg, #D4B896 0%, #B8956E 100%); }
+  .img-placeholder.p2 { background: linear-gradient(145deg, #E8D4B8 0%, #C4A878 100%); }
+  .img-placeholder.p3 { background: linear-gradient(145deg, #C4532A20 0%, #C4532A40 100%), linear-gradient(145deg, #D4B896 0%, #B8956E 100%); }
+  .img-placeholder.p4 { background: linear-gradient(145deg, #B8975A20 0%, #B8975A50 100%), linear-gradient(145deg, #E8D4C8 0%, #D4B8A8 100%); }
+  .img-placeholder svg { opacity: 0.25; }
+
+  /* Decorative circle medallion overlaying mosaic */
+  .hero__medallion {
+    position: absolute;
+    top: 50%;
+    left: -2.5rem;
+    transform: translateY(-50%);
+    width: 120px; height: 120px;
+    border: 1px solid rgba(196,83,42,0.6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cream);
+    z-index: 3;
+    box-shadow: 0 0 0 12px var(--cream), 0 0 0 13px rgba(196,83,42,0.2);
+  }
+  .hero__medallion-inner {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    position: relative;
+    top: 2px;
+  }
+
+  /* ── SCROLL TICKER ────────────────────────────────── */
+  .ticker {
+    background: var(--ink);
+    color: var(--cream);
+    overflow: hidden;
+    padding: 0.75rem 0;
+    border-top: var(--line-thin) solid rgba(245,237,214,0.1);
+    border-bottom: var(--line-thin) solid rgba(245,237,214,0.1);
+  }
+  .ticker__inner {
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+    animation: ticker 28s linear infinite;
+  }
+  .ticker__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 0 2.5rem;
+    font-family: var(--font-label);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.7);
+  }
+  .ticker__item::after {
+    content: '◆';
+    color: var(--terra);
+    font-size: 0.4rem;
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── SECTION BASE ─────────────────────────────────── */
+  section { padding: var(--space-xl) 3rem; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: var(--line-thin) solid rgba(26,18,8,0.15);
+  }
+  .section-title {
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .section-title em { font-style: italic; color: var(--terra); }
+  .section-link {
+    font-family: var(--font-label);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: var(--line-thin) solid var(--ink-light);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .section-link:hover { color: var(--terra); border-color: var(--terra); }
+  .section-link::after { content: '→'; font-size: 0.8rem; }
+
+  /* ── CATEGORIES ───────────────────────────────────── */
+  .categories {
+    background: var(--white);
+  }
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: rgba(26,18,8,0.1);
+    border: var(--line-thin) solid rgba(26,18,8,0.1);
+  }
+  .category-card {
+    background: var(--white);
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .category-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--terra);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .category-card:hover { background: var(--cream); }
+  .category-card:hover::after { transform: scaleX(1); }
+
+  .category-icon {
+    width: 44px; height: 44px;
+    border: var(--line-thin) solid rgba(26,18,8,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    transition: border-color 0.25s;
+  }
+  .category-card:hover .category-icon { border-color: var(--terra); }
+
+  .category-name {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .category-count {
+    font-family: var(--font-label);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    opacity: 0.65;
+  }
+
+  /* ── FEATURED VENDORS ─────────────────────────────── */
+  .vendors {}
+  .vendors-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5px;
+    background: rgba(26,18,8,0.08);
+  }
+  .vendor-card {
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .vendor-card--featured {
+    grid-row: span 2;
+  }
+  .vendor-card__image {
+    aspect-ratio: 4/5;
+    background: var(--cream-dark);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .vendor-card--featured .vendor-card__image {
+    aspect-ratio: auto;
+    flex: 1;
+    min-height: 340px;
+  }
+  .vendor-card__img-bg {
+    width: 100%; height: 100%;
+    transition: transform 0.6s ease;
+  }
+  .vendor-card:hover .vendor-card__img-bg { transform: scale(1.04); }
+
+  .vendor-card__badge {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    background: var(--terra);
+    color: var(--white);
+    font-family: var(--font-label);
+    font-size: 0.5rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+  }
+  .vendor-card__body {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-top: var(--line-thin) solid rgba(26,18,8,0.1);
+  }
+  .vendor-card__category {
+    font-family: var(--font-label);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+  .vendor-card__name {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .vendor-card--featured .vendor-card__name { font-size: 1.5rem; }
+  .vendor-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+  }
+  .vendor-card__city {
+    font-family: var(--font-label);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    opacity: 0.6;
+  }
+  .vendor-card__stars {
+    display: flex;
+    gap: 2px;
+    color: var(--gold);
+    font-size: 0.7rem;
+  }
+
+  /* Hover reveal arrow */
+  .vendor-card__arrow {
+    position: absolute;
+    bottom: 1.5rem; right: 1.5rem;
+    width: 32px; height: 32px;
+    border: var(--line-mid) solid var(--terra);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--terra);
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .vendor-card:hover .vendor-card__arrow { opacity: 1; transform: translateY(0); }
+
+  /* ── EDITORIAL STRIP ──────────────────────────────── */
+  .editorial {
+    background: var(--ink);
+    color: var(--cream);
+    padding: var(--space-lg) 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .editorial__divider {
+    width: 1px;
+    height: 100%;
+    background: rgba(245,237,214,0.15);
+    align-self: stretch;
+  }
+  .editorial__block { text-align: center; padding: 1rem 0; }
+  .editorial__icon {
+    font-size: 2rem;
+    color: var(--terra);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .editorial__title {
+    font-size: 1.3rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+  .editorial__title em { font-style: italic; }
+  .editorial__desc {
+    font-family: var(--font-label);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.5);
+    line-height: 1.9;
+  }
+
+  /* ── CITIES ───────────────────────────────────────── */
+  .cities { background: var(--cream-dark); }
+  .cities-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5px;
+    background: rgba(26,18,8,0.08);
+  }
+  .city-card {
+    background: var(--cream);
+    aspect-ratio: 3/4;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .city-card__bg {
+    width: 100%; height: 100%;
+    transition: transform 0.5s ease;
+  }
+  .city-card:hover .city-card__bg { transform: scale(1.06); }
+  .city-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,18,8,0.8) 0%, transparent 60%);
+  }
+  .city-card__content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+  }
+  .city-card__name {
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--cream);
+    letter-spacing: 0.03em;
+  }
+  .city-card__count {
+    font-family: var(--font-label);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.6);
+    margin-top: 0.25rem;
+  }
+  .city-card__thin-line {
+    width: 24px;
+    height: 1px;
+    background: var(--terra);
+    margin-bottom: 0.5rem;
+  }
+
+  /* City placeholder gradients */
+  .city-bg-1 { background: linear-gradient(145deg, #8B6E52 0%, #6B4E32 100%); }
+  .city-bg-2 { background: linear-gradient(145deg, #C4532A 0%, #8B3218 100%); }
+  .city-bg-3 { background: linear-gradient(145deg, #7A8B6E 0%, #5A6B4E 100%); }
+  .city-bg-4 { background: linear-gradient(145deg, #6E7A8B 0%, #4E5A6B 100%); }
+  .city-bg-5 { background: linear-gradient(145deg, #8B7A6E 0%, #6B5A4E 100%); }
+
+  /* ── CTA BAND ─────────────────────────────────────── */
+  .cta-band {
+    padding: var(--space-xl) 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: 340px;
+  }
+  .cta-band__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 4rem;
+    border-right: var(--line-thin) solid rgba(26,18,8,0.15);
+  }
+  .cta-band__right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 4rem;
+    background: var(--ink);
+    margin: -5rem -3rem -5rem 0;
+    padding: 4rem;
+    color: var(--cream);
+  }
+  .cta-band__title {
+    font-size: clamp(1.8rem, 2.8vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+  .cta-band__title em { font-style: italic; color: var(--terra); }
+  .cta-band__desc {
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    line-height: 1.9;
+    margin-bottom: 2rem;
+  }
+  .cta-band__right .cta-band__desc { color: rgba(245,237,214,0.6); }
+  .cta-band__right .cta-band__title em { color: var(--terra); }
+
+  /* ── TESTIMONIAL ──────────────────────────────────── */
+  .testimonial {
+    background: var(--white);
+    text-align: center;
+    padding: var(--space-xl) 3rem;
+  }
+  .testimonial__quote {
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    max-width: 760px;
+    margin: 0 auto 2rem;
+    line-height: 1.3;
+    color: var(--ink);
+    position: relative;
+  }
+  .testimonial__quote::before {
+    content: '\201C';
+    font-size: 6rem;
+    color: var(--terra);
+    opacity: 0.2;
+    position: absolute;
+    top: -1.5rem; left: -2rem;
+    font-style: normal;
+    line-height: 1;
+  }
+  .testimonial__author {
+    font-family: var(--font-label);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+  .testimonial__author span { color: var(--terra); }
+
+  /* ── FOOTER ───────────────────────────────────────── */
+  footer {
+    background: var(--ink);
+    color: rgba(245,237,214,0.65);
+    padding: 4rem 3rem 2rem;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    margin-bottom: 2rem;
+    border-bottom: var(--line-thin) solid rgba(245,237,214,0.1);
+  }
+  .footer__brand .nav__monogram {
+    border-color: rgba(245,237,214,0.3);
+    color: var(--cream);
+    margin-bottom: 1rem;
+  }
+  .footer__brand .nav__wordmark { color: var(--cream); opacity: 0.7; }
+  .footer__tagline {
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(245,237,214,0.5);
+    margin-top: 1rem;
+    line-height: 1.5;
+    max-width: 260px;
+  }
+  .footer__col-title {
+    font-family: var(--font-label);
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.4);
+    margin-bottom: 1.25rem;
+  }
+  .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+  .footer__links a {
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,237,214,0.5);
+    transition: color 0.2s;
+  }
+  .footer__links a:hover { color: var(--terra); }
+  .footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer__copy {
+    font-family: var(--font-label);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.3);
+  }
+  .footer__legal {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .footer__legal a {
+    font-family: var(--font-label);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.3);
+    transition: color 0.2s;
+  }
+  .footer__legal a:hover { color: rgba(245,237,214,0.6); }
+
+  /* ── VENDOR IMAGE PLACEHOLDERS ────────────────────── */
+  .v-img {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .v-img-1 { background: linear-gradient(145deg, #C8A882 0%, #A88050 100%); }
+  .v-img-2 { background: linear-gradient(145deg, #D4B896 0%, #B48860 100%); }
+  .v-img-3 { background: linear-gradient(145deg, #C4532A30 0%, #C4532A60 100%), linear-gradient(145deg, #C8A882 0%, #A88050 100%); }
+  .v-img-4 { background: linear-gradient(145deg, #B8975A30 0%, #B8975A60 100%), linear-gradient(145deg, #D4B896 0%, #B48860 100%); }
+  .v-img-5 { background: linear-gradient(145deg, #8B6E5230 0%, #8B6E5260 100%), linear-gradient(145deg, #E0C8A8 0%, #C0A878 100%); }
+
+  /* ── DECORATIVE SVG MOTIFS ─────────────────────────── */
+  .motif {
+    position: absolute;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* ── ANNOTATIONS (UI PROPOSAL NOTES) ─────────────── */
+  .annotation {
+    position: fixed;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 1000;
+    background: rgba(26,18,8,0.92);
+    border: var(--line-thin) solid rgba(196,83,42,0.4);
+    padding: 1rem 1.25rem;
+    max-width: 220px;
+    font-family: var(--font-label);
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    color: rgba(245,237,214,0.7);
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+  .annotation__title {
+    color: var(--terra);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: var(--line-thin) solid rgba(196,83,42,0.3);
+  }
+  .annotation__item { padding: 0.25rem 0; }
+  .annotation__dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--terra);
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .annotation__close {
+    cursor: pointer;
+    color: rgba(245,237,214,0.4);
+    text-align: right;
+    font-size: 0.8rem;
+    padding-top: 0.5rem;
+  }
+
+  /* ── GOOGLE FONTS IMPORT ──────────────────────────── */
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── DESIGN NOTES PANEL ─────────────────────────────── -->
+<div class="annotation" id="notes">
+  <div class="annotation__title">Proposition UI · Momento</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Police Cormorant Garamond 300</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Fond crème #F5EDD6</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Accent terracotta #C4532A</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Typographie caps tracée large</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Lignes fines 0.5px partout</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Espace négatif généreux</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Pas de box-shadow, pas de rounded</div>
+  <div class="annotation__item"><span class="annotation__dot"></span>Images remplacent les icônes plates</div>
+  <div class="annotation__close" onclick="document.getElementById('notes').style.display='none'">✕ Fermer</div>
+</div>
+
+<!-- ── NAV ─────────────────────────────────────────────── -->
+<nav>
+  <div class="nav__logo">
+    <div class="nav__monogram">𝓜</div>
+    <div class="nav__wordmark">Momento</div>
+  </div>
+
+  <ul class="nav__links">
+    <li><a href="#">Explorer</a></li>
+    <li><a href="#">Catégories</a></li>
+    <li><a href="#">Villes</a></li>
+    <li><a href="#">Planifier</a></li>
+  </ul>
+
+  <div class="nav__cta">
+    <button class="btn-ghost">Connexion</button>
+    <button class="btn-primary">Devenir prestataire</button>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────── -->
+<section class="hero" style="padding: 0; padding-top: 4.5rem;">
+  <div class="hero__left">
+    <div class="hero__eyebrow">
+      <span class="label label--terra">Maroc · 2025</span>
+    </div>
+
+    <h1 class="hero__title">
+      L'art de célébrer<br>
+      <em>votre moment</em>
+    </h1>
+
+    <p class="hero__subtitle">
+      Photographes, DJ, traiteurs, décorateurs —<br>
+      les meilleurs prestataires du Maroc<br>
+      réunis pour votre événement
+    </p>
+
+    <div class="hero__search">
+      <input type="text" placeholder="Rechercher un prestataire, une ville…">
+      <button>Chercher</button>
+    </div>
+
+    <div class="hero__stats">
+      <div class="hero__stat">
+        <div class="hero__stat-num">80<span>+</span></div>
+        <div class="hero__stat-label">Prestataires</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-num">12<span></span></div>
+        <div class="hero__stat-label">Villes</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-num">28<span>+</span></div>
+        <div class="hero__stat-label">Catégories</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__right">
+    <!-- Decorative medallion at junction -->
+    <div class="hero__medallion">
+      <span class="hero__medallion-inner">𝓜</span>
+    </div>
+
+    <div class="hero__mosaic">
+      <div class="hero__mosaic-cell">
+        <div class="img-placeholder p1" style="background: linear-gradient(160deg, #C8A882 0%, #7A5030 100%); height: 100%;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/>
+          </svg>
+        </div>
+        <div class="mosaic-label">Photographe · Rabat</div>
+      </div>
+      <div class="hero__mosaic-cell">
+        <div class="img-placeholder p2" style="background: linear-gradient(160deg, #D4A850 0%, #8B6E20 100%); height: 100%;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.97 1.61h9.72a2 2 0 001.97-1.61L23 6H6"/>
+          </svg>
+        </div>
+        <div class="mosaic-label">Traiteur · Marrakech</div>
+      </div>
+      <div class="hero__mosaic-cell">
+        <div class="img-placeholder p3" style="background: linear-gradient(160deg, #C4532A60 0%, #8B3218 100%); height: 100%;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+        </div>
+        <div class="mosaic-label">DJ · Casablanca</div>
+      </div>
+      <div class="hero__mosaic-cell">
+        <div class="img-placeholder p4" style="background: linear-gradient(160deg, #6E7A8B 0%, #3A4858 100%); height: 100%;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="mosaic-label">Décoration · Fès</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TICKER ─────────────────────────────────────────── -->
+<div class="ticker">
+  <div class="ticker__inner">
+    <!-- Duplicated for seamless loop -->
+    <span class="ticker__item">Photographes</span>
+    <span class="ticker__item">DJ &amp; Musique</span>
+    <span class="ticker__item">Traiteurs</span>
+    <span class="ticker__item">Décoration</span>
+    <span class="ticker__item">Lieux de réception</span>
+    <span class="ticker__item">Makeup Artist</span>
+    <span class="ticker__item">Neggafa</span>
+    <span class="ticker__item">Wedding Planner</span>
+    <span class="ticker__item">Orchestre</span>
+    <span class="ticker__item">Fleuriste</span>
+    <span class="ticker__item">Photographes</span>
+    <span class="ticker__item">DJ &amp; Musique</span>
+    <span class="ticker__item">Traiteurs</span>
+    <span class="ticker__item">Décoration</span>
+    <span class="ticker__item">Lieux de réception</span>
+    <span class="ticker__item">Makeup Artist</span>
+    <span class="ticker__item">Neggafa</span>
+    <span class="ticker__item">Wedding Planner</span>
+    <span class="ticker__item">Orchestre</span>
+    <span class="ticker__item">Fleuriste</span>
+  </div>
+</div>
+
+<!-- ── CATEGORIES ─────────────────────────────────────── -->
+<section class="categories">
+  <div class="section-header">
+    <div>
+      <div class="label" style="margin-bottom: 0.75rem;">Services</div>
+      <h2 class="section-title">Explorer par <em>catégorie</em></h2>
+    </div>
+    <a href="#" class="section-link">Toutes les catégories</a>
+  </div>
+
+  <div class="categories-grid">
+    <div class="category-card">
+      <div class="category-icon">📸</div>
+      <div>
+        <div class="category-name">Photographe<br>&amp; Vidéaste</div>
+        <div class="category-count">8 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">🎵</div>
+      <div>
+        <div class="category-name">DJ &amp;<br>Musique</div>
+        <div class="category-count">14 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">🍽</div>
+      <div>
+        <div class="category-name">Traiteur</div>
+        <div class="category-count">6 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">💐</div>
+      <div>
+        <div class="category-name">Décoration<br>&amp; Fleuriste</div>
+        <div class="category-count">9 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">🏛</div>
+      <div>
+        <div class="category-name">Lieux de<br>réception</div>
+        <div class="category-count">5 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">💄</div>
+      <div>
+        <div class="category-name">Makeup<br>Artist</div>
+        <div class="category-count">4 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">👗</div>
+      <div>
+        <div class="category-name">Robes de<br>mariés</div>
+        <div class="category-count">3 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">🌙</div>
+      <div>
+        <div class="category-name">Neggafa &amp;<br>Traditions</div>
+        <div class="category-count">4 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card">
+      <div class="category-icon">📋</div>
+      <div>
+        <div class="category-name">Wedding &amp;<br>Event Planner</div>
+        <div class="category-count">5 prestataires</div>
+      </div>
+    </div>
+    <div class="category-card" style="background: var(--terra); color: var(--white);">
+      <div class="category-icon" style="border-color: rgba(255,255,255,0.3); color: var(--white);">+</div>
+      <div>
+        <div class="category-name" style="color: var(--white);">Voir toutes<br>les catégories</div>
+        <div class="category-count" style="color: rgba(255,255,255,0.7);">28 catégories</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURED VENDORS ────────────────────────────────── -->
+<section class="vendors">
+  <div class="section-header">
+    <div>
+      <div class="label" style="margin-bottom: 0.75rem;">Sélection</div>
+      <h2 class="section-title">Prestataires <em>en vedette</em></h2>
+    </div>
+    <a href="#" class="section-link">Tous les prestataires</a>
+  </div>
+
+  <div class="vendors-grid">
+    <!-- Featured large card -->
+    <div class="vendor-card vendor-card--featured">
+      <div class="vendor-card__image">
+        <div class="v-img v-img-1">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <div class="vendor-card__badge">Coup de cœur</div>
+        <div class="vendor-card__arrow">→</div>
+      </div>
+      <div class="vendor-card__body">
+        <div class="vendor-card__category">Photographe</div>
+        <div class="vendor-card__name">Prestige Photo</div>
+        <div class="vendor-card__meta">
+          <div class="vendor-card__city">Rabat</div>
+          <div class="vendor-card__stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="vendor-card">
+      <div class="vendor-card__image">
+        <div class="v-img v-img-2">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+        </div>
+        <div class="vendor-card__arrow">→</div>
+      </div>
+      <div class="vendor-card__body">
+        <div class="vendor-card__category">DJ</div>
+        <div class="vendor-card__name">DJ Azz</div>
+        <div class="vendor-card__meta">
+          <div class="vendor-card__city">Marrakech</div>
+          <div class="vendor-card__stars">★★★★</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="vendor-card">
+      <div class="vendor-card__image">
+        <div class="v-img v-img-3">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="vendor-card__arrow">→</div>
+      </div>
+      <div class="vendor-card__body">
+        <div class="vendor-card__category">Traiteur</div>
+        <div class="vendor-card__name">Afrah Darna Prestige</div>
+        <div class="vendor-card__meta">
+          <div class="vendor-card__city">Marrakech</div>
+          <div class="vendor-card__stars">★★★★</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="vendor-card">
+      <div class="vendor-card__image">
+        <div class="v-img v-img-4">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+        </div>
+        <div class="vendor-card__arrow">→</div>
+      </div>
+      <div class="vendor-card__body">
+        <div class="vendor-card__category">Wedding Planner</div>
+        <div class="vendor-card__name">La Perle Events</div>
+        <div class="vendor-card__meta">
+          <div class="vendor-card__city">Marrakech</div>
+          <div class="vendor-card__stars">★★★★</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="vendor-card">
+      <div class="vendor-card__image">
+        <div class="v-img v-img-5">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(245,237,214,0.3)" stroke-width="0.5">
+            <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/>
+          </svg>
+        </div>
+        <div class="vendor-card__badge" style="background: var(--gold);">Nouveau</div>
+        <div class="vendor-card__arrow">→</div>
+      </div>
+      <div class="vendor-card__body">
+        <div class="vendor-card__category">Makeup Artist</div>
+        <div class="vendor-card__name">Ahlam MUA</div>
+        <div class="vendor-card__meta">
+          <div class="vendor-card__city">Casablanca</div>
+          <div class="vendor-card__stars">★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDITORIAL STRIP ────────────────────────────────── -->
+<div class="editorial">
+  <div class="editorial__block">
+    <span class="editorial__icon">◎</span>
+    <div class="editorial__title">Prestataires <em>vérifiés</em></div>
+    <div class="editorial__desc">Chaque profil est contrôlé<br>et validé par notre équipe</div>
+  </div>
+  <div class="editorial__divider"></div>
+  <div class="editorial__block">
+    <span class="editorial__icon">◈</span>
+    <div class="editorial__title">Réservation <em>directe</em></div>
+    <div class="editorial__desc">Contactez et réservez<br>sans intermédiaire</div>
+  </div>
+  <div class="editorial__divider"></div>
+  <div class="editorial__block">
+    <span class="editorial__icon">◉</span>
+    <div class="editorial__title">100 % <em>Maroc</em></div>
+    <div class="editorial__desc">Prestataires locaux dans<br>les grandes villes du Royaume</div>
+  </div>
+</div>
+
+<!-- ── CITIES ─────────────────────────────────────────── -->
+<section class="cities">
+  <div class="section-header">
+    <div>
+      <div class="label" style="margin-bottom: 0.75rem;">Destinations</div>
+      <h2 class="section-title">Explorer par <em>ville</em></h2>
+    </div>
+    <a href="#" class="section-link">Toutes les villes</a>
+  </div>
+
+  <div class="cities-strip">
+    <div class="city-card">
+      <div class="city-card__bg city-bg-1"></div>
+      <div class="city-card__overlay"></div>
+      <div class="city-card__content">
+        <div class="city-card__thin-line"></div>
+        <div class="city-card__name">Casablanca</div>
+        <div class="city-card__count">24 prestataires</div>
+      </div>
+    </div>
+    <div class="city-card">
+      <div class="city-card__bg city-bg-2"></div>
+      <div class="city-card__overlay"></div>
+      <div class="city-card__content">
+        <div class="city-card__thin-line"></div>
+        <div class="city-card__name">Marrakech</div>
+        <div class="city-card__count">18 prestataires</div>
+      </div>
+    </div>
+    <div class="city-card">
+      <div class="city-card__bg city-bg-3"></div>
+      <div class="city-card__overlay"></div>
+      <div class="city-card__content">
+        <div class="city-card__thin-line"></div>
+        <div class="city-card__name">Rabat</div>
+        <div class="city-card__count">22 prestataires</div>
+      </div>
+    </div>
+    <div class="city-card">
+      <div class="city-card__bg city-bg-4"></div>
+      <div class="city-card__overlay"></div>
+      <div class="city-card__content">
+        <div class="city-card__thin-line"></div>
+        <div class="city-card__name">Fès</div>
+        <div class="city-card__count">8 prestataires</div>
+      </div>
+    </div>
+    <div class="city-card">
+      <div class="city-card__bg city-bg-5"></div>
+      <div class="city-card__overlay"></div>
+      <div class="city-card__content">
+        <div class="city-card__thin-line"></div>
+        <div class="city-card__name">Tanger</div>
+        <div class="city-card__count">6 prestataires</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BAND ────────────────────────────────────────── -->
+<section class="cta-band">
+  <div class="cta-band__left">
+    <div class="label" style="margin-bottom: 1rem;">Pour les clients</div>
+    <h2 class="cta-band__title">Trouvez le prestataire<br><em>idéal</em> pour votre<br>événement</h2>
+    <p class="cta-band__desc">
+      Parcourez les profils, comparez<br>
+      les prestations, contactez directement.
+    </p>
+    <button class="btn-ghost" style="align-self: flex-start;">Explorer les prestataires</button>
+  </div>
+
+  <div class="cta-band__right">
+    <div class="label label--terra" style="margin-bottom: 1rem;">Pour les prestataires</div>
+    <h2 class="cta-band__title" style="color: var(--cream);">Développez votre<br><em>clientèle</em> sur Momento</h2>
+    <p class="cta-band__desc">
+      Créez votre profil gratuitement et<br>
+      accédez à des milliers de clients.
+    </p>
+    <button class="btn-primary" style="align-self: flex-start;">Créer mon profil</button>
+  </div>
+</section>
+
+<!-- ── TESTIMONIAL ─────────────────────────────────────── -->
+<section class="testimonial">
+  <div class="label" style="margin-bottom: 2rem; display: block; text-align: center;">Témoignages</div>
+  <blockquote class="testimonial__quote">
+    Grâce à Momento, j'ai trouvé un photographe, un DJ et un traiteur en moins d'une semaine. Mon mariage était parfait.
+  </blockquote>
+  <div class="testimonial__author">
+    Zineb M. · <span>Casablanca, 2024</span>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────── -->
+<footer>
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div class="nav__monogram">𝓜</div>
+        <div class="nav__wordmark">Momento</div>
+      </div>
+      <p class="footer__tagline">La plateforme des prestataires événementiels du Maroc.</p>
+    </div>
+
+    <div>
+      <div class="footer__col-title">Explorer</div>
+      <ul class="footer__links">
+        <li><a href="#">Tous les prestataires</a></li>
+        <li><a href="#">Catégories</a></li>
+        <li><a href="#">Villes</a></li>
+        <li><a href="#">Prestataires vedettes</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer__col-title">Prestataires</div>
+      <ul class="footer__links">
+        <li><a href="#">Créer un profil</a></li>
+        <li><a href="#">Tableau de bord</a></li>
+        <li><a href="#">Tarifs</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer__col-title">Momento</div>
+      <ul class="footer__links">
+        <li><a href="#">À propos</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <span class="footer__copy">© 2025 Momento · Maroc</span>
+    <ul class="footer__legal">
+      <li><a href="#">Confidentialité</a></li>
+      <li><a href="#">Conditions</a></li>
+      <li><a href="#">Mentions légales</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Smooth parallax on hero mosaic
+  window.addEventListener('scroll', () => {
+    const mosaic = document.querySelector('.hero__mosaic');
+    if (mosaic) {
+      const y = window.scrollY * 0.15;
+      mosaic.style.transform = `translateY(${y}px)`;
+    }
+  });
+</script>
+</body>
+</html>

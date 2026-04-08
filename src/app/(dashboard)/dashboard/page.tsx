@@ -1,9 +1,8 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { C } from "@/lib/colors";
-import DashboardWidgets, { type DashboardData } from "@/components/DashboardWidgets";
-import EditEventInfo from "@/components/EditEventInfo";
+import { type DashboardData } from "@/components/DashboardWidgets";
+import EventsDashboard from "@/components/EventsDashboard";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -104,81 +103,16 @@ export default async function DashboardPage() {
     unreadCount,
   };
 
-  const today = new Date().toLocaleDateString("fr-FR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
   return (
-    <div className="p-6 space-y-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1
-            className="text-2xl font-bold tracking-tight"
-            style={{ color: C.white }}
-          >
-            Bonjour {firstName ?? "toi"} 👋
-          </h1>
-          <p className="text-sm mt-0.5 capitalize" style={{ color: C.mist }}>
-            {today}
-          </p>
-          {workspace.eventDate && (
-            <p className="text-sm mt-1" style={{ color: C.mist }}>
-              📅{" "}
-              <span style={{ color: C.terra }} className="font-medium">
-                {workspace.eventName}
-              </span>
-              {daysUntil !== null && daysUntil > 0 && (
-                <> — dans <span className="font-semibold" style={{ color: C.terra }}>{daysUntil} jour{daysUntil > 1 ? "s" : ""}</span></>
-              )}
-              {daysUntil === 0 && (
-                <> — <span className="font-semibold" style={{ color: C.terra }}>c&apos;est aujourd&apos;hui !</span></>
-              )}
-            </p>
-          )}
-          <div className="mt-2">
-            <EditEventInfo
-              eventName={workspace.eventName}
-              eventDate={workspace.eventDate ? workspace.eventDate.toISOString() : null}
-              budget={workspace.budget}
-              guestCount={workspace.guestCount}
-            />
-          </div>
-        </div>
-
-        {/* Event date badge */}
-        {workspace.eventDate && (
-          <div
-            className="flex-shrink-0 rounded-2xl px-4 py-2 text-center hidden sm:block"
-            style={{
-              backgroundColor: `${C.terra}15`,
-              border: `1px solid ${C.terra}30`,
-            }}
-          >
-            <p className="text-xs font-medium" style={{ color: C.mist }}>
-              Date
-            </p>
-            <p className="text-sm font-bold mt-0.5" style={{ color: C.terra }}>
-              {new Date(workspace.eventDate).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "short",
-              })}
-            </p>
-            <p className="text-xs" style={{ color: C.mist }}>
-              {new Date(workspace.eventDate).getFullYear()}
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Divider */}
-      <div className="h-px" style={{ backgroundColor: C.anthracite }} />
-
-      {/* Widgets grid */}
-      <DashboardWidgets data={data} />
+    <div className="p-6 max-w-4xl mx-auto">
+      <EventsDashboard
+        data={data}
+        eventName={workspace.eventName}
+        eventDate={workspace.eventDate ? workspace.eventDate.toISOString() : null}
+        budget={workspace.budget}
+        guestCount={workspace.guestCount}
+        daysUntil={daysUntil}
+      />
     </div>
   );
 }
