@@ -2,26 +2,20 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { type DashboardData } from "@/components/DashboardWidgets";
-import EventsDashboard from "@/components/EventsDashboard";
+import DashboardWidgets from "@/components/DashboardWidgets";
+import Link from "next/link";
+import { Calendar } from "lucide-react";
 
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  // Ensure workspace exists
   let workspace = await prisma.workspace.findUnique({
     where: { userId: session.user.id },
     include: {
-      tasks: {
-        where: { completed: false },
-        orderBy: { dueDate: "asc" },
-        take: 10,
-      },
+      tasks: { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
       budgetItems: true,
-      bookings: {
-        include: { vendor: { select: { name: true, category: true } } },
-        take: 10,
-      },
+      bookings: { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
       guests: true,
     },
   });
@@ -30,16 +24,9 @@ export default async function DashboardPage() {
     workspace = await prisma.workspace.create({
       data: { userId: session.user.id },
       include: {
-        tasks: {
-          where: { completed: false },
-          orderBy: { dueDate: "asc" },
-          take: 10,
-        },
+        tasks: { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
         budgetItems: true,
-        bookings: {
-          include: { vendor: { select: { name: true, category: true } } },
-          take: 10,
-        },
+        bookings: { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
         guests: true,
       },
     });
@@ -58,17 +45,14 @@ export default async function DashboardPage() {
     },
   });
 
-  // Days until event
   let daysUntil: number | null = null;
   if (workspace.eventDate) {
     const diff = new Date(workspace.eventDate).getTime() - Date.now();
     daysUntil = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   }
 
-  const firstName =
-    user?.firstName ??
-    user?.name?.split(" ")[0] ??
-    null;
+  const firstName = user?.firstName ?? user?.name?.split(" ")[0] ?? null;
+  const hasEvent = !!workspace.eventDate || workspace.eventName !== "Mon événement";
 
   const data: DashboardData = {
     firstName,
@@ -77,46 +61,82 @@ export default async function DashboardPage() {
     budget: workspace.budget,
     guestCount: workspace.guestCount,
     tasks: workspace.tasks.map((t) => ({
-      id: t.id,
-      title: t.title,
-      category: t.category,
-      dueDate: t.dueDate ? t.dueDate.toISOString() : null,
-      completed: t.completed,
+      id: t.id, title: t.title, category: t.category,
+      dueDate: t.dueDate ? t.dueDate.toISOString() : null, completed: t.completed,
     })),
     budgetItems: workspace.budgetItems.map((b) => ({
-      id: b.id,
-      category: b.category,
-      label: b.label,
-      estimated: b.estimated,
-      actual: b.actual,
+      id: b.id, category: b.category, label: b.label, estimated: b.estimated, actual: b.actual,
     })),
     bookings: workspace.bookings.map((b) => ({
-      id: b.id,
-      status: b.status,
-      vendor: b.vendor ?? null,
+      id: b.id, status: b.status, vendor: b.vendor ?? null,
     })),
-    guests: workspace.guests.map((g) => ({
-      id: g.id,
-      rsvp: g.rsvp,
-    })),
+    guests: workspace.guests.map((g) => ({ id: g.id, rsvp: g.rsvp })),
     unreadCount,
   };
 
   const neededCategories: string[] = workspace.neededCategories
     ? (() => { try { return JSON.parse(workspace.neededCategories) } catch { return [] } })()
-    : []
+    : [];
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <EventsDashboard
-        data={data}
-        eventName={workspace.eventName}
-        eventDate={workspace.eventDate ? workspace.eventDate.toISOString() : null}
-        budget={workspace.budget}
-        guestCount={workspace.guestCount}
-        daysUntil={daysUntil}
-        neededCategories={neededCategories}
-      />
+    <div className="p-6 max-w-4xl mx-auto space-y-6">
+
+      {/* Header événement */}
+      {hasEvent ? (
+        <div className="rounded-2xl px-6 py-5 flex items-center justify-between"
+          style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+          <div>
+            <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--momento-terra)" }}>
+              ✦ Votre événement
+            </p>
+            <h1 className="text-2xl font-bold" style={{ color: "var(--fg)" }}>{workspace.eventName}</h1>
+            {workspace.eventDate && (
+              <p className="text-sm flex items-center gap-1.5 mt-1" style={{ color: "var(--fg-muted)" }}>
+                <Calendar size={13} />
+                {new Date(workspace.eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                {daysUntil !== null && daysUntil > 0 && (
+                  <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full"
+                    style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.15)", color: "var(--momento-terra)" }}>
+                    J-{daysUntil}
+                  </span>
+                )}
+                {daysUntil === 0 && (
+                  <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full"
+                    style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.15)", color: "var(--momento-terra)" }}>
+                    Aujourd&apos;hui !
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
+          <Link href="/event/new"
+            className="text-xs px-4 py-2 rounded-xl font-semibold transition hover:opacity-80"
+            style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.12)", color: "var(--momento-terra)", border: "1px solid rgba(var(--momento-terra-rgb),0.25)" }}>
+            + Nouvel événement
+          </Link>
+        </div>
+      ) : (
+        <div className="rounded-2xl px-6 py-8 flex flex-col items-center text-center"
+          style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+          <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: "var(--momento-terra)" }}>
+            ✦ Mes Événements ✦
+          </p>
+          <h1 className="text-2xl font-bold mb-2" style={{ color: "var(--fg)" }}>
+            {firstName ? `Bonjour, ${firstName}` : "Bienvenue sur Momento"}
+          </h1>
+          <p className="text-sm mb-5" style={{ color: "var(--fg-muted)" }}>
+            Créez votre premier événement pour commencer.
+          </p>
+          <Link href="/event/new"
+            className="flex items-center gap-2 text-sm font-bold px-6 py-3 rounded-xl transition hover:opacity-90"
+            style={{ backgroundColor: "var(--momento-terra)", color: "#fff" }}>
+            Créer mon événement →
+          </Link>
+        </div>
+      )}
+
+      {/* Widgets */}
+      <DashboardWidgets data={data} neededCategories={neededCategories} />
     </div>
   );
 }

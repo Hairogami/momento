@@ -50,17 +50,23 @@ export interface DashboardData {
   unreadCount: number;
 }
 
+const CATEGORY_ICONS: Record<string, string> = {
+  "Photographe": "📸", "Vidéaste": "🎥", "DJ": "🎵", "Orchestre": "🎼",
+  "Chanteur / chanteuse": "🎤", "Traiteur": "🍽️", "Fleuriste événementiel": "💐",
+  "Lieu de réception": "🏛️", "Makeup Artist": "💄", "Hairstylist": "💇",
+  "Wedding planner": "💍", "Event planner": "🎪", "Pâtissier / Cake designer": "🎂",
+  "Location de voiture de mariage": "🚗", "Décorateur": "🌸", "Neggafa": "👘",
+  "Créateur de faire-part": "💌", "Créateur de cadeaux invités": "🎁",
+  "Animateur enfants": "🎩", "VTC / Transport invités": "🚌",
+  "Créateur d'ambiance lumineuse": "💡", "Service de bar / mixologue": "🍹",
+  "Spa / soins esthétiques": "💆", "Magicien": "🪄", "Violoniste": "🎻",
+  "Dekka Marrakchia / Issawa": "🥁", "Robes de mariés": "👗",
+  "Sécurité événementielle": "🔒",
+};
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const DEFAULT_ORDER = [
-  "budget",
-  "prestataires",
-  "planning",
-  "messages",
-  "invites",
-  "meteo",
-];
-
+const BASE_ORDER = ["budget", "prestataires", "planning", "messages", "invites", "meteo"];
 const STORAGE_KEY = "momento_widget_order";
 
 // ─── Widget card wrapper ──────────────────────────────────────────────────────
@@ -75,128 +81,64 @@ interface WidgetCardProps {
   onDragStart: (id: string) => void;
   onDragOver: (e: React.DragEvent) => void;
   onDrop: (id: string) => void;
+  fullWidth?: boolean;
 }
 
-function WidgetCard({
-  id,
-  title,
-  icon,
-  children,
-  href,
-  dragging,
-  onDragStart,
-  onDragOver,
-  onDrop,
-}: WidgetCardProps) {
+function WidgetCard({ id, title, icon, children, href, dragging, onDragStart, onDragOver, onDrop, fullWidth }: WidgetCardProps) {
   const [isOver, setIsOver] = useState(false);
 
   const card = (
     <div
       draggable
       onDragStart={() => onDragStart(id)}
-      onDragOver={(e) => {
-        e.preventDefault();
-        setIsOver(true);
-        onDragOver(e);
-      }}
+      onDragOver={(e) => { e.preventDefault(); setIsOver(true); onDragOver(e); }}
       onDragLeave={() => setIsOver(false)}
-      onDrop={() => {
-        setIsOver(false);
-        onDrop(id);
-      }}
-      className="rounded-2xl p-4 flex flex-col gap-3 transition-all cursor-grab active:cursor-grabbing select-none"
+      onDrop={() => { setIsOver(false); onDrop(id); }}
+      className={`rounded-2xl p-4 flex flex-col gap-3 transition-all cursor-grab active:cursor-grabbing select-none${fullWidth ? " md:col-span-2" : ""}`}
       style={{
         backgroundColor: C.dark,
-        border: isOver
-          ? `2px solid ${C.terra}`
-          : `1px solid ${C.anthracite}`,
+        border: isOver ? `2px solid ${C.terra}` : `1px solid ${C.anthracite}`,
         opacity: dragging ? 0.5 : 1,
         boxShadow: isOver ? `0 0 0 2px ${C.terra}30` : undefined,
       }}
     >
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-base">{icon}</span>
-          <span
-            className="text-sm font-semibold"
-            style={{ color: C.white }}
-          >
-            {title}
-          </span>
+          <span className="text-sm font-semibold" style={{ color: C.white }}>{title}</span>
         </div>
-        {href && (
-          <span className="text-xs" style={{ color: C.mist }}>
-            →
-          </span>
-        )}
+        {href && <span className="text-xs" style={{ color: C.mist }}>→</span>}
       </div>
       {children}
     </div>
   );
 
-  if (href) {
-    return (
-      <Link href={href} className="block hover:opacity-95 transition-opacity">
-        {card}
-      </Link>
-    );
-  }
+  if (href) return <Link href={href} className={`block hover:opacity-95 transition-opacity${fullWidth ? " md:col-span-2" : ""}`}>{card}</Link>;
   return card;
 }
 
 // ─── Individual widgets ───────────────────────────────────────────────────────
 
 function BudgetWidget({ data }: { data: DashboardData }) {
-  const spent = data.budgetItems.reduce(
-    (sum, item) => sum + (item.actual ?? item.estimated),
-    0
-  );
-  const pct =
-    data.budget && data.budget > 0
-      ? Math.min(100, Math.round((spent / data.budget) * 100))
-      : 0;
+  const spent = data.budgetItems.reduce((sum, item) => sum + (item.actual ?? item.estimated), 0);
+  const pct = data.budget && data.budget > 0 ? Math.min(100, Math.round((spent / data.budget) * 100)) : 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-2xl font-bold" style={{ color: C.white }}>
-            {spent.toLocaleString("fr-FR")} €
-          </p>
-          {data.budget && (
-            <p className="text-xs" style={{ color: C.mist }}>
-              sur {data.budget.toLocaleString("fr-FR")} € prévus
-            </p>
-          )}
+          <p className="text-2xl font-bold" style={{ color: C.white }}>{spent.toLocaleString("fr-FR")} MAD</p>
+          {data.budget && <p className="text-xs" style={{ color: C.mist }}>sur {data.budget.toLocaleString("fr-FR")} MAD prévus</p>}
         </div>
-        <span
-          className="text-xs px-2 py-0.5 rounded-full font-medium"
-          style={{
-            backgroundColor:
-              pct > 90 ? `${C.terra}30` : `${C.anthracite}`,
-            color: pct > 90 ? C.terra : C.mist,
-          }}
-        >
+        <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+          style={{ backgroundColor: pct > 90 ? `${C.terra}30` : C.anthracite, color: pct > 90 ? C.terra : C.mist }}>
           {pct}%
         </span>
       </div>
-
-      {/* Progress bar */}
-      <div
-        className="w-full h-2 rounded-full overflow-hidden"
-        style={{ backgroundColor: C.anthracite }}
-      >
-        <div
-          className="h-full rounded-full transition-all"
-          style={{
-            width: `${pct}%`,
-            backgroundColor: pct > 90 ? C.terra : "rgba(var(--momento-terra-rgb),0.6)",
-          }}
-        />
+      <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: C.anthracite }}>
+        <div className="h-full rounded-full transition-all"
+          style={{ width: `${pct}%`, backgroundColor: pct > 90 ? C.terra : "rgba(var(--momento-terra-rgb),0.6)" }} />
       </div>
-
-      {/* Donut chart */}
       <BudgetChart items={data.budgetItems} total={data.budget ?? 0} />
     </div>
   );
@@ -209,81 +151,33 @@ function PrestatairesWidget({ data }: { data: DashboardData }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-3">
-        <div
-          className="flex-1 rounded-xl p-3 text-center"
-          style={{ backgroundColor: `${C.terra}15` }}
-        >
-          <p className="text-xl font-bold" style={{ color: C.terra }}>
-            {confirmed.length}
-          </p>
-          <p className="text-xs" style={{ color: C.mist }}>
-            confirmés
-          </p>
+        <div className="flex-1 rounded-xl p-3 text-center" style={{ backgroundColor: `${C.terra}15` }}>
+          <p className="text-xl font-bold" style={{ color: C.terra }}>{confirmed.length}</p>
+          <p className="text-xs" style={{ color: C.mist }}>confirmés</p>
         </div>
-        <div
-          className="flex-1 rounded-xl p-3 text-center"
-          style={{ backgroundColor: C.anthracite + "50" }}
-        >
-          <p className="text-xl font-bold" style={{ color: C.white }}>
-            {pending.length}
-          </p>
-          <p className="text-xs" style={{ color: C.mist }}>
-            en attente
-          </p>
+        <div className="flex-1 rounded-xl p-3 text-center" style={{ backgroundColor: C.anthracite + "50" }}>
+          <p className="text-xl font-bold" style={{ color: C.white }}>{pending.length}</p>
+          <p className="text-xs" style={{ color: C.mist }}>en attente</p>
         </div>
       </div>
-
       <div className="flex flex-col gap-1.5 mt-1">
         {data.bookings.slice(0, 4).map((b) => (
-          <div
-            key={b.id}
-            className="flex items-center gap-2 py-1"
-          >
-            {/* Avatar initial */}
-            <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-              style={{
-                backgroundColor: `${C.terra}20`,
-                color: C.terra,
-              }}
-            >
+          <div key={b.id} className="flex items-center gap-2 py-1">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+              style={{ backgroundColor: `${C.terra}20`, color: C.terra }}>
               {b.vendor?.name?.[0]?.toUpperCase() ?? "?"}
             </div>
             <div className="flex-1 min-w-0">
-              <p
-                className="text-xs font-medium truncate"
-                style={{ color: C.white }}
-              >
-                {b.vendor?.name ?? "—"}
-              </p>
-              <p className="text-xs" style={{ color: C.mist }}>
-                {b.vendor?.category ?? ""}
-              </p>
+              <p className="text-xs font-medium truncate" style={{ color: C.white }}>{b.vendor?.name ?? "—"}</p>
+              <p className="text-xs" style={{ color: C.mist }}>{b.vendor?.category ?? ""}</p>
             </div>
-            <span
-              className="text-xs px-1.5 py-0.5 rounded-full flex-shrink-0"
-              style={{
-                backgroundColor:
-                  b.status === "confirmed"
-                    ? "#2a8a4a20"
-                    : `${C.anthracite}`,
-                color:
-                  b.status === "confirmed" ? "#4ade80" : C.mist,
-              }}
-            >
-              {b.status === "confirmed"
-                ? "Confirmé"
-                : b.status === "cancelled"
-                ? "Annulé"
-                : "En attente"}
+            <span className="text-xs px-1.5 py-0.5 rounded-full flex-shrink-0"
+              style={{ backgroundColor: b.status === "confirmed" ? "#2a8a4a20" : C.anthracite, color: b.status === "confirmed" ? "#4ade80" : C.mist }}>
+              {b.status === "confirmed" ? "Confirmé" : b.status === "cancelled" ? "Annulé" : "En attente"}
             </span>
           </div>
         ))}
-        {data.bookings.length === 0 && (
-          <p className="text-xs" style={{ color: C.mist }}>
-            Aucun prestataire ajouté
-          </p>
-        )}
+        {data.bookings.length === 0 && <p className="text-xs" style={{ color: C.mist }}>Aucun prestataire ajouté</p>}
       </div>
     </div>
   );
@@ -291,87 +185,40 @@ function PrestatairesWidget({ data }: { data: DashboardData }) {
 
 function PlanningWidget({ data }: { data: DashboardData }) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
-
   function toggle(id: string) {
-    setChecked((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+    setChecked((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else next.add(id); return next; });
   }
-
   const upcoming = data.tasks.filter((t) => !t.completed).slice(0, 3);
 
   return (
     <div className="flex flex-col gap-2">
-      {upcoming.length === 0 && (
-        <p className="text-xs" style={{ color: C.mist }}>
-          Toutes les tâches sont terminées 🎉
-        </p>
-      )}
+      {upcoming.length === 0 && <p className="text-xs" style={{ color: C.mist }}>Toutes les tâches sont terminées 🎉</p>}
       {upcoming.map((task) => (
-        <div
-          key={task.id}
+        <div key={task.id}
           className="flex items-start gap-2.5 py-1.5 px-2 rounded-xl transition-colors cursor-pointer"
-          style={{
-            backgroundColor: checked.has(task.id)
-              ? `${C.terra}10`
-              : "transparent",
-          }}
-          onClick={() => toggle(task.id)}
-        >
-          {/* Checkbox */}
-          <div
-            className="w-4 h-4 rounded flex-shrink-0 mt-0.5 border flex items-center justify-center transition-all"
-            style={{
-              borderColor: checked.has(task.id) ? C.terra : C.anthracite,
-              backgroundColor: checked.has(task.id)
-                ? C.terra
-                : "transparent",
-            }}
-          >
+          style={{ backgroundColor: checked.has(task.id) ? `${C.terra}10` : "transparent" }}
+          onClick={() => toggle(task.id)}>
+          <div className="w-4 h-4 rounded flex-shrink-0 mt-0.5 border flex items-center justify-center transition-all"
+            style={{ borderColor: checked.has(task.id) ? C.terra : C.anthracite, backgroundColor: checked.has(task.id) ? C.terra : "transparent" }}>
             {checked.has(task.id) && (
               <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                <path
-                  d="M1 4l2.5 2.5L9 1"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                <path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p
-              className="text-xs font-medium"
-              style={{
-                color: checked.has(task.id) ? C.mist : C.white,
-                textDecoration: checked.has(task.id)
-                  ? "line-through"
-                  : "none",
-              }}
-            >
+            <p className="text-xs font-medium"
+              style={{ color: checked.has(task.id) ? C.mist : C.white, textDecoration: checked.has(task.id) ? "line-through" : "none" }}>
               {task.title}
             </p>
             {task.dueDate && (
               <p className="text-xs mt-0.5" style={{ color: C.mist }}>
-                {new Date(task.dueDate).toLocaleDateString("fr-FR", {
-                  day: "numeric",
-                  month: "short",
-                })}
+                {new Date(task.dueDate).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
               </p>
             )}
           </div>
           {task.category && (
-            <span
-              className="text-xs px-1.5 py-0.5 rounded-full flex-shrink-0"
-              style={{
-                backgroundColor: C.anthracite,
-                color: C.mist,
-              }}
-            >
+            <span className="text-xs px-1.5 py-0.5 rounded-full flex-shrink-0" style={{ backgroundColor: C.anthracite, color: C.mist }}>
               {task.category}
             </span>
           )}
@@ -385,30 +232,17 @@ function MessagesWidget({ data }: { data: DashboardData }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold"
-          style={{
-            backgroundColor:
-              data.unreadCount > 0 ? `${C.terra}20` : C.anthracite,
-          }}
-        >
-          {data.unreadCount > 0 ? (
-            <span style={{ color: C.terra }}>{data.unreadCount}</span>
-          ) : (
-            <span style={{ color: C.mist }}>0</span>
-          )}
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold"
+          style={{ backgroundColor: data.unreadCount > 0 ? `${C.terra}20` : C.anthracite }}>
+          {data.unreadCount > 0
+            ? <span style={{ color: C.terra }}>{data.unreadCount}</span>
+            : <span style={{ color: C.mist }}>0</span>}
         </div>
         <div>
           <p className="text-sm font-medium" style={{ color: C.white }}>
-            {data.unreadCount > 0
-              ? `${data.unreadCount} message${data.unreadCount > 1 ? "s" : ""} non lu${data.unreadCount > 1 ? "s" : ""}`
-              : "Pas de nouveaux messages"}
+            {data.unreadCount > 0 ? `${data.unreadCount} message${data.unreadCount > 1 ? "s" : ""} non lu${data.unreadCount > 1 ? "s" : ""}` : "Pas de nouveaux messages"}
           </p>
-          <p className="text-xs" style={{ color: C.mist }}>
-            {data.unreadCount > 0
-              ? "Cliquez pour répondre"
-              : "Tout est à jour"}
-          </p>
+          <p className="text-xs" style={{ color: C.mist }}>{data.unreadCount > 0 ? "Cliquez pour répondre" : "Tout est à jour"}</p>
         </div>
       </div>
     </div>
@@ -416,74 +250,31 @@ function MessagesWidget({ data }: { data: DashboardData }) {
 }
 
 function InvitesWidget({ data }: { data: DashboardData }) {
-  const confirmed = data.guests.filter((g) => g.rsvp === "yes").length;
-  const declined = data.guests.filter((g) => g.rsvp === "no").length;
-  const pending = data.guests.filter((g) => g.rsvp === "pending").length;
+  const confirmed = data.guests.filter((g) => g.rsvp === "CONFIRMED").length;
+  const declined = data.guests.filter((g) => g.rsvp === "DECLINED").length;
+  const pending = data.guests.filter((g) => g.rsvp === "PENDING").length;
   const total = data.guests.length;
-  const rsvpPct = total > 0 ? Math.round((confirmed / total) * 100) : 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-end gap-2">
-        <p className="text-2xl font-bold" style={{ color: C.white }}>
-          {total}
-        </p>
-        {data.guestCount && (
-          <p className="text-xs pb-1" style={{ color: C.mist }}>
-            / {data.guestCount} prévus
-          </p>
-        )}
+        <p className="text-2xl font-bold" style={{ color: C.white }}>{total}</p>
+        {data.guestCount && <p className="text-xs pb-1" style={{ color: C.mist }}>/ {data.guestCount} prévus</p>}
       </div>
-
-      {/* RSVP bar */}
-      {total > 0 && (
+      {total > 0 ? (
         <>
-          <div
-            className="w-full h-2 rounded-full overflow-hidden flex"
-            style={{ backgroundColor: C.anthracite }}
-          >
-            <div
-              className="h-full transition-all"
-              style={{
-                width: `${(confirmed / total) * 100}%`,
-                backgroundColor: "#4ade80",
-              }}
-            />
-            <div
-              className="h-full transition-all"
-              style={{
-                width: `${(declined / total) * 100}%`,
-                backgroundColor: C.terra,
-              }}
-            />
+          <div className="w-full h-2 rounded-full overflow-hidden flex" style={{ backgroundColor: C.anthracite }}>
+            <div className="h-full transition-all" style={{ width: `${(confirmed / total) * 100}%`, backgroundColor: "#4ade80" }} />
+            <div className="h-full transition-all" style={{ width: `${(declined / total) * 100}%`, backgroundColor: C.terra }} />
           </div>
           <div className="flex gap-3 text-xs" style={{ color: C.mist }}>
-            <span>
-              <span className="inline-block w-2 h-2 rounded-full bg-green-400 mr-1" />
-              {confirmed} oui
-            </span>
-            <span>
-              <span
-                className="inline-block w-2 h-2 rounded-full mr-1"
-                style={{ backgroundColor: C.terra }}
-              />
-              {declined} non
-            </span>
-            <span>
-              <span
-                className="inline-block w-2 h-2 rounded-full mr-1"
-                style={{ backgroundColor: C.anthracite }}
-              />
-              {pending} en attente
-            </span>
+            <span><span className="inline-block w-2 h-2 rounded-full bg-green-400 mr-1" />{confirmed} oui</span>
+            <span><span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: C.terra }} />{declined} non</span>
+            <span><span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: C.anthracite }} />{pending} en attente</span>
           </div>
         </>
-      )}
-
-      {total === 0 && (
-        <p className="text-xs" style={{ color: C.mist }}>
-          Aucun invité ajouté
-        </p>
+      ) : (
+        <p className="text-xs" style={{ color: C.mist }}>Aucun invité ajouté</p>
       )}
     </div>
   );
@@ -493,62 +284,76 @@ function MeteoWidget() {
   return (
     <div className="flex flex-col items-center justify-center py-4 gap-2">
       <span className="text-3xl">🌤</span>
-      <p className="text-sm font-medium" style={{ color: C.white }}>
-        Météo de l&apos;événement
-      </p>
-      <p
-        className="text-xs text-center"
-        style={{ color: C.mist }}
-      >
-        Disponible 14 jours avant l&apos;événement
-      </p>
-      <span
-        className="text-xs px-2 py-1 rounded-full mt-1"
-        style={{ backgroundColor: C.anthracite, color: C.mist }}
-      >
-        À venir
-      </span>
+      <p className="text-sm font-medium" style={{ color: C.white }}>Météo de l&apos;événement</p>
+      <p className="text-xs text-center" style={{ color: C.mist }}>Disponible 14 jours avant l&apos;événement</p>
+      <span className="text-xs px-2 py-1 rounded-full mt-1" style={{ backgroundColor: C.anthracite, color: C.mist }}>À venir</span>
+    </div>
+  );
+}
+
+function PrestatairesRechercheWidget({ categories }: { categories: string[] }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-2">
+        {categories.map(cat => (
+          <Link
+            key={cat}
+            href={`/prestataires?category=${encodeURIComponent(cat)}`}
+            onClick={e => e.stopPropagation()}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:scale-105"
+            style={{
+              backgroundColor: "rgba(var(--momento-terra-rgb),0.12)",
+              border: "1px solid rgba(var(--momento-terra-rgb),0.3)",
+              color: "var(--momento-terra)",
+            }}
+          >
+            {CATEGORY_ICONS[cat] && <span>{CATEGORY_ICONS[cat]}</span>}
+            {cat}
+          </Link>
+        ))}
+      </div>
+      <Link href="/event/new/categories"
+        className="text-xs transition hover:opacity-70 self-start"
+        style={{ color: C.steel }}
+        onClick={e => e.stopPropagation()}>
+        + Modifier mes recherches
+      </Link>
     </div>
   );
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function DashboardWidgets({ data }: { data: DashboardData }) {
-  const [order, setOrder] = useState<string[]>(DEFAULT_ORDER);
+export default function DashboardWidgets({ data, neededCategories = [] }: { data: DashboardData; neededCategories?: string[] }) {
+  const defaultOrder = neededCategories.length > 0
+    ? ["recherche", ...BASE_ORDER]
+    : BASE_ORDER;
+
+  const [order, setOrder] = useState<string[]>(defaultOrder);
   const draggingId = useRef<string | null>(null);
 
-  // Load order from localStorage on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved) as string[];
-        // Validate: must contain all default IDs
-        if (
-          Array.isArray(parsed) &&
-          DEFAULT_ORDER.every((id) => parsed.includes(id))
-        ) {
-          setOrder(parsed);
+        if (Array.isArray(parsed) && BASE_ORDER.every((id) => parsed.includes(id))) {
+          // Ensure "recherche" is included if we have categories
+          if (neededCategories.length > 0 && !parsed.includes("recherche")) {
+            setOrder(["recherche", ...parsed]);
+          } else {
+            setOrder(parsed);
+          }
         }
       }
-    } catch {
-      // ignore
-    }
-  }, []);
+    } catch { /* ignore */ }
+  }, [neededCategories.length]);
 
-  function handleDragStart(id: string) {
-    draggingId.current = id;
-  }
-
-  function handleDragOver(e: React.DragEvent) {
-    e.preventDefault();
-  }
-
+  function handleDragStart(id: string) { draggingId.current = id; }
+  function handleDragOver(e: React.DragEvent) { e.preventDefault(); }
   function handleDrop(targetId: string) {
     const fromId = draggingId.current;
     if (!fromId || fromId === targetId) return;
-
     setOrder((prev) => {
       const next = [...prev];
       const fromIdx = next.indexOf(fromId);
@@ -556,62 +361,28 @@ export default function DashboardWidgets({ data }: { data: DashboardData }) {
       if (fromIdx === -1 || toIdx === -1) return prev;
       next.splice(fromIdx, 1);
       next.splice(toIdx, 0, fromId);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        // ignore
-      }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* ignore */ }
       return next;
     });
-
     draggingId.current = null;
   }
 
-  const widgetProps = {
-    onDragStart: handleDragStart,
-    onDragOver: handleDragOver,
-    onDrop: handleDrop,
-  };
+  const widgetProps = { onDragStart: handleDragStart, onDragOver: handleDragOver, onDrop: handleDrop };
 
-  const widgetMap: Record<
-    string,
-    { title: string; icon: string; href?: string; content: React.ReactNode }
-  > = {
-    budget: {
-      title: "Budget",
-      icon: "💰",
-      href: "/budget",
-      content: <BudgetWidget data={data} />,
-    },
-    prestataires: {
-      title: "Prestataires",
-      icon: "🤝",
+  const widgetMap: Record<string, { title: string; icon: string; href?: string; content: React.ReactNode; fullWidth?: boolean }> = {
+    recherche: {
+      title: "Prestataires recherchés",
+      icon: "🔍",
       href: "/prestataires",
-      content: <PrestatairesWidget data={data} />,
+      content: <PrestatairesRechercheWidget categories={neededCategories} />,
+      fullWidth: true,
     },
-    planning: {
-      title: "Planning",
-      icon: "📋",
-      href: "/planner",
-      content: <PlanningWidget data={data} />,
-    },
-    messages: {
-      title: "Messages",
-      icon: "💬",
-      href: "/messages",
-      content: <MessagesWidget data={data} />,
-    },
-    invites: {
-      title: "Invités",
-      icon: "👥",
-      href: "/guests",
-      content: <InvitesWidget data={data} />,
-    },
-    meteo: {
-      title: "Météo",
-      icon: "☀️",
-      content: <MeteoWidget />,
-    },
+    budget: { title: "Budget", icon: "💰", href: "/budget", content: <BudgetWidget data={data} /> },
+    prestataires: { title: "Prestataires", icon: "🤝", href: "/prestataires", content: <PrestatairesWidget data={data} /> },
+    planning: { title: "Planning", icon: "📋", href: "/planner", content: <PlanningWidget data={data} /> },
+    messages: { title: "Messages", icon: "💬", href: "/messages", content: <MessagesWidget data={data} /> },
+    invites: { title: "Invités", icon: "👥", href: "/guests", content: <InvitesWidget data={data} /> },
+    meteo: { title: "Météo", icon: "☀️", content: <MeteoWidget /> },
   };
 
   return (
@@ -620,34 +391,17 @@ export default function DashboardWidgets({ data }: { data: DashboardData }) {
         const w = widgetMap[id];
         if (!w) return null;
         return (
-          <WidgetCard
-            key={id}
-            id={id}
-            title={w.title}
-            icon={w.icon}
-            href={w.href}
-            dragging={draggingId.current === id}
-            {...widgetProps}
-          >
+          <WidgetCard key={id} id={id} title={w.title} icon={w.icon} href={w.href}
+            dragging={draggingId.current === id} fullWidth={w.fullWidth} {...widgetProps}>
             {w.content}
           </WidgetCard>
         );
       })}
 
-      {/* Add widget button */}
       <button
         className="rounded-2xl p-4 flex items-center justify-center gap-2 text-sm font-medium transition-all hover:opacity-90 active:scale-95 md:col-span-2"
-        style={{
-          backgroundColor: "transparent",
-          border: `2px dashed ${C.anthracite}`,
-          color: C.mist,
-          cursor: "pointer",
-        }}
-        onClick={() => {
-          // Future: open widget picker modal
-          alert("Widget picker — bientôt disponible !");
-        }}
-      >
+        style={{ backgroundColor: "transparent", border: `2px dashed ${C.anthracite}`, color: C.mist, cursor: "pointer" }}
+        onClick={() => alert("Widget picker — bientôt disponible !")}>
         <span style={{ color: C.terra }}>+</span>
         Ajouter un widget
       </button>
