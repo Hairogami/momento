@@ -16,6 +16,7 @@ export async function GET() {
       budget: true,
       guestCount: true,
       location: true,
+      neededCategories: true,
     },
   })
 
@@ -49,6 +50,7 @@ export async function PATCH(req: NextRequest) {
     budget?: number | null
     guestCount?: number | null
     location?: string | null
+    neededCategories?: string
   } = {}
 
   if ("eventName" in body && typeof body.eventName === "string") {
@@ -72,6 +74,9 @@ export async function PATCH(req: NextRequest) {
   }
   if ("location" in body && typeof body.location === "string") {
     updates.location = body.location.trim().slice(0, 200) || null
+  }
+  if ("neededCategories" in body && Array.isArray(body.neededCategories)) {
+    updates.neededCategories = JSON.stringify(body.neededCategories)
   }
 
   if (Object.keys(updates).length === 0) {

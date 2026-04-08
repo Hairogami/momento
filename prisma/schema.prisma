@@ -95,8 +95,9 @@ model Workspace {
   eventDate  DateTime?
   location   String?
   budget     Float?
-  guestCount Int?
-  createdAt  DateTime  @default(now())
+  guestCount        Int?
+  neededCategories  String    @default("")
+  createdAt         DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)

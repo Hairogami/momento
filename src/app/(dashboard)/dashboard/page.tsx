@@ -103,6 +103,10 @@ export default async function DashboardPage() {
     unreadCount,
   };
 
+  const neededCategories: string[] = workspace.neededCategories
+    ? (() => { try { return JSON.parse(workspace.neededCategories) } catch { return [] } })()
+    : []
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <EventsDashboard
@@ -112,6 +116,7 @@ export default async function DashboardPage() {
         budget={workspace.budget}
         guestCount={workspace.guestCount}
         daysUntil={daysUntil}
+        neededCategories={neededCategories}
       />
     </div>
   );

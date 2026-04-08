@@ -7,6 +7,37 @@ import { C } from "@/lib/colors"
 import type { DashboardData } from "@/components/DashboardWidgets"
 import EditEventInfo from "@/components/EditEventInfo"
 
+const CATEGORY_ICONS: Record<string, string> = {
+  "Photographe": "📸",
+  "Vidéaste": "🎥",
+  "DJ": "🎵",
+  "Orchestre": "🎼",
+  "Chanteur / chanteuse": "🎤",
+  "Traiteur": "🍽️",
+  "Fleuriste événementiel": "💐",
+  "Lieu de réception": "🏛️",
+  "Makeup Artist": "💄",
+  "Hairstylist": "💇",
+  "Wedding planner": "💍",
+  "Event planner": "🎪",
+  "Pâtissier / Cake designer": "🎂",
+  "Location de voiture de mariage": "🚗",
+  "Décorateur": "🌸",
+  "Neggafa": "👘",
+  "Créateur de faire-part": "💌",
+  "Créateur de cadeaux invités": "🎁",
+  "Animateur enfants": "🎩",
+  "VTC / Transport invités": "🚌",
+  "Créateur d'ambiance lumineuse": "💡",
+  "Service de bar / mixologue": "🍹",
+  "Spa / soins esthétiques": "💆",
+  "Magicien": "🪄",
+  "Violoniste": "🎻",
+  "Dekka Marrakchia / Issawa": "🥁",
+  "Robes de mariés": "👗",
+  "Sécurité événementielle": "🔒",
+}
+
 interface Props {
   data: DashboardData
   eventName: string | null
@@ -14,13 +45,14 @@ interface Props {
   budget: number | null
   guestCount: number | null
   daysUntil: number | null
+  neededCategories: string[]
 }
 
-export default function EventsDashboard({ data, eventName, eventDate, budget, guestCount, daysUntil }: Props) {
+export default function EventsDashboard({ data, eventName, eventDate, budget, guestCount, daysUntil, neededCategories }: Props) {
   const hasEvent = !!eventDate || (eventName && eventName !== "Mon événement")
 
   if (!hasEvent) return <EmptyState firstName={data.firstName} />
-  return <EventCard data={data} eventName={eventName} eventDate={eventDate} budget={budget} guestCount={guestCount} daysUntil={daysUntil} />
+  return <EventCard data={data} eventName={eventName} eventDate={eventDate} budget={budget} guestCount={guestCount} daysUntil={daysUntil} neededCategories={neededCategories} />
 }
 
 /* ─── Empty state ─── */
@@ -130,7 +162,7 @@ function EmptyState({ firstName }: { firstName: string | null }) {
 }
 
 /* ─── Event card ─── */
-function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil }: Omit<Props, "data"> & { data: DashboardData }) {
+function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil, neededCategories }: Omit<Props, "data"> & { data: DashboardData }) {
   const confirmedGuests = data.guests.filter(g => g.rsvp === "CONFIRMED").length
   const totalGuests = guestCount ?? data.guests.length
   const completedTasks = data.tasks.filter(t => t.completed).length
@@ -210,21 +242,21 @@ function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil }
               label: "Invités",
               value: totalGuests ? `${confirmedGuests}/${totalGuests}` : "—",
               sub: totalGuests ? "confirmés" : "à définir",
-              href: "/dashboard/guests",
+              href: "/guests",
             },
             {
               icon: <Wallet size={15} />,
               label: "Budget",
               value: budget ? `${budgetPct}%` : "—",
               sub: budget ? `${totalBudgetSpent.toLocaleString("fr-FR")} / ${budget.toLocaleString("fr-FR")} MAD` : "à définir",
-              href: "/dashboard/budget",
+              href: "/budget",
             },
             {
               icon: <CheckSquare size={15} />,
               label: "Prestataires",
               value: confirmedBookings > 0 ? `${confirmedBookings}` : "—",
               sub: "confirmés",
-              href: "/dashboard/vendors",
+              href: "/vendors",
             },
             {
               icon: <Clock size={15} />,
@@ -248,13 +280,46 @@ function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil }
         </div>
       </div>
 
+      {/* Vendor category bubbles */}
+      {neededCategories.length > 0 && (
+        <div className="rounded-3xl p-6" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: C.steel }}>
+              Mes prestataires recherchés
+            </p>
+            <Link href="/event/new/categories"
+              className="text-xs transition hover:opacity-70"
+              style={{ color: "var(--momento-terra)" }}>
+              Modifier
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {neededCategories.map(cat => (
+              <Link
+                key={cat}
+                href={`/prestataires?category=${encodeURIComponent(cat)}`}
+                className="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-all hover:scale-105 hover:shadow-md"
+                style={{
+                  backgroundColor: "rgba(var(--momento-terra-rgb),0.12)",
+                  border: "1px solid rgba(var(--momento-terra-rgb),0.3)",
+                  color: "var(--momento-terra)",
+                }}
+              >
+                {CATEGORY_ICONS[cat] && <span className="text-base leading-none">{CATEGORY_ICONS[cat]}</span>}
+                {cat}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Quick actions */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {[
-          { href: "/explore", label: "Trouver des prestataires", icon: "🔍" },
-          { href: "/dashboard/budget", label: "Gérer le budget", icon: "💰" },
-          { href: "/dashboard/guests", label: "Liste des invités", icon: "👥" },
-          { href: "/dashboard/vendors", label: "Mes prestataires", icon: "🤝" },
+          { href: "/prestataires", label: "Trouver des prestataires", icon: "🔍" },
+          { href: "/budget", label: "Gérer le budget", icon: "💰" },
+          { href: "/guests", label: "Liste des invités", icon: "👥" },
+          { href: "/vendors", label: "Mes prestataires", icon: "🤝" },
           { href: "/messages", label: "Messages", icon: "💬" },
           { href: "/planner", label: "Planificateur", icon: "📋" },
         ].map(({ href, label, icon }) => (

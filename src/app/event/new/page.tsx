@@ -63,7 +63,7 @@ export default function NewEventPage() {
     } catch {
       // continue even if save fails
     }
-    router.push("/dashboard")
+    router.push("/event/new/categories")
   }
 
   const canGoStep2 = !!form.type
@@ -262,7 +262,7 @@ export default function NewEventPage() {
                 🎯 Prochaine étape
               </p>
               <p className="text-xs" style={{ color: C.mist }}>
-                Nous allons vous montrer les prestataires recommandés pour votre {form.type.toLowerCase()} à {form.location || "Maroc"}.
+                Choisissez les types de prestataires dont vous avez besoin pour votre {form.type.toLowerCase()}.
               </p>
             </div>
 
@@ -275,7 +275,7 @@ export default function NewEventPage() {
               <button onClick={handleSubmit}
                 className="flex-1 flex items-center justify-center gap-2 font-bold text-base py-4 rounded-2xl transition-all hover:opacity-90"
                 style={{ backgroundColor: selectedType?.color ?? C.terra, color: "#fff" }}>
-                Trouver mes prestataires <ArrowRight size={17} />
+                Choisir mes prestataires <ArrowRight size={17} />
               </button>
             </div>
           </>
