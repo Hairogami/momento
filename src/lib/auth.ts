@@ -11,11 +11,14 @@ import { prisma } from "@/lib/prisma";
 const REMEMBER_ME_MAX_AGE = 30 * 24 * 60 * 60; // 30 jours
 const SESSION_MAX_AGE     = 24 * 60 * 60;       // 1 jour (sans remember me)
 
+const IS_DEV = process.env.NODE_ENV === "development";
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   debug: false,
   secret: process.env.AUTH_SECRET,
-  adapter: PrismaAdapter(prisma),
+  // DEV: no DB adapter → pure JWT, no Prisma connection needed locally
+  ...(IS_DEV ? {} : { adapter: PrismaAdapter(prisma) }),
   session: {
     strategy: "jwt",
     maxAge: REMEMBER_ME_MAX_AGE, // max possible — le JWT peut expirer plus tôt
