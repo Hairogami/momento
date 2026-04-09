@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       Google({
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        allowDangerousEmailAccountLinking: true,
+        allowDangerousEmailAccountLinking: false,
         authorization: {
           params: {
             scope: "openid email profile https://www.googleapis.com/auth/calendar.readonly",
@@ -114,8 +114,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token) {
         session.user.id = token.id as string;
         (session.user as { id: string; role?: string; provider?: string }).role = token.role as string | undefined;
-        (session.user as { id: string; role?: string; provider?: string; accessToken?: string }).provider = token.provider as string | undefined;
-        (session.user as { id: string; role?: string; provider?: string; accessToken?: string }).accessToken = token.accessToken as string | undefined;
+        (session.user as { id: string; role?: string; provider?: string }).provider = token.provider as string | undefined;
+        // accessToken intentionally NOT exposed to client (security)
       }
       return session;
     },

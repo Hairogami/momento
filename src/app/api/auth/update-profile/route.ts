@@ -21,9 +21,27 @@ export async function PATCH(req: NextRequest) {
   for (const key of allowed) {
     if (key in body) {
       const val = body[key]
-      updates[key] = typeof val === "string"
-        ? (key === "image" ? val || null : val.trim().slice(0, 200) || null)
-        : null
+      if (typeof val === "string") {
+        if (key === "image") {
+          if (val) {
+            try {
+              const parsed = new URL(val)
+              if (!["http:", "https:"].includes(parsed.protocol)) {
+                return NextResponse.json({ error: "URL d'image invalide." }, { status: 400 })
+              }
+              updates[key] = val
+            } catch {
+              return NextResponse.json({ error: "URL d'image invalide." }, { status: 400 })
+            }
+          } else {
+            updates[key] = null
+          }
+        } else {
+          updates[key] = val.trim().slice(0, 200) || null
+        }
+      } else {
+        updates[key] = null
+      }
     }
   }
 

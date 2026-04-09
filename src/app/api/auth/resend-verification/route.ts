@@ -2,9 +2,19 @@ import { NextRequest, NextResponse } from "next/server"
 import { randomUUID } from "crypto"
 import { prisma } from "@/lib/prisma"
 import { sendVerificationEmail } from "@/lib/email"
+import { rateLimit } from "@/lib/rateLimiter"
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") ?? "unknown"
+    const rl = rateLimit(`resend-verification:${ip}`, 3, 15 * 60 * 1000)
+    if (!rl.ok) {
+      return NextResponse.json(
+        { message: "Trop de tentatives. Réessayez dans quelques minutes." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+      )
+    }
+
     const { email } = await req.json()
 
     if (!email) {
