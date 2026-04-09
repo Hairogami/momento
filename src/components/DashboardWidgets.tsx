@@ -94,9 +94,9 @@ export function computeStats(d: DashboardData) {
 
   // Invités — dénominateur = guestCount (prévu) si renseigné, sinon total inscrit
   const guests_registered = d.guests.length;
-  const guests_confirmed  = d.guests.filter(g => g.rsvp === "CONFIRMED").length;
-  const guests_declined   = d.guests.filter(g => g.rsvp === "DECLINED").length;
-  const guests_pending    = d.guests.filter(g => g.rsvp === "PENDING").length;
+  const guests_confirmed  = d.guests.filter(g => g.rsvp === "yes").length;
+  const guests_declined   = d.guests.filter(g => g.rsvp === "no").length;
+  const guests_pending    = d.guests.filter(g => g.rsvp === "pending").length;
   const guests_expected   = d.guestCount ?? guests_registered;
   // Progression = confirmés / attendus (même chiffre partout)
   const guests_pct        = guests_expected > 0 ? Math.round((guests_confirmed / guests_expected) * 100) : 0;
@@ -493,17 +493,17 @@ function InvitesWidget({ data, onRSVP }: { data: DashboardData; onRSVP: (id: str
                   </div>
                   <span className="text-xs flex-1 truncate" style={{ color: C.white }}>{g.name ?? `Invité ${g.id.slice(0,4)}`}</span>
                   <div className="flex gap-1">
-                    {(["CONFIRMED", "PENDING", "DECLINED"] as const).map(status => (
+                    {(["yes", "pending", "no"] as const).map(status => (
                       <button key={status}
                         onClick={() => onRSVP(g.id, status)}
                         className="text-[9px] px-1.5 py-0.5 rounded-md transition-all font-semibold"
                         style={{
                           backgroundColor: g.rsvp === status
-                            ? status === "CONFIRMED" ? "#2a8a4a" : status === "DECLINED" ? C.terra : C.anthracite
+                            ? status === "yes" ? "#2a8a4a" : status === "no" ? C.terra : C.anthracite
                             : `${C.anthracite}60`,
                           color: g.rsvp === status ? "#fff" : `${C.mist}60`,
                         }}>
-                        {status === "CONFIRMED" ? "✓" : status === "DECLINED" ? "✗" : "?"}
+                        {status === "yes" ? "✓" : status === "no" ? "✗" : "?"}
                       </button>
                     ))}
                   </div>
@@ -1035,7 +1035,7 @@ function ActiviteWidget({ data }: { data: DashboardData }) {
   data.bookings.filter(b => b.status === "confirmed").slice(0, 2).forEach(b => {
     activities.push({ icon: "✅", text: `${b.vendor?.name ?? "Prestataire"} confirmé (${s.bookings.confirmed} total)` });
   });
-  data.guests.filter(g => g.rsvp === "CONFIRMED").slice(0, 2).forEach(g => {
+  data.guests.filter(g => g.rsvp === "yes").slice(0, 2).forEach(g => {
     activities.push({ icon: "🎉", text: `${g.name ?? "Un invité"} a confirmé (${s.guests.confirmed}/${s.guests.expected})` });
   });
   data.tasks.filter(t => t.completed).slice(0, 2).forEach(t => {
@@ -1336,7 +1336,7 @@ function CarteGeographiqueWidget({ data }: { data: DashboardData }) {
 function EnvoiFairepartWidget({ data }: { data: DashboardData }) {
   const total = data.guests.length;
   const sent  = data.guests.filter(g => g.inviteSent).length;
-  const responded = data.guests.filter(g => g.rsvp !== "PENDING").length;
+  const responded = data.guests.filter(g => g.rsvp !== "pending").length;
   const pctSent = total > 0 ? Math.round((sent / total) * 100) : 0;
   const pctResp = total > 0 ? Math.round((responded / total) * 100) : 0;
 
@@ -1458,6 +1458,18 @@ export default function DashboardWidgets({ data, neededCategories = [] }: { data
   const [taskOverrides,   setTaskOverrides]   = useState<Record<string, boolean>>({});
   const [budgetOverrides, setBudgetOverrides] = useState<Record<string, number | null>>({});
   const [rsvpOverrides,   setRsvpOverrides]   = useState<Record<string, string>>({});
+  const [loadingIds,      setLoadingIds]      = useState<Set<string>>(new Set());
+  const [errorMsg,        setErrorMsg]        = useState<string | null>(null);
+  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showError = useCallback((msg: string) => {
+    setErrorMsg(msg);
+    if (errorTimer.current) clearTimeout(errorTimer.current);
+    errorTimer.current = setTimeout(() => setErrorMsg(null), 3500);
+  }, []);
+
+  const startLoading = useCallback((id: string) => setLoadingIds(s => new Set(s).add(id)), []);
+  const stopLoading  = useCallback((id: string) => setLoadingIds(s => { const n = new Set(s); n.delete(id); return n; }), []);
 
   // ── Merged data (data + overrides) ──
   const mergedData: DashboardData = useMemo(() => ({
@@ -1537,36 +1549,48 @@ export default function DashboardWidgets({ data, neededCategories = [] }: { data
   // ── Mutations (optimistic + API, stables via useCallback) ──
   const toggleTask = useCallback(async (id: string, done: boolean) => {
     setTaskOverrides(prev => ({ ...prev, [id]: done }));
+    startLoading(id);
     try {
       const res = await fetch(`/api/tasks/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ completed: done }) });
       if (!res.ok) throw new Error(res.statusText);
       emitRefresh();
     } catch {
       setTaskOverrides(prev => { const n = { ...prev }; delete n[id]; return n; });
+      showError("Impossible de mettre à jour la tâche.");
+    } finally {
+      stopLoading(id);
     }
-  }, [emitRefresh]);
+  }, [emitRefresh, startLoading, stopLoading, showError]);
 
   const updateBudgetActual = useCallback(async (id: string, actual: number | null) => {
     setBudgetOverrides(prev => ({ ...prev, [id]: actual }));
+    startLoading(id);
     try {
       const res = await fetch(`/api/budget-items/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ actual }) });
       if (!res.ok) throw new Error(res.statusText);
       emitRefresh();
     } catch {
       setBudgetOverrides(prev => { const n = { ...prev }; delete n[id]; return n; });
+      showError("Impossible de mettre à jour le budget.");
+    } finally {
+      stopLoading(id);
     }
-  }, [emitRefresh]);
+  }, [emitRefresh, startLoading, stopLoading, showError]);
 
   const updateRSVP = useCallback(async (id: string, rsvp: string) => {
     setRsvpOverrides(prev => ({ ...prev, [id]: rsvp }));
+    startLoading(id);
     try {
       const res = await fetch(`/api/guests/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rsvp }) });
       if (!res.ok) throw new Error(res.statusText);
       emitRefresh();
     } catch {
       setRsvpOverrides(prev => { const n = { ...prev }; delete n[id]; return n; });
+      showError("Impossible de mettre à jour le RSVP.");
+    } finally {
+      stopLoading(id);
     }
-  }, [emitRefresh]);
+  }, [emitRefresh, startLoading, stopLoading, showError]);
 
   const dragProps = useMemo(
     () => ({ onDragStart: handleDragStart, onDragOver: handleDragOver, onDrop: handleDrop }),
@@ -1611,6 +1635,25 @@ export default function DashboardWidgets({ data, neededCategories = [] }: { data
 
   return (
     <>
+      {/* Toast d'erreur */}
+      {errorMsg && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl text-sm font-medium shadow-xl flex items-center gap-2 animate-in slide-in-from-bottom-2"
+          style={{ backgroundColor: C.terra, color: "#fff" }}
+        >
+          <span>⚠️</span> {errorMsg}
+        </div>
+      )}
+
+      {/* Indicateur de chargement global */}
+      {loadingIds.size > 0 && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2"
+          style={{ backgroundColor: C.dark, color: C.mist, border: `1px solid ${C.anthracite}` }}>
+          <span className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: `${C.terra} transparent transparent transparent` }} />
+          Enregistrement…
+        </div>
+      )}
+
       {showPicker && (
         <WidgetPicker activeIds={order} onAdd={handleAdd} onClose={() => setShowPicker(false)} />
       )}

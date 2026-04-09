@@ -19,6 +19,8 @@ export default async function DashboardPage() {
         eventDate={MOCK_WORKSPACE.eventDate}
         daysUntil={daysUntil}
         neededCategories={MOCK_NEEDED_CATEGORIES}
+        budget={MOCK_WORKSPACE.budget}
+        guestCount={MOCK_WORKSPACE.guestCount}
       />
     )
   }
@@ -105,6 +107,8 @@ export default async function DashboardPage() {
       eventDate={workspace.eventDate ? workspace.eventDate.toISOString() : null}
       daysUntil={daysUntil}
       neededCategories={neededCategories}
+      budget={workspace.budget}
+      guestCount={workspace.guestCount}
     />
   );
 }
@@ -112,17 +116,19 @@ export default async function DashboardPage() {
 // ── Shared UI ────────────────────────────────────────────────────────────────
 
 function DashboardContent({
-  data, eventName, eventDate, daysUntil, neededCategories,
+  data, eventName, eventDate, daysUntil, neededCategories, budget, guestCount,
 }: {
   data: DashboardData
   eventName: string
   eventDate: string | null
   daysUntil: number | null
   neededCategories: string[]
+  budget: number | null
+  guestCount: number | null
 }) {
   return (
     <div className="p-6 w-full max-w-none space-y-6">
-      <EventCard eventName={eventName} eventDate={eventDate} daysUntil={daysUntil} />
+      <EventCard eventName={eventName} eventDate={eventDate} daysUntil={daysUntil} budget={budget} guestCount={guestCount} />
 
       <DashboardWidgets data={data} neededCategories={neededCategories} />
     </div>

@@ -3,10 +3,11 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { IS_DEV } from "@/lib/devMock"
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   if (IS_DEV) {
     const body = await req.json()
-    return NextResponse.json({ id: params.id, ...body })
+    return NextResponse.json({ id, ...body })
   }
 
   const session = await auth()
@@ -14,12 +15,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   const body = await req.json()
 
-  const item = await prisma.budgetItem.findUnique({ where: { id: params.id }, select: { workspace: { select: { userId: true } } } })
+  const item = await prisma.budgetItem.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
   if (!item || item.workspace.userId !== session.user.id)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const updated = await prisma.budgetItem.update({
-    where: { id: params.id },
+    where: { id },
     data: { ...(body.actual !== undefined && { actual: body.actual }) },
   })
   return NextResponse.json(updated)

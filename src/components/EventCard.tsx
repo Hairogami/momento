@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Calendar, Pencil, Check, X } from "lucide-react"
+import { Calendar, Users, Wallet, Pencil, Check, X } from "lucide-react"
 import { C } from "@/lib/colors"
 import { IS_DEV } from "@/lib/devMock"
 
@@ -10,24 +10,31 @@ interface Props {
   eventName: string
   eventDate: string | null
   daysUntil: number | null
+  budget: number | null
+  guestCount: number | null
 }
 
-export default function EventCard({ eventName, eventDate, daysUntil }: Props) {
+export default function EventCard({ eventName, eventDate, daysUntil, budget, guestCount }: Props) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(eventName)
   const [date, setDate] = useState(eventDate ? eventDate.slice(0, 10) : "")
+  const [budgetVal, setBudgetVal] = useState(budget !== null ? String(budget) : "")
+  const [guestVal, setGuestVal] = useState(guestCount !== null ? String(guestCount) : "")
   const [saving, setSaving] = useState(false)
 
   // Valeurs affichées (optimistes)
   const [displayName, setDisplayName] = useState(eventName)
   const [displayDate, setDisplayDate] = useState(eventDate)
+  const [displayBudget, setDisplayBudget] = useState(budget)
+  const [displayGuests, setDisplayGuests] = useState(guestCount)
 
   async function save() {
     setSaving(true)
     const body: Record<string, unknown> = { eventName: name }
-    if (date) body.eventDate = date
-    else body.eventDate = null
+    body.eventDate = date || null
+    if (budgetVal !== "") body.budget = parseFloat(budgetVal)
+    if (guestVal !== "") body.guestCount = parseInt(guestVal)
 
     if (!IS_DEV) {
       try {
@@ -45,6 +52,8 @@ export default function EventCard({ eventName, eventDate, daysUntil }: Props) {
 
     setDisplayName(name)
     setDisplayDate(date ? new Date(date).toISOString() : null)
+    setDisplayBudget(budgetVal !== "" ? parseFloat(budgetVal) : null)
+    setDisplayGuests(guestVal !== "" ? parseInt(guestVal) : null)
     setEditing(false)
     setSaving(false)
     router.refresh()
@@ -53,6 +62,8 @@ export default function EventCard({ eventName, eventDate, daysUntil }: Props) {
   function cancel() {
     setName(displayName)
     setDate(displayDate ? displayDate.slice(0, 10) : "")
+    setBudgetVal(displayBudget !== null ? String(displayBudget) : "")
+    setGuestVal(displayGuests !== null ? String(displayGuests) : "")
     setEditing(false)
   }
 
@@ -78,13 +89,46 @@ export default function EventCard({ eventName, eventDate, daysUntil }: Props) {
             className="w-full max-w-sm text-center text-xl font-bold rounded-xl px-4 py-2 outline-none"
             style={{ backgroundColor: `${C.anthracite}40`, border: `1px solid ${C.terra}60`, color: C.white }}
           />
-          <input
-            type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            className="text-center text-sm rounded-xl px-4 py-2 outline-none"
-            style={{ backgroundColor: `${C.anthracite}40`, border: `1px solid ${C.anthracite}`, color: C.mist }}
-          />
+          <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider mb-1" style={{ color: C.mist }}>
+                <Calendar size={10} className="inline mr-1" />Date
+              </label>
+              <input
+                type="date"
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                className="w-full text-center text-sm rounded-xl px-3 py-2 outline-none"
+                style={{ backgroundColor: `${C.anthracite}40`, border: `1px solid ${C.anthracite}`, color: C.mist, colorScheme: "dark" }}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider mb-1" style={{ color: C.mist }}>
+                <Users size={10} className="inline mr-1" />Invités
+              </label>
+              <input
+                type="number"
+                value={guestVal}
+                onChange={e => setGuestVal(e.target.value)}
+                placeholder="150"
+                className="w-full text-center text-sm rounded-xl px-3 py-2 outline-none"
+                style={{ backgroundColor: `${C.anthracite}40`, border: `1px solid ${C.anthracite}`, color: C.mist }}
+              />
+            </div>
+          </div>
+          <div className="w-full max-w-sm">
+            <label className="block text-[10px] uppercase tracking-wider mb-1" style={{ color: C.mist }}>
+              <Wallet size={10} className="inline mr-1" />Budget total (MAD)
+            </label>
+            <input
+              type="number"
+              value={budgetVal}
+              onChange={e => setBudgetVal(e.target.value)}
+              placeholder="50000"
+              className="w-full text-center text-sm rounded-xl px-3 py-2 outline-none"
+              style={{ backgroundColor: `${C.anthracite}40`, border: `1px solid ${C.anthracite}`, color: C.mist }}
+            />
+          </div>
           <div className="flex gap-2 mt-1">
             <button
               onClick={save}
@@ -125,6 +169,20 @@ export default function EventCard({ eventName, eventDate, daysUntil }: Props) {
                 </span>
               )}
             </p>
+          )}
+          {(displayGuests !== null || displayBudget !== null) && (
+            <div className="flex items-center gap-4 mt-2">
+              {displayGuests !== null && (
+                <span className="text-xs flex items-center gap-1" style={{ color: C.mist }}>
+                  <Users size={11} /> {displayGuests} invités prévus
+                </span>
+              )}
+              {displayBudget !== null && (
+                <span className="text-xs flex items-center gap-1" style={{ color: C.mist }}>
+                  <Wallet size={11} /> {displayBudget.toLocaleString("fr-FR")} MAD
+                </span>
+              )}
+            </div>
           )}
         </div>
       )}
