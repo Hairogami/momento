@@ -54,6 +54,7 @@ type Planner = {
   location?: string | null;
   coverColor?: string | null;
   guestCount?: number | null;
+  budget?: number | null;
 };
 
 function eventIcon(p: Planner): string {
@@ -285,6 +286,16 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
                           </span>
                         )}
                       </div>
+
+                      {/* Budget */}
+                      {p.budget != null && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <Wallet size={9} style={{ color: `${C.mist}60` }} />
+                          <span className="text-[10px]" style={{ color: `${C.mist}60` }}>
+                            {p.budget.toLocaleString("fr-FR")} MAD
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </Link>
                 );

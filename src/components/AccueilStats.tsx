@@ -192,7 +192,7 @@ export default function AccueilStats() {
   }
 
   return (
-    <div className="flex gap-4 px-6 pb-12 max-w-4xl mx-auto w-full" style={{ marginTop: "-120px" }}>
+    <div className="flex gap-4 px-6 pb-12 max-w-4xl mx-auto w-full mt-6">
       <EventsChart data={stats.eventsByMonth} totals={stats.totals} />
       <PartnersChart data={stats.partnersByCategory} totals={stats.totals} />
     </div>

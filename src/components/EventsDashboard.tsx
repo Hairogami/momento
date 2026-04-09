@@ -166,12 +166,12 @@ function EmptyState({ firstName, hasExistingEvents }: { firstName: string | null
 
 /* ─── Event card ─── */
 function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil, neededCategories }: Omit<Props, "data"> & { data: DashboardData }) {
-  const confirmedGuests = data.guests.filter(g => g.rsvp === "CONFIRMED").length
+  const confirmedGuests = data.guests.filter(g => g.rsvp === "yes").length
   const totalGuests = guestCount ?? data.guests.length
   const completedTasks = data.tasks.filter(t => t.completed).length
-  const totalBudgetSpent = data.budgetItems.reduce((s, b) => s + (b.actual ?? 0), 0)
+  const totalBudgetSpent = data.budgetItems.reduce((s, b) => s + (b.actual ?? b.estimated), 0)
   const budgetPct = budget ? Math.min(100, Math.round((totalBudgetSpent / budget) * 100)) : 0
-  const confirmedBookings = data.bookings.filter(b => b.status === "CONFIRMED").length
+  const confirmedBookings = data.bookings.filter(b => b.status === "confirmed").length
 
   const formattedDate = eventDate
     ? new Date(eventDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })
