@@ -16,6 +16,7 @@ model User {
   image          String?
   emailVerified  DateTime?
   passwordHash   String?
+  googleId       String?   @unique
   role           String    @default("client") // client | vendor | admin
   firstName      String?
   lastName       String?
