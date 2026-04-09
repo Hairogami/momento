@@ -29,7 +29,10 @@ export const metadata: Metadata = {
   keywords: ["prestataires événementiels Maroc", "mariage Maroc", "DJ Marrakech", "traiteur Casablanca", "photographe mariage Maroc", "décoration événement Maroc", "organisateur événement Maroc"],
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   icons: {
-    icon: [{ url: "/logo-dark.png", type: "image/png" }],
+    icon: [
+      { url: "/logo-light.png", type: "image/png", media: "(prefers-color-scheme: light)" },
+      { url: "/logo-dark.png",  type: "image/png", media: "(prefers-color-scheme: dark)"  },
+    ],
     apple: "/logo-badge-dark.png",
   },
   openGraph: {
