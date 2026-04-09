@@ -2,11 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Heart, Star, MapPin, ChevronLeft } from "lucide-react"
-import NavAuthButtons from "@/components/NavAuthButtons"
-import { DarkModeToggle } from "@/components/DarkModeToggle"
+import { Heart, Star, MapPin } from "lucide-react"
 import { C } from "@/lib/colors"
-import { MomentoLogo } from "@/components/MomentoLogo"
 
 const CAT_IMAGES: Record<string, string> = {
   "DJ":                            "https://images.unsplash.com/photo-1571266028243-d220c6a18571?w=400&h=300&fit=crop&q=75",
@@ -42,7 +39,6 @@ const CAT_IMAGES: Record<string, string> = {
   "Jeux & animations enfants":     "https://images.unsplash.com/photo-1576515652033-4cb4ae1c67ed?w=400&h=300&fit=crop&q=75",
 }
 
-// Full vendors list — same as explore page
 const VENDORS = [
   { id: "prestige-photo",           name: "PRESTIGE PHOTO",            category: "Photographe",                   city: "Rabat",        rating: 5 },
   { id: "touzani-bola-bola-royal",  name: "TOUZANI BOLA BOLA ROYAL",   category: "Dekka Marrakchia / Issawa",     city: "Rabat",        rating: 5 },
@@ -136,110 +132,76 @@ export default function FavoritesPage() {
     .filter(Boolean) as typeof VENDORS
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: C.ink, color: C.white }}>
-      {/* Nav */}
-      <header
-        className="sticky top-0 z-40 w-full px-6 py-4 flex items-center justify-between"
-        style={{ backgroundColor: `${C.ink}F8`, backdropFilter: "blur(16px)", borderBottom: `1px solid ${C.anthracite}` }}
-      >
-        <MomentoLogo iconSize={28} />
-        <div className="flex items-center gap-2">
-          <DarkModeToggle />
-          <NavAuthButtons />
-        </div>
-      </header>
+    <div className="px-6 py-8">
+      <div className="flex items-center gap-3 mb-8">
+        <h1 className="text-2xl font-bold" style={{ color: C.white }}>Mes favoris</h1>
+        {loaded && favorites.length > 0 && (
+          <span className="text-sm px-2.5 py-1 rounded-full font-semibold"
+            style={{ backgroundColor: `${C.terra}20`, color: C.terra }}>
+            {favorites.length}
+          </span>
+        )}
+      </div>
 
-      <main className="px-4 sm:px-6 py-10 max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <Link href="/explore"
-            className="flex items-center gap-1 text-sm transition-opacity hover:opacity-70"
-            style={{ color: C.mist }}>
-            <ChevronLeft size={16} />
-            Explorer
-          </Link>
-          <span style={{ color: C.anthracite }}>/</span>
-          <h1 className="text-2xl font-bold" style={{ color: C.white, fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif" }}>
-            Mes favoris
-          </h1>
-        </div>
-
-        {!loaded ? null : favorites.length === 0 ? (
-          /* Empty state */
-          <div className="flex flex-col items-center justify-center py-24 gap-5">
-            <div
-              className="w-20 h-20 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: C.dark }}>
-              <Heart size={32} style={{ color: C.anthracite }} />
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-semibold mb-1" style={{ color: C.white }}>Aucun favori pour l'instant</p>
-              <p className="text-sm" style={{ color: C.mist }}>
-                Cliquez sur le ♡ d'un prestataire pour l'ajouter ici.
-              </p>
-            </div>
-            <Link
-              href="/explore"
-              className="text-sm font-bold px-6 py-3 rounded-xl transition-all hover:opacity-90"
-              style={{ backgroundColor: C.terra, color: "#fff" }}>
-              Explorer les prestataires
-            </Link>
+      {!loaded ? null : favorites.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-24 gap-5">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ backgroundColor: C.dark }}>
+            <Heart size={32} style={{ color: C.anthracite }} />
           </div>
-        ) : (
-          <>
-            <p className="text-sm mb-6" style={{ color: C.mist }}>
-              {favorites.length} prestataire{favorites.length > 1 ? "s" : ""} sauvegardé{favorites.length > 1 ? "s" : ""}
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {favorites.map(vendor => {
-                const img = CAT_IMAGES[vendor.category] ?? `https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&q=75`
-                return (
-                  <div key={vendor.id} className="group relative flex flex-col gap-2">
-                    {/* Card image */}
-                    <div className="relative aspect-square rounded-2xl overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={img}
-                        alt={vendor.name}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                      {/* Remove button */}
-                      <button
-                        onClick={() => removeFavorite(vendor.id)}
-                        className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110"
-                        style={{ backgroundColor: "rgba(255,255,255,0.9)" }}
-                        title="Retirer des favoris"
-                      >
-                        <Heart size={16} fill={C.terra} color={C.terra} />
-                      </button>
+          <div className="text-center">
+            <p className="text-lg font-semibold mb-1" style={{ color: C.white }}>Aucun favori pour l&apos;instant</p>
+            <p className="text-sm" style={{ color: C.mist }}>Cliquez sur le ♡ d&apos;un prestataire pour l&apos;ajouter ici.</p>
+          </div>
+          <Link
+            href="/explore"
+            className="text-sm font-bold px-6 py-3 rounded-xl transition-all hover:opacity-90"
+            style={{ backgroundColor: C.terra, color: "#fff" }}>
+            Explorer les prestataires
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {favorites.map(vendor => {
+            const img = CAT_IMAGES[vendor.category] ?? "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&q=75"
+            return (
+              <div key={vendor.id} className="group relative flex flex-col gap-2">
+                <div className="relative aspect-square rounded-2xl overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img}
+                    alt={vendor.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <button
+                    onClick={() => removeFavorite(vendor.id)}
+                    className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                    style={{ backgroundColor: "rgba(255,255,255,0.9)" }}
+                    title="Retirer des favoris"
+                  >
+                    <Heart size={16} fill={C.terra} color={C.terra} />
+                  </button>
+                </div>
+                <div className="px-0.5">
+                  <Link href={`/vendor/${vendor.id}`}>
+                    <p className="text-xs font-bold leading-tight truncate hover:opacity-80" style={{ color: C.white }}>{vendor.name}</p>
+                  </Link>
+                  <p className="text-xs mt-0.5 truncate" style={{ color: C.mist }}>{vendor.category}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-0.5">
+                      <Star size={11} fill={C.terra} color={C.terra} />
+                      <span className="text-xs font-semibold" style={{ color: C.white }}>{vendor.rating}</span>
                     </div>
-
-                    {/* Info */}
-                    <div className="px-0.5">
-                      <p className="text-xs font-bold leading-tight truncate" style={{ color: C.white }}>
-                        {vendor.name}
-                      </p>
-                      <p className="text-xs mt-0.5 truncate" style={{ color: C.mist }}>
-                        {vendor.category}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="flex items-center gap-0.5">
-                          <Star size={11} fill={C.terra} color={C.terra} />
-                          <span className="text-xs font-semibold" style={{ color: C.white }}>{vendor.rating}</span>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          <MapPin size={10} style={{ color: C.steel }} />
-                          <span className="text-xs" style={{ color: C.steel }}>{vendor.city}</span>
-                        </div>
-                      </div>
+                    <div className="flex items-center gap-0.5">
+                      <MapPin size={10} style={{ color: C.steel }} />
+                      <span className="text-xs" style={{ color: C.steel }}>{vendor.city}</span>
                     </div>
                   </div>
-                )
-              })}
-            </div>
-          </>
-        )}
-      </main>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

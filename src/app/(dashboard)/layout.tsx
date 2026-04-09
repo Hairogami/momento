@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import {
   Users, Wallet, Store, Settings, MessageSquare, Heart,
   CalendarDays, Bell, ChevronRight, User, Sparkles, Plus,
-  Home, MapPin, ChevronDown,
+  Home, MapPin, ChevronDown, Menu, X,
 } from "lucide-react";
 import { C } from "@/lib/colors"
 import { DarkModeToggle } from "@/components/DarkModeToggle"
@@ -101,6 +101,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [planners, setPlanners] = useState<Planner[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [unread, setUnread] = useState({ messages: 0, notifications: 0 });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/planners")
@@ -144,12 +145,38 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: C.ink }}>
       {/* Logo fixe en haut à droite */}
-      <div className="fixed top-4 right-5 z-50">
+      <div className="fixed top-4 right-5 z-50 hidden md:block">
         <MomentoLogo iconSize={28} variant="wordmark" />
       </div>
 
+      {/* ── Barre mobile top ── */}
+      <div
+        className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14"
+        style={{ backgroundColor: C.dark, borderBottom: `1px solid ${C.anthracite}` }}
+      >
+        <button
+          onClick={() => setSidebarOpen(v => !v)}
+          className="p-2 rounded-xl transition hover:opacity-70"
+          style={{ color: C.mist }}
+        >
+          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+        <MomentoLogo iconSize={24} variant="wordmark" />
+        <div className="w-10" />
+      </div>
+
+      {/* ── Overlay mobile ── */}
+      {sidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-30 bg-black/50"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       <aside
-        className="w-56 flex flex-col py-5 px-3 sticky top-0 h-screen"
+        className={`fixed md:sticky top-0 z-30 md:z-auto h-screen flex flex-col py-5 px-3 transition-transform duration-300
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
+          w-56 md:w-56 pt-[4.5rem] md:pt-5`}
         style={{ backgroundColor: C.dark, borderRight: `1px solid ${C.anthracite}` }}
       >
         {/* DarkModeToggle seul en haut */}
@@ -162,6 +189,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* ── Accueil (toujours visible) ── */}
           <Link
             href="/accueil"
+            onClick={() => setSidebarOpen(false)}
             className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90 mb-1"
             style={{
               backgroundColor: pathname === "/accueil" ? C.terra : "transparent",
@@ -205,6 +233,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <Link
                     key={p.id}
                     href={href}
+                    onClick={() => setSidebarOpen(false)}
                     className="group block rounded-xl overflow-hidden transition-all hover:scale-[1.02]"
                     style={{
                       backgroundColor: active ? `${color}22` : `${C.anthracite}60`,
@@ -293,6 +322,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link
                 key={href}
                 href={href}
+                onClick={() => setSidebarOpen(false)}
                 className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90"
                 style={{
                   backgroundColor: active ? C.terra : "transparent",
@@ -331,6 +361,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link
                 key={href}
                 href={href}
+                onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90"
                 style={{
                   backgroundColor: active ? C.terra : "transparent",
@@ -361,7 +392,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto" style={{ backgroundColor: C.ink }}>
+      <main className="flex-1 overflow-auto pt-14 md:pt-0" style={{ backgroundColor: C.ink }}>
         {children}
       </main>
     </div>
