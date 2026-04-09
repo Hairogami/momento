@@ -212,6 +212,12 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
         searchPlaceholder={`Rechercher un·e ${vendor.category.toLowerCase()}…`}
       />
 
+      <div className="px-4 pt-3 pb-1 max-w-6xl mx-auto">
+        <Link href="/explore" className="inline-flex items-center gap-1 text-sm transition-opacity hover:opacity-70" style={{ color: C.mist }}>
+          ← Explorer
+        </Link>
+      </div>
+
       {/* CLAIM BANNER */}
       {!claimed && !claimDismissed && (
         <div

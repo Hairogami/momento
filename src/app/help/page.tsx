@@ -57,6 +57,9 @@ export default function HelpPage() {
       >
         <MomentoLogo iconSize={28} />
         <div className="flex items-center gap-4">
+          <Link href="/" className="text-sm transition-opacity hover:opacity-70" style={{ color: C.mist }}>
+            ← Accueil
+          </Link>
           <DarkModeToggle />
           <Link href="/login" className="text-sm" style={{ color: C.mist }}>
             Connexion

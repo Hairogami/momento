@@ -19,8 +19,7 @@ export default function LoginPage() {
         {/* Brand */}
         <div className="text-center mb-10">
           <div className="flex justify-center mb-3">
-            <Image src="/logo-badge-dark.png" alt="Momento" width={100} height={100} className="dark:hidden" style={{ objectFit: "contain" }} priority />
-            <Image src="/logo-badge-light.png" alt="Momento" width={100} height={100} className="hidden dark:block" style={{ objectFit: "contain" }} priority />
+            <Image src="/logo-light.png" alt="Momento" width={100} height={100} className="invert dark:invert-0" style={{ objectFit: "contain" }} priority />
           </div>
           <p className="text-sm" style={{ color: C.mist }}>
             Organisez votre evenement sans stress
@@ -29,9 +28,8 @@ export default function LoginPage() {
 
         {/* Card */}
         <div
-          className="rounded-2xl p-8 space-y-5"
+          className="rounded-2xl p-8 space-y-5 shadow-lg dark:shadow-none bg-white dark:bg-[var(--momento-dark)]"
           style={{
-            backgroundColor: C.dark,
             border: `1px solid ${C.anthracite}`,
           }}
         >
@@ -54,9 +52,8 @@ export default function LoginPage() {
             >
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90 bg-white dark:bg-[var(--momento-ink)]"
                 style={{
-                  backgroundColor: C.ink,
                   color: C.white,
                   border: `1px solid ${C.anthracite}`,
                 }}
@@ -77,9 +74,8 @@ export default function LoginPage() {
               >
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90 bg-white dark:bg-[var(--momento-ink)]"
                   style={{
-                    backgroundColor: C.ink,
                     color: C.white,
                     border: `1px solid ${C.anthracite}`,
                   }}
@@ -104,9 +100,8 @@ export default function LoginPage() {
               >
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90 bg-white dark:bg-[var(--momento-ink)]"
                   style={{
-                    backgroundColor: C.ink,
                     color: C.white,
                     border: `1px solid ${C.anthracite}`,
                   }}
@@ -153,9 +148,8 @@ export default function LoginPage() {
               type="email"
               placeholder="toi@exemple.com"
               required
-              className="rounded-xl py-3 px-4 text-sm"
+              className="rounded-xl py-3 px-4 text-sm bg-white dark:bg-[var(--momento-ink)]"
               style={{
-                backgroundColor: C.ink,
                 border: `1px solid ${C.anthracite}`,
                 color: C.white,
               }}

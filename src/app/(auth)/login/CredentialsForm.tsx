@@ -58,7 +58,6 @@ export function CredentialsForm() {
   }
 
   const inputStyle = {
-    backgroundColor: C.ink,
     border: `1px solid ${C.anthracite}`,
     color: C.white,
     borderRadius: "12px",
@@ -68,10 +67,12 @@ export function CredentialsForm() {
     outline: "none",
   } as React.CSSProperties;
 
+  const inputClassName = "bg-white dark:bg-[var(--momento-ink)]";
+
   return (
     <div className="space-y-3">
       {/* Tabs */}
-      <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: C.ink }}>
+      <div className="flex rounded-xl p-1 gap-1 bg-white dark:bg-[var(--momento-ink)]">
         {(["login", "register"] as const).map((m) => (
           <button
             key={m}
@@ -97,6 +98,7 @@ export function CredentialsForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            className={inputClassName}
             style={inputStyle}
           />
         )}
@@ -106,6 +108,7 @@ export function CredentialsForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          className={inputClassName}
           style={inputStyle}
         />
         <input
@@ -115,8 +118,21 @@ export function CredentialsForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={8}
+          className={inputClassName}
           style={inputStyle}
         />
+
+        {mode === "login" && (
+          <div className="text-right">
+            <a
+              href="/forgot-password"
+              className="text-xs hover:underline"
+              style={{ color: C.mist }}
+            >
+              Mot de passe oublié ?
+            </a>
+          </div>
+        )}
 
         {/* Remember me */}
         <label className="flex items-center gap-2 cursor-pointer select-none">

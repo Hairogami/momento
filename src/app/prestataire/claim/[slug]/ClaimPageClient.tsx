@@ -215,6 +215,11 @@ export default function ClaimPageClient({
     <div className="min-h-screen py-12 px-4" style={{ backgroundColor: C.ink }}>
       <div className="w-full max-w-md mx-auto">
 
+        {/* Back */}
+        <Link href={`/vendor/${slug}`} className="inline-flex items-center gap-1 text-sm mb-6 transition-opacity hover:opacity-70" style={{ color: C.mist }}>
+          ← Retour au prestataire
+        </Link>
+
         {/* Logo */}
         <Link href="/" className="block text-center mb-8">
           <span className="text-2xl font-bold tracking-tight" style={{ color: C.terra }}>momento</span>

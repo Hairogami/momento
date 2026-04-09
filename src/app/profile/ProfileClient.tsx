@@ -93,7 +93,7 @@ export default function ProfileClient({ user: initialUser, planners }: { user: U
         <div className="flex items-center gap-4">
           <DarkModeToggle />
           <Link href="/dashboard" className="text-xs font-semibold transition-opacity hover:opacity-70" style={{ color: C.mist }}>
-            Dashboard
+            ← Mon espace
           </Link>
           <button onClick={handleLogout} className="text-xs font-semibold transition-opacity hover:opacity-70" style={{ color: C.terra }}>
             Déconnexion

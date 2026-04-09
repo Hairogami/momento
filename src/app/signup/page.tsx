@@ -129,7 +129,10 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: C.ink, color: C.white }}>
-      <header className="w-full px-6 pt-8 pb-4 flex justify-center">
+      <header className="w-full px-6 pt-8 pb-4 flex items-center justify-center relative">
+        <Link href="/login" className="absolute left-6 text-sm transition-opacity hover:opacity-70" style={{ color: C.mist }}>
+          ← Connexion
+        </Link>
         <MomentoLogo iconSize={28} />
       </header>
 
