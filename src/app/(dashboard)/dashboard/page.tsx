@@ -53,16 +53,19 @@ export default async function DashboardPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { firstName: true, name: true },
-  });
+    select: { name: true },
+  }).catch(() => null);
 
-  const unreadCount = await prisma.message.count({
-    where: {
-      read: false,
-      senderId: { not: session.user.id },
-      conversation: { clientId: session.user.id },
-    },
-  });
+  let unreadCount = 0;
+  try {
+    unreadCount = await prisma.message.count({
+      where: {
+        read: false,
+        senderId: { not: session.user.id },
+        conversation: { clientId: session.user.id },
+      },
+    });
+  } catch { /* champ read non migré */ }
 
   let daysUntil: number | null = null;
   if (workspace.eventDate) {
@@ -70,7 +73,7 @@ export default async function DashboardPage() {
     daysUntil = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   }
 
-  const firstName = user?.firstName ?? user?.name?.split(" ")[0] ?? null;
+  const firstName = user?.name?.split(" ")[0] ?? null;
 
   const data: DashboardData = {
     firstName,

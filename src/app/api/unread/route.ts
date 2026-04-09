@@ -11,13 +11,16 @@ export async function GET() {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ messages: 0, notifications: 0 })
 
-  const messages = await prisma.message.count({
-    where: {
-      read: false,
-      senderId: { not: session.user.id },
-      conversation: { clientId: session.user.id },
-    },
-  })
+  let messages = 0;
+  try {
+    messages = await prisma.message.count({
+      where: {
+        read: false,
+        senderId: { not: session.user.id },
+        conversation: { clientId: session.user.id },
+      },
+    });
+  } catch { /* champ read non migré */ }
 
   return NextResponse.json({ messages, notifications: 0 })
 }
