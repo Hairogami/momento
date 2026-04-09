@@ -129,8 +129,8 @@ function PartnersChart({ data, totals }: { data: PartnerStat[]; totals: Stats["t
           {total === 0 && (
             <circle cx={cx} cy={cy} r={outer} fill="none" stroke={C.anthracite} strokeWidth={outer - inner} />
           )}
-          <text x={cx} y={cy - 6}  textAnchor="middle" fontSize={16} fontWeight="700" fill={C.terra}>{total}</text>
-          <text x={cx} y={cy + 10} textAnchor="middle" fontSize={8}  fill={`${C.mist}80`}>partenaires</text>
+          <text x={cx} y={cy - 6}  textAnchor="middle" fontSize={16} fontWeight="700" style={{ fill: C.terra }}>{total}</text>
+          <text x={cx} y={cy + 10} textAnchor="middle" fontSize={8}  style={{ fill: C.mist }}>partenaires</text>
         </svg>
 
         <div className="flex flex-col gap-1.5 flex-1 min-w-0">
