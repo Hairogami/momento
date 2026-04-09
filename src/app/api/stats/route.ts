@@ -86,8 +86,8 @@ function buildStats(planners: PlannerWithSteps[]) {
 
   return Response.json({
     eventsByMonth,
-    partnersByCategory: partnersByCategory.length > 0 ? partnersByCategory : MOCK_PARTNERS,
-    totals: { created: totalCreated, realized: totalRealized, partners: totalPartners || 60 },
+    partnersByCategory,
+    totals: { created: totalCreated, realized: totalRealized, partners: totalPartners },
   })
 }
 
