@@ -11,6 +11,9 @@ export default function LoginPage() {
       className="relative min-h-screen flex items-center justify-center px-4"
       style={{ backgroundColor: C.ink }}
     >
+      <div className="absolute top-4 left-4">
+        <a href="/" className="text-sm transition-opacity hover:opacity-70" style={{ color: C.mist }}>← Accueil</a>
+      </div>
       <div className="absolute top-4 right-4">
         <DarkModeToggle />
       </div>
