@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   keywords: ["prestataires événementiels Maroc", "mariage Maroc", "DJ Marrakech", "traiteur Casablanca", "photographe mariage Maroc", "décoration événement Maroc", "organisateur événement Maroc"],
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   icons: {
-    icon: "/logo-badge-dark.png",
-    apple: "/logo-badge-dark.png",
+    icon: "/favicon-momento.png",
+    apple: "/favicon-momento.png",
   },
   openGraph: {
     title: "Momento — Prestataires événementiels au Maroc",
