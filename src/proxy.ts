@@ -11,6 +11,12 @@ const AUTH_ONLY          = ["/login", "/signup"]
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
 
+  // ── DEV BYPASS (localhost only — never runs in production) ────────────────
+  if (process.env.NODE_ENV === "development") {
+    return NextResponse.next()
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   // ── AUTH GATE ─────────────────────────────────────────────────────────────
   // Check session cookie directly — do NOT call auth() here.
   // PrismaAdapter uses database sessions which require Node.js runtime,

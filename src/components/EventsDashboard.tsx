@@ -46,17 +46,18 @@ interface Props {
   guestCount: number | null
   daysUntil: number | null
   neededCategories: string[]
+  hasExistingEvents?: boolean
 }
 
-export default function EventsDashboard({ data, eventName, eventDate, budget, guestCount, daysUntil, neededCategories }: Props) {
+export default function EventsDashboard({ data, eventName, eventDate, budget, guestCount, daysUntil, neededCategories, hasExistingEvents }: Props) {
   const hasEvent = !!eventDate || (eventName && eventName !== "Mon événement")
 
-  if (!hasEvent) return <EmptyState firstName={data.firstName} />
+  if (!hasEvent) return <EmptyState firstName={data.firstName} hasExistingEvents={hasExistingEvents} />
   return <EventCard data={data} eventName={eventName} eventDate={eventDate} budget={budget} guestCount={guestCount} daysUntil={daysUntil} neededCategories={neededCategories} />
 }
 
 /* ─── Empty state ─── */
-function EmptyState({ firstName }: { firstName: string | null }) {
+function EmptyState({ firstName, hasExistingEvents }: { firstName: string | null; hasExistingEvents?: boolean }) {
   const [hover, setHover] = useState(false)
 
   return (
@@ -118,7 +119,9 @@ function EmptyState({ firstName }: { firstName: string | null }) {
 
       <p className="text-sm text-center max-w-xs mb-8" style={{ color: C.mist, lineHeight: 1.7 }}>
         Chaque grand moment commence par une idée.<br />
-        Créez votre premier événement et laissez Momento vous guider.
+        {hasExistingEvents
+          ? "Organisez un nouvel événement et laissez Momento vous guider."
+          : "Chaque grand moment commence par une idée. Créez votre premier événement et laissez Momento vous guider."}
       </p>
 
       {/* Decorative divider */}
@@ -139,7 +142,7 @@ function EmptyState({ firstName }: { firstName: string | null }) {
           letterSpacing: "0.05em",
         }}
       >
-        Créer mon premier événement <ArrowRight size={15} />
+        {hasExistingEvents ? "Créer un nouveau projet" : "Créer mon premier événement"} <ArrowRight size={15} />
       </Link>
 
       {/* Feature pills */}
