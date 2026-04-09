@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import {
   Users, Wallet, Store, Settings, MessageSquare, Heart,
   CalendarDays, Bell, ChevronRight, User, Sparkles, Plus,
@@ -94,7 +94,7 @@ const BOTTOM_NAV = [
   { href: "/settings", label: "Paramètres",  icon: Settings },
 ];
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeId = searchParams.get("id");
@@ -396,5 +396,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {children}
       </main>
     </div>
+  );
+}
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense>
+      <DashboardLayoutInner>{children}</DashboardLayoutInner>
+    </Suspense>
   );
 }
