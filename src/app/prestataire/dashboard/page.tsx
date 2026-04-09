@@ -317,8 +317,13 @@ export default function VendorDashboard() {
           </Link>
         </div>
 
-        {/* Logout */}
-        <div className="px-3 pb-5">
+        {/* Logout + retour site */}
+        <div className="px-3 pb-5 flex flex-col gap-1">
+          <Link href="/"
+            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium transition-all hover:opacity-80"
+            style={{ color: C.mist }}>
+            ← Site public
+          </Link>
           <button onClick={logout}
             className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium transition-all hover:opacity-80"
             style={{ color: C.mist }}>
