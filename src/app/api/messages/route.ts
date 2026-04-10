@@ -3,9 +3,14 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 
-/** Strip dangerous HTML/script content from user input */
+/** Strip dangerous HTML/script content from user input, including encoded entities */
 function sanitize(str: string): string {
-  return str
+  // WR-005: decode numeric HTML entities first to prevent bypass via &#60;script&#62; etc.
+  const decoded = str
+    .replace(/&#x[0-9a-f]+;/gi, "")
+    .replace(/&#[0-9]+;/gi, "")
+    .replace(/&[a-z]+;/gi, "")
+  return decoded
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
     .replace(/<[^>]*>/g, "")
     .trim()

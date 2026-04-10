@@ -23,8 +23,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL("/coming-soon?error=1", base))
   }
 
+  // WR-011: previewKey is guaranteed non-null here (validated above), never set empty cookie
   const res = NextResponse.redirect(new URL("/", base))
-  res.cookies.set("preview_key", previewKey ?? "", {
+  res.cookies.set("preview_key", previewKey, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

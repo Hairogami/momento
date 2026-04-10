@@ -41,6 +41,7 @@ export async function GET() {
     prisma.stepVendor.findMany({
       where: { step: { planner: { userId: session.user.id } } },
       select: { vendor: { select: { category: true } } },
+      take: 5000, // WR-003: cap to prevent unbounded memory usage
     }),
   ])
 

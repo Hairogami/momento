@@ -97,19 +97,13 @@ export async function POST(req: NextRequest) {
     throw createErr
   }
 
-  // Mise à jour dénormalisée rating + reviewCount sur Vendor
-  const agg = await prisma.review.aggregate({
-    where: { vendorId: vendor.id },
-    _avg: { rating: true },
-    _count: true,
-  })
-  await prisma.vendor.update({
-    where: { id: vendor.id },
-    data: {
-      rating:      agg._avg.rating ?? null,
-      reviewCount: agg._count,
-    },
-  })
+  // WR-001: atomic update — aggregate + update in single SQL to avoid race condition
+  await prisma.$executeRaw`
+    UPDATE "Vendor"
+    SET rating = (SELECT AVG(rating)::numeric(3,2) FROM "Review" WHERE "vendorId" = ${vendor.id}),
+        "reviewCount" = (SELECT COUNT(*)::int FROM "Review" WHERE "vendorId" = ${vendor.id})
+    WHERE id = ${vendor.id}
+  `
 
   return NextResponse.json(review, { status: 201 })
 }

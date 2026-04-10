@@ -55,15 +55,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Prestataire introuvable." }, { status: 404 })
     }
 
+    // WR-004: strip HTML tags before storing to prevent stored XSS
+    function stripHtml(s: string): string {
+      return s.replace(/<[^>]*>/g, "").trim()
+    }
+
     const request = await prisma.contactRequest.create({
       data: {
         vendorSlug,
-        clientName,
+        clientName:  stripHtml(clientName),
         clientEmail: clientEmail.trim().toLowerCase(),
         clientPhone: clientPhone ?? null,
         eventType:   eventType ?? null,
         eventDate:   eventDate ?? null,
-        message,
+        message:     stripHtml(message),
       },
     })
 

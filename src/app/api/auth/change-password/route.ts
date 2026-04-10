@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { rateLimitAsync } from "@/lib/rateLimiter"
 
 const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
 
@@ -9,6 +10,15 @@ export async function POST(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
+  }
+
+  // WR-009: rate limit per userId to prevent password oracle brute-force
+  const rl = await rateLimitAsync(`change-password:${session.user.id}`, 5, 15 * 60_000)
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Trop de tentatives. Réessayez dans quelques minutes." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+    )
   }
 
   let body: { currentPassword?: string; newPassword?: string }
