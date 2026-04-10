@@ -182,7 +182,7 @@ export default function FavoritesPage() {
                   </button>
                 </div>
                 <div className="px-0.5">
-                  <Link href={`/vendor/${vendor.id}`}>
+                  <Link href={`/prestataire/${vendor.id}`}>
                     <p className="text-xs font-bold leading-tight truncate hover:opacity-80" style={{ color: C.white }}>{vendor.name}</p>
                   </Link>
                   <p className="text-xs mt-0.5 truncate" style={{ color: C.mist }}>{vendor.category}</p>
