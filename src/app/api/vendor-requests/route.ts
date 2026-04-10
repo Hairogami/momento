@@ -45,7 +45,8 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
   }
   const { id, status } = reqBody
-  if (typeof id !== "string" || !["pending", "read", "replied"].includes(status as string)) {
+  // W-N04: align with vendor/dashboard values (pending/confirmed/declined)
+  if (typeof id !== "string" || !["pending", "confirmed", "declined"].includes(status as string)) {
     return NextResponse.json({ error: "Paramètres invalides." }, { status: 400 })
   }
 

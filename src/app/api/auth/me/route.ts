@@ -20,6 +20,8 @@ export async function GET() {
       lastName: true,
       phone: true,
       location: true,
+      companyName: true,
+      vendorCategory: true,
     },
   })
   if (!user) return NextResponse.json({ error: "Introuvable." }, { status: 404 })

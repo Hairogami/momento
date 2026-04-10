@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Champs requis manquants." }, { status: 400 })
     }
 
-    if (!newPassword) {
+    // C-N01: cap length before bcrypt to prevent DoS via oversized input
+    if (!newPassword || typeof newPassword !== "string" || newPassword.length > 128) {
       return NextResponse.json({ error: "Champs requis manquants." }, { status: 400 })
     }
 
