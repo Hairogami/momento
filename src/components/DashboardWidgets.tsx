@@ -1441,7 +1441,7 @@ function WidgetPicker({ activeIds, onAdd, onClose }: { activeIds: string[]; onAd
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function DashboardWidgets({ data, neededCategories = [] }: { data: DashboardData; neededCategories?: string[] }) {
+export default function DashboardWidgets({ data, neededCategories = [], plannerId }: { data: DashboardData; neededCategories?: string[]; plannerId?: string | null }) {
   const router = useRouter();
   const hasRecherche = neededCategories.length > 0;
   const defaultOrder = hasRecherche ? ["recherche", ...BASE_ORDER] : [...BASE_ORDER];
@@ -1597,38 +1597,48 @@ export default function DashboardWidgets({ data, neededCategories = [] }: { data
     [handleDragStart, handleDragOver, handleDrop]
   );
 
+  // ── Context-aware href builder ──
+  const hrefFor = useCallback((base: string) => {
+    if (!plannerId) return base;
+    if (base === "/vendors")  return `/vendors?id=${plannerId}`;
+    if (base === "/budget")   return `/budget?event=${plannerId}`;
+    if (base === "/guests")   return `/guests?id=${plannerId}`;
+    if (base === "/planner")  return `/planner?id=${plannerId}`;
+    return base;
+  }, [plannerId]);
+
   type WidgetDef = { title: string; icon: string; href?: string; content: React.ReactNode };
   const widgetMap: Record<string, WidgetDef> = useMemo(() => ({
-    recherche:    { title: "Prestataires recherchés", icon: "🔍", href: "/vendors",  content: <PrestatairesRechercheWidget categories={neededCategories} /> },
-    budget:       { title: "Budget",                  icon: "💰", href: "/budget",   content: <BudgetWidget data={mergedData} onEditActual={updateBudgetActual} /> },
-    prestataires: { title: "Prestataires",            icon: "🤝", href: "/vendors",  content: <PrestatairesWidget data={mergedData} /> },
-    planning:     { title: "Planning",                icon: "📋", href: "/planner",  content: <PlanningWidget data={mergedData} onToggle={toggleTask} /> },
-    messages:     { title: "Messages",                icon: "💬", href: "/messages", content: <MessagesWidget data={mergedData} /> },
-    invites:      { title: "Invités",                 icon: "👥", href: "/guests",   content: <InvitesWidget data={mergedData} onRSVP={updateRSVP} /> },
-    meteo:        { title: "Météo",                   icon: "☀️",                   content: <MeteoWidget /> },
-    depenses:     { title: "Dépenses récentes",       icon: "📊", href: "/budget",   content: <DepensesRecentesWidget data={mergedData} /> },
-    epargne:      { title: "Objectif budget",         icon: "🎯", href: "/budget",   content: <ObjectifEpargneWidget data={mergedData} /> },
-    repartition:  { title: "Répartition budget",      icon: "🥧", href: "/budget",   content: <RepartitionBudgetWidget data={mergedData} /> },
-    checklistjx:  { title: "Checklist J-X",           icon: "📆", href: "/planner",  content: <ChecklistJXWidget data={mergedData} /> },
-    timeline:     { title: "Timeline",                icon: "🗓️", href: "/planner",  content: <TimelineWidget data={mergedData} /> },
-    plantable:    { title: "Plan de table",           icon: "🪑", href: "/guests",   content: <PlanTableWidget data={mergedData} /> },
-    rsvplive:     { title: "RSVP Live",               icon: "📨", href: "/guests",   content: <RSVPLiveWidget data={mergedData} /> },
-    regimes:      { title: "Régimes alimentaires",    icon: "🍽️",                   content: <RegimesWidget data={mergedData} /> },
-    agenda:       { title: "Agenda prestataires",     icon: "📅", href: "/vendors",  content: <AgendaWidget data={mergedData} /> },
-    contrats:     { title: "Contrats à signer",       icon: "📄", href: "/vendors",  content: <ContratsWidget data={mergedData} /> },
-    notemoyenne:  { title: "Note moyenne",            icon: "⭐",                   content: <NoteMoyenneWidget data={mergedData} /> },
-    moodboard:    { title: "Mood board",              icon: "🎨",                   content: <MoodboardWidget /> },
-    countdown:    { title: "Compte à rebours",        icon: "⏱️",                   content: <CountdownWidget data={mergedData} /> },
-    activite:     { title: "Fil d'actualité",         icon: "📰",                   content: <ActiviteWidget data={mergedData} /> },
-    citation:     { title: "Citation du jour",        icon: "✨",                   content: <CitationWidget /> },
-    progression:  { title: "Score de progression",   icon: "🏆",                   content: <ProgressionWidget data={mergedData} /> },
-    alertes:      { title: "Rappels & alertes",       icon: "🔔", href: "/planner",  content: <AlertesWidget data={mergedData} /> },
-    comparateur:  { title: "Comparateur devis",       icon: "⚖️", href: "/vendors",  content: <ComparateurWidget data={mergedData} /> },
-    noteslibres:  { title: "Notes libres",            icon: "📝",                   content: <NotesLibresWidget /> },
-    transport:    { title: "Transport & navettes",    icon: "🚌", href: "/vendors",  content: <TransportWidget data={mergedData} /> },
-    cartegeo:     { title: "Carte géographique",      icon: "🗺️", href: "/guests",   content: <CarteGeographiqueWidget data={mergedData} /> },
-    envoi:        { title: "Envoi faire-part",        icon: "💌", href: "/guests",   content: <EnvoiFairepartWidget data={mergedData} /> },
-  }), [mergedData, neededCategories, toggleTask, updateBudgetActual, updateRSVP]);
+    recherche:    { title: "Prestataires recherchés", icon: "🔍", href: hrefFor("/vendors"),  content: <PrestatairesRechercheWidget categories={neededCategories} /> },
+    budget:       { title: "Budget",                  icon: "💰", href: hrefFor("/budget"),   content: <BudgetWidget data={mergedData} onEditActual={updateBudgetActual} /> },
+    prestataires: { title: "Prestataires",            icon: "🤝", href: hrefFor("/vendors"),  content: <PrestatairesWidget data={mergedData} /> },
+    planning:     { title: "Planning",                icon: "📋", href: hrefFor("/planner"),  content: <PlanningWidget data={mergedData} onToggle={toggleTask} /> },
+    messages:     { title: "Messages",                icon: "💬", href: "/messages",          content: <MessagesWidget data={mergedData} /> },
+    invites:      { title: "Invités",                 icon: "👥", href: hrefFor("/guests"),   content: <InvitesWidget data={mergedData} onRSVP={updateRSVP} /> },
+    meteo:        { title: "Météo",                   icon: "☀️",                             content: <MeteoWidget /> },
+    depenses:     { title: "Dépenses récentes",       icon: "📊", href: hrefFor("/budget"),   content: <DepensesRecentesWidget data={mergedData} /> },
+    epargne:      { title: "Objectif budget",         icon: "🎯", href: hrefFor("/budget"),   content: <ObjectifEpargneWidget data={mergedData} /> },
+    repartition:  { title: "Répartition budget",      icon: "🥧", href: hrefFor("/budget"),   content: <RepartitionBudgetWidget data={mergedData} /> },
+    checklistjx:  { title: "Checklist J-X",           icon: "📆", href: hrefFor("/planner"),  content: <ChecklistJXWidget data={mergedData} /> },
+    timeline:     { title: "Timeline",                icon: "🗓️", href: hrefFor("/planner"),  content: <TimelineWidget data={mergedData} /> },
+    plantable:    { title: "Plan de table",           icon: "🪑", href: hrefFor("/guests"),   content: <PlanTableWidget data={mergedData} /> },
+    rsvplive:     { title: "RSVP Live",               icon: "📨", href: hrefFor("/guests"),   content: <RSVPLiveWidget data={mergedData} /> },
+    regimes:      { title: "Régimes alimentaires",    icon: "🍽️",                             content: <RegimesWidget data={mergedData} /> },
+    agenda:       { title: "Agenda prestataires",     icon: "📅", href: hrefFor("/vendors"),  content: <AgendaWidget data={mergedData} /> },
+    contrats:     { title: "Contrats à signer",       icon: "📄", href: hrefFor("/vendors"),  content: <ContratsWidget data={mergedData} /> },
+    notemoyenne:  { title: "Note moyenne",            icon: "⭐",                             content: <NoteMoyenneWidget data={mergedData} /> },
+    moodboard:    { title: "Mood board",              icon: "🎨",                             content: <MoodboardWidget /> },
+    countdown:    { title: "Compte à rebours",        icon: "⏱️",                             content: <CountdownWidget data={mergedData} /> },
+    activite:     { title: "Fil d'actualité",         icon: "📰",                             content: <ActiviteWidget data={mergedData} /> },
+    citation:     { title: "Citation du jour",        icon: "✨",                             content: <CitationWidget /> },
+    progression:  { title: "Score de progression",   icon: "🏆",                             content: <ProgressionWidget data={mergedData} /> },
+    alertes:      { title: "Rappels & alertes",       icon: "🔔", href: hrefFor("/planner"),  content: <AlertesWidget data={mergedData} /> },
+    comparateur:  { title: "Comparateur devis",       icon: "⚖️", href: hrefFor("/vendors"),  content: <ComparateurWidget data={mergedData} /> },
+    noteslibres:  { title: "Notes libres",            icon: "📝",                             content: <NotesLibresWidget /> },
+    transport:    { title: "Transport & navettes",    icon: "🚌", href: hrefFor("/vendors"),  content: <TransportWidget data={mergedData} /> },
+    cartegeo:     { title: "Carte géographique",      icon: "🗺️", href: hrefFor("/guests"),   content: <CarteGeographiqueWidget data={mergedData} /> },
+    envoi:        { title: "Envoi faire-part",        icon: "💌", href: hrefFor("/guests"),   content: <EnvoiFairepartWidget data={mergedData} /> },
+  }), [mergedData, neededCategories, toggleTask, updateBudgetActual, updateRSVP, hrefFor]);
 
   const rechercheIds = order.filter(id => id === "recherche");
   const otherIds     = order.filter(id => id !== "recherche");

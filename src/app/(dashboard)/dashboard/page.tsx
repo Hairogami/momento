@@ -6,7 +6,11 @@ import DashboardWidgets from "@/components/DashboardWidgets";
 import EventCard from "@/components/EventCard";
 import { IS_DEV, MOCK_DASHBOARD_DATA, MOCK_NEEDED_CATEGORIES, MOCK_WORKSPACE } from "@/lib/devMock";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>
+}) {
   // ── DEV MOCK (local only, never runs in production) ──────────────────────
   if (IS_DEV) {
     const daysUntil = Math.max(0, Math.ceil(
@@ -21,6 +25,7 @@ export default async function DashboardPage() {
         neededCategories={MOCK_NEEDED_CATEGORIES}
         budget={MOCK_WORKSPACE.budget}
         guestCount={MOCK_WORKSPACE.guestCount}
+        coverColor={null}
       />
     )
   }
@@ -29,13 +34,44 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
+  const { id: plannerId } = await searchParams;
+
+  // ── Si un planner est sélectionné, charger ses données ──────────────────
+  let plannerOverride: {
+    eventName: string
+    eventDate: string | null
+    budget: number | null
+    budgetItems: DashboardData["budgetItems"]
+    coverColor: string | null
+  } | null = null
+
+  if (plannerId) {
+    const planner = await prisma.planner.findUnique({
+      where: { id: plannerId },
+      include: { budgetItems: true },
+    })
+    if (planner && planner.userId === session.user.id) {
+      plannerOverride = {
+        eventName: planner.coupleNames || planner.title || "Mon événement",
+        eventDate: planner.weddingDate ? planner.weddingDate.toISOString() : null,
+        budget: planner.budget,
+        budgetItems: planner.budgetItems.map(b => ({
+          id: b.id, category: b.category, label: b.label,
+          estimated: b.estimated, actual: b.actual,
+        })),
+        coverColor: planner.coverColor,
+      }
+    }
+  }
+
+  // ── Workspace (tâches, réservations, invités) ────────────────────────────
   let workspace = await prisma.workspace.findUnique({
     where: { userId: session.user.id },
     include: {
-      tasks: { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
+      tasks:    { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
       budgetItems: true,
       bookings: { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
-      guests: true,
+      guests:   true,
     },
   });
 
@@ -43,10 +79,10 @@ export default async function DashboardPage() {
     workspace = await prisma.workspace.create({
       data: { userId: session.user.id },
       include: {
-        tasks: { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
+        tasks:    { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
         budgetItems: true,
         bookings: { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
-        guests: true,
+        guests:   true,
       },
     });
   }
@@ -67,25 +103,27 @@ export default async function DashboardPage() {
     });
   } catch (err) { console.error("[dashboard] unreadCount query failed:", err) }
 
-  let daysUntil: number | null = null;
-  if (workspace.eventDate) {
-    const diff = new Date(workspace.eventDate).getTime() - Date.now();
-    daysUntil = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  // ── Calcul des jours restants ────────────────────────────────────────────
+  const rawDate = plannerOverride?.eventDate ?? (workspace.eventDate ? workspace.eventDate.toISOString() : null)
+  let daysUntil: number | null = null
+  if (rawDate) {
+    daysUntil = Math.max(0, Math.ceil((new Date(rawDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
   }
 
   const firstName = user?.name?.split(" ")[0] ?? null;
 
+  // ── Données agrégées — planner prioritaire, workspace en fallback ─────────
   const data: DashboardData = {
     firstName,
-    eventName: workspace.eventName,
-    eventDate: workspace.eventDate ? workspace.eventDate.toISOString() : null,
-    budget: workspace.budget,
+    eventName: plannerOverride?.eventName ?? workspace.eventName,
+    eventDate: plannerOverride?.eventDate ?? (workspace.eventDate ? workspace.eventDate.toISOString() : null),
+    budget: plannerOverride?.budget ?? workspace.budget,
     guestCount: workspace.guestCount,
     tasks: workspace.tasks.map((t) => ({
       id: t.id, title: t.title, category: t.category,
       dueDate: t.dueDate ? t.dueDate.toISOString() : null, completed: t.completed,
     })),
-    budgetItems: workspace.budgetItems.map((b) => ({
+    budgetItems: plannerOverride?.budgetItems ?? workspace.budgetItems.map((b) => ({
       id: b.id, category: b.category, label: b.label, estimated: b.estimated, actual: b.actual,
     })),
     bookings: workspace.bookings.map((b) => ({
@@ -101,17 +139,19 @@ export default async function DashboardPage() {
       SELECT "neededCategories" FROM "Workspace" WHERE "userId" = ${session.user.id} LIMIT 1
     `;
     if (raw[0]?.neededCategories) neededCategories = JSON.parse(raw[0].neededCategories);
-  } catch (err) { console.error("[dashboard] neededCategories raw query failed (migration pending?):", err) }
+  } catch (err) { console.error("[dashboard] neededCategories raw query failed:", err) }
 
   return (
     <DashboardContent
       data={data}
-      eventName={workspace.eventName}
-      eventDate={workspace.eventDate ? workspace.eventDate.toISOString() : null}
+      eventName={plannerOverride?.eventName ?? workspace.eventName}
+      eventDate={plannerOverride?.eventDate ?? (workspace.eventDate ? workspace.eventDate.toISOString() : null)}
       daysUntil={daysUntil}
       neededCategories={neededCategories}
-      budget={workspace.budget}
+      budget={plannerOverride?.budget ?? workspace.budget}
       guestCount={workspace.guestCount}
+      coverColor={plannerOverride?.coverColor ?? null}
+      plannerId={plannerId}
     />
   );
 }
@@ -119,7 +159,7 @@ export default async function DashboardPage() {
 // ── Shared UI ────────────────────────────────────────────────────────────────
 
 function DashboardContent({
-  data, eventName, eventDate, daysUntil, neededCategories, budget, guestCount,
+  data, eventName, eventDate, daysUntil, neededCategories, budget, guestCount, coverColor, plannerId,
 }: {
   data: DashboardData
   eventName: string
@@ -128,12 +168,20 @@ function DashboardContent({
   neededCategories: string[]
   budget: number | null
   guestCount: number | null
+  coverColor: string | null
+  plannerId?: string
 }) {
   return (
     <div className="p-6 w-full max-w-none space-y-6">
-      <EventCard eventName={eventName} eventDate={eventDate} daysUntil={daysUntil} budget={budget} guestCount={guestCount} />
-
-      <DashboardWidgets data={data} neededCategories={neededCategories} />
+      <EventCard
+        eventName={eventName}
+        eventDate={eventDate}
+        daysUntil={daysUntil}
+        budget={budget}
+        guestCount={guestCount}
+        coverColor={coverColor}
+      />
+      <DashboardWidgets data={data} neededCategories={neededCategories} plannerId={plannerId} />
     </div>
   )
 }
