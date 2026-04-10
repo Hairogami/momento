@@ -1,17 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { rateLimit, getIp } from "@/lib/rateLimit"
+import { rateLimit, getIp } from "@/lib/rateLimiter"
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export async function POST(req: NextRequest) {
+  // Body size limit: 16 KB max
+  const contentLength = parseInt(req.headers.get("content-length") ?? "0", 10)
+  if (contentLength > 16_384) {
+    return NextResponse.json({ error: "Requête trop volumineuse." }, { status: 413 })
+  }
+
   // Rate limit: 5 contact requests per 10 minutes per IP (anti-spam)
   const ip = getIp(req)
-  const rl = rateLimit(ip, { limit: 5, windowSec: 600 })
+  const rl = rateLimit(`contact:${ip}`, 5, 600_000)
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de demandes. Veuillez patienter 10 minutes." },
-      { status: 429, headers: { "Retry-After": "600" } }
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
     )
   }
 

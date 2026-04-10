@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { rateLimit, getIp } from "@/lib/rateLimit"
+import { rateLimit, getIp } from "@/lib/rateLimiter"
 
 /** Strip dangerous HTML/script content from user input */
 function sanitize(str: string): string {
@@ -45,13 +45,19 @@ export async function GET() {
 
 // POST /api/messages — create or find conversation, then send a message
 export async function POST(req: NextRequest) {
+  // Body size limit: 16 KB max
+  const contentLength = parseInt(req.headers.get("content-length") ?? "0", 10)
+  if (contentLength > 16_384) {
+    return NextResponse.json({ error: "Requête trop volumineuse." }, { status: 413 })
+  }
+
   // Rate limit: 30 messages per minute per IP
   const ip = getIp(req)
-  const rl = rateLimit(ip, { limit: 30, windowSec: 60 })
+  const rl = rateLimit(`messages:${ip}`, 30, 60_000)
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de messages. Veuillez patienter." },
-      { status: 429, headers: { "Retry-After": "60" } }
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
     )
   }
 

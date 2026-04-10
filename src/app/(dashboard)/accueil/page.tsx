@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import EventsDashboard from "@/components/EventsDashboard"
 import AccueilStats from "@/components/AccueilStats"
+import OnboardingModal from "@/components/OnboardingModal"
 
 const EMPTY_DATA = {
   firstName: "Yazid",
@@ -29,6 +30,7 @@ export default function AccueilPage() {
 
   return (
     <div className="flex flex-col">
+      <OnboardingModal show={!hasExistingEvents} />
       <EventsDashboard
         data={EMPTY_DATA}
         eventName={null}

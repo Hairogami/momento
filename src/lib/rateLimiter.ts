@@ -37,6 +37,15 @@ export function rateLimit(
   return { ok: true }
 }
 
+/** Extrait l'IP réelle depuis les headers Next.js */
+export function getIp(req: Request): string {
+  return (
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    req.headers.get("x-real-ip") ??
+    "unknown"
+  )
+}
+
 // Nettoyage périodique (évite les fuites mémoire)
 if (typeof setInterval !== "undefined") {
   setInterval(() => {
