@@ -22,6 +22,9 @@ export async function POST(req: NextRequest) {
 
     // Rate limit: 5 attempts per 15 min per IP
     const ip = getIp(req)
+    if (!ip) {
+      return NextResponse.json({ error: "Requête non identifiable." }, { status: 400 })
+    }
     const rl = rateLimit(`vendor-claim:${ip}`, 5, 15 * 60_000)
     if (!rl.ok) {
       return NextResponse.json({ error: "Trop de tentatives. Réessayez dans quelques minutes." }, { status: 429 })
@@ -39,6 +42,10 @@ export async function POST(req: NextRequest) {
       // Prevent a user who is already a vendor from claiming a second profile
       const userProfile = await prisma.vendorProfile.findUnique({ where: { userId: session.user.id }, select: { id: true } })
       if (userProfile) return NextResponse.json({ error: "Vous avez déjà un profil prestataire." }, { status: 409 })
+
+      // CR-02: Check slug not already claimed before transaction to avoid silent 500 on race
+      const existingSlugProfile = await prisma.vendorProfile.findUnique({ where: { slug }, select: { id: true } })
+      if (existingSlugProfile) return NextResponse.json({ error: "Ce profil est déjà revendiqué." }, { status: 409 })
 
       try {
         await prisma.$transaction([

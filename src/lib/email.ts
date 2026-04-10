@@ -7,6 +7,16 @@ function getResend() {
 const FROM = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev"
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
+/** CR-01: Escape HTML special chars to prevent XSS in email templates */
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
 const BASE_STYLE = `
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #F5EDD6;
@@ -47,7 +57,7 @@ export async function sendVerificationEmail({
   token: string
 }) {
   const link = `${APP_URL}/api/auth/verify-email?token=${token}`
-  const name = firstName ?? "là"
+  const name = escapeHtml(firstName ?? "là")
 
   await getResend().emails.send({
     from: FROM,
@@ -82,7 +92,7 @@ export async function sendPasswordResetEmail({
   token: string
 }) {
   const link = `${APP_URL}/reset-password?token=${token}`
-  const name = firstName ?? "là"
+  const name = escapeHtml(firstName ?? "là")
 
   await getResend().emails.send({
     from: FROM,

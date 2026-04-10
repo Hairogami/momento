@@ -13,6 +13,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const body = await req.json()
 
+  // WR-03: Validate title and description
+  if (!body.title || typeof body.title !== "string") {
+    return Response.json({ error: "title requis." }, { status: 400 })
+  }
+  const title = body.title.trim().slice(0, 200)
+  const description = typeof body.description === "string" ? body.description.slice(0, 1000) : null
+
   const lastStep = await prisma.step.findFirst({
     where: { plannerId },
     orderBy: { order: "desc" },
@@ -20,9 +27,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const step = await prisma.step.create({
     data: {
-      title: body.title,
-      description: body.description,
-      category: body.category || "general",
+      title,
+      description,
+      category: typeof body.category === "string" ? body.category.slice(0, 100) : "general",
       dueDate: body.dueDate ? new Date(body.dueDate) : null,
       order: (lastStep?.order ?? -1) + 1,
       plannerId,

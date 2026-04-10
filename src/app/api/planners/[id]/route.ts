@@ -10,6 +10,14 @@ function parseDate(val: unknown): Date | undefined {
   return isNaN(d.getTime()) ? undefined : d
 }
 
+// WR-01: Safe budget parse — rejects NaN, Infinity, negatives
+function parseBudget(val: unknown): number | undefined {
+  if (val === undefined) return undefined
+  const n = parseFloat(String(val))
+  if (!isFinite(n) || n < 0) return undefined
+  return n
+}
+
 async function findPlannerOwnership(id: string) {
   return prisma.planner.findUnique({ where: { id }, select: { userId: true } })
 }
@@ -53,7 +61,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       title:       body.title,
       coupleNames: body.coupleNames,
       weddingDate: parseDate(body.weddingDate),
-      budget:      body.budget !== undefined ? parseFloat(body.budget) : undefined,
+      budget:      parseBudget(body.budget),
       location:    body.location,
       coverColor:  typeof body.coverColor === "string" && HEX_COLOR.test(body.coverColor)
         ? body.coverColor

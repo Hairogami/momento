@@ -75,8 +75,13 @@ export async function PATCH(req: NextRequest) {
   if ("location" in body && typeof body.location === "string") {
     updates.location = body.location.trim().slice(0, 200) || null
   }
+  // CR-04: Validate each element of neededCategories — no arbitrary values or oversized strings
   if ("neededCategories" in body && Array.isArray(body.neededCategories)) {
-    updates.neededCategories = JSON.stringify(body.neededCategories)
+    const cats = (body.neededCategories as unknown[])
+      .filter((c): c is string => typeof c === "string")
+      .map(c => c.trim().slice(0, 100))
+      .slice(0, 50)
+    updates.neededCategories = JSON.stringify(cats)
   }
 
   if (Object.keys(updates).length === 0) {

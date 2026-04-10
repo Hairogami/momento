@@ -39,6 +39,14 @@ function parseDate(val: unknown): Date | null {
   return isNaN(d.getTime()) ? null : d
 }
 
+// WR-01: Safe budget parse — rejects NaN, Infinity, negatives
+function parseBudget(val: unknown): number | null {
+  if (typeof val !== "string" && typeof val !== "number") return null
+  const n = parseFloat(String(val))
+  if (!isFinite(n) || n < 0) return null
+  return n
+}
+
 export async function POST(request: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) {
@@ -54,7 +62,7 @@ export async function POST(request: NextRequest) {
       title:       typeof b.title === "string"       ? b.title.slice(0, 200)       : "",
       coupleNames: typeof b.coupleNames === "string" ? b.coupleNames.slice(0, 200) : "",
       weddingDate: parseDate(b.weddingDate),
-      budget:      typeof b.budget === "string"      ? parseFloat(b.budget)        : null,
+      budget:      parseBudget(b.budget),
       location:    typeof b.location === "string"    ? b.location.slice(0, 200)    : null,
       coverColor:  typeof b.coverColor === "string" && HEX_COLOR.test(b.coverColor)
         ? b.coverColor

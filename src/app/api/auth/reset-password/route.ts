@@ -6,7 +6,12 @@ export async function POST(req: NextRequest) {
   try {
     const { token, newPassword } = await req.json()
 
-    if (!token || !newPassword) {
+    // WR-08: Validate token length before hitting the DB
+    if (!token || typeof token !== "string" || token.length > 200) {
+      return NextResponse.json({ error: "Champs requis manquants." }, { status: 400 })
+    }
+
+    if (!newPassword) {
       return NextResponse.json({ error: "Champs requis manquants." }, { status: 400 })
     }
 

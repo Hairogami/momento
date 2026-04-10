@@ -3,10 +3,11 @@ import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
+  const { searchParams } = req.nextUrl
   const category = searchParams.get("category")
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10))
-  const limit = Math.min(1000, parseInt(searchParams.get("limit") ?? "50", 10))
+  // WR-09: Cap at 50 per request on public endpoint to prevent bulk scraping
+  const limit = Math.min(50, parseInt(searchParams.get("limit") ?? "20", 10))
   const vendors = await prisma.vendor.findMany({
     where: category ? { category } : {},
     orderBy: { name: "asc" },
