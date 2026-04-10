@@ -213,6 +213,7 @@ export default function Landing() {
         )}
       </nav>
 
+      <main>
       {/* ── HERO ── */}
       <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 px-4 sm:px-6 text-center overflow-x-clip"
         style={{ backgroundColor: C.ink }}>
@@ -571,6 +572,7 @@ export default function Landing() {
       {/* ── FOOTER ── */}
       <Footer />
 
+      </main>
     </div>
   )
 }
