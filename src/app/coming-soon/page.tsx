@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react"
 
-// Launch date: June 1, 2026
 const LAUNCH_DATE = new Date("2026-06-01T00:00:00Z")
 
 function useCountdown(target: Date) {
@@ -11,7 +10,7 @@ function useCountdown(target: Date) {
     const id = setInterval(() => setDiff(target.getTime() - Date.now()), 1000)
     return () => clearInterval(id)
   }, [target])
-  const total = Math.max(0, diff)
+  const total   = Math.max(0, diff)
   const days    = Math.floor(total / (1000 * 60 * 60 * 24))
   const hours   = Math.floor((total % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
   const minutes = Math.floor((total % (1000 * 60 * 60)) / (1000 * 60))
@@ -19,29 +18,63 @@ function useCountdown(target: Date) {
   return { days, hours, minutes, seconds, launched: total === 0 }
 }
 
+function getCookie(name: string) {
+  return document.cookie.split(";").find(c => c.trim().startsWith(name + "="))?.split("=")[1]?.trim()
+}
+
 export default function ComingSoonPage() {
-  const [code, setCode] = useState("")
-  const [error, setError] = useState(false)
-  const [shake, setShake] = useState(false)
+  const [code, setCode]               = useState("")
+  const [codeError, setCodeError]     = useState(false)
+  const [shake, setShake]             = useState(false)
+  const [email, setEmail]             = useState("")
+  const [emailStatus, setEmailStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [consent, setConsent]         = useState<"pending" | "accepted" | "refused">("pending")
   const inputRef = useRef<HTMLInputElement>(null)
   const { days, hours, minutes, seconds, launched } = useCountdown(LAUNCH_DATE)
 
   useEffect(() => { inputRef.current?.focus() }, [])
 
+  useEffect(() => {
+    const saved = getCookie("cookie_consent")
+    if (saved === "accepted" || saved === "refused") setConsent(saved)
+  }, [])
+
   function handleUnlock() {
     if (code.trim().toUpperCase() === "NGF") {
-      document.cookie = "momento_bypass=1; max-age=2592000; path=/; SameSite=Lax; Secure"
+      document.cookie = "preview_key=NGF; max-age=2592000; path=/; SameSite=Lax"
       window.location.href = "/"
     } else {
-      setError(true)
+      setCodeError(true)
       setShake(true)
       setCode("")
       setTimeout(() => setShake(false), 500)
     }
   }
 
-  function handleKey(e: React.KeyboardEvent) {
-    if (e.key === "Enter") handleUnlock()
+  async function handleWaitlist() {
+    if (!email || emailStatus === "loading") return
+    setEmailStatus("loading")
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+      setEmailStatus(res.ok ? "success" : "error")
+      if (res.ok) setEmail("")
+    } catch {
+      setEmailStatus("error")
+    }
+  }
+
+  function acceptCookies() {
+    document.cookie = "cookie_consent=accepted; max-age=31536000; path=/; SameSite=Lax"
+    setConsent("accepted")
+  }
+
+  function refuseCookies() {
+    document.cookie = "cookie_consent=refused; max-age=31536000; path=/; SameSite=Lax"
+    setConsent("refused")
   }
 
   const units = [
@@ -115,30 +148,71 @@ export default function ComingSoonPage() {
           </div>
         )}
 
-        {/* Passcode box */}
-        <div
-          className="rounded-2xl p-6"
-          style={{ backgroundColor: "#EDE4CC", border: "1px solid #DDD4BC" }}
-        >
+        {/* Email waitlist */}
+        <div className="rounded-2xl p-6 mb-4"
+          style={{ backgroundColor: "#EDE4CC", border: "1px solid #DDD4BC" }}>
+          <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "#9A907A" }}>
+            Soyez les premiers informés
+          </p>
+          <p className="text-xs mb-4" style={{ color: "#6A5F4A" }}>
+            Inscrivez-vous pour recevoir une notification au lancement.
+          </p>
+
+          {emailStatus === "success" ? (
+            <p className="text-sm font-medium py-3" style={{ color: "var(--momento-terra)" }}>
+              ✓ Vous êtes sur la liste !
+            </p>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={email}
+                onChange={e => { setEmail(e.target.value); setEmailStatus("idle") }}
+                onKeyDown={e => e.key === "Enter" && handleWaitlist()}
+                placeholder="votre@email.com"
+                className="flex-1 px-4 py-3 rounded-xl text-sm outline-none"
+                style={{
+                  backgroundColor: "#F5EDD6",
+                  border: `1.5px solid ${emailStatus === "error" ? "var(--momento-terra)" : "#DDD4BC"}`,
+                  color: "#1A1208",
+                }}
+              />
+              <button
+                onClick={handleWaitlist}
+                disabled={emailStatus === "loading"}
+                className="px-5 py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50"
+                style={{ backgroundColor: "var(--momento-terra)", color: "#fff" }}
+              >
+                {emailStatus === "loading" ? "…" : "OK"}
+              </button>
+            </div>
+          )}
+          {emailStatus === "error" && (
+            <p className="text-xs mt-2" style={{ color: "var(--momento-terra)" }}>
+              Une erreur est survenue. Réessayez.
+            </p>
+          )}
+        </div>
+
+        {/* Passcode */}
+        <div className="rounded-2xl p-6"
+          style={{ backgroundColor: "#EDE4CC", border: "1px solid #DDD4BC" }}>
           <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: "#9A907A" }}>
             Accès privé
           </p>
-
-          <div
-            className="flex gap-2"
-            style={{ animation: shake ? "shake 0.4s ease" : "none" }}
-          >
+          <div className="flex gap-2"
+            style={{ animation: shake ? "shake 0.4s ease" : "none" }}>
             <input
               ref={inputRef}
               type="password"
               value={code}
-              onChange={e => { setCode(e.target.value); setError(false) }}
-              onKeyDown={handleKey}
+              onChange={e => { setCode(e.target.value); setCodeError(false) }}
+              onKeyDown={e => e.key === "Enter" && handleUnlock()}
               placeholder="Code d'accès"
               className="flex-1 px-4 py-3 rounded-xl text-sm outline-none"
               style={{
                 backgroundColor: "#F5EDD6",
-                border: `1.5px solid ${error ? "var(--momento-terra)" : "#DDD4BC"}`,
+                border: `1.5px solid ${codeError ? "var(--momento-terra)" : "#DDD4BC"}`,
                 color: "#1A1208",
               }}
             />
@@ -150,8 +224,7 @@ export default function ComingSoonPage() {
               →
             </button>
           </div>
-
-          {error && (
+          {codeError && (
             <p className="text-xs mt-2" style={{ color: "var(--momento-terra)" }}>
               Code incorrect. Réessayez.
             </p>
@@ -162,6 +235,35 @@ export default function ComingSoonPage() {
           © 2026 Momento · Tous droits réservés
         </p>
       </div>
+
+      {/* Cookie consent banner */}
+      {consent === "pending" && (
+        <div
+          className="fixed bottom-0 left-0 right-0 z-50 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3"
+          style={{ backgroundColor: "#2C1A0E", color: "#F5EDD6" }}
+        >
+          <p className="text-xs text-center sm:text-left" style={{ color: "#DDD4BC" }}>
+            Nous utilisons des cookies pour analyser notre audience et améliorer votre expérience.{" "}
+            <a href="/legal/privacy" className="underline" style={{ color: "#F5EDD6" }}>En savoir plus</a>
+          </p>
+          <div className="flex gap-3 shrink-0">
+            <button
+              onClick={refuseCookies}
+              className="px-4 py-2 rounded-xl text-xs font-semibold border transition-all hover:opacity-80"
+              style={{ border: "1px solid #6A5F4A", color: "#9A907A" }}
+            >
+              Refuser
+            </button>
+            <button
+              onClick={acceptCookies}
+              className="px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-90"
+              style={{ backgroundColor: "var(--momento-terra)", color: "#fff" }}
+            >
+              Accepter
+            </button>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes shake {

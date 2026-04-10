@@ -177,6 +177,8 @@ export default function VendorDashboard() {
       }
       setVendor(mock)
       setProfileForm({ name: mock.name, category: mock.category, city: mock.city, phone: mock.phone, email: mock.email, description: mock.description, priceFrom: String(mock.priceFrom) })
+      setDashStats({ totalContacts: 18, pendingContacts: 5, confirmedContacts: 11, totalConversations: 24, responseRate: 92 })
+      setBookings(DEMO_BOOKINGS)
       return
     }
 

@@ -1,8 +1,20 @@
 import { prisma } from "@/lib/prisma"
+import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 
+async function assertOwnedPlanner(id: string, userId: string) {
+  return prisma.planner.findUnique({ where: { id }, select: { userId: true } })
+}
+
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+
   const { id } = await params
+  const ownership = await assertOwnedPlanner(id, session.user.id)
+  if (!ownership || ownership.userId !== session.user.id)
+    return Response.json({ error: "Forbidden" }, { status: 403 })
+
   const planner = await prisma.planner.findUnique({
     where: { id },
     include: {
@@ -18,7 +30,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+
   const { id } = await params
+  const ownership = await assertOwnedPlanner(id, session.user.id)
+  if (!ownership || ownership.userId !== session.user.id)
+    return Response.json({ error: "Forbidden" }, { status: 403 })
+
   const body = await req.json()
   const planner = await prisma.planner.update({
     where: { id },
@@ -35,7 +54,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+
   const { id } = await params
+  const ownership = await assertOwnedPlanner(id, session.user.id)
+  if (!ownership || ownership.userId !== session.user.id)
+    return Response.json({ error: "Forbidden" }, { status: 403 })
+
   await prisma.planner.delete({ where: { id } })
   return new Response(null, { status: 204 })
 }

@@ -23,14 +23,15 @@ export async function registerAction({
     return { error: "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre." };
   }
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const normalizedEmail = email.toLowerCase().trim();
+  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) {
     return { error: "Un compte existe déjà avec cet email." };
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
   await prisma.user.create({
-    data: { name: name || null, email, passwordHash },
+    data: { name: name || null, email: normalizedEmail, passwordHash },
   });
 
   return { success: true };

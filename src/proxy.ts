@@ -11,9 +11,12 @@ const AUTH_ONLY          = ["/login", "/signup"]
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
 
-  // ── DEV BYPASS (localhost only — never runs in production) ────────────────
-  if (process.env.NODE_ENV === "development") {
-    return NextResponse.next()
+  // ── COMING SOON GATE (tous les environnements) ────────────────────────────
+  const previewKey = request.cookies.get("preview_key")?.value
+  const isExempt   = COMING_SOON_EXEMPT.some(p => path.startsWith(p))
+
+  if (!isExempt && previewKey !== process.env.PREVIEW_KEY) {
+    return NextResponse.redirect(new URL("/coming-soon", request.url))
   }
   // ─────────────────────────────────────────────────────────────────────────
 
@@ -28,7 +31,8 @@ export function proxy(request: NextRequest) {
   const isProtected = PROTECTED.some(p => path.startsWith(p))
   const isAuthPage  = AUTH_ONLY.some(p => path.startsWith(p))
 
-  if (isProtected && !sessionCookie) {
+  const isDev = process.env.NODE_ENV === "development"
+  if (isProtected && !sessionCookie && !isDev) {
     const url = new URL("/login", request.url)
     url.searchParams.set("next", path)
     return NextResponse.redirect(url)

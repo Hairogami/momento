@@ -15,16 +15,6 @@ export default async function MessagesPage({
 
   const { conv } = await searchParams
 
-  // Marquer les messages non-lus comme lus
-  await prisma.message.updateMany({
-    where: {
-      read: false,
-      senderId: { not: session.user.id },
-      conversation: { clientId: session.user.id },
-    },
-    data: { read: true },
-  })
-
   const conversations = await prisma.conversation.findMany({
     where: { clientId: session.user.id },
     include: {
@@ -36,6 +26,18 @@ export default async function MessagesPage({
   const activeConv = conv
     ? conversations.find((c) => c.id === conv) ?? conversations[0]
     : conversations[0]
+
+  // Mark unread messages as read only for the active conversation
+  if (activeConv) {
+    await prisma.message.updateMany({
+      where: {
+        conversationId: activeConv.id,
+        read: false,
+        senderId: { not: session.user.id },
+      },
+      data: { read: true },
+    })
+  }
 
   return (
     <div className="px-6 py-8 max-w-5xl mx-auto">

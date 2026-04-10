@@ -19,12 +19,7 @@ export async function GET() {
 
   const session = await auth()
   if (!session?.user?.id) {
-    // Return all planners for unauthenticated (backward compat with localStorage flow)
-    const planners = await prisma.planner.findMany({
-      include: { steps: true, events: true },
-      orderBy: { createdAt: "desc" },
-    })
-    return Response.json(planners)
+    return Response.json([], { status: 401 })
   }
 
   const planners = await prisma.planner.findMany({

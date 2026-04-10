@@ -4,10 +4,33 @@ import { NextRequest } from "next/server"
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
+// Simple in-memory rate limiter: max 10 requests per hour per user
+// Note: this is per-instance and will not work reliably on Vercel (see WR-003).
+// Replace with Upstash/Redis for production.
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT = 10
+const RATE_WINDOW_MS = 60 * 60 * 1000 // 1 hour
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(userId)
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW_MS })
+    return true
+  }
+  if (entry.count >= RATE_LIMIT) return false
+  entry.count += 1
+  return true
+}
+
 export async function POST(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) {
     return Response.json({ error: "Non authentifié." }, { status: 401 })
+  }
+
+  if (!checkRateLimit(session.user.id)) {
+    return Response.json({ error: "Trop de requêtes. Réessayez dans une heure." }, { status: 429 })
   }
 
   const { stepTitle, stepCategory, weddingLocation, budget } = await req.json()
@@ -39,7 +62,7 @@ Return ONLY valid JSON, no markdown, no extra text.`
     messages: [{ role: "user", content: prompt }],
   })
 
-  const text = message.content[0].type === "text" ? message.content[0].text : "[]"
+  const text = message.content[0]?.type === "text" ? message.content[0].text : "[]"
 
   try {
     const vendors = JSON.parse(text)

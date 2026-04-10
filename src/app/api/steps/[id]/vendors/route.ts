@@ -1,8 +1,23 @@
 import { prisma } from "@/lib/prisma"
+import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 
+async function getOwnedStep(stepId: string, userId: string) {
+  return prisma.step.findUnique({
+    where: { id: stepId },
+    select: { id: true, planner: { select: { userId: true } } },
+  })
+}
+
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+
   const { id: stepId } = await params
+  const owned = await getOwnedStep(stepId, session.user.id)
+  if (!owned || owned.planner.userId !== session.user.id)
+    return Response.json({ error: "Forbidden" }, { status: 403 })
+
   const body = await req.json()
 
   // Create vendor if it doesn't exist yet
@@ -32,7 +47,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+
   const { id: stepId } = await params
+  const owned = await getOwnedStep(stepId, session.user.id)
+  if (!owned || owned.planner.userId !== session.user.id)
+    return Response.json({ error: "Forbidden" }, { status: 403 })
+
   const { vendorId } = await req.json()
   await prisma.stepVendor.deleteMany({ where: { stepId, vendorId } })
   return new Response(null, { status: 204 })
