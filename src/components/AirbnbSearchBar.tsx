@@ -147,6 +147,7 @@ export default function AirbnbSearchBar() {
         {/* Bouton recherche */}
         <button
           onClick={handleSearch}
+          aria-label="Rechercher"
           className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-5 py-4 transition-opacity hover:opacity-85"
           style={{
             backgroundColor: C.terra,
