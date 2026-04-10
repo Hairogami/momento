@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { rateLimit, getIp } from "@/lib/rateLimiter"
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const ContactSchema = z.object({
+  vendorSlug:  z.string().min(1).max(100),
+  clientName:  z.string().min(1).max(100),
+  clientEmail: z.string().email().max(200),
+  clientPhone: z.string().max(20).optional(),
+  eventType:   z.string().max(50).optional(),
+  eventDate:   z.string().max(20).optional(),
+  message:     z.string().min(1).max(2000),
+})
 
 export async function POST(req: NextRequest) {
   // Body size limit: 16 KB max
@@ -27,48 +36,31 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
     }
 
-    if (!body || typeof body !== "object") {
-      return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
+    const parsed = ContactSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message ?? "Données invalides." },
+        { status: 400 }
+      )
     }
 
-    const { vendorSlug, clientName, clientEmail, clientPhone, eventType, eventDate, message } =
-      body as Record<string, unknown>
-
-    // Validate required fields
-    if (
-      typeof vendorSlug !== "string" || !vendorSlug.trim() ||
-      typeof clientName !== "string" || !clientName.trim() ||
-      typeof clientEmail !== "string" || !clientEmail.trim() ||
-      typeof message !== "string" || !message.trim()
-    ) {
-      return NextResponse.json({ error: "Champs requis manquants." }, { status: 400 })
-    }
-
-    // Validate email format
-    if (!EMAIL_RE.test(clientEmail.trim())) {
-      return NextResponse.json({ error: "Adresse email invalide." }, { status: 400 })
-    }
-
-    // Length limits
-    if (message.trim().length > 2000) {
-      return NextResponse.json({ error: "Message trop long (max 2000 caractères)." }, { status: 400 })
-    }
+    const { vendorSlug, clientName, clientEmail, clientPhone, eventType, eventDate, message } = parsed.data
 
     const request = await prisma.contactRequest.create({
       data: {
-        vendorSlug: vendorSlug.trim(),
-        clientName: clientName.trim().slice(0, 100),
-        clientEmail: clientEmail.trim().toLowerCase().slice(0, 200),
-        clientPhone: typeof clientPhone === "string" ? clientPhone.trim().slice(0, 20) || null : null,
-        eventType: typeof eventType === "string" ? eventType.trim().slice(0, 50) || null : null,
-        eventDate: typeof eventDate === "string" ? eventDate.trim().slice(0, 20) || null : null,
-        message: message.trim().slice(0, 2000),
+        vendorSlug,
+        clientName,
+        clientEmail: clientEmail.toLowerCase(),
+        clientPhone: clientPhone ?? null,
+        eventType:   eventType ?? null,
+        eventDate:   eventDate ?? null,
+        message,
       },
     })
 
     return NextResponse.json({ id: request.id }, { status: 201 })
   } catch (err) {
-    console.error("Contact request error:", err)
+    console.error("[contact] error:", err)
     return NextResponse.json({ error: "Une erreur est survenue." }, { status: 500 })
   }
 }

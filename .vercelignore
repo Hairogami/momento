@@ -1,0 +1,4 @@
+src/app/api/auth/account
+src/app/api/auth/google
+src/app/api/auth/login
+src/app/api/waitlist

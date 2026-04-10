@@ -76,7 +76,15 @@ export default async function VendorPage(
 ) {
   const { slug } = await params
   const vendor = VENDOR_BASIC[slug]
-  const claimed = !!(await prisma.vendorProfile.findUnique({ where: { slug }, select: { id: true } }))
+  const vendorProfile = await prisma.vendorProfile.findUnique({
+    where: { slug },
+    select: { id: true },
+  })
+  const vendorData = await prisma.vendor.findUnique({
+    where: { slug },
+    select: { rating: true, reviewCount: true },
+  })
+  const claimed = !!vendorProfile
 
   // JSON-LD structured data (LocalBusiness)
   const jsonLd = vendor ? {
@@ -92,6 +100,15 @@ export default async function VendorPage(
     },
     "priceRange": "MAD",
     ...(vendor.instagram ? { "sameAs": [vendor.instagram] } : {}),
+    ...(vendorData?.rating && (vendorData.reviewCount ?? 0) > 0 ? {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": vendorData.rating!.toFixed(1),
+        "reviewCount": vendorData.reviewCount,
+        "bestRating": "5",
+        "worstRating": "1",
+      }
+    } : {}),
   } : null
 
   const session = await auth()

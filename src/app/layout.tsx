@@ -49,6 +49,10 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://momentoevents.app",
+    languages: {
+      "fr-MA":    "https://momentoevents.app",
+      "x-default": "https://momentoevents.app",
+    },
   },
 };
 
