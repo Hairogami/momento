@@ -22,6 +22,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Mot de passe actuel et nouveau mot de passe requis." }, { status: 400 })
   }
 
+  // I01: cap currentPassword length before bcrypt.compare to prevent DoS via oversized input
+  if (typeof currentPassword !== "string" || currentPassword.length > 128) {
+    return NextResponse.json(
+      { error: "Le mot de passe actuel ne peut pas dépasser 128 caractères." },
+      { status: 400 }
+    )
+  }
+
   // W04: cap max length before bcrypt to prevent DoS via oversized input
   if (newPassword.length > 128) {
     return NextResponse.json(

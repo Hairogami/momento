@@ -1,7 +1,7 @@
 ---
-fixed: 25
-skipped: 2
-fixed_at: 2026-04-10T19:23:00Z
+fixed: 29
+skipped: 3
+fixed_at: 2026-04-10T20:08:00Z
 ---
 
 ## CRITICAL
@@ -65,6 +65,24 @@ I01–I05 : Non appliqués — findings informationnels, pas de vecteur d'exploi
 [APPLIED] W-NEW-03 — src/app/api/stats/route.ts:14-17 — Suppression du ternaire `session?.user?.id ? ... : {}` dans la branche IS_DEV. Remplacé par `where: { userId: session.user.id }` cohérent avec la branche prod. Élimine le risque théorique de charger tous les planners.
 
 [APPLIED] W-NEW-04 — src/proxy.ts:38 — Validation du paramètre `next` avant redirection login : `path.startsWith("/") && !path.startsWith("//")`. Empêche un open redirect protocol-relative si un attaquant forge `//evil.com` comme pathname.
+
+---
+
+## Itération 5 — 2026-04-10T20:08Z
+
+[APPLIED] C01/I03 — src/app/(auth)/login/actions.ts — `registerAction` neutralisé : bcrypt, prisma.user.create et toute la logique métier supprimés. Remplacé par un stub no-op qui retourne une erreur explicite invitant à utiliser `/api/auth/register`. Élimine la création de comptes zombies sans rate-limit ni vérification email.
+
+[APPLIED] W01 — src/app/api/auth/update-profile/route.ts:25-45 — Ajout allowlist de 8 domaines autorisés pour les URLs d'image (`googleusercontent.com`, `fbcdn.net`, `facebook.com`, `cloudinary.com`, `githubusercontent.com`, `vercel-storage.com`, `momentoevents.app`). Retourne 400 si le domaine ne correspond à aucun pattern. Empêche le SSRF indirect via next/image optimizer.
+
+[APPLIED] W05 — src/app/api/planners/route.ts:27-43 — Remplacé `include: { steps: true, events: true }` par `select` limité aux champs d'affichage (id, title, coupleNames, weddingDate, coverColor, location, budget, createdAt) + `_count: { select: { steps: true, events: true } }`. Élimine le chargement de N×M rows pour un simple listing.
+
+[APPLIED] I01 — src/app/api/auth/change-password/route.ts:21-25 — Ajout guard `currentPassword.length > 128` → 400 avant `bcrypt.compare`. Aligne `currentPassword` sur la même borne que `newPassword` (déjà bornée). Élimine le vecteur DoS par mot de passe surdimensionné.
+
+[SKIP] W06 — src/app/api/stats/route.ts — N+1 planners→steps→vendors. Refactor nécessite soit `unstable_cache` soit requêtes `groupBy` — changement architectural non trivial. Laissé pour une itération dédiée avec tests.
+
+[SKIP] I02 — vendor-requests statuts incohérents — Nécessite une migration Prisma pour créer l'enum `ContactStatus`. Non applicable sans coordination DB.
+
+[SKIP] I04 — getIp() fallback x-real-ip — Comportement intentionnel documenté (Vercel uniquement). Suppression du fallback risque de casser le rate-limit en dev/CI. Non appliqué.
 
 ---
 

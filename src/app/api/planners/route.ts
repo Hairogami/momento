@@ -23,9 +23,20 @@ export async function GET() {
     ])
   }
 
+  // W05: replaced full include with select + _count to avoid loading all steps/events for a list view
   const planners = await prisma.planner.findMany({
     where: { userId: session.user.id },
-    include: { steps: true, events: true },
+    select: {
+      id: true,
+      title: true,
+      coupleNames: true,
+      weddingDate: true,
+      coverColor: true,
+      location: true,
+      budget: true,
+      createdAt: true,
+      _count: { select: { steps: true, events: true } },
+    },
     orderBy: { createdAt: "desc" },
   })
   return Response.json(planners)

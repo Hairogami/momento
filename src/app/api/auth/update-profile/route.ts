@@ -29,6 +29,21 @@ export async function PATCH(req: NextRequest) {
               if (!["http:", "https:"].includes(parsed.protocol)) {
                 return NextResponse.json({ error: "URL d'image invalide." }, { status: 400 })
               }
+              // W01: allowlist known safe domains to prevent SSRF via next/image optimizer
+              const ALLOWED_IMAGE_HOSTS = [
+                /^.*\.googleusercontent\.com$/,
+                /^.*\.fbcdn\.net$/,
+                /^.*\.facebook\.com$/,
+                /^.*\.cloudinary\.com$/,
+                /^.*\.githubusercontent\.com$/,
+                /^.*\.vercel-storage\.com$/,
+                /^momentoevents\.app$/,
+                /^.*\.momentoevents\.app$/,
+              ]
+              const isAllowed = ALLOWED_IMAGE_HOSTS.some(r => r.test(parsed.hostname))
+              if (!isAllowed) {
+                return NextResponse.json({ error: "Domaine d'image non autorisé." }, { status: 400 })
+              }
               updates[key] = val
             } catch {
               return NextResponse.json({ error: "URL d'image invalide." }, { status: 400 })
