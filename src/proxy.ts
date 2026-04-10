@@ -12,11 +12,13 @@ export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   // ── COMING SOON GATE (tous les environnements) ────────────────────────────
-  const previewKey = request.cookies.get("preview_key")?.value
-  const isExempt   = COMING_SOON_EXEMPT.some(p => path.startsWith(p))
+  // Mettre LAUNCH_PUBLIC=true dans les env vars Vercel pour désactiver la gate au lancement.
+  const isLaunchPublic = process.env.LAUNCH_PUBLIC === "true"
+  const previewKey     = request.cookies.get("preview_key")?.value
+  const isExempt       = COMING_SOON_EXEMPT.some(p => path.startsWith(p))
 
   const configuredKey = process.env.PREVIEW_KEY
-  if (!isExempt && (!configuredKey || previewKey !== configuredKey)) {
+  if (!isLaunchPublic && !isExempt && (!configuredKey || previewKey !== configuredKey)) {
     return NextResponse.redirect(new URL("/coming-soon", request.url))
   }
   // ─────────────────────────────────────────────────────────────────────────
