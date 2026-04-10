@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk"
+import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { rateLimitAsync } from "@/lib/rateLimiter"
 import { NextRequest } from "next/server"
@@ -6,7 +7,22 @@ import { NextRequest } from "next/server"
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 
+const VendorSuggestionSchema = z.array(z.object({
+  name:        z.string().max(200),
+  category:    z.string().max(100),
+  description: z.string().max(500).optional(),
+  priceRange:  z.enum(["budget", "mid", "premium"]).optional(),
+  phone:       z.string().max(30).optional(),
+  address:     z.string().max(300).optional(),
+})).max(10)
+
 export async function POST(req: NextRequest) {
+  // I-N05: body size guard — consistent with other POST routes
+  const contentLength = parseInt(req.headers.get("content-length") ?? "0", 10)
+  if (contentLength > 16_384) {
+    return Response.json({ error: "Requête trop volumineuse." }, { status: 413 })
+  }
+
   const session = await auth()
   if (!session?.user?.id) {
     return Response.json({ error: "Non authentifié." }, { status: 401 })
@@ -60,7 +76,10 @@ Return ONLY valid JSON, no markdown, no extra text.`
     const text = message.content[0]?.type === "text" ? message.content[0].text : "[]"
 
     try {
-      const vendors = JSON.parse(text)
+      const raw = JSON.parse(text)
+      // W-N02: validate LLM output structure before forwarding to client
+      const parsed = VendorSuggestionSchema.safeParse(raw)
+      const vendors = parsed.success ? parsed.data : []
       return Response.json({ vendors })
     } catch {
       return Response.json({ vendors: [] })

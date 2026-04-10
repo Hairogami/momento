@@ -15,7 +15,7 @@ export async function addBudgetItem(formData: FormData) {
   const raw = formData.get("plannerId") as string | null;
   const plannerId = raw && raw !== "__none__" ? raw : null;
 
-  if (!workspaceId || !label || !category || !isFinite(estimated) || estimated < 0 || !plannerId) return;
+  if (!workspaceId || !label || !category || !isFinite(estimated) || estimated < 0 || estimated > 1_000_000_000 || !plannerId) return;
 
   const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId }, select: { userId: true } });
   if (!workspace || workspace.userId !== session.user.id) return;
@@ -50,7 +50,7 @@ export async function updateBudget(formData: FormData) {
   const workspaceId = formData.get("workspaceId") as string;
   const budget = parseFloat(formData.get("budget") as string);
 
-  if (!workspaceId || !isFinite(budget) || budget < 0) return;
+  if (!workspaceId || !isFinite(budget) || budget < 0 || budget > 1_000_000_000) return;
 
   const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId }, select: { userId: true } });
   if (!workspace || workspace.userId !== session.user.id) return;

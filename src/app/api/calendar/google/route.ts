@@ -31,6 +31,11 @@ export async function GET(req: NextRequest) {
   const from = parseIso(searchParams.get("from"), new Date().toISOString())
   const to   = parseIso(searchParams.get("to"),   new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString())
 
+  // I-N02: reject ranges larger than 1 year to avoid costly Google Calendar calls
+  if (new Date(to).getTime() - new Date(from).getTime() > 365 * 86_400_000) {
+    return NextResponse.json({ error: "Plage de dates trop large (max 1 an)." }, { status: 400 })
+  }
+
   try {
     const url = new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events")
     url.searchParams.set("timeMin", from)

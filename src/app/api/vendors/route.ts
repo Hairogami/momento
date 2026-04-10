@@ -65,21 +65,30 @@ export async function POST(req: NextRequest) {
     .replace(/[^a-z0-9-]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 100)
-  const vendor = await prisma.vendor.create({
-    data: {
-      slug,
-      name: String(body.name).slice(0, 200),
-      category: String(body.category).slice(0, 100),
-      description: body.description ? String(body.description).slice(0, 2000) : undefined,
-      phone: body.phone ? String(body.phone).slice(0, 30) : undefined,
-      email: body.email ? String(body.email).slice(0, 200) : undefined,
-      website: body.website ? String(body.website).slice(0, 500) : undefined,
-      address: body.address ? String(body.address).slice(0, 500) : undefined,
-      lat: typeof body.lat === "number" ? body.lat : undefined,
-      lng: typeof body.lng === "number" ? body.lng : undefined,
-      priceRange: body.priceRange ? String(body.priceRange) : undefined,
-      rating: typeof body.rating === "number" ? Math.min(5, Math.max(0, body.rating)) : undefined,
-    },
-  })
+  let vendor
+  try {
+    vendor = await prisma.vendor.create({
+      data: {
+        slug,
+        name: String(body.name).slice(0, 200),
+        category: String(body.category).slice(0, 100),
+        description: body.description ? String(body.description).slice(0, 2000) : undefined,
+        phone: body.phone ? String(body.phone).slice(0, 30) : undefined,
+        email: body.email ? String(body.email).slice(0, 200) : undefined,
+        website: body.website ? String(body.website).slice(0, 500) : undefined,
+        address: body.address ? String(body.address).slice(0, 500) : undefined,
+        lat: typeof body.lat === "number" ? body.lat : undefined,
+        lng: typeof body.lng === "number" ? body.lng : undefined,
+        priceRange: body.priceRange ? String(body.priceRange) : undefined,
+        rating: typeof body.rating === "number" ? Math.min(5, Math.max(0, body.rating)) : undefined,
+      },
+    })
+  } catch (createErr: unknown) {
+    // W-N03: handle duplicate slug — can occur if two admins create the same vendor concurrently
+    if ((createErr as { code?: string })?.code === "P2002") {
+      return Response.json({ error: "Un prestataire avec ce slug existe déjà." }, { status: 409 })
+    }
+    throw createErr
+  }
   return Response.json(vendor, { status: 201 })
 }
