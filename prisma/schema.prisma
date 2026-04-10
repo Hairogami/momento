@@ -4,7 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ─── AUTH (NextAuth compatible) ───────────────────────────────────────────────
@@ -350,6 +352,14 @@ model PlannerEvent {
   plannerId String
   planner   Planner   @relation(fields: [plannerId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
+}
+
+// ─── LISTE D'ATTENTE ─────────────────────────────────────────────────────────
+
+model Waitlist {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }
 
 // ─── MESSAGERIE ───────────────────────────────────────────────────────────────

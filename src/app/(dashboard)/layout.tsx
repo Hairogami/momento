@@ -127,12 +127,19 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       const method = (typeof args[1]?.method === "string" ? args[1].method : "GET").toUpperCase()
       if (res.ok && MUTATE.includes(method) && WATCHED.some(w => url.includes(w))) {
         window.dispatchEvent(new Event("momento:stats-refresh"))
-        // Rafraîchit aussi la liste des planners dans la sidebar
-        fetch("/api/planners").then(r => r.json()).then(setPlanners).catch(() => {})
       }
       return res
     }
     return () => { window.fetch = original }
+  }, []);
+
+  // Rafraîchit les planners dans la sidebar sur evento stats-refresh
+  useEffect(() => {
+    function refresh() {
+      fetch("/api/planners").then(r => r.json()).then(setPlanners).catch(() => {})
+    }
+    window.addEventListener("momento:stats-refresh", refresh)
+    return () => window.removeEventListener("momento:stats-refresh", refresh)
   }, [setPlanners]);
 
   function isActive(href: string) {
