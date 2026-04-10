@@ -6,13 +6,44 @@ export async function GET(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  // W08: accessToken is intentionally NOT on session.user (auth.ts security decision).
-  // Fetch it from the DB Account table instead.
+  // CR-001: fetch access_token + refresh_token + expires_at to handle token refresh
   const account = await prisma.account.findFirst({
     where: { userId: session.user.id, provider: "google" },
-    select: { access_token: true },
+    select: { access_token: true, refresh_token: true, expires_at: true },
   })
-  const accessToken = account?.access_token
+
+  let accessToken = account?.access_token
+
+  // Refresh if expired (expires_at is Unix seconds)
+  const now = Math.floor(Date.now() / 1000)
+  if (account?.expires_at && account.expires_at < now && account.refresh_token) {
+    try {
+      const resp = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          client_id:     process.env.GOOGLE_CLIENT_ID!,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+          grant_type:    "refresh_token",
+          refresh_token: account.refresh_token,
+        }),
+      })
+      const data = await resp.json()
+      if (data.access_token) {
+        accessToken = data.access_token
+        await prisma.account.updateMany({
+          where: { userId: session.user.id, provider: "google" },
+          data: {
+            access_token: data.access_token,
+            expires_at:   now + (data.expires_in ?? 3600),
+          },
+        })
+      }
+    } catch (refreshErr) {
+      console.error("[Google Calendar] token refresh failed", refreshErr)
+    }
+  }
+
   if (!accessToken) {
     return NextResponse.json(
       { error: "Google Calendar non connecté. Reconnectez-vous avec Google." },
