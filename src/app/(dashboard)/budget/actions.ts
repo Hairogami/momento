@@ -51,6 +51,7 @@ export async function updateBudget(formData: FormData) {
   const budget = parseFloat(formData.get("budget") as string);
 
   if (!workspaceId || !isFinite(budget) || budget < 0 || budget > 1_000_000_000) return;
+  // I-N01: upper bound guard mirrors addBudgetItem
 
   const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId }, select: { userId: true } });
   if (!workspace || workspace.userId !== session.user.id) return;

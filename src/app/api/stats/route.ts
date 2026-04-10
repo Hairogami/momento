@@ -14,7 +14,7 @@ export async function GET() {
     const planners = await prisma.planner.findMany({
       where: { userId: session.user.id },
       include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } },
-    }).catch(() => [])
+    }).catch((e: unknown) => { console.error("[stats] DB error:", e); return [] })
 
     if (planners.length > 0) {
       return buildStats(planners)
@@ -30,6 +30,7 @@ export async function GET() {
 
   const planners = await prisma.planner.findMany({
     where: { userId: session.user.id },
+    take: 100,
     include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } },
   })
 

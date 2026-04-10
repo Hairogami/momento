@@ -22,6 +22,18 @@ export async function GET() {
   const requests = await prisma.contactRequest.findMany({
     where: { vendorSlug: user.vendorSlug },
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      vendorSlug: true,
+      clientName: true,
+      clientEmail: true,
+      clientPhone: true,
+      eventType: true,
+      eventDate: true,
+      message: true,
+      status: true,
+      createdAt: true,
+    },
   })
 
   return NextResponse.json({ requests })

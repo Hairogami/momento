@@ -23,6 +23,11 @@ export async function POST(req: NextRequest) {
     if (!rawEmail || typeof rawEmail !== "string" || rawEmail.length > 320) {
       return NextResponse.json({ message: "E-mail de vérification renvoyé si le compte existe." })
     }
+    // W-N07: validate email format before hitting DB
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!EMAIL_RE.test(rawEmail)) {
+      return NextResponse.json({ message: "E-mail de vérification renvoyé si le compte existe." })
+    }
     const email = rawEmail.toLowerCase().trim()
 
     const user = await prisma.user.findUnique({ where: { email } })

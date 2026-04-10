@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     const record = await prisma.emailVerification.findUnique({
       where: { token },
-      include: { user: true },
+      select: { id: true, userId: true, type: true, usedAt: true, expiresAt: true },
     })
 
     if (!record || record.type !== "password_reset") {

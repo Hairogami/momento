@@ -56,6 +56,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
+        // C-N02: cap password length before bcrypt.compare to prevent DoS via oversized input
+        if ((credentials.password as string).length > 128) return null;
         const user = await prisma.user.findUnique({
           where: { email: (credentials.email as string).toLowerCase().trim() },
           select: { id: true, name: true, email: true, image: true, passwordHash: true, emailVerified: true },
@@ -130,12 +132,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (!user?.id || account?.type !== "oauth") return;
       try {
         const updates: { name?: string; image?: string } = {};
-        if (profile?.name && profile.name !== user.name) updates.name = profile.name as string;
+        // W-N06: cap lengths to prevent oversized OAuth profile data being written to DB
+        if (profile?.name && profile.name !== user.name) updates.name = (profile.name as string).slice(0, 200);
         const providerImage =
           (profile?.picture as string | undefined) ||
           (profile?.avatar_url as string | undefined) ||
           (profile?.image_url as string | undefined);
-        if (providerImage && providerImage !== user.image) updates.image = providerImage;
+        if (providerImage && providerImage !== user.image) updates.image = providerImage.slice(0, 2000);
         if (Object.keys(updates).length > 0) {
           await prisma.user.update({ where: { id: user.id }, data: updates });
         }
