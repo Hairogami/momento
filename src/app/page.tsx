@@ -384,8 +384,8 @@ export default function Landing() {
                     <span className="text-xs flex items-center gap-1" style={{ color: C.mist }}>
                       <MapPin size={10} /> {v.city}
                     </span>
-                    <span className="text-xs flex items-center gap-1" style={{ color: C.white }}>
-                      <Star size={11} fill={C.terra} style={{ color: C.terra }} /> {v.rating.toFixed(1)}
+                    <span className="text-xs flex items-center gap-1" style={{ color: C.terra }}>
+                      <Star size={11} fill={C.terra} stroke="none" />
                     </span>
                   </div>
                 </div>

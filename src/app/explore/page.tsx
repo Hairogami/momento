@@ -294,9 +294,11 @@ function VendorCard({
             <p className="text-xs mt-0.5 truncate" style={{ color: C.mist }}>{v.category}</p>
             <p className="text-xs" style={{ color: C.steel }}>{v.city}</p>
           </div>
-          <div className="shrink-0 flex items-center gap-1 text-xs font-semibold mt-0.5" style={{ color: C.white }}>
-            <Star size={11} fill={C.terra} stroke="none" />{v.rating}
-          </div>
+          {isCoupDeCoeur && (
+            <div className="shrink-0 flex items-center gap-1 text-xs font-semibold mt-0.5" style={{ color: C.terra }}>
+              <Star size={11} fill={C.terra} stroke="none" />
+            </div>
+          )}
         </div>
       </Link>
 

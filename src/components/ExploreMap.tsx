@@ -158,7 +158,6 @@ export default function ExploreMap({ vendors, activeCity, activeCategory, onCity
             <div style="font-family:system-ui,sans-serif;min-width:150px;padding:2px 0;">
               <div style="font-weight:700;font-size:12px;color:#1A1208;margin-bottom:2px;">${v.name}</div>
               <div style="font-size:10px;color:${color};font-weight:600;margin-bottom:3px;">${v.category}</div>
-              <div style="margin-bottom:3px;">${starHtml(v.rating ?? 4)}</div>
               <div style="font-size:10px;color:#6A5F4A;">📍 ${v.city}</div>
               <a href="/vendor/${v.id}" style="display:block;margin-top:6px;text-align:center;background:${color};color:#fff;font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;text-decoration:none;">
                 Voir le profil →
