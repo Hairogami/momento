@@ -91,14 +91,16 @@ export async function rateLimitAsync(
 }
 
 /**
- * Extrait l'IP réelle depuis les headers Next.js / Vercel.
+ * CR-03: Extrait l'IP réelle depuis les headers Next.js / Vercel.
  * x-vercel-forwarded-for est injecté par l'infra Vercel et ne peut pas
  * être falsifié par le client, contrairement à x-forwarded-for.
+ * Retourne null si aucune IP disponible — les appelants doivent gérer null
+ * plutôt que d'utiliser "unknown" comme clé de rate-limit partagée.
  */
-export function getIp(req: Request | NextRequest): string {
+export function getIp(req: Request | NextRequest): string | null {
   return (
     (req as NextRequest).headers?.get("x-vercel-forwarded-for") ??
     (req as NextRequest).headers?.get("x-real-ip") ??
-    "unknown"
+    null
   )
 }

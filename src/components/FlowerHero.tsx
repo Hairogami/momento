@@ -47,8 +47,8 @@ export default function FlowerHero() {
     })
 
     function resize() {
-      W = canvas.width = window.innerWidth
-      H = canvas.height = window.innerHeight
+      W = canvas!.width = window.innerWidth
+      H = canvas!.height = window.innerHeight
       if (smoothCY < 0) smoothCY = H * 0.38
       init()
     }
