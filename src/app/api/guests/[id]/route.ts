@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { GuestPatchSchema } from "@/lib/validations"
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -8,20 +9,23 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const body = await req.json()
+  let body: unknown
+  try { body = await req.json() } catch {
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
+  }
+
+  const parsed = GuestPatchSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Données invalides." }, { status: 400 })
+  }
 
   const guest = await prisma.guest.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
   if (!guest || guest.workspace.userId !== session.user.id)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
-  const VALID_RSVP = ["PENDING", "CONFIRMED", "DECLINED"]
-  if (body.rsvp !== undefined && !VALID_RSVP.includes(body.rsvp as string)) {
-    return NextResponse.json({ error: "Valeur rsvp invalide." }, { status: 400 })
-  }
-
   const updated = await prisma.guest.update({
     where: { id },
-    data: { ...(body.rsvp !== undefined && { rsvp: body.rsvp as string }) },
+    data: parsed.data,
   })
   return NextResponse.json(updated)
 }

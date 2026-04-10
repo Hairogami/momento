@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { BudgetItemPatchSchema } from "@/lib/validations"
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -8,19 +9,23 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const body = await req.json()
+  let body: unknown
+  try { body = await req.json() } catch {
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
+  }
+
+  const parsed = BudgetItemPatchSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Données invalides." }, { status: 400 })
+  }
 
   const item = await prisma.budgetItem.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
   if (!item || item.workspace.userId !== session.user.id)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
-  const actualRaw = body.actual
-  const actual = actualRaw === null ? null
-    : (typeof actualRaw === "number" && isFinite(actualRaw) && actualRaw >= 0 ? actualRaw : undefined)
-
   const updated = await prisma.budgetItem.update({
     where: { id },
-    data: { ...(actual !== undefined && { actual }) },
+    data: parsed.data,
   })
   return NextResponse.json(updated)
 }
