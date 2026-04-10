@@ -6,9 +6,12 @@ import { prisma } from "@/lib/prisma";
 
 const VALID_RSVP = ["PENDING", "CONFIRMED", "DECLINED"] as const
 
-export async function addGuest(formData: FormData) {
+// W03: Server Actions return typed results so callers can surface errors via toast/form state
+type ActionResult = { ok: true } | { ok: false; error: string }
+
+export async function addGuest(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id) return;
+  if (!session?.user?.id) return { ok: false, error: "Non authentifié." };
 
   const workspaceId = formData.get("workspaceId") as string;
   const name  = (formData.get("name") as string)?.trim().slice(0, 100);
@@ -16,30 +19,32 @@ export async function addGuest(formData: FormData) {
   const phone = (formData.get("phone") as string)?.trim().slice(0, 20)  || null;
   const plusOne = formData.get("plusOne") === "on";
 
-  if (!workspaceId || !name) return;
+  if (!workspaceId || !name) return { ok: false, error: "Données invalides." };
 
   const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId }, select: { userId: true } });
-  if (!workspace || workspace.userId !== session.user.id) return;
+  if (!workspace || workspace.userId !== session.user.id) return { ok: false, error: "Accès refusé." };
 
   await prisma.guest.create({
     data: { workspaceId, name, email, phone, plusOne },
   });
 
   revalidatePath("/guests");
+  return { ok: true };
 }
 
-export async function updateRsvp(id: string, rsvp: string) {
+export async function updateRsvp(id: string, rsvp: string): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id) return;
+  if (!session?.user?.id) return { ok: false, error: "Non authentifié." };
 
-  if (!(VALID_RSVP as readonly string[]).includes(rsvp)) return;
+  if (!(VALID_RSVP as readonly string[]).includes(rsvp)) return { ok: false, error: "Valeur RSVP invalide." };
 
   const guest = await prisma.guest.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } });
-  if (!guest || guest.workspace.userId !== session.user.id) return;
+  if (!guest || guest.workspace.userId !== session.user.id) return { ok: false, error: "Accès refusé." };
 
   await prisma.guest.update({
     where: { id },
     data: { rsvp },
   });
   revalidatePath("/guests");
+  return { ok: true };
 }

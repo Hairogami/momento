@@ -67,8 +67,10 @@ Respond with a JSON array of vendor suggestions. Each item should have:
 Return ONLY valid JSON, no markdown, no extra text.`
 
   try {
+    // W04: model ID via env var so it can be updated without a redeploy
+    const model = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5"
     const message = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model,
       max_tokens: 1024,
       messages: [{ role: "user", content: prompt }],
     })

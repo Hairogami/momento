@@ -9,7 +9,7 @@ export function TogglePaid({ id, paid }: { id: string; paid: boolean }) {
   return (
     <button
       type="button"
-      onClick={() => startTransition(() => togglePaid(id, !paid))}
+      onClick={() => startTransition(() => { void togglePaid(id, !paid) })}
       className={`w-4 h-4 rounded border shrink-0 flex items-center justify-center transition-colors ${
         paid
           ? "bg-green-500 border-green-500 text-white"

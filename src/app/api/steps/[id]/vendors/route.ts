@@ -37,6 +37,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const safeSlug = (baseSlug || "vendor") + "-" + Date.now().toString(36)
 
   // WR-07: Case-insensitive dedup to avoid duplicate vendors differing only in case
+  // W02: TOCTOU guard — if concurrent request wins the race, catch P2002 and fall back to findFirst
   let vendor = await prisma.vendor.findFirst({
     where: {
       name: { equals: safeName, mode: "insensitive" },
@@ -44,20 +45,33 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     },
   })
   if (!vendor) {
-    vendor = await prisma.vendor.create({
-      data: {
-        slug: safeSlug,
-        name: safeName,
-        category: safeCategory,
-        description: body.description ? String(body.description).slice(0, 1000) : undefined,
-        phone:   body.phone   ? String(body.phone).slice(0, 30)   : undefined,
-        email:   body.email   ? String(body.email).slice(0, 200)  : undefined,
-        address: body.address ? String(body.address).slice(0, 300): undefined,
-        lat: typeof body.lat === "number" ? body.lat : undefined,
-        lng: typeof body.lng === "number" ? body.lng : undefined,
-        priceRange: body.priceRange ? String(body.priceRange).slice(0, 50) : undefined,
-      },
-    })
+    try {
+      vendor = await prisma.vendor.create({
+        data: {
+          slug: safeSlug,
+          name: safeName,
+          category: safeCategory,
+          description: body.description ? String(body.description).slice(0, 1000) : undefined,
+          phone:   body.phone   ? String(body.phone).slice(0, 30)   : undefined,
+          email:   body.email   ? String(body.email).slice(0, 200)  : undefined,
+          address: body.address ? String(body.address).slice(0, 300): undefined,
+          lat: typeof body.lat === "number" && isFinite(body.lat) ? body.lat : undefined,
+          lng: typeof body.lng === "number" && isFinite(body.lng) ? body.lng : undefined,
+          priceRange: body.priceRange ? String(body.priceRange).slice(0, 50) : undefined,
+        },
+      })
+    } catch (createErr: unknown) {
+      if ((createErr as { code?: string })?.code !== "P2002") throw createErr
+      // Race condition: another request created the vendor between our findFirst and create
+      const existing = await prisma.vendor.findFirst({
+        where: {
+          name: { equals: safeName, mode: "insensitive" },
+          category: { equals: safeCategory, mode: "insensitive" },
+        },
+      })
+      if (!existing) throw createErr
+      vendor = existing
+    }
   }
 
   const link = await prisma.stepVendor.create({

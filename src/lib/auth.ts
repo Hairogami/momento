@@ -87,11 +87,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, account }) {
       if (account) {
         token.provider = account.provider
-        // SECURITY: accessToken is stored in the JWT for server-side use only.
-        // It is intentionally NOT forwarded to the session callback (client-side).
-        // TODO: migrate to DB-only storage via prisma.account to avoid token exposure if JWT secret leaks.
-        if (account.access_token) token.accessToken = account.access_token
-        if (account.refresh_token) token.refreshToken = account.refresh_token
+        // C01: access_token/refresh_token are stored in the DB via PrismaAdapter (Account table).
+        // They are intentionally NOT stored in the JWT to avoid exposure if AUTH_SECRET leaks.
+        // The calendar route reads them directly via prisma.account.findFirst().
       }
       if (user) {
         token.id = user.id;
@@ -138,7 +136,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           (profile?.picture as string | undefined) ||
           (profile?.avatar_url as string | undefined) ||
           (profile?.image_url as string | undefined);
-        if (providerImage && providerImage !== user.image) updates.image = providerImage.slice(0, 2000);
+        // W05: validate OAuth image URL against the same allowlist as update-profile
+        if (providerImage && providerImage !== user.image) {
+          try {
+            const parsed = new URL(providerImage)
+            const ALLOWED_IMAGE_HOSTS = [
+              /^.*\.googleusercontent\.com$/,
+              /^.*\.fbcdn\.net$/,
+              /^.*\.facebook\.com$/,
+              /^.*\.cloudinary\.com$/,
+              /^.*\.githubusercontent\.com$/,
+              /^.*\.vercel-storage\.com$/,
+              /^momentoevents\.app$/,
+              /^.*\.momentoevents\.app$/,
+            ]
+            if (["http:", "https:"].includes(parsed.protocol) && ALLOWED_IMAGE_HOSTS.some(r => r.test(parsed.hostname))) {
+              updates.image = providerImage.slice(0, 2000)
+            }
+          } catch {
+            // invalid URL — skip image update
+          }
+        }
         if (Object.keys(updates).length > 0) {
           await prisma.user.update({ where: { id: user.id }, data: updates });
         }

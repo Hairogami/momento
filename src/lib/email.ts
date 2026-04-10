@@ -5,10 +5,11 @@ function getResend() {
   return new Resend(key)
 }
 const FROM = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev"
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+// W06: fail hard in production if APP_URL is unset — broken localhost links in emails are worse than a 500
 if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_APP_URL) {
-  console.error("[email] NEXT_PUBLIC_APP_URL is not set — email links will point to localhost:3000")
+  throw new Error("[email] NEXT_PUBLIC_APP_URL is not set — refusing to send emails with localhost links")
 }
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
 /** CR-01: Escape HTML special chars to prevent XSS in email templates */
 function escapeHtml(s: string): string {

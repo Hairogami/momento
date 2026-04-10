@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
+// C02: Use APP_URL as redirect base to avoid Host-header open redirect.
+// req.url is controlled by the Host header which can be spoofed in non-Vercel environments.
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? ""
+
+function safeRedirect(path: string, req: NextRequest): NextResponse {
+  const base = APP_URL || req.nextUrl.origin
+  return NextResponse.redirect(new URL(path, base))
+}
+
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token")
 
   // CR-02: Validate token length before hitting the DB
   if (!token || token.length > 256) {
-    return NextResponse.redirect(new URL("/login?error=token_invalide", req.url))
+    return safeRedirect("/login?error=token_invalide", req)
   }
 
   try {
@@ -23,12 +32,12 @@ export async function GET(req: NextRequest) {
       record.usedAt ||
       record.expiresAt < new Date()
     ) {
-      return NextResponse.redirect(new URL("/login?error=token_invalide", req.url))
+      return safeRedirect("/login?error=token_invalide", req)
     }
 
     if (record.user.emailVerified) {
       // Déjà vérifié, on redirige quand même avec succès
-      return NextResponse.redirect(new URL("/login?verified=true", req.url))
+      return safeRedirect("/login?verified=true", req)
     }
 
     await prisma.$transaction([
@@ -42,9 +51,9 @@ export async function GET(req: NextRequest) {
       }),
     ])
 
-    return NextResponse.redirect(new URL("/login?verified=true", req.url))
+    return safeRedirect("/login?verified=true", req)
   } catch (err) {
     console.error("[verify-email]", err)
-    return NextResponse.redirect(new URL("/login?error=erreur_serveur", req.url))
+    return safeRedirect("/login?error=erreur_serveur", req)
   }
 }

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { timingSafeEqual } from "crypto"
 
+// C02: Use APP_URL as redirect base to avoid Host-header open redirect.
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? ""
+
 export async function GET(req: NextRequest) {
   const key = req.nextUrl.searchParams.get("key")
   const previewKey = process.env.PREVIEW_KEY
+  const base = APP_URL || req.nextUrl.origin
 
   // W03: timing-safe comparison to prevent key enumeration via timing side-channel
   let valid = false
@@ -16,10 +20,10 @@ export async function GET(req: NextRequest) {
   }
 
   if (!valid) {
-    return NextResponse.redirect(new URL("/coming-soon?error=1", req.url))
+    return NextResponse.redirect(new URL("/coming-soon?error=1", base))
   }
 
-  const res = NextResponse.redirect(new URL("/", req.url))
+  const res = NextResponse.redirect(new URL("/", base))
   res.cookies.set("preview_key", previewKey ?? "", {
     httpOnly: true,
     sameSite: "lax",

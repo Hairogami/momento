@@ -1,80 +1,132 @@
 ---
 status: findings
-reviewed_at: 2026-04-10T20:50:00Z
+reviewed_at: 2026-04-10T21:07:50Z
 critical: 2
-warning: 5
+warning: 6
 info: 4
 ---
 
-<!-- Fixes déjà appliqués (iterations précédentes) :
-     C01 (registerAction supprimé), C02, C03, W01 (image allowlist), W02, W03, W04,
-     W05 (planners select+_count), W06 (stats scope), W07, W08, I01 (currentPassword cap)
-     W-N02 (Zod sur LLM output), W-N03 (P2002 catch vendors), W-N04 (vendor-requests status unifiés),
-     I-N02 (calendar range limit), I-N05 (body size guard ai/suggest),
-     C-N01 (reset-password newPassword cap — RÉSOLU ci-dessous par vérification du code actuel)
--->
+## Review — Momento codebase (src/)
 
-## CRITICAL
-
-### [CRITICAL] C-N01 — reset-password/route.ts : `include: { user: true }` expose passwordHash en mémoire
-**Fichier:** `src/app/api/auth/reset-password/route.ts:41`
-**Problème:** `prisma.emailVerification.findUnique({ where: { token }, include: { user: true } })` charge l'intégralité de l'objet `user` incluant `passwordHash`, `emailVerifications`, etc. Seul `record.userId` est utilisé ensuite. En cas de fuite mémoire ou log d'erreur, le hash du mot de passe est exposé.
-**Fix:** Remplacer `include: { user: true }` par `select: { id: true, userId: true, type: true, usedAt: true, expiresAt: true }` et supprimer la référence à `record.user`.
-
-### [CRITICAL] C-N02 — auth.ts : credentials.password sans cap longueur avant bcrypt.compare (DoS)
-**Fichier:** `src/lib/auth.ts:64`
-**Problème:** `bcrypt.compare(credentials.password as string, user.passwordHash)` sans vérification de longueur. Un attaquant peut envoyer un mot de passe de 1 Mo et saturer le CPU (bcrypt tronque à 72 bytes mais évalue quand même l'input complet selon l'implémentation). Le guard existe dans `change-password/route.ts:26` mais pas dans `authorize`.
-**Fix:** Ajouter `if ((credentials.password as string).length > 128) return null;` avant l'appel bcrypt.compare.
+> Scope: all .ts / .tsx under src/, excluding node_modules / .next / dist.
+> Previous audit rounds (sessions 717–742) already patched many issues — only new/remaining findings listed.
 
 ---
 
-## WARNING
+### [CRITICAL] C01 — Access token stored in JWT, leaks if AUTH_SECRET compromised
 
-### [WARNING] W-N01 — stats/route.ts : include hiérarchique non borné (N+1 mémoire)
-**Fichier:** `src/app/api/stats/route.ts:31`
-**Problème:** `prisma.planner.findMany` avec `include: { steps: { include: { vendors: { select: { vendor: ... } } } } }` charge la hiérarchie entière en mémoire sans limite. 10 planners × 20 steps × 5 vendors = 1000 objets par appel.
-**Fix:** Ajouter `take: 100` sur le `findMany` pour borner la charge côté stats.
+**Fichier:** `src/lib/auth.ts:93-94`
 
-### [WARNING] W-N04 — vendor-requests/route.ts GET : select manquant — tous les champs retournés
-**Fichier:** `src/app/api/vendor-requests/route.ts:22`
-**Problème:** `prisma.contactRequest.findMany({ where: { vendorSlug: ... } })` sans `select` retourne tous les colonnes. Incohérent avec les autres routes qui utilisent toutes un `select` explicite. Expose des champs potentiellement sensibles ajoutés à la table à l'avenir.
-**Fix:** Ajouter un `select` explicite avec les champs utiles au frontend.
+**Probleme:** The Google OAuth `access_token` (and `refresh_token`) is persisted inside the JWT payload. If `AUTH_SECRET` leaks, all stored tokens become readable — and this app has Google Calendar read scope. The code has a self-noted TODO to migrate away from this. The calendar route already fetches the token from `prisma.account` directly, making the JWT copy redundant.
 
-### [WARNING] W-N05 — email.ts : APP_URL fallback localhost:3000 en production
-**Fichier:** `src/lib/email.ts:8`
-**Problème:** `const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"`. Si la variable n'est pas définie sur Vercel, les liens de vérification email et reset-password pointent vers localhost — les utilisateurs reçoivent des liens non fonctionnels.
-**Fix:** Logger un warning explicite si `NODE_ENV === "production"` et `NEXT_PUBLIC_APP_URL` est absent.
-
-### [WARNING] W-N06 — auth.ts signIn event : profile.name sans cap longueur avant update DB
-**Fichier:** `src/lib/auth.ts:133`
-**Problème:** `updates.name = profile.name as string` stocke le nom OAuth sans `.slice(0, 200)`. Un provider OAuth malicieux ou corrompu peut envoyer un nom de plusieurs Ko qui sera écrit tel quel en DB.
-**Fix:** Ajouter `.slice(0, 200)` sur `profile.name` et `.slice(0, 2000)` sur l'image URL.
-
-### [WARNING] W-N07 — resend-verification/route.ts : pas de validation format email avant findUnique
-**Fichier:** `src/app/api/auth/resend-verification/route.ts:23`
-**Problème:** La vérification est `rawEmail.length <= 320` mais il n'y a pas de validation de format email. Une chaîne sans `@` comme `"aaaa...320chars"` génère une requête Prisma inutile.
-**Fix:** Ajouter une validation `z.string().email()` ou regex email avant le `findUnique`.
+**Fix:** Remove lines 93-94 (`token.accessToken` / `token.refreshToken`) from the JWT callback. The `access_token` is already available via `prisma.account.findFirst({ where: { userId, provider: "google" } })` as the calendar route demonstrates.
 
 ---
 
-## INFO
+### [CRITICAL] C02 — `verify-email` redirects built from `req.url` — Host-header open redirect
 
-### [INFO] I-N01 — budget/actions.ts : updateBudget sans borne max sur budget
-**Fichier:** `src/app/(dashboard)/budget/actions.ts:53`
-**Problème:** `updateBudget` vérifie `budget < 0` mais pas `budget > 1_000_000_000` (contrairement à `addBudgetItem` ligne 18 qui a le guard). Asymétrie qui laisse passer des montants aberrants.
-**Fix:** Ajouter `|| budget > 1_000_000_000` au guard ligne 53.
+**Fichier:** `src/app/api/auth/verify-email/route.ts:9,45,46,48`
 
-### [INFO] I-N03 — auth.ts : accessToken/refreshToken OAuth dans le JWT
-**Fichier:** `src/lib/auth.ts:91-92`
-**Problème:** TODO déjà noté en commentaire dans le code. Les tokens Google OAuth sont dans le JWT signé côté client — si `AUTH_SECRET` fuit, les tokens OAuth sont exposés. Non critique car le token n'est pas forwarded à `session`, mais le risque existe si le JWT est inspecté.
-**Fix:** Migrer vers stockage exclusivement DB via `prisma.account` (TODO existant, à prioriser en v2).
+**Probleme:** `new URL("/path", req.url)` uses the request's `Host` header as the base. In environments where the `Host` header can be spoofed (non-Vercel deploys, local dev behind nginx), this allows an attacker to craft a verification link that redirects to an arbitrary origin. Same pattern in `unlock/route.ts:19,22` and `logout/route.ts:7`.
 
-### [INFO] I-N04 — stats/route.ts : catch silencieux en mode IS_DEV
-**Fichier:** `src/app/api/stats/route.ts:17`
-**Problème:** `.catch(() => [])` avale silencieusement toutes les erreurs Prisma en dev. Un problème de connexion DB passe inaperçu.
-**Fix:** `.catch((e) => { console.error("[stats] DB error:", e); return [] })`.
+**Fix:** Use `process.env.NEXT_PUBLIC_APP_URL` as the base. Example: `new URL("/login?verified=true", process.env.NEXT_PUBLIC_APP_URL ?? req.url)`.
 
-### [INFO] I-N05 — dashboard/layout.tsx : monkey-patch de window.fetch global
-**Fichier:** `src/app/(dashboard)/layout.tsx:123`
-**Problème:** Monkey-patching de `window.fetch` dans un `useEffect` est fragile — peut interférer avec SWR, React Query, ou tout autre lib. Le cleanup restore correctement `original` mais le pattern reste risqué si le composant se remonte.
-**Fix:** Préférer un event bus centralisé ou un contexte React pour propager les mutations sans intercepter fetch globalement.
+---
+
+### [WARNING] W01 — `vendors/route.ts` POST: lat/lng/email/website unvalidated
+
+**Fichier:** `src/app/api/vendors/route.ts:77-84`
+
+**Probleme:** Admin vendor-creation accepts `lat`/`lng` as any number (including `Infinity`, `NaN`, out-of-range). `email` and `website` are stored with no format check. Bad data breaks the map UI and could cause display issues.
+
+**Fix:** Guard `lat` ∈ [-90,90] and `lng` ∈ [-180,180] with `isFinite`. Validate `email` format. Check `website` starts with `https://`.
+
+---
+
+### [WARNING] W02 — `steps/[id]/vendors/route.ts`: TOCTOU race on vendor dedup
+
+**Fichier:** `src/app/api/steps/[id]/vendors/route.ts:40-48`
+
+**Probleme:** `findFirst` + `create` for vendor deduplication is not atomic. Two concurrent requests can both pass the `findFirst` check and create duplicate vendor rows (the slug includes `Date.now()` so no unique-constraint collision occurs on slug).
+
+**Fix:** Catch `P2002` on `vendor.create` and do a `findFirst` retry, or replace with `upsert` if a `@@unique([name, category])` constraint is added to the schema.
+
+---
+
+### [WARNING] W03 — Server Actions return void on all failures — silent errors
+
+**Fichier:** `src/app/(dashboard)/budget/actions.ts:8,35,46` / `src/app/(dashboard)/guests/actions.ts:9,31`
+
+**Probleme:** All Server Actions return `undefined` on auth failure, ownership check failure, and validation failure. Client components cannot distinguish success from silent failure, masking security enforcement (e.g., ownership check failing looks identical to a successful no-op).
+
+**Fix:** Return `{ ok: boolean; error?: string }` so callers can surface errors via toast or form state.
+
+---
+
+### [WARNING] W04 — `ai/suggest/route.ts`: hardcoded deprecated model ID
+
+**Fichier:** `src/app/api/ai/suggest/route.ts:74`
+
+**Probleme:** `"claude-haiku-4-5-20251001"` is a snapshot model ID that may be retired. When it is, all AI suggestions silently return `{ vendors: [] }` — the error goes to `console.error` only, no monitoring.
+
+**Fix:** Move to env var `ANTHROPIC_MODEL` (default `"claude-haiku-4-5"`). Alert via structured logging rather than bare `console.error`.
+
+---
+
+### [WARNING] W05 — OAuth sign-in event writes image URL without domain allowlist
+
+**Fichier:** `src/lib/auth.ts:141`
+
+**Probleme:** The `signIn` event writes the provider's `image` URL to the DB (`.slice(0, 2000)`) without checking the domain. The `update-profile` route has an `ALLOWED_IMAGE_HOSTS` allowlist, but it's not applied here. A misconfigured or compromised OAuth provider could inject an arbitrary URL.
+
+**Fix:** Extract `ALLOWED_IMAGE_HOSTS` into `src/lib/allowedImageHosts.ts` and apply it in both `update-profile/route.ts` and the `signIn` event in `auth.ts`.
+
+---
+
+### [WARNING] W06 — `email.ts`: localhost fallback silently sends broken verification emails in production
+
+**Fichier:** `src/lib/email.ts:8-11`
+
+**Probleme:** If `NEXT_PUBLIC_APP_URL` is unset in production, verification and password-reset emails are sent with `http://localhost:3000/...` links. The `console.error` warning is easy to miss and the app continues sending broken emails.
+
+**Fix:** Throw (or return an error response) when `NODE_ENV === "production"` and `NEXT_PUBLIC_APP_URL` is not set, rather than allowing emails with localhost URLs to be dispatched.
+
+---
+
+### [INFO] I01 — All API routes bypass coming-soon gate by design
+
+**Fichier:** `src/proxy.ts:5`
+
+**Probleme:** `/api/` is entirely exempt from the coming-soon gate. Public routes (`/api/vendors`, `/api/reviews`, `/api/contact`, `/api/waitlist`) are reachable before launch. Likely intentional but undocumented.
+
+**Fix:** Add a comment. If only waitlist should be public pre-launch, tighten the exemption to `/api/waitlist` and `/api/auth`.
+
+---
+
+### [INFO] I02 — `stats/route.ts`: IS_DEV mock returns hardcoded totals (44/31/60)
+
+**Fichier:** `src/app/api/stats/route.ts:24-29`
+
+**Probleme:** When DB is empty in dev mode, the endpoint returns fabricated totals. Masks bugs in the real stats calculation path during development.
+
+**Fix:** Return zeros or remove the mock fallback to force real code paths in dev.
+
+---
+
+### [INFO] I03 — `unread/route.ts`: full MOCK_DASHBOARD_DATA imported for one field
+
+**Fichier:** `src/app/api/unread/route.ts:4`
+
+**Probleme:** Imports a large mock object to read `.unreadCount = 2`. Minor bundle bloat.
+
+**Fix:** Export a dedicated `MOCK_UNREAD_COUNT = 2` constant from `devMock.ts`.
+
+---
+
+### [INFO] I04 — Dead code: `MOCK_SESSION` exported from `devMock.ts` but unused
+
+**Fichier:** `src/lib/devMock.ts:10-12`
+
+**Probleme:** `MOCK_SESSION` is defined but no file in src/ imports it (search confirms zero usages).
+
+**Fix:** Remove the export.

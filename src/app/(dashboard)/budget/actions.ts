@@ -4,9 +4,12 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function addBudgetItem(formData: FormData) {
+// W03: Server Actions return typed results so callers can surface errors via toast/form state
+type ActionResult = { ok: true } | { ok: false; error: string }
+
+export async function addBudgetItem(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id) return;
+  if (!session?.user?.id) return { ok: false, error: "Non authentifié." };
 
   const workspaceId = formData.get("workspaceId") as string;
   const label    = (formData.get("label") as string)?.trim().slice(0, 200);
@@ -15,14 +18,15 @@ export async function addBudgetItem(formData: FormData) {
   const raw = formData.get("plannerId") as string | null;
   const plannerId = raw && raw !== "__none__" ? raw : null;
 
-  if (!workspaceId || !label || !category || !isFinite(estimated) || estimated < 0 || estimated > 1_000_000_000 || !plannerId) return;
+  if (!workspaceId || !label || !category || !isFinite(estimated) || estimated < 0 || estimated > 1_000_000_000 || !plannerId)
+    return { ok: false, error: "Données invalides." };
 
   const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId }, select: { userId: true } });
-  if (!workspace || workspace.userId !== session.user.id) return;
+  if (!workspace || workspace.userId !== session.user.id) return { ok: false, error: "Accès refusé." };
 
   if (plannerId) {
     const planner = await prisma.planner.findUnique({ where: { id: plannerId }, select: { userId: true } });
-    if (!planner || planner.userId !== session.user.id) return;
+    if (!planner || planner.userId !== session.user.id) return { ok: false, error: "Accès refusé." };
   }
 
   await prisma.budgetItem.create({
@@ -30,32 +34,36 @@ export async function addBudgetItem(formData: FormData) {
   });
 
   revalidatePath("/budget");
+  return { ok: true };
 }
 
-export async function togglePaid(id: string, paid: boolean) {
+export async function togglePaid(id: string, paid: boolean): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id) return;
+  if (!session?.user?.id) return { ok: false, error: "Non authentifié." };
 
   const item = await prisma.budgetItem.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } });
-  if (!item || item.workspace.userId !== session.user.id) return;
+  if (!item || item.workspace.userId !== session.user.id) return { ok: false, error: "Accès refusé." };
 
   await prisma.budgetItem.update({ where: { id }, data: { paid } });
   revalidatePath("/budget");
+  return { ok: true };
 }
 
-export async function updateBudget(formData: FormData) {
+export async function updateBudget(formData: FormData): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id) return;
+  if (!session?.user?.id) return { ok: false, error: "Non authentifié." };
 
   const workspaceId = formData.get("workspaceId") as string;
   const budget = parseFloat(formData.get("budget") as string);
 
-  if (!workspaceId || !isFinite(budget) || budget < 0 || budget > 1_000_000_000) return;
+  if (!workspaceId || !isFinite(budget) || budget < 0 || budget > 1_000_000_000)
+    return { ok: false, error: "Données invalides." };
   // I-N01: upper bound guard mirrors addBudgetItem
 
   const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId }, select: { userId: true } });
-  if (!workspace || workspace.userId !== session.user.id) return;
+  if (!workspace || workspace.userId !== session.user.id) return { ok: false, error: "Accès refusé." };
 
   await prisma.workspace.update({ where: { id: workspaceId }, data: { budget } });
   revalidatePath("/budget");
+  return { ok: true };
 }

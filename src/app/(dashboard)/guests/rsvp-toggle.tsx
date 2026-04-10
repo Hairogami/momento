@@ -28,7 +28,7 @@ export function RsvpToggle({ id, rsvp }: { id: string; rsvp: string }) {
   return (
     <button
       type="button"
-      onClick={() => startTransition(() => updateRsvp(id, RSVP_CYCLE[rsvp] ?? "pending"))}
+      onClick={() => startTransition(() => { void updateRsvp(id, RSVP_CYCLE[rsvp] ?? "pending") })}
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors cursor-pointer ${RSVP_STYLE[rsvp] ?? RSVP_STYLE.pending}`}
     >
       {RSVP_LABEL[rsvp] ?? rsvp}

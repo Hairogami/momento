@@ -77,8 +77,9 @@ export async function POST(req: NextRequest) {
         email: body.email ? String(body.email).slice(0, 200) : undefined,
         website: body.website ? String(body.website).slice(0, 500) : undefined,
         address: body.address ? String(body.address).slice(0, 500) : undefined,
-        lat: typeof body.lat === "number" ? body.lat : undefined,
-        lng: typeof body.lng === "number" ? body.lng : undefined,
+        // W01: validate coordinate ranges and email/website format
+        lat: typeof body.lat === "number" && isFinite(body.lat) && body.lat >= -90  && body.lat <= 90  ? body.lat : undefined,
+        lng: typeof body.lng === "number" && isFinite(body.lng) && body.lng >= -180 && body.lng <= 180 ? body.lng : undefined,
         priceRange: body.priceRange ? String(body.priceRange) : undefined,
         rating: typeof body.rating === "number" ? Math.min(5, Math.max(0, body.rating)) : undefined,
       },
