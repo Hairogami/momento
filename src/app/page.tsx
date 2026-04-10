@@ -102,9 +102,9 @@ const MAJOR_CATS_HOME = [
 ]
 
 const STEPS = [
-  { n: "01", icon: <Calendar size={18} />, t: "Créez votre événement", d: "Type, date, lieu et budget. 30 secondes chrono." },
-  { n: "02", icon: <Users size={18} />,    t: "Parcourez les prestataires", d: `${VENDOR_COUNT} pros filtrés par ville, catégorie et budget.` },
-  { n: "03", icon: <Zap size={18} />,      t: "Réservez directement", d: "Envoyez une demande, confirmez. C'est tout." },
+  { n: "01", icon: <Calendar size={18} />, t: "Fixe ta date & ton lieu", d: "Type, date, lieu et budget. 30 secondes chrono." },
+  { n: "02", icon: <Users size={18} />,    t: "Trouve tes prestataires", d: `${VENDOR_COUNT} pros vérifiés — filtre par ville, style et budget.` },
+  { n: "03", icon: <Zap size={18} />,      t: "Contacte & réserve", d: "Envoie une demande, confirme. C'est tout." },
 ]
 
 const CATEGORY_IMAGES: Record<string, string> = {
@@ -162,7 +162,7 @@ export default function Landing() {
 
           <p className="text-sm sm:text-base mb-8 max-w-lg mx-auto leading-relaxed"
             style={{ color: C.mist, opacity: 0.8 }}>
-            Contactez directement photographes, DJ, traiteurs et décorateurs vérifiés au Maroc — sans intermédiaire, sans commission.
+            Trouve ton photographe, ton DJ, ton traiteur au Maroc — directement, sans commission, sans intermédiaire.
           </p>
 
           <AirbnbSearchBar />
@@ -358,10 +358,10 @@ export default function Landing() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
               <div>
                 <p className="text-xs tracking-widest uppercase mb-2" style={{ color: C.terra, letterSpacing: "0.18em" }}>
-                  Vous êtes prestataire ?
+                  Tu es prestataire ?
                 </p>
                 <h3 className="font-display text-2xl sm:text-3xl font-light" style={{ color: C.white }}>
-                  Développez votre activité<br />
+                  Fais grandir ton activité<br />
                   <em style={{ fontStyle: "italic", color: C.terra }}>gratuitement</em> sur Momento
                 </h3>
               </div>
@@ -374,9 +374,9 @@ export default function Landing() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-px" style={{ borderTop: `0.5px solid ${C.anthracite}` }}>
               {[
-                { n: "100%",   label: "Profil gratuit",        desc: "Aucun abonnement. Publiez vos services, photos et tarifs sans frais." },
-                { n: "0%",     label: "Commission",             desc: "Gardez 100% de vos revenus. Momento ne prend aucune commission sur vos contrats." },
-                { n: String(VENDOR_COUNT) + "+", label: "Pros référencés", desc: "Rejoignez la plus grande communauté de prestataires événementiels du Maroc." },
+                { n: "100%",   label: "Profil gratuit",        desc: "Aucun abonnement. Publie tes services, tes photos et tes tarifs sans frais." },
+                { n: "0%",     label: "Commission",             desc: "Garde 100% de tes revenus. Momento ne touche rien sur tes contrats." },
+                { n: String(VENDOR_COUNT) + "+", label: "Pros référencés", desc: "Rejoins la plus grande communauté de pros de l'événement au Maroc." },
               ].map(({ n, label, desc }) => (
                 <div key={label} className="flex flex-col gap-2 pt-6 sm:pr-8">
                   <div className="font-display text-3xl sm:text-4xl font-light" style={{ color: C.terra }}>{n}</div>
@@ -413,7 +413,7 @@ export default function Landing() {
               {
                 name: "Youssef A.", event: "Corporate — Casablanca",
                 photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&q=75",
-                text: "Plateforme intuitive, prestataires réactifs. Notre soirée d'entreprise a dépassé toutes les attentes.",
+                text: "Interface ultra simple, prestataires réactifs. Notre soirée d'entreprise a dépassé toutes les attentes.",
                 stars: 5,
               },
               {
@@ -461,7 +461,7 @@ export default function Landing() {
                 <em style={{ fontStyle: "italic", color: C.silver }}>commence ici.</em>
               </h2>
               <p className="text-sm leading-relaxed" style={{ color: C.mist }}>
-                Des milliers d&apos;organisateurs au Maroc font confiance à Momento.
+                Des milliers de mariés et d&apos;organisateurs au Maroc préparent leur grand jour avec Momento.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/dashboard"
@@ -487,7 +487,7 @@ export default function Landing() {
                 sur Momento.
               </h2>
               <p className="text-sm leading-relaxed" style={{ color: C.mist }}>
-                Publiez votre profil gratuitement et recevez des demandes qualifiées.
+                Publie ton profil gratuitement et reçois des demandes de clients qui te correspondent.
               </p>
               <Link href="/prestataires"
                 className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-7 py-4 transition-all hover:opacity-90 self-start"

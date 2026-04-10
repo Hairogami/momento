@@ -54,9 +54,9 @@ export default async function GuestsPage({
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center gap-6">
         <div className="text-5xl">📅</div>
         <div>
-          <h1 className="text-xl font-semibold mb-2">Aucun événement actif</h1>
+          <h1 className="text-xl font-semibold mb-2">Ton mariage n&apos;est pas encore créé</h1>
           <p className="text-sm text-muted-foreground max-sm">
-            Vous devez créer un événement avant de gérer la liste des invités.
+            Crée ton événement pour commencer ta liste d&apos;invités.
           </p>
         </div>
         <a
@@ -210,8 +210,8 @@ export default async function GuestsPage({
       <Card>
         {guests.length === 0 ? (
           <CardContent className="py-10 text-center">
-            <p className="text-sm text-muted-foreground">Aucun invité pour le moment.</p>
-            <p className="text-xs text-muted-foreground mt-1">Ajoutez vos invités pour gérer les RSVP.</p>
+            <p className="text-sm text-muted-foreground">Ta liste est encore vide — hâte de la remplir !</p>
+            <p className="text-xs text-muted-foreground mt-1">Ajoute ton premier invité →</p>
           </CardContent>
         ) : (
           <Table>

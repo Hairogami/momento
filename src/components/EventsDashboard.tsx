@@ -118,10 +118,10 @@ function EmptyState({ firstName, hasExistingEvents }: { firstName: string | null
       </h1>
 
       <p className="text-sm text-center max-w-xs mb-8" style={{ color: C.mist, lineHeight: 1.7 }}>
-        Chaque grand moment commence par une idée.<br />
+        Chaque grand mariage commence par une idée.<br />
         {hasExistingEvents
-          ? "Organisez un nouvel événement et laissez Momento vous guider."
-          : "Chaque grand moment commence par une idée. Créez votre premier événement et laissez Momento vous guider."}
+          ? "Lance ton prochain événement et laisse Momento t'accompagner."
+          : "Crée ton premier événement et laisse Momento t'accompagner."}
       </p>
 
       {/* Decorative divider */}
@@ -142,7 +142,7 @@ function EmptyState({ firstName, hasExistingEvents }: { firstName: string | null
           letterSpacing: "0.05em",
         }}
       >
-        {hasExistingEvents ? "Créer un nouveau projet" : "Créer mon premier événement"} <ArrowRight size={15} />
+        {hasExistingEvents ? "Préparer un nouvel événement →" : "C'est parti — crée ton événement →"} <ArrowRight size={15} />
       </Link>
 
       {/* Feature pills */}
@@ -197,7 +197,7 @@ function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil, 
         <div className="flex items-start justify-between gap-4 relative z-10">
           <div>
             <p className="text-xs font-semibold tracking-[0.25em] uppercase mb-2" style={{ color: C.terra }}>
-              ✦ Votre événement
+              ✦ Ton événement
             </p>
             <h2
               className="font-display text-3xl sm:text-4xl font-light leading-tight mb-1"
@@ -244,14 +244,14 @@ function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil, 
               icon: <Users size={15} />,
               label: "Invités",
               value: totalGuests ? `${confirmedGuests}/${totalGuests}` : "—",
-              sub: totalGuests ? "confirmés" : "à définir",
+              sub: totalGuests ? "confirmés" : "pas encore fixé",
               href: "/guests",
             },
             {
               icon: <Wallet size={15} />,
               label: "Budget",
               value: budget ? `${budgetPct}%` : "—",
-              sub: budget ? `${totalBudgetSpent.toLocaleString("fr-FR")} / ${budget.toLocaleString("fr-FR")} MAD` : "à définir",
+              sub: budget ? `${totalBudgetSpent.toLocaleString("fr-FR")} / ${budget.toLocaleString("fr-FR")} MAD` : "pas encore fixé",
               href: "/budget",
             },
             {
@@ -320,8 +320,8 @@ function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil, 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {[
           { href: "/prestataires", label: "Trouver des prestataires", icon: "🔍" },
-          { href: "/budget", label: "Gérer le budget", icon: "💰" },
-          { href: "/guests", label: "Liste des invités", icon: "👥" },
+          { href: "/budget", label: "Ton budget", icon: "💰" },
+          { href: "/guests", label: "Tes invités", icon: "👥" },
           { href: "/vendors", label: "Mes prestataires", icon: "🤝" },
           { href: "/messages", label: "Messages", icon: "💬" },
           { href: "/planner", label: "Planificateur", icon: "📋" },
@@ -341,7 +341,7 @@ function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil, 
         <Link href="/event/new"
           className="flex items-center gap-2 text-xs font-medium transition-opacity hover:opacity-70"
           style={{ color: C.steel }}>
-          <Plus size={13} /> Créer un autre événement
+          <Plus size={13} /> + Ajouter un autre événement
         </Link>
       </div>
     </div>

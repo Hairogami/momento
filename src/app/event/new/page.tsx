@@ -134,7 +134,7 @@ export default function NewEventPage() {
             <div className="text-center mb-10">
               <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: C.terra }}>Étape 1 / 3</p>
               <h1 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: C.white }}>Quel type d&apos;événement ?</h1>
-              <p className="text-base" style={{ color: C.mist }}>Nous sélectionnerons les meilleurs prestataires pour vous.</p>
+              <p className="text-base" style={{ color: C.mist }}>On t&apos;aidera à trouver les meilleurs prestataires pour toi.</p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
@@ -173,7 +173,7 @@ export default function NewEventPage() {
                 {selectedType?.icon} {form.type} · Étape 2 / 3
               </p>
               <h1 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: C.white }}>Les détails</h1>
-              <p className="text-base" style={{ color: C.mist }}>Plus d&apos;infos = meilleures recommandations.</p>
+              <p className="text-base" style={{ color: C.mist }}>Plus tu nous en dis, mieux on peut t&apos;aider.</p>
             </div>
 
             <div className="flex flex-col gap-5 mb-10">
@@ -262,7 +262,7 @@ export default function NewEventPage() {
                 {selectedType?.icon} Étape 3 / 3
               </p>
               <h1 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: C.white }}>Tout est correct ?</h1>
-              <p className="text-base" style={{ color: C.mist }}>On vous trouve les meilleurs prestataires juste après.</p>
+              <p className="text-base" style={{ color: C.mist }}>On te trouve les meilleurs prestataires juste après.</p>
             </div>
 
             <div className="rounded-2xl p-6 mb-8" style={{ backgroundColor: C.dark, border: `2px solid ${selectedType?.color ?? C.terra}30` }}>
@@ -287,7 +287,7 @@ export default function NewEventPage() {
                 🎯 Prochaine étape
               </p>
               <p className="text-xs" style={{ color: C.mist }}>
-                Choisissez les types de prestataires dont vous avez besoin pour votre {form.type.toLowerCase()}.
+                Choisis les prestataires dont tu as besoin pour ton {form.type.toLowerCase()}.
               </p>
             </div>
 

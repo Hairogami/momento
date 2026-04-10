@@ -63,10 +63,10 @@ export default async function BudgetPage({
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center gap-6">
         <div className="text-5xl">📅</div>
         <div>
-          <h1 className="text-xl font-semibold mb-2">Aucun événement actif</h1>
+          <h1 className="text-xl font-semibold mb-2">Ton mariage n&apos;est pas encore créé</h1>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Vous devez créer un événement avant de pouvoir gérer un budget.
-            Chaque poste budgétaire est lié à un événement spécifique.
+            Crée d&apos;abord ton événement — ton budget suivra.
+            Chaque dépense sera rattachée à ton grand jour.
           </p>
         </div>
         <a
@@ -259,7 +259,7 @@ export default async function BudgetPage({
         <Card>
           <CardContent className="pt-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Utilisation du budget global</span>
+              <span className="text-muted-foreground">Budget utilisé</span>
               <span className={overBudget ? "text-destructive font-medium" : "font-medium"}>
                 {Math.round(pct)}%
                 {overBudget && ` (+${(totalActual - budget).toLocaleString("fr-FR")} MAD)`}
@@ -274,8 +274,8 @@ export default async function BudgetPage({
       {sections.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center">
-            <p className="text-sm text-muted-foreground">Aucun poste budgétaire.</p>
-            <p className="text-xs text-muted-foreground mt-1">Cliquez sur « Ajouter » pour commencer.</p>
+            <p className="text-sm text-muted-foreground">Aucune dépense pour l&apos;instant.</p>
+            <p className="text-xs text-muted-foreground mt-1">Ajoute ton premier poste — DJ, traiteur, décor... →</p>
           </CardContent>
         </Card>
       ) : (

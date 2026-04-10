@@ -96,9 +96,9 @@ export default async function VendorsPage({
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center gap-6">
         <div className="text-5xl">🤝</div>
         <div>
-          <h1 className="text-xl font-semibold mb-2">Aucun événement actif</h1>
+          <h1 className="text-xl font-semibold mb-2">Ton mariage n&apos;est pas encore créé</h1>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Créez d&apos;abord un événement pour gérer vos prestataires.
+            Crée ton événement pour commencer à construire ton équipe de rêve.
           </p>
         </div>
         <a
@@ -241,10 +241,10 @@ export default async function VendorsPage({
           <div className="text-4xl">🎯</div>
           <div>
             <p className="text-base font-semibold mb-1" style={{ color: C.white }}>
-              Aucun prestataire réservé
+              Ton équipe est encore à construire !
             </p>
             <p className="text-sm max-w-sm" style={{ color: C.mist }}>
-              Parcourez l&apos;annuaire pour trouver et réserver vos prestataires d&apos;événement.
+              Explore les pros disponibles et construis l&apos;équipe parfaite pour ton mariage.
             </p>
           </div>
           <Link
@@ -252,7 +252,7 @@ export default async function VendorsPage({
             className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
             style={{ backgroundColor: C.terra, color: "#fff" }}
           >
-            Explorer les prestataires →
+            Trouver mes prestataires →
           </Link>
         </div>
       ) : (
