@@ -1,11 +1,18 @@
 import { prisma } from "@/lib/prisma"
+import { auth } from "@/lib/auth"
 import { IS_DEV } from "@/lib/devMock"
 
 export async function GET() {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return Response.json({ error: "Non authentifié." }, { status: 401 })
+  }
+
   if (IS_DEV) {
     // Calcul dynamique depuis les planners mock retournés par /api/planners
     // On simule avec les vraies données DB si dispo, sinon fallback
     const planners = await prisma.planner.findMany({
+      where: session?.user?.id ? { userId: session.user.id } : {},
       include: { steps: { include: { vendors: { include: { vendor: true } } } } },
     }).catch(() => [])
 
@@ -22,6 +29,7 @@ export async function GET() {
   }
 
   const planners = await prisma.planner.findMany({
+    where: { userId: session.user.id },
     include: { steps: { include: { vendors: { include: { vendor: true } } } } },
   })
 

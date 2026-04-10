@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server"
 import { randomUUID } from "crypto"
 import { prisma } from "@/lib/prisma"
 import { sendPasswordResetEmail } from "@/lib/email"
-import { rateLimit } from "@/lib/rateLimiter"
+import { rateLimit, getIp } from "@/lib/rateLimiter"
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get("x-forwarded-for") ?? "unknown"
+    const ip = getIp(req)
     const rl = rateLimit(`forgot-password:${ip}`, 5, 15 * 60 * 1000)
     if (!rl.ok) {
       return NextResponse.json(
@@ -37,6 +37,9 @@ export async function POST(req: NextRequest) {
         } catch (e) {
           console.error("Forgot password email error:", e)
         }
+      } else {
+        // Constant-time delay to prevent user-existence enumeration via timing
+        await new Promise(r => setTimeout(r, 200))
       }
     }
 

@@ -65,7 +65,7 @@ export default async function DashboardPage() {
         conversation: { clientId: session.user.id },
       },
     });
-  } catch { /* champ read non migré */ }
+  } catch (err) { console.error("[dashboard] unreadCount query failed:", err) }
 
   let daysUntil: number | null = null;
   if (workspace.eventDate) {
@@ -101,7 +101,7 @@ export default async function DashboardPage() {
       SELECT "neededCategories" FROM "Workspace" WHERE "userId" = ${session.user.id} LIMIT 1
     `;
     if (raw[0]?.neededCategories) neededCategories = JSON.parse(raw[0].neededCategories);
-  } catch { /* migration pending */ }
+  } catch (err) { console.error("[dashboard] neededCategories raw query failed (migration pending?):", err) }
 
   return (
     <DashboardContent

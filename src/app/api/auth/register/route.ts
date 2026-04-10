@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, after } from "next/server"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
@@ -91,28 +91,35 @@ export async function POST(req: NextRequest) {
     select: { id: true, email: true, name: true },
   })
 
-  // Welcome email (non-blocking)
+  // Welcome email — deferred after response via after() so the lambda doesn't
+  // terminate before the send completes (WR-012 fix).
   const firstName = data.role === "client" ? (data.firstName ?? name ?? "là") : (data.companyName ?? "vous")
-  resend.emails.send({
-    from: FROM,
-    to: user.email,
-    subject: "Bienvenue sur Momento 🎉",
-    html: `
-      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#0f0f0f;color:#f5f0eb;border-radius:12px">
-        <h1 style="font-size:22px;font-weight:600;margin-bottom:8px">Bienvenue, ${firstName} !</h1>
-        <p style="color:#9a9a9a;font-size:14px;line-height:1.6;margin-bottom:24px">
-          Votre compte Momento est prêt. Commencez à organiser votre événement ou trouvez les meilleurs prestataires au Maroc.
-        </p>
-        <a href="https://momentoevents.app/dashboard"
-           style="display:inline-block;background:#C1713A;color:#0f0f0f;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">
-          Accéder à mon espace →
-        </a>
-        <p style="color:#555;font-size:12px;margin-top:32px">
-          Momento · Votre plateforme événementielle au Maroc
-        </p>
-      </div>
-    `,
-  }).catch(() => {}) // silently ignore email errors
+  after(async () => {
+    try {
+      await resend.emails.send({
+        from: FROM,
+        to: user.email,
+        subject: "Bienvenue sur Momento 🎉",
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#0f0f0f;color:#f5f0eb;border-radius:12px">
+            <h1 style="font-size:22px;font-weight:600;margin-bottom:8px">Bienvenue, ${firstName} !</h1>
+            <p style="color:#9a9a9a;font-size:14px;line-height:1.6;margin-bottom:24px">
+              Votre compte Momento est prêt. Commencez à organiser votre événement ou trouvez les meilleurs prestataires au Maroc.
+            </p>
+            <a href="https://momentoevents.app/dashboard"
+               style="display:inline-block;background:#C1713A;color:#0f0f0f;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">
+              Accéder à mon espace →
+            </a>
+            <p style="color:#555;font-size:12px;margin-top:32px">
+              Momento · Votre plateforme événementielle au Maroc
+            </p>
+          </div>
+        `,
+      })
+    } catch (e) {
+      console.error("[register] welcome email error:", e)
+    }
+  })
 
   return NextResponse.json({ id: user.id }, { status: 201 })
   } catch (err) {

@@ -9,11 +9,11 @@ export async function addBudgetItem(formData: FormData) {
   if (!session?.user?.id) return;
 
   const workspaceId = formData.get("workspaceId") as string;
-  const label = formData.get("label") as string;
-  const category = formData.get("category") as string;
+  const label    = (formData.get("label") as string)?.trim().slice(0, 200);
+  const category = (formData.get("category") as string)?.trim().slice(0, 100);
   const estimated = parseFloat(formData.get("estimated") as string);
 
-  if (!workspaceId || !label || isNaN(estimated)) return;
+  if (!workspaceId || !label || !category || !isFinite(estimated) || estimated < 0) return;
 
   const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId }, select: { userId: true } });
   if (!workspace || workspace.userId !== session.user.id) return;

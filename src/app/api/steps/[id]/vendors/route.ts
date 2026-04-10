@@ -20,21 +20,27 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const body = await req.json()
 
-  // Create vendor if it doesn't exist yet
-  let vendor = await prisma.vendor.findFirst({ where: { name: body.name, category: body.category } })
+  if (!body.name || typeof body.name !== "string" || !body.category || typeof body.category !== "string") {
+    return Response.json({ error: "name et category requis." }, { status: 400 })
+  }
+  const safeName     = String(body.name).slice(0, 200).trim()
+  const safeCategory = String(body.category).slice(0, 100).trim()
+
+  // Create vendor if it doesn't exist yet (only in the user's planner context)
+  let vendor = await prisma.vendor.findFirst({ where: { name: safeName, category: safeCategory } })
   if (!vendor) {
     vendor = await prisma.vendor.create({
       data: {
-        slug: body.slug ?? body.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        name: body.name,
-        category: body.category,
-        description: body.description,
-        phone: body.phone,
-        email: body.email,
-        address: body.address,
-        lat: body.lat,
-        lng: body.lng,
-        priceRange: body.priceRange,
+        slug: safeName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 100) || "vendor",
+        name: safeName,
+        category: safeCategory,
+        description: body.description ? String(body.description).slice(0, 1000) : undefined,
+        phone:   body.phone   ? String(body.phone).slice(0, 30)   : undefined,
+        email:   body.email   ? String(body.email).slice(0, 200)  : undefined,
+        address: body.address ? String(body.address).slice(0, 300): undefined,
+        lat: typeof body.lat === "number" ? body.lat : undefined,
+        lng: typeof body.lng === "number" ? body.lng : undefined,
+        priceRange: body.priceRange ? String(body.priceRange).slice(0, 50) : undefined,
       },
     })
   }

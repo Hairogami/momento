@@ -1,29 +1,27 @@
-"use client"
-
+import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import { useState, useEffect } from "react"
-import { ArrowRight, Menu, X, Calendar, Users, Zap, Star, MapPin } from "lucide-react"
+import { ArrowRight, Calendar, Users, Zap, Star, MapPin } from "lucide-react"
 import NavAuthButtons from "@/components/NavAuthButtons"
 import AirbnbSearchBar from "@/components/AirbnbSearchBar"
-import { DarkModeToggle } from "@/components/DarkModeToggle"
 import HeroOrbs from "@/components/HeroOrbs"
 import Footer from "@/components/Footer"
+import LandingNav from "./LandingNav"
+import HeroTitle from "./HeroTitle"
 import { VENDOR_COUNT } from "@/lib/vendorData"
 import { C } from "@/lib/colors"
 import { MomentoLogo } from "@/components/MomentoLogo"
 
-const EVENTS = ["Mariage", "Anniversaire", "Fiançailles", "Baby shower", "Soutenance", "Cérémonie", "Fête privée", "Corporate"]
-
-const EVENT_COLORS: Record<string, string> = {
-  "Mariage":      "#D4A86A",  // or champagne
-  "Anniversaire": "#C47850",  // terracotta chaud
-  "Fiançailles":  "#E2C88A",  // champagne clair
-  "Baby shower":  "#C8A890",  // rose poudré
-  "Soutenance":   "#A8B890",  // sauge
-  "Cérémonie":    "#B8A878",  // taupe chaud
-  "Fête privée":  "#C8B898",  // lin naturel
-  "Corporate":    "#9AB0C0",  // acier bleu doux
+export const metadata: Metadata = {
+  title: "Momento — Marketplace événementiel au Maroc",
+  description: `Trouvez et réservez les meilleurs prestataires événementiels au Maroc : photographes, DJ, traiteurs, décorateurs et plus. ${VENDOR_COUNT}+ professionnels référencés.`,
+  alternates: { canonical: "https://momentoevents.app" },
+  openGraph: {
+    title: "Momento — Marketplace événementiel au Maroc",
+    description: "Trouvez, comparez et réservez les meilleurs prestataires du Maroc pour votre mariage, anniversaire ou événement d'entreprise.",
+    url: "https://momentoevents.app",
+    type: "website",
+  },
 }
 
 const MAJOR_CATS_HOME = [
@@ -139,79 +137,11 @@ const TOP_VENDORS = [
   { id: "ahlam-mua",            name: "Ahlam MUA",            cat: "Makeup Artist",  city: "Casablanca", rating: 4.0, featured: false },
 ]
 
-
 export default function Landing() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [eventIdx, setEventIdx] = useState(0)
-
-  useEffect(() => {
-    let ticking = false
-    const fn = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => { setScrolled(window.scrollY > 10); ticking = false })
-        ticking = true
-      }
-    }
-    window.addEventListener("scroll", fn, { passive: true })
-    return () => window.removeEventListener("scroll", fn)
-  }, [])
-
-  useEffect(() => {
-    const t = setInterval(() => setEventIdx(i => (i + 1) % EVENTS.length), 2000)
-    return () => clearInterval(t)
-  }, [])
-
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: C.ink, color: C.white }}>
 
-      {/* ── NAV ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        style={scrolled ? {
-          backgroundColor: `${C.ink}F2`,
-          backdropFilter: "blur(20px)",
-          borderBottom: `0.5px solid ${C.anthracite}`,
-        } : {}}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
-          <MomentoLogo iconSize={34} />
-
-          <div className="hidden md:flex items-center gap-8" style={{ color: C.mist }}>
-            {[
-              { href: "#explore", label: "Explorer" },
-              { href: "#how",     label: "Comment ça marche" },
-              { href: "/prestataires", label: "Prestataires" },
-            ].map(({ href, label }) => (
-              <a key={label} href={href}
-                className="text-xs tracking-widest uppercase hover:opacity-100 transition-opacity"
-                style={{ letterSpacing: "0.16em", opacity: 0.7 }}>
-                {label}
-              </a>
-            ))}
-          </div>
-
-          <div className="hidden md:flex items-center gap-3">
-            <DarkModeToggle />
-            <NavAuthButtons />
-          </div>
-
-          <div className="md:hidden flex items-center gap-2">
-            <DarkModeToggle />
-            <button className="p-2 rounded-lg" onClick={() => setMenuOpen(o => !o)} style={{ color: C.white }} aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}>
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-
-        {menuOpen && (
-          <div className="md:hidden px-4 pb-4 pt-2 flex flex-col gap-3"
-            style={{ backgroundColor: C.dark, borderTop: `0.5px solid ${C.anthracite}` }}>
-            <a href="#explore"    className="text-xs tracking-widest uppercase py-2" style={{ color: C.mist }} onClick={() => setMenuOpen(false)}>Explorer</a>
-            <a href="#how"        className="text-xs tracking-widest uppercase py-2" style={{ color: C.mist }} onClick={() => setMenuOpen(false)}>Comment ça marche</a>
-            <Link href="/prestataires" className="text-xs tracking-widest uppercase py-2" style={{ color: C.mist }} onClick={() => setMenuOpen(false)}>Prestataires</Link>
-            <NavAuthButtons mobile />
-          </div>
-        )}
-      </nav>
+      <LandingNav />
 
       <main>
       {/* ── HERO ── */}
@@ -225,23 +155,14 @@ export default function Landing() {
           </div>
 
           <p className="text-xs font-semibold tracking-widest uppercase mb-6" style={{ color: C.terra }}>
-            La plateforme événementielle du Maroc
+            N°1 des prestataires événementiels · Maroc
           </p>
 
-          {/* Editorial hero title — Cormorant display font */}
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-light leading-tight mb-6"
-            style={{ color: C.white }}>
-            Chaque{" "}
-            <em style={{ color: EVENT_COLORS[EVENTS[eventIdx]], transition: "color 0.4s ease", fontStyle: "italic" }}>
-              {EVENTS[eventIdx]}
-            </em>
-            {" "}est un{" "}
-            <em className="font-light" style={{ color: C.silver, fontStyle: "italic" }}>moment.</em>
-          </h1>
+          <HeroTitle />
 
-          <p className="text-sm sm:text-base mb-8 max-w-xl mx-auto leading-relaxed tracking-wide"
-            style={{ color: C.mist, letterSpacing: "0.04em" }}>
-            Trouvez et réservez les meilleurs prestataires au Maroc — en quelques clics.
+          <p className="text-sm sm:text-base mb-8 max-w-lg mx-auto leading-relaxed"
+            style={{ color: C.mist, opacity: 0.8 }}>
+            Contactez directement photographes, DJ, traiteurs et décorateurs vérifiés au Maroc — sans intermédiaire, sans commission.
           </p>
 
           <AirbnbSearchBar />
@@ -281,7 +202,6 @@ export default function Landing() {
       <section id="explore" className="py-16 sm:py-24 px-4 sm:px-6" style={{ backgroundColor: C.dark }}>
         <div className="max-w-7xl mx-auto">
 
-          {/* Editorial section header */}
           <div className="flex items-end justify-between mb-10 pb-4"
             style={{ borderBottom: `0.5px solid ${C.anthracite}` }}>
             <div>
@@ -355,7 +275,6 @@ export default function Landing() {
             </Link>
           </div>
 
-          {/* Asymmetric grid: featured large + 4 small */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             {TOP_VENDORS.map((v, idx) => (
               <Link href={`/vendor/${v.id}`} key={v.id}
@@ -435,24 +354,37 @@ export default function Landing() {
       {/* ── PRESTATAIRES BANNER ── */}
       <section className="py-12 sm:py-16 px-4 sm:px-6" style={{ backgroundColor: C.ink }}>
         <div className="max-w-7xl mx-auto">
-          <div className="p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6"
-            style={{ backgroundColor: C.dark, border: `0.5px solid ${C.anthracite}` }}>
-            <div>
-              <p className="text-xs tracking-widest uppercase mb-2" style={{ color: C.terra, letterSpacing: "0.18em" }}>
-                Vous êtes prestataire ?
-              </p>
-              <h3 className="font-display text-2xl sm:text-3xl font-light mb-2" style={{ color: C.white }}>
-                Rejoignez <em style={{ fontStyle: "italic" }}>{VENDOR_COUNT} professionnels</em> référencés
-              </h3>
-              <p className="text-sm" style={{ color: C.mist }}>
-                Publiez votre profil gratuitement et recevez des demandes qualifiées.
-              </p>
+          <div className="p-6 sm:p-10" style={{ backgroundColor: C.dark, border: `0.5px solid ${C.anthracite}` }}>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
+              <div>
+                <p className="text-xs tracking-widest uppercase mb-2" style={{ color: C.terra, letterSpacing: "0.18em" }}>
+                  Vous êtes prestataire ?
+                </p>
+                <h3 className="font-display text-2xl sm:text-3xl font-light" style={{ color: C.white }}>
+                  Développez votre activité<br />
+                  <em style={{ fontStyle: "italic", color: C.terra }}>gratuitement</em> sur Momento
+                </h3>
+              </div>
+              <Link href="/prestataires"
+                className="flex-shrink-0 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-6 py-3.5 transition-all hover:opacity-90 whitespace-nowrap"
+                style={{ backgroundColor: C.terra, color: "var(--momento-ink)", letterSpacing: "0.16em" }}>
+                Créer mon profil <ArrowRight size={14} />
+              </Link>
             </div>
-            <Link href="/prestataires"
-              className="flex-shrink-0 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-6 py-3.5 transition-all hover:opacity-90 whitespace-nowrap"
-              style={{ backgroundColor: C.terra, color: "var(--momento-ink)", letterSpacing: "0.16em" }}>
-              Créer mon profil <ArrowRight size={14} />
-            </Link>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px" style={{ borderTop: `0.5px solid ${C.anthracite}` }}>
+              {[
+                { n: "100%",   label: "Profil gratuit",        desc: "Aucun abonnement. Publiez vos services, photos et tarifs sans frais." },
+                { n: "0%",     label: "Commission",             desc: "Gardez 100% de vos revenus. Momento ne prend aucune commission sur vos contrats." },
+                { n: String(VENDOR_COUNT) + "+", label: "Pros référencés", desc: "Rejoignez la plus grande communauté de prestataires événementiels du Maroc." },
+              ].map(({ n, label, desc }) => (
+                <div key={label} className="flex flex-col gap-2 pt-6 sm:pr-8">
+                  <div className="font-display text-3xl sm:text-4xl font-light" style={{ color: C.terra }}>{n}</div>
+                  <div className="text-sm font-semibold" style={{ color: C.white }}>{label}</div>
+                  <p className="text-xs leading-relaxed" style={{ color: C.mist }}>{desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -493,7 +425,6 @@ export default function Landing() {
             ].map(({ name, event, photo, text, stars }) => (
               <div key={name} className="flex flex-col gap-5 p-6 sm:p-8 transition-all duration-200 hover:-translate-y-0.5"
                 style={{ backgroundColor: C.ink }}>
-                {/* Quote mark */}
                 <div className="font-display text-5xl font-light leading-none" style={{ color: `${C.terra}30` }}>&ldquo;</div>
                 <div className="flex gap-1 -mt-4">
                   {Array.from({ length: stars }).map((_, i) => (

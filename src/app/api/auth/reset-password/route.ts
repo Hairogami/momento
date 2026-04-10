@@ -10,9 +10,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Champs requis manquants." }, { status: 400 })
     }
 
-    if (newPassword.length < 8) {
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/
+    if (!strongPassword.test(newPassword)) {
       return NextResponse.json(
-        { error: "Le mot de passe doit contenir au moins 8 caractères." },
+        { error: "Le mot de passe doit contenir une majuscule, une minuscule et un chiffre (8 caractères min)." },
         { status: 400 }
       )
     }

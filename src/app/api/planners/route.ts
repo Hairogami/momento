@@ -4,6 +4,12 @@ import { NextRequest } from "next/server"
 import { IS_DEV, MOCK_DASHBOARD_DATA } from "@/lib/devMock"
 
 export async function GET() {
+  // Auth check BEFORE dev mock — never expose data without a session
+  const session = await auth()
+  if (!session?.user?.id) {
+    return Response.json({ error: "Non authentifié." }, { status: 401 })
+  }
+
   if (IS_DEV) {
     return Response.json([
       { id: "mock-1", coupleNames: "Mariage Yasmine & Karim",  title: null, weddingDate: "2026-09-15", location: "Casablanca", coverColor: "#e07b5a", guestCount: 220 },
@@ -17,31 +23,43 @@ export async function GET() {
     ])
   }
 
-  const session = await auth()
-  if (!session?.user?.id) {
-    return Response.json([], { status: 401 })
-  }
-
   const planners = await prisma.planner.findMany({
-    where: { userId: session!.user!.id },
+    where: { userId: session.user.id },
     include: { steps: true, events: true },
     orderBy: { createdAt: "desc" },
   })
   return Response.json(planners)
 }
 
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/
+
+function parseDate(val: unknown): Date | null {
+  if (typeof val !== "string" || !val) return null
+  const d = new Date(val)
+  return isNaN(d.getTime()) ? null : d
+}
+
 export async function POST(request: NextRequest) {
   const session = await auth()
-  const body = await request.json()
+  if (!session?.user?.id) {
+    return Response.json({ error: "Non authentifié." }, { status: 401 })
+  }
+  let body: unknown
+  try { body = await request.json() } catch {
+    return Response.json({ error: "Requête invalide." }, { status: 400 })
+  }
+  const b = body as Record<string, unknown>
   const planner = await prisma.planner.create({
     data: {
-      title: body.title,
-      coupleNames: body.coupleNames,
-      weddingDate: body.weddingDate ? new Date(body.weddingDate) : null,
-      budget: body.budget ? parseFloat(body.budget) : null,
-      location: body.location,
-      coverColor: body.coverColor || "#f9a8d4",
-      userId: session?.user?.id ?? null,
+      title:       typeof b.title === "string"       ? b.title.slice(0, 200)       : "",
+      coupleNames: typeof b.coupleNames === "string" ? b.coupleNames.slice(0, 200) : "",
+      weddingDate: parseDate(b.weddingDate),
+      budget:      typeof b.budget === "string"      ? parseFloat(b.budget)        : null,
+      location:    typeof b.location === "string"    ? b.location.slice(0, 200)    : null,
+      coverColor:  typeof b.coverColor === "string" && HEX_COLOR.test(b.coverColor)
+        ? b.coverColor
+        : "#f9a8d4",
+      userId: session.user.id,
     },
   })
   return Response.json(planner, { status: 201 })

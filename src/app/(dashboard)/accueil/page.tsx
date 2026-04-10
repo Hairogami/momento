@@ -6,7 +6,7 @@ import AccueilStats from "@/components/AccueilStats"
 import OnboardingModal from "@/components/OnboardingModal"
 
 const EMPTY_DATA = {
-  firstName: "Yazid",
+  firstName: "",
   eventName: "Mon événement",
   eventDate: null,
   budget: null,

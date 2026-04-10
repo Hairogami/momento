@@ -40,8 +40,12 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Accès réservé aux prestataires." }, { status: 403 })
   }
 
-  const { id, status } = await req.json()
-  if (!id || !["pending", "read", "replied"].includes(status)) {
+  let reqBody: { id?: unknown; status?: unknown }
+  try { reqBody = await req.json() } catch {
+    return NextResponse.json({ error: "Requ�te invalide." }, { status: 400 })
+  }
+  const { id, status } = reqBody
+  if (typeof id !== "string" || !["pending", "read", "replied"].includes(status as string)) {
     return NextResponse.json({ error: "Paramètres invalides." }, { status: 400 })
   }
 
@@ -50,7 +54,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Demande introuvable." }, { status: 404 })
   }
 
-  await prisma.contactRequest.update({ where: { id }, data: { status } })
+  await prisma.contactRequest.update({ where: { id }, data: { status: status as string } })
 
   return NextResponse.json({ ok: true })
 }

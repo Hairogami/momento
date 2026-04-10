@@ -5,10 +5,17 @@ export async function GET(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  // Access token stored in session (see auth.ts session callback)
+  // The accessToken is intentionally NOT exposed on session.user (auth.ts session callback).
+  // It is stored server-side in the JWT only. To fix properly, fetch it from the DB
+  // Account table by userId+provider. For now return a clear 501 error rather than a
+  // misleading 403 so callers know this feature is not yet implemented server-side.
+  // TODO: fetch token from prisma.account where userId = session.user.id AND provider = "google"
   const accessToken = (session.user as { accessToken?: string }).accessToken
   if (!accessToken) {
-    return NextResponse.json({ error: "No Google access token" }, { status: 403 })
+    return NextResponse.json(
+      { error: "Google Calendar integration not available. OAuth token must be fetched from the database." },
+      { status: 501 }
+    )
   }
 
   const { searchParams } = req.nextUrl

@@ -9,10 +9,10 @@ export async function GET(req: NextRequest) {
   }
 
   const res = NextResponse.redirect(new URL("/", req.url))
-  res.cookies.set("preview_key", process.env.PREVIEW_KEY ?? "1", {
+  res.cookies.set("preview_key", previewKey, {
     httpOnly: true,
     sameSite: "lax",
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 30,
     path: "/",
   })

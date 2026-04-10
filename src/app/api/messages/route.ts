@@ -21,6 +21,12 @@ export async function GET() {
 
   let conversations
 
+  if (user.role === "vendor" && !user.vendorSlug) {
+    // Vendor account exists but vendorSlug not set — return empty to avoid
+    // leaking client-side conversations (WR-016)
+    return NextResponse.json([])
+  }
+
   if (user.role === "vendor" && user.vendorSlug) {
     conversations = await prisma.conversation.findMany({
       where: { vendorSlug: user.vendorSlug },

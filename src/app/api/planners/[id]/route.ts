@@ -2,7 +2,15 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 
-async function assertOwnedPlanner(id: string, userId: string) {
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/
+
+function parseDate(val: unknown): Date | undefined {
+  if (typeof val !== "string" || !val) return undefined
+  const d = new Date(val)
+  return isNaN(d.getTime()) ? undefined : d
+}
+
+async function findPlannerOwnership(id: string) {
   return prisma.planner.findUnique({ where: { id }, select: { userId: true } })
 }
 
@@ -11,7 +19,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
-  const ownership = await assertOwnedPlanner(id, session.user.id)
+  const ownership = await findPlannerOwnership(id)
   if (!ownership || ownership.userId !== session.user.id)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
@@ -34,7 +42,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
-  const ownership = await assertOwnedPlanner(id, session.user.id)
+  const ownership = await findPlannerOwnership(id)
   if (!ownership || ownership.userId !== session.user.id)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
@@ -42,12 +50,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const planner = await prisma.planner.update({
     where: { id },
     data: {
-      title: body.title,
+      title:       body.title,
       coupleNames: body.coupleNames,
-      weddingDate: body.weddingDate ? new Date(body.weddingDate) : undefined,
-      budget: body.budget !== undefined ? parseFloat(body.budget) : undefined,
-      location: body.location,
-      coverColor: body.coverColor,
+      weddingDate: parseDate(body.weddingDate),
+      budget:      body.budget !== undefined ? parseFloat(body.budget) : undefined,
+      location:    body.location,
+      coverColor:  typeof body.coverColor === "string" && HEX_COLOR.test(body.coverColor)
+        ? body.coverColor
+        : undefined,
     },
   })
   return Response.json(planner)
@@ -58,7 +68,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
-  const ownership = await assertOwnedPlanner(id, session.user.id)
+  const ownership = await findPlannerOwnership(id)
   if (!ownership || ownership.userId !== session.user.id)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 

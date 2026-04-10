@@ -14,16 +14,15 @@ export async function GET(req: NextRequest) {
       include: { user: { select: { id: true, emailVerified: true } } },
     })
 
-    if (!record || record.type !== "email_verification") {
+    // All failure cases collapse to a single error to prevent oracle attacks
+    // (distinguishing "expired" vs "already used" vs "not found" leaks information)
+    if (
+      !record ||
+      record.type !== "email_verification" ||
+      record.usedAt ||
+      record.expiresAt < new Date()
+    ) {
       return NextResponse.redirect(new URL("/login?error=token_invalide", req.url))
-    }
-
-    if (record.usedAt) {
-      return NextResponse.redirect(new URL("/login?error=token_deja_utilise", req.url))
-    }
-
-    if (record.expiresAt < new Date()) {
-      return NextResponse.redirect(new URL("/login?error=token_expire", req.url))
     }
 
     if (record.user.emailVerified) {

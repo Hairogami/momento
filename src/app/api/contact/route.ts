@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
-import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 
 const ContactSchema = z.object({
   vendorSlug:  z.string().min(1).max(100),
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
   // Rate limit: 5 contact requests per 10 minutes per IP (anti-spam)
   const ip = getIp(req)
-  const rl = rateLimit(`contact:${ip}`, 5, 600_000)
+  const rl = await rateLimitAsync(`contact:${ip}`, 5, 600_000)
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de demandes. Veuillez patienter 10 minutes." },

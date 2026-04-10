@@ -5,8 +5,8 @@ import { NextRequest } from "next/server"
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const category = searchParams.get("category")
-  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1"))
-  const limit = Math.min(100, parseInt(searchParams.get("limit") ?? "50"))
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10))
+  const limit = Math.min(1000, parseInt(searchParams.get("limit") ?? "50", 10))
   const vendors = await prisma.vendor.findMany({
     where: category ? { category } : {},
     orderBy: { name: "asc" },

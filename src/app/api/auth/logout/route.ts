@@ -1,7 +1,7 @@
-import { signOut } from "@/lib/auth"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function POST() {
-  await signOut({ redirect: false })
-  return NextResponse.json({ message: "Déconnecté." })
+// Delegates to NextAuth's built-in signout handler which correctly clears auth cookies.
+// Calling signOut() from a custom route handler bypasses NextAuth's response builder.
+export async function POST(req: NextRequest) {
+  return NextResponse.redirect(new URL("/api/auth/signout", req.url), { status: 307 })
 }

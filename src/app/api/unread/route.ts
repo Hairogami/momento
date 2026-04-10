@@ -20,7 +20,9 @@ export async function GET() {
         conversation: { clientId: session.user.id },
       },
     });
-  } catch { /* champ read non migré */ }
+  } catch (err) {
+    if (process.env.NODE_ENV !== "production") console.error("[unread]", err)
+  }
 
   return NextResponse.json({ messages, notifications: 0 })
 }

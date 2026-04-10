@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { MapPin, Star, Globe, CheckCircle, Calendar, Users, MessageSquare, Share2, X, Loader2 } from "lucide-react"
 import ExploreNav from "@/components/ExploreNav"
@@ -113,6 +113,39 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [sendError, setSendError] = useState("")
+
+  // Reviews from DB
+  const [dbReviews, setDbReviews] = useState<{ id: string; rating: number; comment: string | null; eventType: string | null; createdAt: string; author: { name: string | null; image: string | null } }[]>([])
+  const [reviewAvg, setReviewAvg] = useState<number | null>(null)
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "", eventType: "" })
+  const [reviewSending, setReviewSending] = useState(false)
+  const [reviewSent, setReviewSent] = useState(false)
+  const [reviewError, setReviewError] = useState("")
+
+  useEffect(() => {
+    fetch(`/api/reviews?slug=${slug}`)
+      .then(r => r.json())
+      .then(d => { setDbReviews(d.reviews ?? []); setReviewAvg(d.avg ?? null) })
+      .catch(() => {})
+  }, [slug])
+
+  async function handleReview() {
+    if (reviewForm.rating < 1 || reviewForm.rating > 5) return
+    setReviewSending(true); setReviewError("")
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vendorSlug: slug, rating: reviewForm.rating, comment: reviewForm.comment || undefined, eventType: reviewForm.eventType || undefined }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setReviewError(data.error ?? "Erreur."); return }
+      setReviewSent(true)
+      // Re-fetch reviews
+      fetch(`/api/reviews?slug=${slug}`).then(r => r.json()).then(d => { setDbReviews(d.reviews ?? []); setReviewAvg(d.avg ?? null) }).catch(() => {})
+    } catch { setReviewError("Impossible d'envoyer. Réessayez.") }
+    finally { setReviewSending(false) }
+  }
 
   function set(k: keyof ContactForm, v: string) { setForm(f => ({ ...f, [k]: v })) }
 
@@ -420,25 +453,88 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
 
         {/* Reviews */}
         <div className="mb-10">
-          <h2 className="text-base font-bold mb-4" style={{ color: C.white }}>Avis clients ({vendorReviews.length})</h2>
-          <div className="flex flex-col gap-3">
-            {vendorReviews.map((r, i) => (
-              <div key={i} className="p-4 rounded-xl" style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}` }}>
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <span className="text-sm font-bold" style={{ color: C.white }}>{r.author}</span>
-                    <span className="text-xs ml-2" style={{ color: C.mist }}>· {r.event}</span>
-                  </div>
-                  <div className="flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, j) => (
-                      <Star key={j} size={11} fill={j < r.stars ? C.terra : "none"} style={{ color: C.terra }} />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-sm" style={{ color: C.mist }}>{r.note}</p>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-bold" style={{ color: C.white }}>
+              Avis clients{reviewAvg !== null ? ` — ${reviewAvg}/5` : ""}
+              <span className="text-xs font-normal ml-2" style={{ color: C.mist }}>
+                ({dbReviews.length > 0 ? dbReviews.length : vendorReviews.length})
+              </span>
+            </h2>
           </div>
+          <div className="flex flex-col gap-3">
+            {(dbReviews.length > 0 ? dbReviews : vendorReviews).map((r, i) => {
+              const isDb = dbReviews.length > 0
+              const author = isDb ? ((r as typeof dbReviews[0]).author?.name ?? "Anonyme") : (r as typeof vendorReviews[0]).author
+              const stars  = isDb ? (r as typeof dbReviews[0]).rating : (r as typeof vendorReviews[0]).stars
+              const note   = isDb ? ((r as typeof dbReviews[0]).comment ?? "") : (r as typeof vendorReviews[0]).note
+              const event  = isDb ? ((r as typeof dbReviews[0]).eventType ?? "") : (r as typeof vendorReviews[0]).event
+              return (
+                <div key={i} className="p-4 rounded-xl" style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}` }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <span className="text-sm font-bold" style={{ color: C.white }}>{author}</span>
+                      {event && <span className="text-xs ml-2" style={{ color: C.mist }}>· {event}</span>}
+                    </div>
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <Star key={j} size={11} fill={j < stars ? C.terra : "none"} style={{ color: C.terra }} />
+                      ))}
+                    </div>
+                  </div>
+                  {note && <p className="text-sm" style={{ color: C.mist }}>{note}</p>}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* ReviewForm — utilisateurs connectés uniquement */}
+          {currentUserId && !reviewSent && (
+            <div className="mt-6 p-4 rounded-xl" style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}` }}>
+              <h3 className="text-sm font-bold mb-3" style={{ color: C.white }}>Laisser un avis</h3>
+              <div className="flex gap-1 mb-3">
+                {[1,2,3,4,5].map(n => (
+                  <button key={n} onClick={() => setReviewForm(f => ({ ...f, rating: n }))} aria-label={`${n} étoile${n>1?"s":""}`}>
+                    <Star size={22} fill={n <= reviewForm.rating ? C.terra : "none"} style={{ color: C.terra }} />
+                  </button>
+                ))}
+              </div>
+              <select
+                className="w-full text-sm p-2 rounded-lg mb-2"
+                style={{ backgroundColor: C.anthracite, color: C.white, border: `1px solid ${C.steel}` }}
+                value={reviewForm.eventType}
+                onChange={e => setReviewForm(f => ({ ...f, eventType: e.target.value }))}>
+                <option value="">Type d&apos;événement (optionnel)</option>
+                {["Mariage","Fiançailles","Anniversaire","Baby shower","Soutenance","Cérémonie","Fête privée","Corporate"].map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+              <textarea
+                rows={3}
+                placeholder="Votre avis..."
+                className="w-full text-sm p-2 rounded-lg resize-none mb-3"
+                style={{ backgroundColor: C.anthracite, color: C.white, border: `1px solid ${C.steel}` }}
+                value={reviewForm.comment}
+                onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))}
+              />
+              {reviewError && <p className="text-xs mb-2" style={{ color: "#f87171" }}>{reviewError}</p>}
+              <button
+                onClick={handleReview}
+                disabled={reviewSending}
+                className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg disabled:opacity-50"
+                style={{ backgroundColor: C.terra, color: "#fff" }}>
+                {reviewSending ? <Loader2 size={14} className="animate-spin" /> : <Star size={14} />}
+                Publier l&apos;avis
+              </button>
+            </div>
+          )}
+          {currentUserId && reviewSent && (
+            <p className="mt-4 text-sm text-center" style={{ color: C.terra }}>✓ Avis publié, merci !</p>
+          )}
+          {!currentUserId && (
+            <p className="mt-4 text-xs text-center" style={{ color: C.mist }}>
+              <Link href="/login" style={{ color: C.terra }}>Connectez-vous</Link> pour laisser un avis.
+            </p>
+          )}
         </div>
 
         {/* Contact CTA mobile */}

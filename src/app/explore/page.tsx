@@ -173,8 +173,14 @@ const FILTER_CATS = MAJOR_CATS.map(m => ({ slug: m.slug, icon: m.icon, label: m.
 
 const CITIES = ["Toutes les villes", "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Meknès", "Agadir", "Kénitra", "El Jadida", "Mohammedia", "Oujda", "Tétouan", "Salé", "Béni Mellal", "Essaouira", "Khémisset", "Laâyoune", "Dakhla", "Settat", "Nador", "Ouarzazate", "Safi", "Tiznit", "Khouribga", "Errachidia", "Guelmim", "Berkane", "Al Hoceima", "Ifrane", "Chefchaouen", "Taroudant", "Azrou", "Figuig", "Témara", "Skhirat", "Asilah", "Ourika", "Bouznika", "Martil", "Saïdia"]
 
-// Derived from VENDOR_BASIC (single source of truth)
-const VENDORS = Object.entries(VENDOR_BASIC).map(([id, v]) => ({ id, ...v }))
+// Fallback statique — utilisé si l'API échoue ou pendant le chargement
+const VENDORS_FALLBACK = Object.entries(VENDOR_BASIC).map(([id, v]) => ({ id, ...v }))
+
+// Alias pour la rétrocompatibilité du type
+const VENDORS = VENDORS_FALLBACK
+
+// Type partagé pour un vendor (compatible fallback + API)
+type VendorEntry = { id: string; name: string; category: string; city: string; rating: number }
 
 // Two extra ambiance photos used as slides 2 & 3 for every vendor
 const EXTRA_PHOTOS = [
@@ -198,7 +204,7 @@ function getVendorPhotos(vendorId: string, cat: string): string[] {
 function VendorCard({
   v, isFav, onToggleFav, isAdded, onAdd, onCoupDeCoeur, showEventBtn,
 }: {
-  v: typeof VENDORS[number]
+  v: VendorEntry
   isFav: boolean
   onToggleFav: (e: React.MouseEvent) => void
   isAdded: boolean
@@ -371,6 +377,8 @@ function ExploreContent() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
   const [coupDeCoeurVendor, setCoupDeCoeurVendor] = useState<string | null>(null)
   const [toast, setToast] = useState("")
+  // Vendors state: starts with static fallback, replaced by API data if available
+  const [vendors, setVendors] = useState<VendorEntry[]>(VENDORS_FALLBACK)
 
   useEffect(() => {
     const saved = localStorage.getItem(`momento_current_event${keySuffix}`)
@@ -386,6 +394,26 @@ function ExploreContent() {
     if (savedFavs) { try { setFavorites(new Set(JSON.parse(savedFavs))) } catch {} }
   }, [keySuffix])
 
+  // Fetch vendors from API, fallback to static data on error
+  useEffect(() => {
+    fetch("/api/vendors?limit=1000")
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then((data: Array<{ slug: string; name: string; category: string; city?: string | null; rating?: number | null }>) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setVendors(data.map(v => ({
+            id: v.slug,
+            name: v.name,
+            category: v.category,
+            city: v.city ?? "",
+            rating: v.rating ?? 4,
+          })))
+        }
+      })
+      .catch(() => {
+        // Silently keep fallback static data
+      })
+  }, [])
+
   function toggleFavorite(vendorId: string, e: React.MouseEvent) {
     e.preventDefault(); e.stopPropagation()
     setFavorites(prev => {
@@ -397,7 +425,7 @@ function ExploreContent() {
     })
   }
 
-  function addVendor(vendor: typeof VENDORS[number]) {
+  function addVendor(vendor: VendorEntry) {
     const saved = JSON.parse(localStorage.getItem(`momento_selected_vendors${keySuffix}`) ?? "[]")
     if (!saved.find((v: { id: string }) => v.id === vendor.id)) {
       saved.push(vendor)
@@ -409,7 +437,7 @@ function ExploreContent() {
   }
 
   const filtered = useMemo(() => {
-    let list = VENDORS.filter(v => {
+    let list = vendors.filter(v => {
       if (search) {
         const q = search.toLowerCase()
         if (!v.name.toLowerCase().includes(q) && !v.category.toLowerCase().includes(q) && !v.city.toLowerCase().includes(q)) return false
@@ -430,7 +458,7 @@ function ExploreContent() {
     if (sortBy === "rating") list = [...list].sort((a, b) => b.rating - a.rating)
     if (sortBy === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name))
     return list
-  }, [search, activeMajor, activeSub, activeCity, sortBy, photoFilter])
+  }, [vendors, search, activeMajor, activeSub, activeCity, sortBy, photoFilter])
 
   const hasFilters = !!(search || activeMajor || activeSub || activeCity !== "Toutes les villes" || activeDate || photoFilter !== "all")
 

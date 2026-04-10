@@ -31,7 +31,7 @@ export function proxy(request: NextRequest) {
   const isProtected = PROTECTED.some(p => path.startsWith(p))
   const isAuthPage  = AUTH_ONLY.some(p => path.startsWith(p))
 
-  const isDev = process.env.NODE_ENV === "development"
+  const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
   if (isProtected && !sessionCookie && !isDev) {
     const url = new URL("/login", request.url)
     url.searchParams.set("next", path)
