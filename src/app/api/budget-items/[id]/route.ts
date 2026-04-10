@@ -14,9 +14,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!item || item.workspace.userId !== session.user.id)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
+  const actualRaw = body.actual
+  const actual = actualRaw === null ? null
+    : (typeof actualRaw === "number" && isFinite(actualRaw) && actualRaw >= 0 ? actualRaw : undefined)
+
   const updated = await prisma.budgetItem.update({
     where: { id },
-    data: { ...(body.actual !== undefined && { actual: body.actual }) },
+    data: { ...(actual !== undefined && { actual }) },
   })
   return NextResponse.json(updated)
 }

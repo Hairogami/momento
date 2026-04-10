@@ -107,7 +107,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     fetch("/api/planners")
       .then(r => r.json())
-      .then(setPlanners)
+      .then(d => Array.isArray(d) ? setPlanners(d) : null)
       .catch(() => {});
     fetch("/api/unread")
       .then(r => r.json())
@@ -136,7 +136,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   // Rafraîchit les planners dans la sidebar sur evento stats-refresh
   useEffect(() => {
     function refresh() {
-      fetch("/api/planners").then(r => r.json()).then(setPlanners).catch(() => {})
+      fetch("/api/planners").then(r => r.json()).then(d => Array.isArray(d) ? setPlanners(d) : null).catch(() => {})
     }
     window.addEventListener("momento:stats-refresh", refresh)
     return () => window.removeEventListener("momento:stats-refresh", refresh)
@@ -152,11 +152,6 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: C.ink }}>
-      {/* Logo fixe en haut à droite */}
-      <div className="fixed top-4 right-5 z-50 hidden md:block">
-        <MomentoLogo iconSize={28} variant="wordmark" />
-      </div>
-
       {/* ── Barre mobile top ── */}
       <div
         className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14"

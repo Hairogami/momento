@@ -7,6 +7,9 @@ import { rateLimit, getIp } from "@/lib/rateLimiter"
 export async function POST(req: NextRequest) {
   try {
     const ip = getIp(req)
+    if (!ip) {
+      return NextResponse.json({ message: "Si un compte existe, un e-mail a été envoyé." })
+    }
     const rl = rateLimit(`forgot-password:${ip}`, 5, 15 * 60 * 1000)
     if (!rl.ok) {
       return NextResponse.json(
@@ -15,10 +18,12 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { email } = await req.json()
-
-    if (email) {
-      const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } })
+    // CR-03: Validate email type and length before hitting the DB
+    const body = await req.json().catch(() => null)
+    const rawEmail = body?.email
+    if (rawEmail && typeof rawEmail === "string" && rawEmail.length <= 320) {
+      const email = rawEmail.toLowerCase().trim()
+      const user = await prisma.user.findUnique({ where: { email } })
 
       if (user) {
         await prisma.emailVerification.deleteMany({

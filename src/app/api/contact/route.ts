@@ -9,7 +9,7 @@ const ContactSchema = z.object({
   clientEmail: z.string().email().max(200),
   clientPhone: z.string().max(20).optional(),
   eventType:   z.string().max(50).optional(),
-  eventDate:   z.string().max(20).optional(),
+  eventDate:   z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   message:     z.string().min(1).max(2000),
 })
 
@@ -45,6 +45,11 @@ export async function POST(req: NextRequest) {
     }
 
     const { vendorSlug, clientName, clientEmail, clientPhone, eventType, eventDate, message } = parsed.data
+
+    const vendorExists = await prisma.vendor.findUnique({ where: { slug: vendorSlug }, select: { id: true } })
+    if (!vendorExists) {
+      return NextResponse.json({ error: "Prestataire introuvable." }, { status: 404 })
+    }
 
     const request = await prisma.contactRequest.create({
       data: {

@@ -36,8 +36,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     .slice(0, 80)
   const safeSlug = (baseSlug || "vendor") + "-" + Date.now().toString(36)
 
-  // Create vendor if it doesn't exist yet (only in the user's planner context)
-  let vendor = await prisma.vendor.findFirst({ where: { name: safeName, category: safeCategory } })
+  // WR-07: Case-insensitive dedup to avoid duplicate vendors differing only in case
+  let vendor = await prisma.vendor.findFirst({
+    where: {
+      name: { equals: safeName, mode: "insensitive" },
+      category: { equals: safeCategory, mode: "insensitive" },
+    },
+  })
   if (!vendor) {
     vendor = await prisma.vendor.create({
       data: {
@@ -56,7 +61,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   const link = await prisma.stepVendor.create({
-    data: { stepId, vendorId: vendor.id, notes: body.notes },
+    data: { stepId, vendorId: vendor.id, notes: typeof body.notes === "string" ? body.notes.slice(0, 500) : null },
     include: { vendor: true },
   })
   return Response.json(link, { status: 201 })
@@ -71,7 +76,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   if (!owned || owned.planner.userId !== session.user.id)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
-  const { vendorId } = await req.json()
+  const body = await req.json()
+  const { vendorId } = body
+  if (typeof vendorId !== "string") {
+    return Response.json({ error: "vendorId requis." }, { status: 400 })
+  }
   await prisma.stepVendor.deleteMany({ where: { stepId, vendorId } })
   return new Response(null, { status: 204 })
 }

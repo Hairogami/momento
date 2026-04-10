@@ -12,9 +12,10 @@ interface Props {
   daysUntil: number | null
   budget: number | null
   guestCount: number | null
+  coverColor?: string | null
 }
 
-export default function EventCard({ eventName, eventDate, daysUntil, budget, guestCount }: Props) {
+export default function EventCard({ eventName, eventDate, daysUntil, budget, guestCount, coverColor }: Props) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(eventName)
@@ -72,8 +73,16 @@ export default function EventCard({ eventName, eventDate, daysUntil, budget, gue
     : null
 
   return (
-    <div className="max-w-[1400px] mx-auto rounded-2xl px-6 py-5 relative"
-      style={{ backgroundColor: "var(--bg-card)", border: `1px solid var(--border)` }}>
+    <div className="max-w-[1400px] mx-auto rounded-2xl px-6 py-5 relative overflow-hidden"
+      style={{
+        backgroundColor: "var(--bg-card)",
+        border: `1px solid ${coverColor ?? "var(--border)"}`,
+        boxShadow: coverColor ? `0 0 0 1px ${coverColor}22` : undefined,
+      }}>
+      {/* Barre colorée top si planner sélectionné */}
+      {coverColor && (
+        <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ backgroundColor: coverColor }} />
+      )}
 
       {editing ? (
         /* ── Mode édition ── */

@@ -46,24 +46,49 @@ export default function NewEventPage() {
   }
 
   async function handleSubmit() {
-    const payload: Record<string, unknown> = {
-      eventName: form.name || `Mon ${form.type}`,
-    }
-    if (form.date) payload.eventDate = form.date
-    if (form.guestCount) payload.guestCount = parseInt(form.guestCount)
-    if (form.budget) payload.budget = parseFloat(form.budget)
-    if (form.location) payload.location = form.location
+    const isRomantic = form.type === "Mariage" || form.type === "Fiançailles"
+    const eventName = form.name || `Mon ${form.type}`
 
+    // Mise à jour workspace (dashboard stats)
     try {
       await fetch("/api/workspace", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          eventName,
+          ...(form.date        && { eventDate: form.date }),
+          ...(form.guestCount  && { guestCount: parseInt(form.guestCount) }),
+          ...(form.budget      && { budget: parseFloat(form.budget) }),
+          ...(form.location    && { location: form.location }),
+        }),
       })
-    } catch {
-      // continue even if save fails
-    }
-    router.push("/event/new/categories")
+    } catch { /* continue */ }
+
+    // Création du Planner (sidebar)
+    let plannerId: string | undefined
+    try {
+      const res = await fetch("/api/planners", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          coupleNames: isRomantic ? eventName : "",
+          title:       isRomantic ? "" : eventName,
+          weddingDate: form.date   || null,
+          budget:      form.budget ? parseFloat(form.budget) : null,
+          location:    form.location || null,
+          coverColor:  selectedType?.color ?? "#f9a8d4",
+        }),
+      })
+      if (res.ok) {
+        const planner = await res.json()
+        plannerId = planner.id
+      }
+    } catch { /* continue */ }
+
+    router.push(plannerId
+      ? `/event/new/categories?plannerId=${plannerId}`
+      : "/event/new/categories"
+    )
   }
 
   const canGoStep2 = !!form.type

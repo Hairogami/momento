@@ -5,7 +5,7 @@
 
 import type { DashboardData } from "@/components/DashboardWidgets"
 
-export const IS_DEV = process.env.NODE_ENV === "development"
+export const IS_DEV = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
 
 export const MOCK_SESSION = {
   user: { id: "mock-user-id", name: "Yasmine El Fassi", email: "yasmine@test.com" },

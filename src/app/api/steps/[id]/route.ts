@@ -25,13 +25,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
   const body = await req.json()
+
+  const VALID_STATUS = ["todo", "in_progress", "done"]
+  if (body.status !== undefined && !VALID_STATUS.includes(body.status as string)) {
+    return Response.json({ error: "Statut invalide." }, { status: 400 })
+  }
+
   const step = await prisma.step.update({
     where: { id },
     data: {
-      title: body.title,
-      description: body.description,
-      status: body.status,
-      category: body.category,
+      title:       typeof body.title === "string"       ? body.title.trim().slice(0, 200)       : undefined,
+      description: typeof body.description === "string" ? body.description.slice(0, 1000)       : undefined,
+      status:      body.status !== undefined             ? (body.status as string)               : undefined,
+      category:    typeof body.category === "string"    ? body.category.trim().slice(0, 100)    : undefined,
       dueDate: parseDate(body.dueDate),
     },
     include: { vendors: { include: { vendor: true } } },

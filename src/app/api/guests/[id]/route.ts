@@ -14,9 +14,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!guest || guest.workspace.userId !== session.user.id)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
+  const VALID_RSVP = ["PENDING", "CONFIRMED", "DECLINED"]
+  if (body.rsvp !== undefined && !VALID_RSVP.includes(body.rsvp as string)) {
+    return NextResponse.json({ error: "Valeur rsvp invalide." }, { status: 400 })
+  }
+
   const updated = await prisma.guest.update({
     where: { id },
-    data: { ...(body.rsvp !== undefined && { rsvp: body.rsvp }) },
+    data: { ...(body.rsvp !== undefined && { rsvp: body.rsvp as string }) },
   })
   return NextResponse.json(updated)
 }

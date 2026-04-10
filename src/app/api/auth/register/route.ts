@@ -3,7 +3,16 @@ import bcrypt from "bcryptjs"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { Resend } from "resend"
-import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY!)
 const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@momentoevents.app"
@@ -36,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   // Rate limit: 5 registrations per 15 min per IP
   const ip = getIp(req)
-  const rl = rateLimit(`register:${ip}`, 5, 15 * 60_000)
+  const rl = await rateLimitAsync(`register:${ip}`, 5, 15 * 60_000)
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de tentatives. Réessayez dans quelques minutes." },
@@ -93,7 +102,7 @@ export async function POST(req: NextRequest) {
 
   // Welcome email — deferred after response via after() so the lambda doesn't
   // terminate before the send completes (WR-012 fix).
-  const firstName = data.role === "client" ? (data.firstName ?? name ?? "là") : (data.companyName ?? "vous")
+  const firstName = escapeHtml(data.role === "client" ? (data.firstName ?? name ?? "là") : (data.companyName ?? "vous"))
   after(async () => {
     try {
       await resend.emails.send({

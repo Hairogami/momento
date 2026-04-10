@@ -42,7 +42,7 @@ export async function PATCH(req: NextRequest) {
 
   let reqBody: { id?: unknown; status?: unknown }
   try { reqBody = await req.json() } catch {
-    return NextResponse.json({ error: "Requ�te invalide." }, { status: 400 })
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
   }
   const { id, status } = reqBody
   if (typeof id !== "string" || !["pending", "read", "replied"].includes(status as string)) {

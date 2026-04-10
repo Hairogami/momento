@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 
 /** Strip dangerous HTML/script content from user input */
 function sanitize(str: string): string {
@@ -57,9 +57,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Requête trop volumineuse." }, { status: 413 })
   }
 
-  // Rate limit: 30 messages per minute per IP
+  // Rate limit: 30 messages per minute per IP — CR-01: null IP guard
   const ip = getIp(req)
-  const rl = rateLimit(`messages:${ip}`, 30, 60_000)
+  if (!ip) {
+    return NextResponse.json({ error: "Requête non identifiable." }, { status: 400 })
+  }
+  const rl = await rateLimitAsync(`messages:${ip}`, 30, 60_000)
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de messages. Veuillez patienter." },

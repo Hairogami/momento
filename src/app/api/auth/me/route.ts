@@ -6,17 +6,20 @@ export async function GET() {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
 
-  const user = await prisma.user.findUnique({ where: { id: session.user.id } })
+  // I05: select only the fields returned — avoid loading passwordHash etc.
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+      location: true,
+    },
+  })
   if (!user) return NextResponse.json({ error: "Introuvable." }, { status: 404 })
 
-  return NextResponse.json({
-    id: user.id,
-    email: user.email,
-    role: user.role,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phone: user.phone,
-    location: user.location,
-    createdAt: user.createdAt,
-  })
+  return NextResponse.json(user)
 }

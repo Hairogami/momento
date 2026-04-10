@@ -133,11 +133,13 @@ model BudgetItem {
   actual      Float?
   paid        Boolean  @default(false)
   vendorId    String?
+  plannerId   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   vendor    Vendor?   @relation(fields: [vendorId], references: [id])
+  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
 }
 
 model Guest {
@@ -312,6 +314,7 @@ model Planner {
   user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   steps       Step[]
   events      PlannerEvent[]
+  budgetItems BudgetItem[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 }

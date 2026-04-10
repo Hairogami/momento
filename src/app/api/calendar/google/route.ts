@@ -13,14 +13,21 @@ export async function GET(req: NextRequest) {
   const accessToken = (session.user as { accessToken?: string }).accessToken
   if (!accessToken) {
     return NextResponse.json(
-      { error: "Google Calendar integration not available. OAuth token must be fetched from the database." },
+      { error: "Google Calendar integration not yet available." },
       { status: 501 }
     )
   }
 
   const { searchParams } = req.nextUrl
-  const from = searchParams.get("from") ?? new Date().toISOString()
-  const to   = searchParams.get("to")   ?? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+
+  function parseIso(val: string | null, fallback: string): string {
+    if (!val) return fallback
+    const d = new Date(val)
+    return isNaN(d.getTime()) ? fallback : d.toISOString()
+  }
+
+  const from = parseIso(searchParams.get("from"), new Date().toISOString())
+  const to   = parseIso(searchParams.get("to"),   new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString())
 
   try {
     const url = new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events")
@@ -37,7 +44,7 @@ export async function GET(req: NextRequest) {
     if (!res.ok) {
       const err = await res.json()
       console.error("[Google Calendar]", err)
-      return NextResponse.json({ error: "Google API error", detail: err }, { status: res.status })
+      return NextResponse.json({ error: "Google Calendar API error." }, { status: res.status })
     }
 
     const data = await res.json()

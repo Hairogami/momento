@@ -13,7 +13,7 @@ export async function GET() {
     // On simule avec les vraies données DB si dispo, sinon fallback
     const planners = await prisma.planner.findMany({
       where: session?.user?.id ? { userId: session.user.id } : {},
-      include: { steps: { include: { vendors: { include: { vendor: true } } } } },
+      include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } },
     }).catch(() => [])
 
     if (planners.length > 0) {
@@ -30,14 +30,14 @@ export async function GET() {
 
   const planners = await prisma.planner.findMany({
     where: { userId: session.user.id },
-    include: { steps: { include: { vendors: { include: { vendor: true } } } } },
+    include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } },
   })
 
   return buildStats(planners)
 }
 
 type PlannerWithSteps = Awaited<ReturnType<typeof prisma.planner.findMany<{
-  include: { steps: { include: { vendors: { include: { vendor: true } } } } }
+  include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } }
 }>>>[number]
 
 function buildStats(planners: PlannerWithSteps[]) {

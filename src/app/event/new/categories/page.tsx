@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Check } from "lucide-react"
 import { C } from "@/lib/colors"
@@ -38,8 +38,10 @@ const CATEGORIES = [
   { icon: "🔒", label: "Sécurité événementielle" },
 ]
 
-export default function CategoriesPage() {
+function CategoriesInner() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const plannerId = searchParams.get("plannerId")
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -48,6 +50,8 @@ export default function CategoriesPage() {
       s.includes(label) ? s.filter(x => x !== label) : [...s, label]
     )
   }
+
+  const dest = plannerId ? `/dashboard?id=${plannerId}` : "/dashboard"
 
   async function handleContinue() {
     setLoading(true)
@@ -58,7 +62,7 @@ export default function CategoriesPage() {
         body: JSON.stringify({ neededCategories: selected }),
       })
     } catch { /* continue anyway */ }
-    router.push("/dashboard")
+    router.push(dest)
   }
 
   return (
@@ -75,7 +79,7 @@ export default function CategoriesPage() {
           Étape 4 / 4
         </div>
         <button
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push(dest)}
           className="text-xs px-3 py-1.5 rounded-lg transition hover:opacity-70"
           style={{ color: C.steel }}
         >
@@ -131,7 +135,7 @@ export default function CategoriesPage() {
         {/* CTA */}
         <div className="flex gap-3">
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(dest)}
             className="px-6 py-4 rounded-2xl font-bold text-sm"
             style={{ backgroundColor: C.dark, color: C.mist, border: `1.5px solid ${C.anthracite}` }}
           >
@@ -156,5 +160,13 @@ export default function CategoriesPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function CategoriesPage() {
+  return (
+    <Suspense>
+      <CategoriesInner />
+    </Suspense>
   )
 }

@@ -31,6 +31,7 @@ export async function GET() {
         messages: {
           orderBy: { createdAt: "desc" },
           take: 1,
+          select: { senderId: true },
         },
         client: { select: { id: true, name: true, email: true, image: true } },
       },
@@ -39,13 +40,12 @@ export async function GET() {
     user.vendorProfile,
   ])
 
-  // Response time stats from conversations
+  // WR-08: Only count conversations where the vendor actually replied
+  // (message from someone other than the client, i.e. the vendor)
   const totalConversations = conversations.length
-  const respondedConversations = conversations.filter(c => {
-    const msgs = c.messages
-    // Check if vendor replied (has a message from a different sender than the client)
-    return msgs.length > 0
-  }).length
+  const respondedConversations = conversations.filter(c =>
+    c.messages.some(m => m.senderId !== c.client?.id)
+  ).length
 
   const responseRate = totalConversations > 0
     ? Math.round((respondedConversations / totalConversations) * 100)
@@ -96,9 +96,14 @@ export async function PATCH(req: Request) {
   }
 
   const { contactId, status } = body
-  if (typeof contactId !== "string" || !["pending", "confirmed", "declined"].includes(status as string)) {
+  const VALID_STATUSES = ["pending", "confirmed", "declined"] as const
+  type ContactStatus = typeof VALID_STATUSES[number]
+
+  if (typeof contactId !== "string" || !VALID_STATUSES.includes(status as ContactStatus)) {
     return NextResponse.json({ error: "Paramètres invalides." }, { status: 400 })
   }
+
+  const validStatus = status as ContactStatus
 
   // Verify contact belongs to this vendor
   const contact = await prisma.contactRequest.findUnique({
@@ -112,7 +117,7 @@ export async function PATCH(req: Request) {
 
   const updated = await prisma.contactRequest.update({
     where: { id: contactId },
-    data: { status: status as string },
+    data: { status: validStatus },
   })
 
   return NextResponse.json({ id: updated.id, status: updated.status })

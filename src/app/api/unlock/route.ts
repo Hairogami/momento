@@ -1,15 +1,28 @@
 import { NextRequest, NextResponse } from "next/server"
+import { timingSafeEqual } from "crypto"
+
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
 export async function GET(req: NextRequest) {
   const key = req.nextUrl.searchParams.get("key")
   const previewKey = process.env.PREVIEW_KEY
 
-  if (!previewKey || key !== previewKey) {
-    return NextResponse.redirect(new URL("/coming-soon", req.url))
+  // W03: timing-safe comparison to prevent key enumeration via timing side-channel
+  let valid = false
+  if (previewKey && key) {
+    try {
+      valid = timingSafeEqual(Buffer.from(key), Buffer.from(previewKey))
+    } catch {
+      valid = false
+    }
   }
 
-  const res = NextResponse.redirect(new URL("/", req.url))
-  res.cookies.set("preview_key", previewKey, {
+  if (!valid) {
+    return NextResponse.redirect(new URL("/coming-soon", BASE_URL))
+  }
+
+  const res = NextResponse.redirect(new URL("/", BASE_URL))
+  res.cookies.set("preview_key", previewKey ?? "", {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

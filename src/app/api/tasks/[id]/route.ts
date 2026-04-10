@@ -14,9 +14,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!task || task.workspace.userId !== session.user.id)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
+  if (body.completed !== undefined && typeof body.completed !== "boolean") {
+    return NextResponse.json({ error: "completed doit être un booléen." }, { status: 400 })
+  }
+
   const updated = await prisma.task.update({
     where: { id },
-    data: { ...(body.completed !== undefined && { completed: body.completed }) },
+    data: { ...(body.completed !== undefined && { completed: body.completed as boolean }) },
   })
   return NextResponse.json(updated)
 }

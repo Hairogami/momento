@@ -40,12 +40,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const color = typeof body.color === "string" && HEX_COLOR.test(body.color)
     ? body.color : "#f9a8d4"
 
+  // W08: validate type against known enum values
+  const VALID_TYPES = ["task", "reminder", "appointment"]
+  const type = typeof body.type === "string" && VALID_TYPES.includes(body.type) ? body.type : "task"
+
   const event = await prisma.plannerEvent.create({
     data: {
       title,
       date,
       endDate: parseDateOpt(body.endDate),
-      type: body.type || "task",
+      type,
       color,
       plannerId,
     },

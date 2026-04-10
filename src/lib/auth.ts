@@ -83,6 +83,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, account }) {
       if (account) {
         token.provider = account.provider
+        // SECURITY: accessToken is stored in the JWT for server-side use only.
+        // It is intentionally NOT forwarded to the session callback (client-side).
+        // TODO: migrate to DB-only storage via prisma.account to avoid token exposure if JWT secret leaks.
         if (account.access_token) token.accessToken = account.access_token
         if (account.refresh_token) token.refreshToken = account.refresh_token
       }

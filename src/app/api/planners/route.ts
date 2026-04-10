@@ -57,9 +57,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Requête invalide." }, { status: 400 })
   }
   const b = body as Record<string, unknown>
+  const title = typeof b.title === "string" ? b.title.trim().slice(0, 200) : ""
+  if (!title) return Response.json({ error: "title requis." }, { status: 400 })
   const planner = await prisma.planner.create({
     data: {
-      title:       typeof b.title === "string"       ? b.title.slice(0, 200)       : "",
+      title,
       coupleNames: typeof b.coupleNames === "string" ? b.coupleNames.slice(0, 200) : "",
       weddingDate: parseDate(b.weddingDate),
       budget:      parseBudget(b.budget),

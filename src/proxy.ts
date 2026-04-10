@@ -3,8 +3,8 @@ import type { NextRequest } from "next/server"
 
 // Paths always allowed through regardless of gates
 const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon"]
-const PROTECTED          = ["/dashboard", "/profile", "/planner", "/favorites",
-                             "/budget", "/guests", "/messages", "/notifications",
+const PROTECTED          = ["/dashboard", "/accueil", "/profile", "/planner", "/favorites",
+                             "/budget", "/guests", "/messages", "/notifications", "/settings",
                              "/prestataire/dashboard"]
 const AUTH_ONLY          = ["/login", "/signup"]
 
@@ -32,7 +32,7 @@ export function proxy(request: NextRequest) {
   const isAuthPage  = AUTH_ONLY.some(p => path.startsWith(p))
 
   const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
-  if (isProtected && !sessionCookie && !isDev) {
+  if (isProtected && (!sessionCookie || sessionCookie.length < 20) && !isDev) {
     const url = new URL("/login", request.url)
     url.searchParams.set("next", path)
     return NextResponse.redirect(url)
