@@ -47,6 +47,7 @@ export default function LoginPage() {
 
           {/* OAuth providers */}
           <div className="space-y-2.5">
+            {process.env.GITHUB_CLIENT_ID && (
             <form
               action={async () => {
                 "use server";
@@ -67,6 +68,7 @@ export default function LoginPage() {
                 Continuer avec GitHub
               </button>
             </form>
+            )}
 
             {process.env.GOOGLE_CLIENT_ID && (
               <form

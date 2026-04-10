@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Facebook from "next-auth/providers/facebook";
+import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
@@ -24,6 +25,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     updateAge: 60 * 60,           // renouvelle le token toutes les heures
   },
   providers: [
+    ...(process.env.GITHUB_CLIENT_ID ? [
+      GitHub({
+        clientId: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      }),
+    ] : []),
     ...(process.env.GOOGLE_CLIENT_ID ? [
       Google({
         clientId: process.env.GOOGLE_CLIENT_ID,
