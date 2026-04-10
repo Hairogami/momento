@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (!valid) {
-    return NextResponse.redirect(new URL("/coming-soon", BASE_URL))
+    return NextResponse.redirect(new URL("/coming-soon?error=1", BASE_URL))
   }
 
   const res = NextResponse.redirect(new URL("/", BASE_URL))

@@ -1,6 +1,9 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
+import { DarkModeToggle } from "@/components/DarkModeToggle"
 
 const LAUNCH_DATE = new Date("2026-06-01T00:00:00Z")
 
@@ -22,7 +25,8 @@ function getCookie(name: string) {
   return document.cookie.split(";").find(c => c.trim().startsWith(name + "="))?.split("=")[1]?.trim()
 }
 
-export default function ComingSoonPage() {
+function ComingSoonInner() {
+  const searchParams = useSearchParams()
   const [code, setCode]               = useState("")
   const [codeError, setCodeError]     = useState(false)
   const [shake, setShake]             = useState(false)
@@ -39,16 +43,19 @@ export default function ComingSoonPage() {
     if (saved === "accepted" || saved === "refused") setConsent(saved)
   }, [])
 
-  function handleUnlock() {
-    if (code.trim().toUpperCase() === "NGF") {
-      document.cookie = "preview_key=NGF; max-age=2592000; path=/; SameSite=Lax"
-      window.location.href = "/"
-    } else {
+  // Déclencher le shake si redirigé depuis /api/unlock avec ?error=1
+  useEffect(() => {
+    if (searchParams.get("error") === "1") {
       setCodeError(true)
       setShake(true)
-      setCode("")
       setTimeout(() => setShake(false), 500)
     }
+  }, [searchParams])
+
+  function handleUnlock() {
+    if (!code.trim()) return
+    // Déléguer au serveur — /api/unlock gère la vérification + le cookie + la redirection
+    window.location.href = `/api/unlock?key=${encodeURIComponent(code.trim())}`
   }
 
   async function handleWaitlist() {
@@ -89,6 +96,11 @@ export default function ComingSoonPage() {
       className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden"
       style={{ backgroundColor: "#F5EDD6", color: "#1A1208" }}
     >
+      {/* Dark mode toggle — top right */}
+      <div className="absolute top-4 right-4 z-20">
+        <DarkModeToggle />
+      </div>
+
       {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full opacity-20"
@@ -275,5 +287,13 @@ export default function ComingSoonPage() {
         }
       `}</style>
     </div>
+  )
+}
+
+export default function ComingSoonPage() {
+  return (
+    <Suspense fallback={null}>
+      <ComingSoonInner />
+    </Suspense>
   )
 }
