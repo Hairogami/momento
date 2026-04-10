@@ -39,33 +39,46 @@ export async function POST(req: NextRequest) {
       const session = await auth()
       if (!session?.user?.id) return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
 
+      // WR-006: per-user rate limit (3 claims per 24h) to block multi-IP abuse
+      const rlUser = rateLimit(`vendor-claim-user:${session.user.id}`, 3, 24 * 60 * 60_000)
+      if (!rlUser.ok) {
+        return NextResponse.json(
+          { error: "Limite quotidienne de revendications atteinte." },
+          { status: 429 }
+        )
+      }
+
       // Prevent a user who is already a vendor from claiming a second profile
       const userProfile = await prisma.vendorProfile.findUnique({ where: { userId: session.user.id }, select: { id: true } })
       if (userProfile) return NextResponse.json({ error: "Vous avez déjà un profil prestataire." }, { status: 409 })
 
-      // CR-02: Check slug not already claimed before transaction to avoid silent 500 on race
+      // CR-003: Check slug not already claimed
       const existingSlugProfile = await prisma.vendorProfile.findUnique({ where: { slug }, select: { id: true } })
       if (existingSlugProfile) return NextResponse.json({ error: "Ce profil est déjà revendiqué." }, { status: 409 })
 
-      try {
-        await prisma.$transaction([
-          prisma.vendorProfile.create({
-            data: { slug, userId: session.user.id, claimed: true, verified: false, plan: "free" }
-          }),
-          prisma.user.update({
-            where: { id: session.user.id },
-            data: { role: "vendor", vendorSlug: slug }
-          }),
-        ])
-      } catch (txErr: unknown) {
-        const code = (txErr as { code?: string })?.code
-        if (code === "P2002") {
-          return NextResponse.json({ error: "Ce profil est déjà revendiqué." }, { status: 409 })
-        }
-        throw txErr
+      // CR-003: Check no pending claim already exists for this user or this slug
+      const existingPending = await prisma.vendorClaimRequest.findFirst({
+        where: { OR: [{ userId: session.user.id, status: "pending" }, { slug, status: "pending" }] },
+        select: { id: true },
+      })
+      if (existingPending) {
+        return NextResponse.json(
+          { error: "Une demande de revendication est déjà en attente pour ce profil ou cet utilisateur." },
+          { status: 409 }
+        )
       }
 
-      return NextResponse.json({ success: true, redirect: "/prestataire/dashboard" })
+      // CR-003: Place in pending queue for admin review instead of immediate role elevation
+      await prisma.vendorClaimRequest.create({
+        data: {
+          userId:      session.user.id,
+          slug,
+          status:      "pending",
+          submittedAt: new Date(),
+        },
+      })
+
+      return NextResponse.json({ success: true, step: "pending_admin_review" })
     }
 
     // ── MODE: new account via magic link ──────────────────────────────────

@@ -65,10 +65,14 @@ export async function PATCH(req: NextRequest) {
     }
   }
   if ("budget" in body) {
-    updates.budget = typeof body.budget === "number" && body.budget > 0 ? body.budget : null
+    // CR-004: cap at 1 billion to prevent DB/frontend overflow
+    updates.budget = typeof body.budget === "number" && body.budget > 0 && body.budget <= 1_000_000_000
+      ? body.budget
+      : null
   }
   if ("guestCount" in body) {
-    updates.guestCount = typeof body.guestCount === "number" && body.guestCount > 0
+    // CR-004: cap at 100,000 to prevent DB/frontend overflow
+    updates.guestCount = typeof body.guestCount === "number" && body.guestCount > 0 && body.guestCount <= 100_000
       ? Math.floor(body.guestCount)
       : null
   }

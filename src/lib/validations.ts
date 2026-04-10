@@ -50,8 +50,8 @@ export const MessageCreateSchema = z.object({
 export const WorkspacePatchSchema = z.object({
   eventName: z.string().min(1).max(200).optional(),
   eventDate: z.string().datetime({ offset: true }).optional().nullable(),
-  budget: z.number().positive().finite().optional().nullable(),
-  guestCount: z.number().int().positive().optional().nullable(),
+  budget: z.number().positive().finite().max(1_000_000_000).optional().nullable(),
+  guestCount: z.number().int().min(1).max(100_000).optional().nullable(),
   location: z.string().max(200).optional().nullable(),
   neededCategories: z.array(z.string().max(100)).max(50).optional(),
 })

@@ -36,9 +36,10 @@ model User {
   vendorProfile       VendorProfile?
   planners            Planner[]
   emailVerifications  EmailVerification[]
-  clientConversations Conversation[]      @relation("ClientConversations")
-  sentMessages        Message[]           @relation("SentMessages")
+  clientConversations Conversation[]        @relation("ClientConversations")
+  sentMessages        Message[]             @relation("SentMessages")
   reviews             Review[]
+  vendorClaimRequests VendorClaimRequest[]
 }
 
 model Account {
@@ -403,4 +404,16 @@ model Review {
   author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   @@unique([authorId, vendorId])
+}
+
+// CR-003: Vendor claim requests go through admin review before role elevation
+model VendorClaimRequest {
+  id          String   @id @default(cuid())
+  userId      String
+  slug        String
+  status      String   @default("pending") // pending | approved | rejected
+  submittedAt DateTime @default(now())
+  reviewedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
