@@ -21,11 +21,24 @@ export async function GET(req: NextRequest) {
   const page = Math.min(1000, Math.max(1, parseInt(searchParams.get("page") ?? "1", 10)))
   // WR-09: Cap at 50 per request on public endpoint to prevent bulk scraping
   const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10) || 20))
+  // W03: public endpoint — exclude sensitive contact/location fields
   const vendors = await prisma.vendor.findMany({
     where: category ? { category } : {},
     orderBy: { name: "asc" },
     skip: (page - 1) * limit,
     take: limit,
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      category: true,
+      description: true,
+      address: true,
+      priceRange: true,
+      rating: true,
+      reviewCount: true,
+      website: true,
+    },
   })
   return Response.json(vendors)
 }

@@ -1,20 +1,22 @@
 import { auth } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  // The accessToken is intentionally NOT exposed on session.user (auth.ts session callback).
-  // It is stored server-side in the JWT only. To fix properly, fetch it from the DB
-  // Account table by userId+provider. For now return a clear 501 error rather than a
-  // misleading 403 so callers know this feature is not yet implemented server-side.
-  // TODO: fetch token from prisma.account where userId = session.user.id AND provider = "google"
-  const accessToken = (session.user as { accessToken?: string }).accessToken
+  // W08: accessToken is intentionally NOT on session.user (auth.ts security decision).
+  // Fetch it from the DB Account table instead.
+  const account = await prisma.account.findFirst({
+    where: { userId: session.user.id, provider: "google" },
+    select: { access_token: true },
+  })
+  const accessToken = account?.access_token
   if (!accessToken) {
     return NextResponse.json(
-      { error: "Google Calendar integration not yet available." },
-      { status: 501 }
+      { error: "Google Calendar non connecté. Reconnectez-vous avec Google." },
+      { status: 403 }
     )
   }
 
