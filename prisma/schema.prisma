@@ -4,9 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 // ─── AUTH (NextAuth compatible) ───────────────────────────────────────────────
@@ -40,6 +38,7 @@ model User {
   emailVerifications  EmailVerification[]
   clientConversations Conversation[]      @relation("ClientConversations")
   sentMessages        Message[]           @relation("SentMessages")
+  reviews             Review[]
 }
 
 model Account {
@@ -192,6 +191,7 @@ model Vendor {
   budgetItems  BudgetItem[]
   media        VendorMedia[]
   stepVendors  StepVendor[]
+  reviews      Review[]
 }
 
 model VendorVerification {
@@ -385,4 +385,19 @@ model Message {
   createdAt      DateTime     @default(now())
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  vendorId   String
+  authorId   String
+  rating     Int      // 1–5
+  comment    String?  @db.Text
+  eventType  String?  // "Mariage", "Fiançailles", etc.
+  createdAt  DateTime @default(now())
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@unique([authorId, vendorId])
 }

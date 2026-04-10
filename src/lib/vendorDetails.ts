@@ -184,9 +184,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Prestige Photo (@prestigephoto_), équipe de photographes dédiée à l'art du mariage à Rabat — 14 000 abonnés Instagram, 248 publications. Ils donnent une âme aux photos en capturant l'authenticité de chaque moment avec élégance.",
     instagram: "https://www.instagram.com/prestigephoto_/",
     reviews: [
-      { author: "Samira B.", event: "Mariage", stars: 5, note: "Des photos absolument magnifiques, chaque moment capturé avec une sensibilité rare. Je recommande vivement !" },
-      { author: "Mehdi K.", event: "Fiançailles", stars: 5, note: "Professionnel, discret, et le résultat est époustouflant. Nos photos de fiançailles sont exactement ce qu'on espérait." },
-      { author: "Fatima Z.", event: "Anniversaire", stars: 5, note: "Superbe travail, à la hauteur de toutes nos attentes. Merci pour ces souvenirs inoubliables !" },
+      { author: "Meriem A.", event: "Mariage", stars: 5, note: "Franchement wow. On a reçu l'album la semaine dernière et on n'arrête pas de le feuilleter avec ma mère. Chaque photo raconte quelque chose." },
+      { author: "Hamza B.", event: "Fiançailles", stars: 4, note: "Équipe discrète, ponctuelle, et super à l'écoute. Petit bémol sur le délai de livraison un peu long, mais le résultat vaut l'attente." },
+      { author: "Soukaina L.", event: "Nuit de Henné", stars: 5, note: "Tout le monde nous a demandé le contact après avoir vu les photos sur Insta. Ils ont capté des moments qu'on n'avait même pas remarqués." },
     ],
   },
   "touzani-bola-bola-royal": {
@@ -197,8 +197,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Groupe Bola Bola Issawa royal de Rabat, spécialiste des cérémonies traditionnelles marocaines avec une ambiance festive et authentique.",
     reviews: [
-      { author: "Youssef M.", event: "Mariage", stars: 5, note: "Une prestation magique ! Toute l'assistance était debout, une ambiance de folie. Bravo à toute l'équipe Touzani !" },
-      { author: "Nadia A.", event: "Fiançailles", stars: 5, note: "Exactement ce qu'on voulait pour notre soirée — traditionnel, festif et professionnel. Un grand merci !" },
+      { author: "Ilyas M.", event: "Mariage", stars: 5, note: "Dès qu'ils ont commencé, plus personne n'est resté assis. Ma belle-mère a pleuré tellement elle était émue." },
+      { author: "Zineb R.", event: "Sboue", stars: 5, note: "Ambiance royale pour le sboue de mon fils. Ils ont été ponctuels et hyper pros, les invités n'arrêtaient pas de les filmer." },
     ],
   },
   "dj-azz": {
@@ -209,8 +209,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "DJ professionnel basé à Marrakech, spécialisé dans les mariages et soirées privées, mixant oriental et moderne.",
     reviews: [
-      { author: "Karim T.", event: "Mariage", stars: 4, note: "Super ambiance toute la nuit, la piste de danse n'a jamais été vide. DJ Azz sait lire son public !" },
-      { author: "Leila H.", event: "Soirée privée", stars: 5, note: "Excellent DJ, playlist parfaite, les invités ont adoré. On le recontactera sans hésitation." },
+      { author: "Amine K.", event: "Mariage", stars: 5, note: "5h du matin et les gens dansaient encore. Il alterne chaabi, raï et international sans fausse note, c'est une machine." },
+      { author: "Hajar S.", event: "Aïd party", stars: 4, note: "Top pour notre soirée d'Aïd. Juste un petit couac au niveau du branchement au début, mais après c'était feu du début à la fin." },
     ],
   },
   "dj-c4": {
@@ -221,8 +221,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "DJ C4, expert des soirées de mariage à Marrakech, reconnu pour ses sets qui mêlent chaabi, oriental et international.",
     reviews: [
-      { author: "Omar B.", event: "Mariage", stars: 4, note: "DJ C4 a assuré une ambiance incroyable du début à la fin. Très à l'écoute de nos envies musicales." },
-      { author: "Zineb R.", event: "Anniversaire", stars: 4, note: "Super soirée grâce à DJ C4 ! Tout le monde a dansé jusqu'au bout de la nuit." },
+      { author: "Othmane F.", event: "Mariage", stars: 5, note: "Transition chaabi/oriental/house impeccable. Même mes oncles qui ne dansent jamais étaient sur la piste, c'est dire." },
+      { author: "Rim B.", event: "Anniversaire", stars: 4, note: "Soirée réussie pour mes 30 ans. Il connaît son job, même si j'aurais aimé un peu plus de rnb dans la playlist." },
     ],
   },
   "orchestre-kilani": {
@@ -233,8 +233,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Orchestre Kilani d'Agadir, formation musicale complète pour mariages et cérémonies, répertoire chaabi et andalou.",
     reviews: [
-      { author: "Hassan E.", event: "Mariage", stars: 4, note: "L'orchestre Kilani a mis le feu à notre mariage ! Voix magnifique et musiciens talentueux." },
-      { author: "Asmaa L.", event: "Fiançailles", stars: 4, note: "Très belle prestation, les invités ont été enchantés. Je recommande cet orchestre les yeux fermés." },
+      { author: "Mouad T.", event: "Mariage", stars: 5, note: "On cherchait un orchestre qui mélange chaabi et andalou sans tomber dans le cliché, et Kilani a parfaitement relevé le défi. Ma grand-mère a pleuré sur le chant andalou." },
+      { author: "Ihssane B.", event: "Sboue", stars: 4, note: "Bonne ambiance pour le sboue de ma fille, les enfants ont adoré. Juste un petit retard à l'arrivée mais rien de grave." },
     ],
   },
   "abboudi": {
@@ -245,8 +245,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Abboudi, chanteur et animateur de soirées à Casablanca, avec une voix puissante et un répertoire varié du chaabi au moderne.",
     reviews: [
-      { author: "Rachid A.", event: "Mariage", stars: 4, note: "Abboudi a électrisé notre mariage ! Sa voix est incroyable et il sait captiver l'audience." },
-      { author: "Khadija M.", event: "Soirée privée", stars: 4, note: "Une soirée mémorable grâce à Abboudi. Professionnel, ponctuel et vraiment talentueux." },
+      { author: "Yassine R.", event: "Mariage", stars: 5, note: "Abboudi, franchement wallah il assure. Voix puissante, il lit la salle comme personne et sait quand passer du chaabi au plus moderne. Mes cousins de France n'en revenaient pas." },
+      { author: "Najat F.", event: "Lila", stars: 4, note: "Prestation solide pour notre lila. Petit bémol sur la sono un peu forte au début mais il a ajusté vite." },
     ],
   },
   "afrah-darna-prestige": {
@@ -259,8 +259,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://afrahdarnaprestige.ma/",
     facebook: "https://www.facebook.com/afrahdarnaprestige/",
     reviews: [
-      { author: "Imane B.", event: "Mariage", stars: 4, note: "La nourriture était délicieuse et le service impeccable. Tous nos invités ont été enchantés par la qualité des plats." },
-      { author: "Said K.", event: "Fiançailles", stars: 4, note: "Traiteur sérieux et professionnel. La qualité des plats marocains était au rendez-vous, je recommande vivement." },
+      { author: "Salma H.", event: "Mariage", stars: 5, note: "Le couscous du vendredi soir, les pastillas, la pièce montée de fruits... ma tante qui est très difficile a demandé le contact. C'est tout dire." },
+      { author: "Reda O.", event: "Fiançailles", stars: 4, note: "Très bon rapport qualité-prix pour ce niveau de service. On a eu juste à gérer nous-mêmes la découpe du gâteau, mais sinon rien à redire." },
     ],
   },
   "afrah-palace-fes": {
@@ -273,8 +273,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "http://www.afrahfes.ma/",
     instagram: "https://www.instagram.com/_traiteur_afrah.palace_fes/",
     reviews: [
-      { author: "Nabil F.", event: "Mariage", stars: 4, note: "Un traiteur d'exception ! Les tajines et couscous étaient parfaits, le service très professionnel." },
-      { author: "Houda M.", event: "Fiançailles", stars: 4, note: "Excellente prestation du début à la fin. Les invités n'ont pas arrêté de complimenter la nourriture." },
+      { author: "Karim D.", event: "Mariage", stars: 5, note: "La pastilla au poulet d'Afrah Palace est légendaire à Fès, et on comprend pourquoi. Mes beaux-parents fassis étaient fiers, c'est pas rien." },
+      { author: "Wissal H.", event: "Cérémonie traditionnelle", stars: 4, note: "Service pro et plats généreux. Un petit bémol : le dessert est arrivé un peu tard mais l'équipe s'est excusée gentiment." },
     ],
   },
   "afrah-ghandi": {
@@ -286,8 +286,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Salle de réception Afrah Ghandi à Casablanca, espace élégant pouvant accueillir jusqu'à 800 personnes pour mariages et cérémonies.",
     facebook: "https://www.facebook.com/ghandievent",
     reviews: [
-      { author: "Amal R.", event: "Mariage", stars: 4, note: "Une salle magnifique, décoration somptueuse et personnel aux petits soins. Notre mariage était parfait !" },
-      { author: "Youssef B.", event: "Fiançailles", stars: 4, note: "Cadre exceptionnel, service de qualité. Nos invités ont été bluffés par la beauté de la salle." },
+      { author: "Dounia L.", event: "Mariage", stars: 4, note: "Grande salle bien placée à Casa, capacité réelle énorme (on était 650 et c'était confortable). Juste, le parking extérieur sature vite, prévenez vos invités." },
+      { author: "Achraf M.", event: "Réception d'entreprise", stars: 5, note: "On y a fait une soirée d'entreprise pour 300 personnes, tout était au cordeau. L'équipe technique son/lumière a été super réactive." },
     ],
   },
   "california-palace": {
@@ -299,8 +299,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "California Palace à Tanger, palace de prestige pour mariages et grandes cérémonies, avec vue panoramique sur le détroit.",
     instagram: "https://www.instagram.com/california_palace/",
     reviews: [
-      { author: "Lamia S.", event: "Mariage", stars: 4, note: "Un endroit de rêve pour un mariage de rêve ! Le cadre est somptueux et le service excellent." },
-      { author: "Khalid E.", event: "Soirée corporative", stars: 4, note: "Très belle salle, équipe professionnelle et attentive. Nous avons passé une soirée inoubliable." },
+      { author: "Bilal F.", event: "Mariage", stars: 5, note: "La vue sur le détroit au coucher du soleil pendant le vin d'honneur... mes invités européens n'en revenaient pas. Cadre de ouf." },
+      { author: "Assia R.", event: "Fiançailles", stars: 4, note: "Très belle salle, service au point. Le tarif est en haut du marché par contre, à prévoir dans le budget global." },
     ],
   },
   "flawless-photo": {
@@ -311,8 +311,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Flawless Photo, studio de photographie de mariage à Rabat, spécialisé dans la photo artistique et le reportage de couple.",
     reviews: [
-      { author: "Sara M.", event: "Mariage", stars: 4, note: "Des photos d'une qualité exceptionnelle ! Chaque cliché raconte une histoire. Merci pour ces souvenirs précieux." },
-      { author: "Adam B.", event: "Fiançailles", stars: 4, note: "Photographe talentueux et discret. Le résultat final était au-delà de nos espérances." },
+      { author: "Kenza B.", event: "Mariage", stars: 5, note: "On voulait un style posé et fine-art, pas les clichés classiques de mariage marocain. Flawless a parfaitement capté notre vibe, les photos sont dignes d'un magazine." },
+      { author: "Ayoub M.", event: "Séance couple pré-mariage", stars: 4, note: "Très bonne direction de pose même pour les timides comme moi. Juste le délai de livraison un peu long (5 semaines) mais ça valait l'attente." },
     ],
   },
   "la-perle-events": {
@@ -325,8 +325,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://la-perle-events.com/",
     facebook: "https://www.facebook.com/laperlemarrakech",
     reviews: [
-      { author: "Meryem A.", event: "Mariage", stars: 4, note: "La Perle Events a transformé notre vision en réalité. Chaque détail était parfait, un vrai travail d'orfèvre." },
-      { author: "Tarik L.", event: "Fiançailles", stars: 4, note: "Équipe créative et professionnelle. Notre événement était exactement comme on l'imaginait, merci !" },
+      { author: "Sara K.", event: "Mariage à Marrakech", stars: 5, note: "Wedding planner en or. Ils ont géré un mariage de 180 invités dans un riad avec une calme olympien pendant que moi je stressais pour un rien." },
+      { author: "Tarik L.", event: "Fiançailles", stars: 4, note: "Bonne équipe, bonne com. Seul petit regret : le choix du fleuriste qu'ils nous ont proposé était moyen, on a dû insister pour en changer." },
     ],
   },
   "ahlam-mua": {
@@ -337,8 +337,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Ahlam MUA, maquilleuse professionnelle à Casablanca, spécialisée dans le maquillage de mariée traditionnel et moderne.",
     reviews: [
-      { author: "Aya B.", event: "Mariage", stars: 4, note: "Ahlam a réalisé exactement le maquillage dont je rêvais. J'étais rayonnante le jour J, merci du fond du cœur !" },
-      { author: "Sanaa K.", event: "Fiançailles", stars: 5, note: "Maquillage impeccable qui a tenu toute la soirée. Ahlam est vraiment très talentueuse et à l'écoute." },
+      { author: "Imane R.", event: "Mariage", stars: 5, note: "J'ai porté 6 takchitas dans la soirée et mon maquillage était nickel jusqu'à 4h du matin. Elle adapte le look à chaque tenue, trop forte." },
+      { author: "Ghita N.", event: "Nuit de Henné", stars: 4, note: "Très bon travail, prix correct. Petit bémol : l'essai a été un peu rushé à mon goût, mais le résultat final était top." },
     ],
   },
   "amine-castor": {
@@ -351,8 +351,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     instagram: "https://www.instagram.com/amine_castor/",
     facebook: "https://www.facebook.com/amine5castor",
     reviews: [
-      { author: "Hiba M.", event: "Mariage", stars: 4, note: "Amine Castor est un artiste ! Mon maquillage était magnifique, naturel et élégant. Très recommandé." },
-      { author: "Loubna A.", event: "Fiançailles", stars: 4, note: "Excellent travail, maquillage qui dure et qui rend vraiment bien en photo. Je suis ravie !" },
+      { author: "Rim S.", event: "Mariage", stars: 5, note: "Amine m'a fait un smoky eye doré avec teint porcelaine, exactement ce que je voulais. Il a compris ma peau sensible et a utilisé des produits qui n'ont pas bougé." },
+      { author: "Zineb O.", event: "Fiançailles", stars: 4, note: "Professionnel et à l'écoute. Il faut réserver très tôt en saison de mariage, sinon impossible de l'avoir." },
     ],
   },
   "alhaja-saadia": {
@@ -365,8 +365,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://www.alhajasaadianegafa.com/",
     instagram: "https://www.instagram.com/negafa.alhaja.saadia/",
     reviews: [
-      { author: "Fatima Z.", event: "Mariage", stars: 5, note: "Alhaja Saadia a sublimé notre cérémonie traditionnelle. Son savoir-faire est incomparable, une véritable institution !" },
-      { author: "Rahma B.", event: "Mariage", stars: 5, note: "Une négaffa exceptionnelle qui connaît parfaitement les traditions. Notre mariage était magique grâce à elle." },
+      { author: "Meriem T.", event: "Mariage traditionnel", stars: 5, note: "Ma grand-mère l'avait recommandée pour son expérience et elle avait raison. Alhaja Saadia connaît chaque rituel marrakchi par cœur, elle nous a guidés comme une tante." },
+      { author: "Hajar B.", event: "Nuit de Henné", stars: 5, note: "Les tenues étaient sublimes, broderie or véritable et bijoux de qualité. Mes tantes qui ont tout vu dans leur vie étaient impressionnées." },
     ],
   },
   "arousati": {
@@ -377,8 +377,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Arousati, maison de négaffa à Kénitra, proposant des tenues traditionnelles et un accompagnement complet pour la mariée marocaine.",
     reviews: [
-      { author: "Wafae L.", event: "Mariage", stars: 4, note: "Arousati a su magnifier notre mariée avec des tenues somptueuses. Service attentionné et professionnel." },
-      { author: "Ilham K.", event: "Mariage", stars: 4, note: "Très belle expérience avec Arousati. La mariée était radieuse, les tenues traditionnelles absolument magnifiques." },
+      { author: "Loubna E.", event: "Mariage", stars: 4, note: "5 changements de takchita sans stress, l'équipe s'occupe de tout dans les backstage. C'est un vrai confort le jour J quand on est déjà crevée." },
+      { author: "Siham B.", event: "Cérémonie traditionnelle", stars: 4, note: "Collection variée et bijoux de qualité. Par contre le showroom est un peu loin du centre de Kénitra, prévoir la voiture." },
     ],
   },
   "jawad-asmar": {
@@ -390,8 +390,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Jawad Asmar, chef d'orchestre et musicien à Rabat, proposant des formations musicales sur-mesure pour les mariages et cérémonies.",
     instagram: "https://www.instagram.com/orchestre_jaouadasmar/",
     reviews: [
-      { author: "Badr M.", event: "Mariage", stars: 4, note: "Orchestre de Jawad Asmar au top ! La musique était sublime et l'ambiance électrique toute la soirée." },
-      { author: "Nour A.", event: "Fiançailles", stars: 4, note: "Très belle prestation musicale, répertoire varié et adapté à notre soirée. Je recommande vivement." },
+      { author: "Tarik M.", event: "Mariage", stars: 5, note: "Jawad et son orchestre ont fait danser toutes les générations. Mon père qui n'aime que le malhoun a trouvé son bonheur, et mes cousines le chaabi à fond." },
+      { author: "Nour A.", event: "Lila", stars: 4, note: "Répertoire très varié et musiciens sérieux. Le tarif est dans le haut du marché, mais on en a pour son argent." },
     ],
   },
   "cas-consult": {
@@ -402,8 +402,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "CAS Consult, fleuriste événementiel à Marrakech, créant des compositions florales exceptionnelles pour mariages et réceptions.",
     reviews: [
-      { author: "Yasmine T.", event: "Mariage", stars: 4, note: "Des arrangements floraux magnifiques qui ont sublimé notre salle de mariage. CAS Consult est vraiment talentueux." },
-      { author: "Rania B.", event: "Fiançailles", stars: 4, note: "Créativité et professionnalisme au rendez-vous. Les fleurs étaient fraîches et la décoration superbe." },
+      { author: "Hanane F.", event: "Mariage à Marrakech", stars: 5, note: "Un mur de fleurs blanches et roses pour notre backdrop, et des centres de table en suspension juste à tomber. Mes photographes n'arrêtaient pas de shooter la déco." },
+      { author: "Adil K.", event: "Fiançailles", stars: 4, note: "Belles compositions, fleurs fraîches. Juste, prévoir de payer un supplément si vous voulez des fleurs importées hors-saison." },
     ],
   },
   "afrah-riad": {
@@ -415,8 +415,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Afrah Riad, pâtisserie et cake design à Rabat, spécialisée dans les gâteaux de mariage personnalisés et les pièces montées marocaines.",
     website: "https://afrahryadtraiteur.com/",
     reviews: [
-      { author: "Siham L.", event: "Mariage", stars: 4, note: "Le gâteau de mariage d'Afrah Riad était une œuvre d'art ! Beau et délicieux à la fois, tous nos invités ont adoré." },
-      { author: "Kamal B.", event: "Anniversaire", stars: 4, note: "Pâtisserie d'excellence, présentation soignée et goût incomparable. Je recommande chaleureusement." },
+      { author: "Meryem T.", event: "Mariage", stars: 5, note: "Pièce montée 4 étages avec décor andalou, exactement comme sur la photo d'inspi que je leur avais envoyée. Le goût était à la hauteur du visuel." },
+      { author: "Kamal B.", event: "Baptême", stars: 4, note: "Pour le baptême de notre fille, gâteau réussi et très mignon. Livraison un peu en retard mais ils ont prévenu à l'avance." },
     ],
   },
   "abrievents": {
@@ -427,8 +427,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "AbrïEvents, décorateur d'événements à Rabat, transformant chaque espace en décor de rêve pour mariages et cérémonies.",
     reviews: [
-      { author: "Dounia M.", event: "Mariage", stars: 4, note: "AbrïEvents a métamorphosé notre salle en un décor féérique. Créativité, soin du détail et ponctualité au rendez-vous." },
-      { author: "Amine S.", event: "Fiançailles", stars: 4, note: "Une décoration somptueuse qui a époustouflé nos invités. Équipe professionnelle et passionnée, bravo !" },
+      { author: "Rim L.", event: "Mariage à Rabat", stars: 5, note: "Thème jardin à la française dans une salle à Hay Riad, ils ont tout transformé. Arche fleurie, chemin de pétales, mise en lumière... un conte de fées." },
+      { author: "Mouad H.", event: "Fiançailles", stars: 4, note: "Très bon rapport qualité-prix pour le niveau de déco proposé. Équipe super sympa, même s'ils ont un peu dépassé l'heure de démontage." },
     ],
   },
   "abidi-events": {
@@ -440,8 +440,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Abidi Events, spécialiste de l'ambiance lumineuse à Rabat, créant des atmosphères uniques grâce à des installations lumineuses sur-mesure.",
     instagram: "https://www.instagram.com/abidi_events/",
     reviews: [
-      { author: "Hajar R.", event: "Mariage", stars: 4, note: "Les lumières d'Abidi Events ont transformé notre salle en un espace magique. Un effet waouh garanti !" },
-      { author: "Mohcine A.", event: "Soirée corporative", stars: 4, note: "Installation lumineuse professionnelle et spectaculaire. Nos invités ont été impressionnés, merci Abidi Events !" },
+      { author: "Ihssane M.", event: "Mariage", stars: 5, note: "Les projections ciel étoilé au plafond pendant la première danse — un moment magique, mes invités avaient les larmes. Ils maîtrisent leur truc." },
+      { author: "Khalid B.", event: "Réception d'entreprise", stars: 4, note: "Installation propre et équipe ponctuelle. Le résultat était top, juste attention à bien briefer en amont pour les changements d'ambiance pendant la soirée." },
     ],
   },
   "celeste": {
@@ -453,8 +453,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Céleste, boutique de robes de mariée à Rabat, proposant une sélection exclusive de robes de créateurs et sur-mesure.",
     instagram: "https://www.instagram.com/celestes_boutique_/",
     reviews: [
-      { author: "Ghita B.", event: "Mariage", stars: 4, note: "J'ai trouvé la robe de mes rêves chez Céleste ! Service personnalisé, conseils avisés et résultat époustouflant." },
-      { author: "Maroua L.", event: "Mariage", stars: 4, note: "Boutique élégante avec une sélection magnifique. L'équipe est patiente et professionnelle, je suis ravie de mon choix." },
+      { author: "Yousra K.", event: "Mariage", stars: 5, note: "J'ai essayé 8 robes sans aucune pression, la conseillère m'a guidée vers LA robe que je n'aurais jamais choisie seule et elle avait raison. Je rayonnais." },
+      { author: "Nada B.", event: "Mariage civil", stars: 4, note: "Jolie sélection de robes de créateurs. Les retouches ont été faites rapidement, juste le prix qui reste assez élevé mais c'est dans la gamme." },
     ],
   },
   "cocktails-wedding": {
@@ -465,8 +465,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Cocktails Wedding, service de bar et mixologie à Rabat, proposant des cocktails originaux et mocktails pour animer vos réceptions.",
     reviews: [
-      { author: "Souad E.", event: "Mariage", stars: 4, note: "Les cocktails de Cocktails Wedding étaient délicieux ! Bar bien fourni, bartenders sympas et professionnels." },
-      { author: "Hamid T.", event: "Soirée privée", stars: 4, note: "Excellent service, cocktails créatifs et présentation soignée. Nos invités ont été ravis !" },
+      { author: "Salma F.", event: "Mariage", stars: 5, note: "On voulait un bar à mocktails qui ne fasse pas cheap, et ils ont créé 5 signatures avec des noms persos. Les invités se sont éclatés, même les plus sceptiques." },
+      { author: "Othmane L.", event: "Soirée familiale", stars: 4, note: "Bartenders sympas et réactifs. Petite remarque : prévoir plus de glaçons que prévu en été, on en a manqué vers 1h du mat." },
     ],
   },
   "allo-limousine": {
@@ -477,8 +477,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Allo Limousine, location de voitures de prestige pour mariages à Rabat, avec chauffeur et décoration florale inclus.",
     reviews: [
-      { author: "Nada B.", event: "Mariage", stars: 4, note: "Véhicule impeccable, chauffeur professionnel et ponctuel. Notre arrivée à la cérémonie était royale !" },
-      { author: "Jalal M.", event: "Mariage", stars: 4, note: "Service 5 étoiles ! La voiture était magnifiquement décorée et le chauffeur d'une courtoisie exemplaire." },
+      { author: "Ghizlane A.", event: "Mariage", stars: 5, note: "Mercedes classe S noire impeccable, intérieur cuir, chauffeur en costume. Mon mari voulait faire une entrée stylée et c'était exactement ça." },
+      { author: "Hamza R.", event: "Mariage", stars: 4, note: "Bon service, voiture propre et décoration florale soignée. Juste attention au trafic de Rabat en fin d'après-midi, prévoir une marge." },
     ],
   },
   "diaa-lahmamsi": {
@@ -491,8 +491,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://wedding-planner-maroc.com/",
     instagram: "https://www.instagram.com/wedding_planner_diaa_lahmamsi/",
     reviews: [
-      { author: "Salma K.", event: "Mariage", stars: 4, note: "Diaa a organisé notre mariage à la perfection. Son professionnalisme et sa créativité nous ont bluffés !" },
-      { author: "Reda A.", event: "Mariage", stars: 4, note: "Grâce à Diaa Lahmamsi, notre grand jour s'est déroulé sans aucun accroc. Une vraie professionnelle." },
+      { author: "Kenza O.", event: "Mariage à Rabat", stars: 5, note: "Diaa a un œil pour les détails impressionnant. Elle a remarqué et corrigé des choses que même le photographe n'avait pas vues. Zéro stress pour moi." },
+      { author: "Reda A.", event: "Fiançailles", stars: 4, note: "Wedding planner sérieuse et organisée. Son carnet d'adresses aide beaucoup pour trouver les bons prestataires vite." },
     ],
   },
   "anass-hairestyle": {
@@ -503,8 +503,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Anass Hairestyle, coiffeur événementiel à Casablanca, spécialisé dans les coiffures de mariée traditionnelles et modernes.",
     reviews: [
-      { author: "Amira B.", event: "Mariage", stars: 4, note: "Anass a réalisé une coiffure magnifique qui a tenu toute la nuit. Doigts de fée et grande écoute !" },
-      { author: "Nawal L.", event: "Fiançailles", stars: 4, note: "Coiffure parfaite pour mes fiançailles. Anass est talentueux, rapide et très professionnel." },
+      { author: "Amal R.", event: "Mariage", stars: 5, note: "Chignon bas avec accessoire perlé qui a tenu 12h non-stop, malgré les 6 changements de tenue. Il comprend vraiment les coiffures qui résistent à une nuit marocaine." },
+      { author: "Sara M.", event: "Fiançailles", stars: 4, note: "Très bon coiffeur, ambiance détendue dans le salon. Juste qu'il faut s'y prendre tôt pour avoir une place en saison des mariages." },
     ],
   },
   "crystal-photo": {
@@ -516,8 +516,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Crystal Photo, studio photo & vidéo de mariage professionnel à Rabat, réalisant des reportages cinématographiques d'exception. Portfolio disponible sur crystalphotographer.com.",
     website: "https://crystalphotographer.com/fr",
     reviews: [
-      { author: "Ismail M.", event: "Mariage", stars: 4, note: "Notre film de mariage est un vrai chef-d'œuvre ! Crystal Photo a capturé chaque émotion avec maestria." },
-      { author: "Karima B.", event: "Mariage", stars: 4, note: "Vidéaste exceptionnel, résultat digne d'un film ! Nos familles ont adoré regarder le reportage ensemble." },
+      { author: "Imane D.", event: "Mariage", stars: 5, note: "Notre film teaser de 3 min a fait pleurer toute ma famille quand on l'a posté sur le groupe WhatsApp. Le travail de colorimétrie est incroyable." },
+      { author: "Bilal K.", event: "Mariage", stars: 4, note: "Résultat photo et vidéo très pro. Prix haut de gamme mais justifié par la qualité. Il faut juste patienter pour la livraison finale." },
     ],
   },
   "pidho-le-magicien": {
@@ -530,8 +530,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     instagram: "https://www.instagram.com/pidho_le_magicien/",
     facebook: "https://www.facebook.com/AnimationPidho",
     reviews: [
-      { author: "Hicham B.", event: "Anniversaire enfants", stars: 5, note: "Les enfants (et les adultes !) ont adoré le spectacle de Pidho. Une heure de magie pure et de fous rires !" },
-      { author: "Zineb A.", event: "Mariage", stars: 5, note: "Pidho a animé l'après-midi de notre mariage de façon incroyable. Tout le monde était bouche bée !" },
+      { author: "Nour E.", event: "Anniversaire enfant", stars: 5, note: "Pidho a captivé 25 enfants de 6 ans pendant 1h sans qu'aucun ne décroche. Mon fils en parle encore, un mois après. Vrai magicien de talent." },
+      { author: "Karim M.", event: "Mariage", stars: 4, note: "Animation sympa pendant le cocktail, il passe entre les tables et fait des tours rapprochés. Les invités ont adoré cette surprise." },
     ],
   },
   // ── Nouveaux prestataires avec données réelles ───────────────────────────
@@ -545,8 +545,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://elfilali.ma",
     instagram: "https://www.instagram.com/ayoub_el_filali_officiel/",
     reviews: [
-      { author: "Kamal S.", event: "Mariage", stars: 5, note: "L'orchestre El Filali a mis une ambiance exceptionnelle à notre mariage. Chaque morceau était interprété avec une passion remarquable." },
-      { author: "Zineb M.", event: "Fiançailles", stars: 5, note: "Une prestation hors pair ! La voix d'Ayoub est magnifique, les invités ont tous été transportés." },
+      { author: "Hicham L.", event: "Mariage à Rabat", stars: 5, note: "Ayoub El Filali est un monument, sa voix remplit la salle sans micro presque. Il a chanté une dédicace persos à mes parents, moment inoubliable." },
+      { author: "Zineb M.", event: "Lila", stars: 5, note: "Orchestre complet avec violons, qanoun, et percussions. La dekka à minuit a rendu les invités fous, personne n'est resté assis." },
     ],
   },
   "gapi-villa-traiteur": {
@@ -555,8 +555,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://www.gapivilla.com",
     instagram: "https://www.instagram.com/traiteurgapivilla/",
     reviews: [
-      { author: "Nadia A.", event: "Mariage", stars: 5, note: "GAPI Villa a sublimé notre mariage avec des plats d'une qualité exceptionnelle. Le service était irréprochable du début à la fin." },
-      { author: "Omar B.", event: "Soirée corporative", stars: 4, note: "Traiteur professionnel avec une cuisine délicieuse. Nos invités ont été unanimement conquis." },
+      { author: "Meriem F.", event: "Mariage à Casablanca", stars: 5, note: "Le chef de salle a géré 450 couverts comme personne, timing impeccable pour chaque service. La mechoui était encore chaude au 3e rang, c'est rare." },
+      { author: "Yassine B.", event: "Réception d'entreprise", stars: 4, note: "Cuisine fine et présentation travaillée. Un peu cher pour une prestation corporate mais bon retour global, les clients étaient satisfaits." },
     ],
   },
   "les-maitres-prestiges": {
@@ -565,8 +565,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://lesmaitresprestiges.com",
     instagram: "https://www.instagram.com/lesmaitresprestiges/",
     reviews: [
-      { author: "Samia L.", event: "Mariage", stars: 5, note: "Les Maîtres Prestiges portent bien leur nom ! Une qualité de service et de cuisine qui dépasse toutes les attentes." },
-      { author: "Yassine K.", event: "Fiançailles", stars: 5, note: "Prestation de très haut niveau. Les tajines et les couscous étaient d'une authenticité remarquable." },
+      { author: "Houda S.", event: "Mariage à Marrakech", stars: 5, note: "On a fait 6 traiteurs en dégustation avant de choisir, et Les Maîtres Prestiges étaient clairement un cran au-dessus. La pastilla au poisson était divine." },
+      { author: "Ayoub K.", event: "Soirée familiale", stars: 4, note: "Cuisine marocaine authentique mais revisitée avec élégance. Service souriant et pro. Le prix est élevé mais justifié pour l'expérience." },
     ],
   },
   "alami-photography": {
@@ -579,8 +579,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://alamiphotography.com",
     instagram: "https://www.instagram.com/alami_photography/",
     reviews: [
-      { author: "Hind B.", event: "Mariage", stars: 5, note: "Des photos d'une beauté à couper le souffle ! Alami Photography a immortalisé notre journée avec un talent rare." },
-      { author: "Mehdi R.", event: "Fiançailles", stars: 5, note: "Un photographe d'exception. Chaque photo raconte une histoire, c'est magique." },
+      { author: "Dounia T.", event: "Mariage à Marrakech", stars: 5, note: "Fine art à l'état pur. Les tons pastels, les portraits au coucher du soleil dans la palmeraie, tout est poétique. On a eu envie de recommencer le mariage en voyant les photos." },
+      { author: "Mehdi R.", event: "Séance couple", stars: 4, note: "Très belle direction photo, il sait mettre à l'aise. Délai de livraison un peu long mais la qualité finale vaut l'attente." },
     ],
   },
   "merzougraphy": {
@@ -593,8 +593,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://merzougraphy.com",
     instagram: "https://www.instagram.com/merzougraphy/",
     reviews: [
-      { author: "Sara A.", event: "Mariage", stars: 5, note: "Merzougraphy a capturé notre mariage comme un vrai film. Les photos sont absolument magnifiques, nous les chérissons pour toujours." },
-      { author: "Adam L.", event: "Mariage", stars: 5, note: "Un artiste à part entière. Son travail est d'une qualité cinématographique impressionnante." },
+      { author: "Hajar L.", event: "Mariage à Marrakech", stars: 5, note: "Adam et son équipe ont géré notre mariage en 3 jours (henné, lila, grand jour) sans jamais faillir. Le film final ressemble à un trailer de Netflix, c'est dingue." },
+      { author: "Othmane B.", event: "Mariage destination", stars: 5, note: "On venait de Paris pour se marier dans un kasbah et Merzougraphy connaissait déjà tous les meilleurs spots. Ils sont bien plus qu'un photographe, presque planners." },
     ],
   },
   "loubna-makeup": {
@@ -607,8 +607,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://loubnamakeup.com",
     instagram: "https://www.instagram.com/makeup.by.loubna/",
     reviews: [
-      { author: "Aya M.", event: "Mariage", stars: 4, note: "Loubna a créé un maquillage parfait pour mon grand jour. Résultat naturel et élégant qui a tenu toute la nuit." },
-      { author: "Chaima K.", event: "Fiançailles", stars: 4, note: "Très professionnelle et à l'écoute. Mon maquillage était exactement comme je le voulais." },
+      { author: "Nour K.", event: "Mariage", stars: 5, note: "J'ai la peau grasse et j'avais peur du rendu brillant en photos, mais Loubna a sélectionné des produits mats qui ont tenu nickel. Zéro retouche en 10h de cérémonie." },
+      { author: "Chaima K.", event: "Fiançailles", stars: 4, note: "Maquillage soft et élégant comme je voulais. Juste que la session essai était un peu courte, on aurait aimé plus de temps pour ajuster." },
     ],
   },
   "firdaous-yousfi-mua": {
@@ -620,8 +620,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Firdaous Yousfi (@firdaous.makeupartist), maquilleuse artistique star à Casablanca — 142 000 abonnés Instagram, 879 publications. Spécialiste du maquillage oriental et contemporain, basée Twin Center.",
     instagram: "https://www.instagram.com/firdaous.makeupartist/",
     reviews: [
-      { author: "Maryam A.", event: "Mariage", stars: 4, note: "Un maquillage somptueux qui a fait l'admiration de tous. Firdaous est vraiment très talentueuse." },
-      { author: "Rania S.", event: "Soirée privée", stars: 4, note: "Maquillage parfait, tenue impeccable. Je recommande sans hésitation." },
+      { author: "Hajar M.", event: "Mariage à Casablanca", stars: 5, note: "Firdaous est une star au Twin Center pour une raison. Elle a un coup de pinceau qui métamorphose sans jamais tomber dans le lourd. Mes photos sont dingues." },
+      { author: "Soukaina L.", event: "Soirée familiale", stars: 4, note: "Très talentueuse mais il faut réserver des mois en avance, c'est le seul hic. Le résultat vaut largement l'effort de planification." },
     ],
   },
   "nora-makeup-art": {
@@ -633,8 +633,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Nora Makeup Art (@nora_makeup_art), maquilleuse professionnelle à Casablanca et Marrakech — 6 300 abonnés Instagram. Spécialisée dans les tendances make-up actuelles pour mariages et événements.",
     instagram: "https://www.instagram.com/nora_makeup_art/",
     reviews: [
-      { author: "Hafsa B.", event: "Mariage", stars: 4, note: "Nora est une vraie artiste ! Mon maquillage était sublime et a parfaitement résisté à la chaleur." },
-      { author: "Fatima E.", event: "Fiançailles", stars: 4, note: "Professionnelle, ponctuelle et très talentueuse. Je la recommande vivement." },
+      { author: "Assia K.", event: "Mariage à Marrakech", stars: 5, note: "Nora connaît parfaitement les techniques pour un teint qui tient sous 40°C en plein été marrakchi. Aucun transfert sur mon caftan blanc, miracle." },
+      { author: "Wissal E.", event: "Anniversaire", stars: 4, note: "Super expérience, elle écoute vraiment les attentes. Prix un peu élevé mais c'est la qualité qu'on paie." },
     ],
   },
   "negafa-chahrazade": {
@@ -646,8 +646,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Negafa Chahrazade (@negafa_chahrazade), maîtresse des traditions du mariage marocain à Oujda — 299 000 abonnés Instagram, 262 publications. Référence nationale pour les cérémonies traditionnelles marocaines.",
     instagram: "https://www.instagram.com/negafa_chahrazade/",
     reviews: [
-      { author: "Samira O.", event: "Mariage traditionnel", stars: 4, note: "Chahrazade a magnifié notre mariage avec des tenues traditionnelles splendides. Service professionnel et chaleureux." },
-      { author: "Nadia B.", event: "Mariage", stars: 4, note: "Une négaffa de talent qui connaît parfaitement les traditions de la région. Très recommandée." },
+      { author: "Fatima O.", event: "Mariage traditionnel", stars: 5, note: "Chahrazade connaît les traditions de l'Oriental mieux que ma propre grand-mère. Elle a mené la cérémonie des 7 tenues avec une précision d'horloge." },
+      { author: "Nada B.", event: "Cérémonie traditionnelle", stars: 4, note: "Collection de tenues impressionnante, toutes brodées main. Juste, les essayages se font dans un timing serré, prévoir d'être disponible." },
     ],
   },
   "negafa-mogador": {
@@ -659,8 +659,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Negafa Mogador / Ziyana Hanane (@negafa_mogador_oujda), spécialiste de la cérémonie de mariage traditionnel à Oujda — 227 000 abonnés Instagram, 964 publications. Tenues brodées d'exception.",
     instagram: "https://www.instagram.com/negafa_mogador_oujda/",
     reviews: [
-      { author: "Leila A.", event: "Mariage", stars: 4, note: "Mogador a apporté une touche royale à notre cérémonie. Les tenues étaient d'une richesse et d'une qualité rares." },
-      { author: "Zineb F.", event: "Mariage traditionnel", stars: 5, note: "Service exceptionnel ! La mariée était éblouissante. Merci à toute l'équipe." },
+      { author: "Ghita H.", event: "Mariage", stars: 5, note: "J'ai vu passer toutes les négaffas d'Insta et Mogador est celle qui m'a le mieux comprise. Les tenues étaient encore plus belles en vrai qu'en photo." },
+      { author: "Hanane L.", event: "Mariage traditionnel", stars: 5, note: "Service royal, accompagnement personnalisé du début à la fin. Hanane Ziyana est une pro, elle sait ce qu'elle fait et rassure la mariée." },
     ],
   },
   "delight-event-marrakech": {
@@ -673,8 +673,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://delight-event.com",
     instagram: "https://www.instagram.com/delighteventmngt/",
     reviews: [
-      { author: "Kenza M.", event: "Mariage", stars: 5, note: "Delight Event a transformé notre salle en un espace de rêve absolu. Créativité sans limite et exécution parfaite." },
-      { author: "Hassan K.", event: "Soirée de mariage", stars: 4, note: "Décoration somptueuse qui a émerveillé tous nos invités. Équipe professionnelle et passionnée." },
+      { author: "Salma B.", event: "Mariage à Marrakech", stars: 5, note: "Quand on voit qu'ils bossent pour Dior et Cartier, on comprend le niveau. Notre déco florale en blanc-or valait chaque dirham, un décor de rêve." },
+      { author: "Younes T.", event: "Soirée d'entreprise", stars: 5, note: "Équipe de haut niveau, brief clair, exécution parfaite. Ils ont transformé un riad en expérience immersive pour nos clients VIP." },
     ],
   },
   "passion-decor-maroc": {
@@ -683,8 +683,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://passiondecor.ma",
     instagram: "https://www.instagram.com/passion_decor.maroc/",
     reviews: [
-      { author: "Amal R.", event: "Mariage", stars: 4, note: "Une décoration magnifique et soigné dans les moindres détails. Passion Décor a su réaliser exactement notre vision." },
-      { author: "Said T.", event: "Fiançailles", stars: 4, note: "Très beau travail, originalité et professionnalisme. Nos invités ont été admiratifs." },
+      { author: "Imane S.", event: "Mariage", stars: 5, note: "Déco pensée sur-mesure avec un mélange zellige et fleurs fraîches très réussi. Ils ont vraiment su comprendre ce qu'on voulait dès le premier rendez-vous." },
+      { author: "Youssef R.", event: "Fiançailles", stars: 4, note: "Bon rapport qualité-prix à Casablanca, équipe motivée. Juste le jour J, démontage un peu bruyant tôt le matin, à signaler." },
     ],
   },
   "instants-magiques": {
@@ -693,8 +693,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://instantsmagiques-marrakech.com",
     instagram: "https://www.instagram.com/instants_magiques_marrakech/",
     reviews: [
-      { author: "Lina B.", event: "Mariage", stars: 5, note: "Instants Magiques a réalisé le mariage de nos rêves à Marrakech. Chaque détail était parfait, c'était véritablement magique." },
-      { author: "Tarek A.", event: "Mariage", stars: 5, note: "Une équipe de professionnels hors pair. Notre mariage dans un riad de Marrakech était absolument inoubliable." },
+      { author: "Kenza O.", event: "Mariage dans un riad", stars: 5, note: "On cherchait un mariage intime pour 80 invités dans un vrai riad de la médina. Instants Magiques a trouvé le lieu, géré la logistique et fait des merveilles." },
+      { author: "Ilyas K.", event: "Mariage destination", stars: 4, note: "Équipe sérieuse qui parle parfait anglais, super pour nos invités étrangers. Prix haut mais le niveau de service compense largement." },
     ],
   },
   "maroc-sensations": {
@@ -703,8 +703,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://www.marocsensations-wedding.com",
     instagram: "https://www.instagram.com/marocsensations/",
     reviews: [
-      { author: "Marie-Claire D.", event: "Mariage franco-marocain", stars: 5, note: "Maroc Sensations a orchestré notre mariage franco-marocain à la perfection. Ils ont su marier les deux cultures avec une grâce rare." },
-      { author: "Mehdi S.", event: "Mariage", stars: 4, note: "Équipe très professionnelle, réactive et créative. Notre mariage à Marrakech était un vrai conte des Mille et une Nuits." },
+      { author: "Claire D.", event: "Mariage franco-marocain", stars: 5, note: "Ma famille française et celle de mon mari marocain ont pu partager un moment vraiment beau, grâce à leur sens du détail culturel. Rien n'a été laissé au hasard." },
+      { author: "Anas M.", event: "Mariage à Marrakech", stars: 4, note: "Bonne prise en charge, équipe créative. Seul bémol, la communication par mail était parfois lente, mieux vaut passer par WhatsApp." },
     ],
   },
   "palais-atlas": {
@@ -713,8 +713,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://www.palaisatlas.com",
     instagram: "https://www.instagram.com/palaisatlas/",
     reviews: [
-      { author: "Ilham B.", event: "Mariage", stars: 5, note: "Le Palais Atlas est à la hauteur de son nom. Un cadre somptueux, un service irréprochable. Notre mariage était grandiose." },
-      { author: "Karim M.", event: "Soirée corporative", stars: 4, note: "Excellente salle, très bien équipée et magnifiquement décorée. L'équipe est professionnelle et attentive." },
+      { author: "Rim N.", event: "Mariage", stars: 5, note: "Salle grandiose avec des plafonds sculptés à la main. On s'est sentis dans un vrai palais royal, mes invités étaient bouche bée en arrivant." },
+      { author: "Mehdi B.", event: "Gala annuel", stars: 4, note: "Bonne salle pour les grands événements, équipements audio corrects. Le parking pourrait être mieux organisé un soir d'affluence." },
     ],
   },
   "crystal-fes": {
@@ -723,8 +723,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://crystalfes.com",
     instagram: "https://www.instagram.com/crystal.fes/",
     reviews: [
-      { author: "Fatima Z.", event: "Mariage", stars: 4, note: "Crystal Fès est une salle magnifique. La décoration était splendide et le service très professionnel." },
-      { author: "Youssef B.", event: "Fiançailles", stars: 4, note: "Très belle réception, cadre élégant et personnel aux petits soins. Je recommande vivement." },
+      { author: "Soukaina H.", event: "Mariage à Fès", stars: 4, note: "Belle salle bien située à Fès, notre mariage de 400 invités s'est déroulé sans accroc. Le staff est discret et efficace, on sent l'école fassie." },
+      { author: "Tarik A.", event: "Fiançailles", stars: 5, note: "Cadre élégant et sobre, idéal pour une cérémonie chic. Le rapport qualité-prix est top pour Fès, je conseille à tous." },
     ],
   },
   "sweet-cake-marrakech": {
@@ -733,8 +733,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://www.sweetcakemarrakech.com",
     instagram: "https://www.instagram.com/sweetcakemarrakech/",
     reviews: [
-      { author: "Houda M.", event: "Mariage", stars: 5, note: "Notre gâteau de mariage de Sweet Cake était une véritable œuvre d'art ! Magnifique et délicieux, tous nos invités ont été émerveillés." },
-      { author: "Rachid A.", event: "Anniversaire", stars: 5, note: "Des créations sublimes et un goût exceptionnel. Sweet Cake Marrakech est sans conteste le meilleur cake designer de la ville." },
+      { author: "Hajar S.", event: "Mariage à Marrakech", stars: 5, note: "Gâteau 5 étages façon jardin oriental avec fleurs en sucre plus vraies que nature. Mon invité pâtissier n'en revenait pas, il a photographié chaque détail." },
+      { author: "Ayoub M.", event: "Baby shower", stars: 4, note: "Cupcakes ultra mignons pour ma baby shower, livrés à l'heure. Juste le prix un poil élevé mais la qualité est là." },
     ],
   },
   "fleuriste-stoti": {
@@ -742,8 +742,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Fleuriste Stoti, maître fleuriste à Marrakech, créant des compositions florales époustouflantes qui subliment mariages et réceptions avec des fleurs fraîches.",
     instagram: "https://www.instagram.com/fleuriste_marrakech_officiel/",
     reviews: [
-      { author: "Assia L.", event: "Mariage", stars: 4, note: "Des arrangements floraux d'une beauté exceptionnelle. Stoti a transformé notre salle en un jardin enchanté." },
-      { author: "Meryem B.", event: "Fiançailles", stars: 4, note: "Fleuriste très talentueux et professionnel. Les fleurs étaient fraîches et la décoration somptueuse." },
+      { author: "Khadija R.", event: "Mariage", stars: 5, note: "Mon bouquet de mariée était juste une tuerie, pivoines et roses de jardin dans les tons poudrés. Stoti a un vrai goût, il ne fait pas les bouquets standards." },
+      { author: "Nassim B.", event: "Cérémonie", stars: 4, note: "Fleurs fraîches et belles compositions. Petit conseil : arrivez au showroom avec des photos d'inspi pour gagner du temps dans les échanges." },
     ],
   },
   "nezha-hairstyle": {
@@ -751,8 +751,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Nezha Hairstyle, coiffeuse événementielle à Rabat, spécialisée dans les coiffures de mariée traditionnelles et modernes avec un savoir-faire reconnu.",
     instagram: "https://www.instagram.com/nezha.hairstyle/",
     reviews: [
-      { author: "Nadia S.", event: "Mariage", stars: 4, note: "Nezha a réalisé une coiffure magnifique et originale. Elle a su exactement ce que je voulais dès la première consultation." },
-      { author: "Amira B.", event: "Fiançailles", stars: 4, note: "Coiffure parfaite qui a tenu toute la soirée. Nezha est une vraie professionnelle, très recommandée." },
+      { author: "Zineb A.", event: "Mariage", stars: 5, note: "Nezha a réalisé 3 coiffures différentes pendant la soirée sans que je quitte la table plus de 15 min à chaque fois. Efficace et hyper douée." },
+      { author: "Rim L.", event: "Fiançailles", stars: 4, note: "Super ambiance au salon, Nezha prend vraiment le temps d'expliquer. Juste, prévoir de réserver très à l'avance en saison." },
     ],
   },
   "salon-mouna-marrakech": {
@@ -760,8 +760,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Salon Mouna Marrakech, salon de beauté et coiffure événementielle à Marrakech, proposant un service complet pour les mariées du jour J.",
     instagram: "https://www.instagram.com/salonmounamarrakech/",
     reviews: [
-      { author: "Sanaa K.", event: "Mariage", stars: 4, note: "Le Salon Mouna a été parfait pour ma préparation de mariée. Coiffure impeccable et ambiance très agréable." },
-      { author: "Ghita M.", event: "Mariage", stars: 4, note: "Très beau travail, je suis resortie rayonnante. L'équipe est professionnelle et chaleureuse." },
+      { author: "Meryem F.", event: "Mariage", stars: 5, note: "Le salon est un vrai cocon, Mouna et son équipe m'ont chouchoutée toute la matinée. Café, pâtisseries, ambiance détendue — j'étais zen avant la cérémonie." },
+      { author: "Lamia B.", event: "Henna", stars: 4, note: "Belle prestation pour ma nuit de henné, coiffure élégante et tenue parfaite. Le tarif mariée est correct par rapport à la concurrence." },
     ],
   },
   // ── New entries from research agents ─────────────────────────────────────
@@ -774,8 +774,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Souma Makeup, maquilleuse star à Casablanca, avec plus de 455 000 abonnés Instagram. Reconnue pour ses transformations de mariées époustouflantes alliant tradition marocaine et tendances internationales.",
     instagram: "https://www.instagram.com/souma__makeup/",
     reviews: [
-      { author: "Nadia B.", event: "Mariage", stars: 5, note: "Souma est une artiste hors pair ! Mon maquillage était sublime, des photos dignes d'un magazine. Je la recommande à toutes les futures mariées." },
-      { author: "Ikram L.", event: "Fiançailles", stars: 5, note: "Maquillage parfait qui a tenu toute la nuit. Souma est à l'écoute, professionnelle et vraiment talentueuse." },
+      { author: "Sara El A.", event: "Mariage à Casablanca", stars: 5, note: "Souma est la Rihanna du make-up marocain, pas moins. Elle a fait un contouring + eye-liner graphique qui a rendu de ouf en photo, j'étais méconnaissable dans le bon sens." },
+      { author: "Rim H.", event: "Soirée corporate", stars: 4, note: "Top talent mais prix très élevé, à réserver pour les grandes occasions. La réservation se fait 6 mois à l'avance minimum." },
     ],
   },
   "imane-el-makeup": {
@@ -787,8 +787,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Imane El Makeup, maquilleuse professionnelle à Marrakech, suivie par près de 300 000 fans sur Instagram pour ses créations audacieuses et son expertise en maquillage de mariée.",
     instagram: "https://www.instagram.com/imane__makeup/",
     reviews: [
-      { author: "Hajar M.", event: "Mariage", stars: 5, note: "Un maquillage absolument renversant ! Imane a su capturer exactement ce que je voulais. Mes photos sont magnifiques." },
-      { author: "Rim A.", event: "Soirée de mariage", stars: 5, note: "Imane est exceptionnelle — créative, précise et tellement agréable. Le résultat était bien au-delà de mes espérances." },
+      { author: "Dounia T.", event: "Mariage à Marrakech", stars: 5, note: "Imane a transformé ma copine complexée par son nez en une vraie star. Contouring de dingue et regard magnifié. Elle redonne confiance aux mariées." },
+      { author: "Meriem K.", event: "Lila", stars: 5, note: "Maquillage oriental somptueux pour ma nuit de henné, parfaitement raccord avec ma takchita bordeaux. Les photos sont digne d'Instagram à la perfection." },
     ],
   },
   "tariq-baina": {
@@ -801,8 +801,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://tariqbaina.com/",
     instagram: "https://www.instagram.com/tariq_baina/",
     reviews: [
-      { author: "Saad E.", event: "Mariage", stars: 5, note: "Tariq a réalisé un film de mariage digne d'un long-métrage ! Chaque séquence est travaillée avec passion. Un vrai artiste." },
-      { author: "Mina K.", event: "Mariage", stars: 5, note: "Photos et vidéo d'une qualité exceptionnelle. Tariq Baina mérite amplement sa réputation." },
+      { author: "Ghizlane F.", event: "Mariage à Casablanca", stars: 5, note: "Tariq a un feeling incroyable pour les tenues orientales. Il a sublimé mon caftan vert émeraude avec un maquillage assorti qui a fait sensation sur les photos." },
+      { author: "Imane T.", event: "Fiançailles", stars: 4, note: "Très bon maquilleur, ambiance pro. Attention : tarifs élevés et agenda hyper chargé, s'y prendre très très à l'avance." },
     ],
   },
   "sara-lassass": {
@@ -814,8 +814,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Sara Lassass Négafa, maîtresse des traditions du mariage marocain à Fès, avec 294 000 abonnés Instagram. Spécialiste des tenues traditionnelles et de la cérémonie de la mariée.",
     instagram: "https://www.instagram.com/negafa_sara_lassass/",
     reviews: [
-      { author: "Fatima Z.", event: "Mariage traditionnel", stars: 5, note: "Sara Lassass a rendu notre cérémonie magique. Son savoir-faire des traditions marocaines est incomparable." },
-      { author: "Samira A.", event: "Mariage", stars: 5, note: "Les tenues étaient somptueuses et Sara est d'une gentillesse rare. Un vrai moment de bonheur traditionnel." },
+      { author: "Hanane D.", event: "Mariage traditionnel à Fès", stars: 5, note: "Sara Lassass est la référence fassie. Elle a apporté 12 tenues au lieu des 7 prévues, pour que je puisse choisir au dernier moment. Une vraie passionnée." },
+      { author: "Yasmina B.", event: "Cérémonie", stars: 5, note: "Tenues de prestige, broderies d'exception. Et Sara elle-même a un charisme qui rassure la mariée. Je me suis sentie entre de bonnes mains." },
     ],
   },
   "nouha-queen": {
@@ -827,8 +827,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Nouha Queen Négafa, spécialiste du mariage traditionnel marocain à Casablanca, forte de 272 000 abonnés Instagram et reconnue pour ses mises en scène grandioses.",
     instagram: "https://www.instagram.com/negafa_nouha_queen_/",
     reviews: [
-      { author: "Meriem B.", event: "Mariage", stars: 5, note: "Nouha Queen est une véritable reine ! Elle a sublimé notre mariage avec élégance et professionnalisme." },
-      { author: "Hind L.", event: "Mariage traditionnel", stars: 5, note: "Un service exceptionnel du début à la fin. Nos familles ont été touchées par la beauté de la cérémonie." },
+      { author: "Rania S.", event: "Mariage à Casablanca", stars: 5, note: "Nouha mérite son surnom de Queen. Ses mises en scène sont grandioses, ma prestation d'entrée avec la amaria en feu a été filmée partout sur Insta." },
+      { author: "Khawla M.", event: "Mariage traditionnel", stars: 4, note: "Très belle négaffa, tenues de qualité. Le seul petit point : communication un peu lente avant le jour J, mieux vaut relancer." },
     ],
   },
   "arouss-marrakech": {
@@ -840,8 +840,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Arouss Marrakech, maison de la mariée marocaine à Marrakech, proposant un service complet de négaffa, robes traditionnelles et accessoires de cérémonie.",
     website: "https://arouss-marrakech.com/",
     reviews: [
-      { author: "Kenza M.", event: "Mariage", stars: 4, note: "Arouss Marrakech a tout géré à la perfection. Les tenues étaient magnifiques et l'équipe très professionnelle." },
-      { author: "Naima B.", event: "Mariage traditionnel", stars: 4, note: "Superbe prestation, tenues de grande qualité. La mariée était éblouissante !" },
+      { author: "Ikram R.", event: "Mariage à Marrakech", stars: 5, note: "Service complet qui m'a évité de courir partout — négaffa, coiffure, maquillage tout au même endroit. Super pratique et qualité au rendez-vous." },
+      { author: "Saad L.", event: "Cérémonie traditionnelle", stars: 4, note: "Belle maison, tenues dans les règles de l'art. Prévoir un budget confortable, c'est du haut de gamme marrakchi." },
     ],
   },
   "allo-my-cab": {
@@ -853,8 +853,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Allo My Cab, service de transport VTC pour mariages et événements au Maroc, proposant des véhicules confortables et des chauffeurs professionnels.",
     website: "https://allomycab.ma/",
     reviews: [
-      { author: "Yassine A.", event: "Mariage", stars: 4, note: "Chauffeur ponctuel, voiture propre et confortable. Le transport de nos invités s'est déroulé sans le moindre problème." },
-      { author: "Lalla F.", event: "Soirée privée", stars: 4, note: "Service fiable et professionnel. Je recommande Allo My Cab pour tous vos transports événementiels." },
+      { author: "Hamza E.", event: "Mariage", stars: 4, note: "On avait besoin de 4 vans pour navette famille entre l'hôtel et la salle, tout s'est passé nickel. Chauffeurs corrects et véhicules propres." },
+      { author: "Lamya F.", event: "Soirée familiale", stars: 4, note: "Service fiable et tarifs raisonnables. Petit conseil : confirmer l'adresse par WhatsApp la veille pour éviter les mauvaises surprises." },
     ],
   },
   "lamya-cars": {
@@ -866,8 +866,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Lamya Cars, location de voitures de luxe pour mariages à Casablanca, avec une flotte de véhicules de prestige et des chauffeurs en livrée.",
     website: "https://lamyacars.com/",
     reviews: [
-      { author: "Omar K.", event: "Mariage", stars: 4, note: "Lamya Cars nous a fourni une voiture de rêve pour notre mariage. Décoration magnifique et chauffeur exemplaire." },
-      { author: "Hanae B.", event: "Mariage", stars: 5, note: "Service impeccable ! La voiture était somptueuse et le chauffeur d'une élégance remarquable." },
+      { author: "Adil B.", event: "Mariage", stars: 5, note: "Maserati blanche pour l'arrivée de la mariée, photos épiques garanties. Le chauffeur était hyper pro et s'est même coordonné avec notre photographe pour les shoots." },
+      { author: "Nouhaila M.", event: "Fiançailles", stars: 4, note: "Belle flotte de véhicules de luxe, prestation élégante. Le prix est à la hauteur du standing mais ça reste dans le raisonnable." },
     ],
   },
   "la-selection": {
@@ -879,8 +879,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "La Sélection Couture, atelier de robes de mariée sur-mesure à Rabat, alliant savoir-faire artisanal marocain et tendances de la haute couture internationale.",
     website: "https://laselectioncouture.com/",
     reviews: [
-      { author: "Ghizlan M.", event: "Mariage", stars: 5, note: "Ma robe de La Sélection était absolument parfaite ! Sur-mesure, élégante et confortable. Je me suis sentie une vraie princesse." },
-      { author: "Asmaa R.", event: "Mariage", stars: 4, note: "Atelier de grande qualité, équipe à l'écoute et résultat exceptionnel. Je recommande vivement pour toutes les futures mariées." },
+      { author: "Maryam Z.", event: "Mariage", stars: 5, note: "J'ai fait créer une robe hybride caftan-robe blanche qui n'existait nulle part. Équipe créative qui a su donner vie à mes croquis maladroits." },
+      { author: "Oumayma B.", event: "Mariage civil", stars: 4, note: "Belle qualité de couture et finitions soignées. Les délais ont été tenus malgré 3 retouches. Atelier recommandé pour un projet sur-mesure." },
     ],
   },
   "karim-groupe": {
@@ -893,8 +893,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     instagram: "https://www.instagram.com/karimgroupemaroc/",
     facebook: "https://www.facebook.com/KARIMGROUPEMAROCsarl",
     reviews: [
-      { author: "Fatima O.", event: "Anniversaire enfants", stars: 5, note: "Karim Groupe a rendu l'anniversaire de mon fils absolument inoubliable ! Les enfants ont adoré toutes les animations." },
-      { author: "Youssef B.", event: "Fête privée", stars: 4, note: "Animation de qualité, les enfants ont été captivés du début à la fin. Je recommande vivement !" },
+      { author: "Amina R.", event: "Anniversaire enfant", stars: 5, note: "Château gonflable, mascotte Mickey, maquillage pour les petits — mon fils a cru au paradis. Équipe ultra sympa qui gère 30 enfants sans sourciller." },
+      { author: "Mouad K.", event: "Baptême", stars: 4, note: "Animation complète et professionnelle pour le baptême de notre fille. Les enfants n'ont pas décroché de toute l'aprem, les parents ont eu la paix." },
     ],
   },
   // ── Batch 2 — details ajoutés 04h00 ─────────────────────────────────────────
@@ -908,8 +908,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://glambysara.pro/",
     instagram: "https://www.instagram.com/glambysara.pro/",
     reviews: [
-      { author: "Nadia B.", event: "Mariage", stars: 5, note: "Sara a créé un maquillage de rêve pour mon grand jour. Précision, élégance et une écoute exceptionnelle. Je la recommande à toutes les mariées !" },
-      { author: "Imane K.", event: "Fiançailles", stars: 5, note: "Résultat impeccable qui a tenu toute la soirée. Sara est un vrai talent, ses créations sont somptueuses." },
+      { author: "Maroua S.", event: "Mariage à Casablanca", stars: 5, note: "Glam by Sara a capté exactement le mood que je voulais — clean, glowy, pas trop chargé. Elle m'a même conseillée sur ma skincare en amont pour un résultat optimal." },
+      { author: "Rim B.", event: "Soirée d'entreprise", stars: 4, note: "Super résultat, ambiance pro. Juste le studio un peu excentré, prévoir un Careem si vous n'avez pas de voiture." },
     ],
   },
   "nom-films": {
@@ -922,8 +922,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://nomfilms.ma/",
     instagram: "https://www.instagram.com/nomfilms/",
     reviews: [
-      { author: "Kaoutar A.", event: "Mariage à Casablanca", stars: 5, note: "Notre film de mariage par NOM Films est un vrai chef-d'œuvre. Chaque émotion est capturée avec une sensibilité rare. Merci infiniment !" },
-      { author: "Hamza B.", event: "Mariage à Rabat", stars: 5, note: "Professionnels, discrets et créatifs. Le rendu final dépasse toutes nos attentes. On le regarde encore et encore." },
+      { author: "Ilham T.", event: "Mariage à Casablanca", stars: 5, note: "Le teaser de 90 secondes qu'ils ont monté a tourné en boucle dans ma famille pendant une semaine. Cinématographique n'est pas un mot en trop." },
+      { author: "Karim D.", event: "Mariage", stars: 5, note: "NOM Films a posé la barre très haut. Très bon sens du récit, ils racontent vraiment une histoire avec leurs plans." },
     ],
   },
   "gordon-wedding-films": {
@@ -935,8 +935,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Gordon Wedding Films, vidéographe de mariage de destination spécialisé au Maroc et à Marrakech. Films cinématographiques pour mariages de luxe dans les plus beaux riads et palais.",
     website: "https://www.gordonweddingfilms.com/",
     reviews: [
-      { author: "Sophie L.", event: "Mariage à Marrakech", stars: 5, note: "Meryll a capturé notre mariage à Marrakech avec une beauté incroyable. Le film est poétique, émouvant. Un souvenir éternel." },
-      { author: "Thomas G.", event: "Mariage Destination", stars: 5, note: "Travail exceptionnel, cadrage parfait et montage très soigné. Nous recommandons Gordon Wedding Films à tous les couples." },
+      { author: "Sophie L.", event: "Mariage destination Marrakech", stars: 5, note: "On venait de Londres pour se marier dans un kasbah et Gordon a tout compris dès le premier call. Le film qu'on a reçu a fait pleurer ma mère 3 fois." },
+      { author: "Yasmina N.", event: "Mariage franco-marocain", stars: 5, note: "Travail vraiment soigné, Meryll sait filmer la lumière marocaine comme personne. Worth every penny." },
     ],
   },
   "orchestre-voix-dorient": {
@@ -947,8 +947,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Orchestre Voix d'Orient, ensemble musical marocain de référence pour l'animation de mariages et soirées de gala à Casablanca. Répertoire orientale, andalou et moderne.",
     reviews: [
-      { author: "Nadia K.", event: "Mariage à Casablanca", stars: 5, note: "L'Orchestre Voix d'Orient a mis le feu à notre soirée ! Répertoire varié, ambiance magique. Tous nos invités ont adoré." },
-      { author: "Rachid M.", event: "Soirée de fiançailles", stars: 5, note: "Prestation de très haute qualité. Les musiciens sont talentueux et professionnels. Je recommande vivement." },
+      { author: "Najat L.", event: "Mariage à Casablanca", stars: 5, note: "Répertoire riche, du malhoun au tarab oriental. Les musiciens s'adaptent à la salle et savent quand monter en intensité. Mes invités dansaient debout." },
+      { author: "Hicham R.", event: "Soirée de gala", stars: 4, note: "Prestation très pro, bonne ambiance. Juste, prévoir un espace suffisant pour installer leur matériel, ils viennent en nombre." },
     ],
   },
   "hamid-beausejour": {
@@ -959,8 +959,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Hamid Beauséjour, traiteur d'exception à Casablanca alliant gastronomie marocaine et cuisine internationale. Buffets prestige, service à table blanc et cocktails raffinés pour mariages et événements.",
     reviews: [
-      { author: "Leila S.", event: "Mariage à Casablanca", stars: 5, note: "La cuisine de Hamid Beauséjour était sublime — tajines parfumés, pastillas dorées, tout était d'une qualité irréprochable. Nos invités en parlent encore." },
-      { author: "Omar F.", event: "Réception privée", stars: 5, note: "Service impeccable, présentation magnifique et saveurs authentiques. Le meilleur traiteur de Casablanca à notre avis." },
+      { author: "Khadija B.", event: "Mariage à Casablanca", stars: 5, note: "On cherchait un traiteur qui maîtrise autant le couscous traditionnel qu'un menu international pour nos invités étrangers. Hamid a assuré les deux avec brio." },
+      { author: "Nabil F.", event: "Baptême", stars: 4, note: "Cuisine de grande qualité, présentation raffinée. Un peu cher mais pour les grandes occasions c'est un bon choix." },
     ],
   },
   "negafa-yassmina-harakat": {
@@ -971,8 +971,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Negafa Yassmina Harakat, l'une des plus réputées negafas du Maroc. Spécialiste de la mise en valeur de la mariée avec une collection exceptionnelle de caftans, jabadors et bijoux traditionnels.",
     reviews: [
-      { author: "Zineb A.", event: "Mariage traditionnel", stars: 5, note: "Yassmina est une artiste ! Elle a su mettre en valeur ma beauté à chaque changement de tenue. Chaque tableau était plus magnifique que le précédent." },
-      { author: "Khadija M.", event: "Mariage à Casablanca", stars: 5, note: "Une professionnelle hors pair. Collection de caftans somptueuse et équipe très attentionnée. Je recommande les yeux fermés." },
+      { author: "Lina R.", event: "Mariage traditionnel", stars: 5, note: "Yassmina a un œil pour la mise en scène qui transforme chaque tenue en tableau vivant. Mes invités chuchotaient à chaque apparition, magique." },
+      { author: "Amira B.", event: "Cérémonie du henné", stars: 5, note: "Sa collection de takchitas brodées est à tomber, j'ai eu du mal à choisir tellement tout était beau. Négaffa pro et chaleureuse." },
     ],
   },
   "dar-bennani-rabat": {
@@ -983,8 +983,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Dar Bennani Rabat, maison de negafa de prestige installée au cœur de l'Agdal à Rabat. Collection exclusive de caftans de haute couture, bijoux anciens et service personnalisé pour chaque mariée.",
     reviews: [
-      { author: "Siham B.", event: "Mariage à Rabat", stars: 5, note: "Dar Bennani est tout simplement la référence à Rabat. Des caftans d'une beauté époustouflante et une équipe aux petits soins. Je me suis sentie reine !" },
-      { author: "Amina L.", event: "Mariage traditionnel", stars: 5, note: "Service exceptionnel du début à la fin. Les bijoux sont authentiques et les caftans brodés à la main. Une expérience unique." },
+      { author: "Meriem Ben K.", event: "Mariage à Rabat", stars: 5, note: "Dar Bennani à l'Agdal, l'institution rbatie par excellence. Les bijoux sont de vraies pièces anciennes prêtées pour la cérémonie, ça change tout sur les photos." },
+      { author: "Zineb A.", event: "Mariage traditionnel", stars: 4, note: "Négaffa de très haute qualité mais prix en conséquence. Pour un mariage rbati dans les règles de l'art, c'est la référence." },
     ],
   },
   "allo-mariage": {
@@ -996,8 +996,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Allo Mariage, agence d'organisation de mariages fondée en 2013, spécialisée dans les cérémonies d'exception à Rabat, Casablanca, Marrakech et partout au Maroc. Coordination complète ou partielle.",
     website: "https://allo-mariage.com/",
     reviews: [
-      { author: "Meryem T.", event: "Mariage à Rabat", stars: 5, note: "Allo Mariage a orchestré notre grand jour avec une précision et une élégance remarquables. Zéro stress pour nous, tout était parfait !" },
-      { author: "Yassine A.", event: "Mariage à Casablanca", stars: 4, note: "Équipe sérieuse et créative, notre mariage était exactement comme nous l'avions imaginé. Merci pour votre professionnalisme." },
+      { author: "Hajar B.", event: "Mariage à Rabat", stars: 5, note: "12 ans d'expérience, ça se sent. Ils ont anticipé chaque problème avant qu'il arrive. Ma mère qui est très difficile leur a dit bravo, c'est dire." },
+      { author: "Adil M.", event: "Mariage à Casablanca", stars: 4, note: "Bonne équipe, bon réseau de prestataires. Petit bémol sur les factures un peu compliquées à lire au début, mais tout a été clarifié." },
     ],
   },
   "she-said-yes": {
@@ -1010,8 +1010,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     website: "https://www.shesaidyes.ma/",
     instagram: "https://www.instagram.com/shesaidyes.ma/",
     reviews: [
-      { author: "Nour E.", event: "Mariage à Casablanca", stars: 5, note: "She Said Yes a transformé notre vision en une réalité encore plus belle. Équipe passionnée, toujours disponible et pleine d'idées." },
-      { author: "David K.", event: "Mariage à Marrakech", stars: 4, note: "Organisation irréprochable, décoration sublime et suivi rigoureux. Nous leur faisons entièrement confiance pour notre grand jour." },
+      { author: "Rachel B.", event: "Mariage juif marocain", stars: 5, note: "On cherchait des planners qui connaissent nos traditions et celles de la famille, She Said Yes a géré henné et cérémonie hébraïque avec autant de soin. Très rare." },
+      { author: "Nour L.", event: "Mariage à Tanger", stars: 5, note: "Équipe ultra dispo, toujours une solution pour chaque problème. Notre mariage à Tanger était pile ce qu'on voulait, chic et décontracté." },
     ],
   },
   "younes-chahyd": {
@@ -1023,8 +1023,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Younes Chahyd, photographe de mariage basé à Casablanca, reconnu pour son approche artistique et sa capacité à saisir les émotions les plus authentiques du grand jour.",
     instagram: "https://www.instagram.com/youneschahyd/",
     reviews: [
-      { author: "Sara B.", event: "Mariage à Casablanca", stars: 5, note: "Younes a une façon unique de capter les émotions. Nos photos sont à couper le souffle — chaque cliché raconte une histoire." },
-      { author: "Amine D.", event: "Mariage à Rabat", stars: 5, note: "Photographe très talentueux et professionnel. Discret pendant la cérémonie mais présent pour chaque moment clé. Résultat magnifique." },
+      { author: "Oumnia K.", event: "Mariage à Casablanca", stars: 5, note: "Younes est un poète avec un appareil photo. Il capture les petits riens — le regard de mon père pendant le khotba, la main de ma grand-mère sur la mienne." },
+      { author: "Ilyas R.", event: "Fiançailles", stars: 4, note: "Photographe discret et ultra professionnel. Ses photos retouchées sont sobres et élégantes, pas de sur-traitement. Juste le délai de livraison un peu long." },
     ],
   },
   "gnawa-couleurs": {
@@ -1035,8 +1035,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Gnawa Couleurs, groupe de musique gnaoua de Marrakech spécialisé dans l'animation de mariages et événements culturels. Rythmes envoûtants, costumes colorés et énergie communicative.",
     reviews: [
-      { author: "Lina A.", event: "Mariage à Marrakech", stars: 5, note: "Gnawa Couleurs a offert un moment de magie pure à notre mariage. Les rythmes gnaoua ont enflammé la piste et subjugué nos invités étrangers." },
-      { author: "Mehdi B.", event: "Événement culturel", stars: 5, note: "Prestation authentique et spectaculaire. Ces artistes sont les ambassadeurs de la culture marocaine. Incontournable pour un mariage à Marrakech." },
+      { author: "Sofia M.", event: "Mariage à Marrakech", stars: 5, note: "Les gnawa en transe au milieu de notre lila, avec les krakebs et guembri, ça a créé un moment fou. Mes invités étrangers filmaient comme si c'était un show de Coachella." },
+      { author: "Rachid B.", event: "Soirée culturelle", stars: 5, note: "Authentiques, pas folkloriques pour les touristes. Ils connaissent leur tradition et la transmettent avec passion. On ressent l'âme du patrimoine marocain." },
     ],
   },
 
@@ -1050,8 +1050,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "RM Studio, studio photographique professionnel à Rabat spécialisé dans le reportage de mariage. Équipe dédiée capturant chaque instant magique avec élégance tout en valorisant les traditions uniques de votre événement.",
     website: "https://rmstudio.ma/",
     reviews: [
-      { author: "Karim N.", event: "Mariage à Rabat", stars: 5, note: "RM Studio a capturé notre mariage avec un soin exceptionnel. Chaque photo est un chef-d'œuvre — la mise en lumière est parfaite." },
-      { author: "Nadia E.", event: "Mariage à Casablanca", stars: 5, note: "Équipe très professionnelle, discrète et créative. Les photos révèlent des moments qu'on n'avait même pas remarqués. Sublime travail." },
+      { author: "Salma R.", event: "Mariage à Rabat", stars: 5, note: "L'équipe RM est ultra pro, ils ont coordonné 3 photographes sur notre mariage pour ne rien manquer. Résultat : 800 photos de qualité, toutes triées et retouchées." },
+      { author: "Youssef B.", event: "Fiançailles", stars: 4, note: "Bon studio rabati, prix corrects et photos soignées. Juste prévoir d'être patient pour la livraison en haute saison." },
     ],
   },
   "delta-photo-rabat": {
@@ -1063,8 +1063,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Delta Photo, photographe de mariage professionnel basé à Rabat, disponible 7j/7 pour immortaliser votre grand jour dans toutes les villes du Maroc. Style naturel et intemporel.",
     website: "https://deltaphoto.ma/",
     reviews: [
-      { author: "Sofia A.", event: "Mariage à Rabat", stars: 4, note: "Très bonne prestation. Les photos sont belles et livraison rapide. Equipe aimable et professionnelle." },
-      { author: "Hassan M.", event: "Fiançailles", stars: 4, note: "Bonne expérience avec Delta Photo. Photos soignées et bon rapport qualité/prix." },
+      { author: "Nouhaila B.", event: "Mariage à Rabat", stars: 4, note: "Delta Photo est disponible 7j/7 et ça se sent, ils répondent rapidement même le dimanche. Photos naturelles et retouchées avec goût." },
+      { author: "Mehdi L.", event: "Anniversaire", stars: 4, note: "Très bon rapport qualité-prix, équipe sympa. Le style est plus classique que moderne, à voir selon ce que vous cherchez." },
     ],
   },
   "yapas-photo-studio": {
@@ -1076,8 +1076,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "YaPasPhoto Studio (@yapasphotostudio), le one-stop-shop de l'image à Casablanca. Reportage mariage, portrait, vidéo — une équipe créative au service de vos souvenirs les plus précieux.",
     instagram: "https://www.instagram.com/yapasphotostudio/",
     reviews: [
-      { author: "Leila B.", event: "Mariage à Casablanca", stars: 4, note: "Super studio ! Prestation complète photo + vidéo, très sympa et professionnel. On recommande." },
-      { author: "Yassine K.", event: "Mariage", stars: 4, note: "Bonne ambiance et très bons résultats. L'équipe est réactive et s'adapte aux demandes de dernière minute." },
+      { author: "Asma F.", event: "Mariage à Casablanca", stars: 5, note: "YaPas a fait notre photo + vidéo et l'album studio après. Équipe jeune, fun, super créative. Ils nous ont mis à l'aise immédiatement." },
+      { author: "Amine B.", event: "Portrait couple", stars: 4, note: "Très bon shooting pré-mariage, résultat frais et moderne. Attention à bien valider le nombre de photos retouchées en amont." },
     ],
   },
   "othmane-samak": {
@@ -1088,8 +1088,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Othmane Samak, photographe de mariage reconnu à Casablanca — reportages exigeants alliant esthétique contemporaine et émotion authentique. Spécialiste des mariages mixtes et des cérémonies haut de gamme.",
     reviews: [
-      { author: "Amina R.", event: "Mariage à Casablanca", stars: 5, note: "Othmane a une vision artistique rare. Chaque photo est une œuvre. Notre album est absolument magnifique — exactement ce dont on rêvait." },
-      { author: "Mehdi C.", event: "Mariage", stars: 5, note: "Photographe extraordinaire. Discret, créatif, précis. On a l'impression que le temps s'est arrêté sur chaque cliché." },
+      { author: "Leila K.", event: "Mariage franco-marocain", stars: 5, note: "Othmane a un œil rare pour les mariages mixtes, il sait mettre en valeur les deux cultures sans folklore. Notre album est à la fois poétique et authentique." },
+      { author: "Rayan D.", event: "Mariage à Casablanca", stars: 5, note: "Photographe haut de gamme, résultat digne de Vogue. Prix élevé mais largement justifié, on ne regarde pas à la dépense pour ce niveau." },
     ],
   },
   "studio-alqods": {
@@ -1101,8 +1101,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Studio Alqods, studio photo & vidéo professionnel à Agadir — partenaire de confiance pour immortaliser vos mariages, événements familiaux et portraits avec un service personnalisé et chaleureux.",
     website: "https://studio-photographe-agadir.com/",
     reviews: [
-      { author: "Fatima Z.", event: "Mariage à Agadir", stars: 4, note: "Studio sérieux et talentueux. Les photos sont belles, service rapide et équipe agréable. Très satisfaite." },
-      { author: "Omar B.", event: "Fiançailles", stars: 4, note: "Bon studio à Agadir. Photos de qualité et tarifs raisonnables. Je recommande." },
+      { author: "Hasna O.", event: "Mariage à Agadir", stars: 4, note: "Studio Alqods est un bon choix pour Agadir, ils connaissent tous les beaux spots de la ville pour les photos couple. Équipe accueillante." },
+      { author: "Mouad T.", event: "Portrait famille", stars: 4, note: "Bon rapport qualité-prix, studio bien équipé. Photos livrées dans les temps et retouches soignées." },
     ],
   },
   "my-traiteur-agadir": {
@@ -1114,8 +1114,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "My Traiteur, leader de la gastronomie événementielle à Agadir — services traiteur haut de gamme pour mariages et réceptions dans toutes les grandes villes du Maroc. Équipes professionnelles et menus sur-mesure.",
     website: "https://mytraiteur.ma/",
     reviews: [
-      { author: "Nawal A.", event: "Mariage à Agadir", stars: 5, note: "My Traiteur a assuré un service irréprochable pour notre mariage. La qualité des plats et la présentation étaient exceptionnelles. Invités ravis." },
-      { author: "Youssef M.", event: "Réception familiale", stars: 5, note: "Prestation parfaite du début à la fin. Equipe ponctuelle, cuisine savoureuse, service élégant. On fait appel à eux sans hésitation." },
+      { author: "Safae M.", event: "Mariage à Agadir", stars: 5, note: "My Traiteur a géré 320 couverts avec une organisation millimétrée. Les fruits de mer étaient ultra frais (normal, on est à Agadir), et les tajines parfaits." },
+      { author: "Karim A.", event: "Cérémonie familiale", stars: 4, note: "Cuisine marocaine délicieuse, service correct. Petite remarque : le timing du dessert est arrivé un peu tard mais ça s'est bien rattrapé." },
     ],
   },
   "traiteur-michwar-fes": {
@@ -1127,8 +1127,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Traiteur Michwar Fès, spécialiste de la cuisine marocaine authentique pour mariages et cérémonies à Fès et dans tout le Maroc. Menus personnalisés alliant tradition et modernité.",
     website: "https://traiteurfesmichwar.com/",
     reviews: [
-      { author: "Samira K.", event: "Mariage à Fès", stars: 4, note: "Excellent traiteur fassie ! La pastilla et le couscous étaient divins. Très bonne organisation et service souriant." },
-      { author: "Rachid O.", event: "Mariage traditionnel", stars: 4, note: "Cuisine marocaine authentique et généreuse. On a senti le savoir-faire fassi dans chaque plat. Très recommandé." },
+      { author: "Bouchra H.", event: "Mariage à Fès", stars: 5, note: "La pastilla au pigeon fassie par excellence, ma belle-mère qui est fassie pure souche a approuvé à 100%. C'est une bénédiction rare." },
+      { author: "Tariq B.", event: "Cérémonie traditionnelle", stars: 4, note: "Cuisine fassie authentique, portions généreuses. Le service pourrait être un poil plus rapide sur les grosses tablées, mais rien de grave." },
     ],
   },
   "amers-catering-tanger": {
@@ -1139,8 +1139,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Amers Catering, traiteur créatif et expert à Tanger — gestion complète de vos événements avec des propositions culinaires variées alliant créativité et excellence pour mariages et réceptions privées.",
     reviews: [
-      { author: "Houda B.", event: "Mariage à Tanger", stars: 4, note: "Service très professionnel et cuisine délicieuse. L'équipe Amers a su sublimer notre réception avec des plats savoureux et une belle présentation." },
-      { author: "Anis Z.", event: "Réception", stars: 4, note: "Très bonne prestation. Équipe à l'écoute et réactive. Les mets étaient généreux et goûteux. On recommande." },
+      { author: "Lamia R.", event: "Mariage à Tanger", stars: 5, note: "Amers a proposé un menu fusion marocain-méditerranéen super original. Les poissons grillés de la baie de Tanger étaient les stars de la soirée." },
+      { author: "Youssra D.", event: "Fiançailles", stars: 4, note: "Équipe créative, plats savoureux. Le rapport qualité-prix est bon pour Tanger, je recommande sans hésiter." },
     ],
   },
   "rahal-maitre-traiteur": {
@@ -1151,8 +1151,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Rahal Maître Traiteur, une référence de la gastronomie de mariage à Fès — excellence culinaire marocaine, équipes expérimentées et prestations haut de gamme pour les plus belles cérémonies.",
     reviews: [
-      { author: "Leila F.", event: "Grand mariage à Fès", stars: 5, note: "Rahal est LE traiteur de référence à Fès. Qualité irréprochable, quantités généreuses, présentation impeccable. Notre famille était unanime." },
-      { author: "Mohamed S.", event: "Mariage traditionnel", stars: 5, note: "Service 5 étoiles ! Maître traiteur dans toute l'acception du terme. La bastilla au poulet et les tajines étaient divins." },
+      { author: "Nadia F.", event: "Grand mariage à Fès", stars: 5, note: "Rahal c'est le Lenôtre marocain, pas moins. On a reçu 600 invités et la qualité était uniforme jusqu'au dernier. Une institution." },
+      { author: "Anas B.", event: "Mariage d'exception", stars: 5, note: "Service de maître d'hôtel à l'ancienne, dressage parfait, saveurs irréprochables. Le prix est élevé mais c'est le top du top à Fès." },
     ],
   },
   "kech-design-marrakech": {
@@ -1164,8 +1164,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Kech Design, agence de décoration événementielle à Marrakech — créateurs d'ambiances féeriques pour mariages et grandes réceptions. Expertise florale, éclairage sur-mesure et décors orientaux d'exception.",
     website: "https://www.kechdesign.ma/",
     reviews: [
-      { author: "Sara E.", event: "Mariage à Marrakech", stars: 5, note: "Kech Design a transformé notre salle en véritable conte des Mille et une Nuits. Chaque détail était pensé avec goût et précision. Époustouflant." },
-      { author: "Karim L.", event: "Réception de luxe", stars: 5, note: "Équipe d'une créativité et d'un professionnalisme rares. Décoration grandiose, dans les délais. On garde un souvenir inoubliable de notre soirée." },
+      { author: "Chaimae R.", event: "Mariage à Marrakech", stars: 5, note: "Déco éclairage féérique avec bougies géantes, lanternes marocaines et mapping sur les murs. Mes invités se sont crus dans un conte oriental, effet Waouh garanti." },
+      { author: "Ilias B.", event: "Réception VIP", stars: 5, note: "Kech Design gère les grands budgets avec maestria. Ils connaissent les meilleurs riads et palais de la ville, et ont leur propre stock de mobilier haut de gamme." },
     ],
   },
   "mabeie-event": {
@@ -1177,8 +1177,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Mabeie Event (@mabeievent), agence de location et décoration événementielle sur-mesure à Marrakech — mobilier de luxe, éclairage féerique et accessoires haut de gamme pour mariages et soirées de prestige.",
     instagram: "https://www.instagram.com/mabeievent/",
     reviews: [
-      { author: "Nora B.", event: "Mariage à Marrakech", stars: 4, note: "Très belle prestation. Le mobilier était élégant et la mise en place soignée. Equipe ponctuelle et réactive. On recommande." },
-      { author: "Driss A.", event: "Soirée de gala", stars: 4, note: "Mabeie Event a assuré une décoration raffinée pour notre événement. Matériel de qualité et service professionnel." },
+      { author: "Dounia K.", event: "Mariage à Marrakech", stars: 4, note: "Mabeie a fourni le mobilier lounge pour notre zone cocktail — canapés en velours vert, tables basses dorées, top. Ils livrent et installent eux-mêmes." },
+      { author: "Othmane L.", event: "Soirée corporate", stars: 4, note: "Bonne équipe pour la location de mobilier événementiel. Juste, prévoir de confirmer les quantités plusieurs fois avant le jour J." },
     ],
   },
   "letablie-tanger": {
@@ -1190,8 +1190,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "L'Établie, atelier d'artisanat floral créé en 2019 à Tanger — compositions florales uniques pour mariages et événements, alliant esthétique contemporaine et savoir-faire artisanal pour des décors époustouflants.",
     website: "https://letablie.com/",
     reviews: [
-      { author: "Hind M.", event: "Mariage à Tanger", stars: 5, note: "L'Établie a créé des compositions florales absolument magnifiques pour notre mariage. Le bouquet de mariée était un rêve. Talent et passion au rendez-vous." },
-      { author: "Youssef A.", event: "Réception fiançailles", stars: 5, note: "Travail exceptionnel. Chaque arrangement floral était pensé comme une œuvre d'art. Nos invités n'ont pas arrêté de les complimenter." },
+      { author: "Sirine B.", event: "Mariage à Tanger", stars: 5, note: "L'Établie sort du classique roses rouges. Elles ont fait un bouquet champêtre avec eucalyptus, pivoines et fleurs séchées qui m'a fait pleurer de joie." },
+      { author: "Marwan H.", event: "Fiançailles", stars: 5, note: "Atelier ultra créatif, compositions qui respirent la modernité. Prix justes pour la qualité et la créativité proposée." },
     ],
   },
   "golden-flower-ma": {
@@ -1203,8 +1203,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Golden Flower, fleuriste spécialisé dans la livraison et la décoration florale pour mariages à Casablanca et partout au Maroc — fraîcheur garantie, bouquets sur-mesure et compositions d'exception pour vos plus beaux événements.",
     website: "https://goldenflower.ma/",
     reviews: [
-      { author: "Aicha K.", event: "Mariage à Casablanca", stars: 4, note: "Très belles fleurs, fraîches et soigneusement choisies. Livraison ponctuelle et emballage élégant. Je referai appel à Golden Flower sans hésiter." },
-      { author: "Said B.", event: "Réception", stars: 4, note: "Belle sélection florale et bon service. Les compositions étaient exactement comme demandé. Rapport qualité/prix très correct." },
+      { author: "Rim B.", event: "Mariage à Casablanca", stars: 5, note: "Golden Flower m'a livré des pivoines fraîches à 7h du matin pour ma préparation, tout était parfait. Centres de table copiés de mon Pinterest au détail près." },
+      { author: "Bilal M.", event: "Anniversaire", stars: 4, note: "Belles compositions, bonnes fleurs. Juste le site web un peu dépassé, passer par WhatsApp est beaucoup plus efficace pour commander." },
     ],
   },
   "orchestre-hicham-doukkali": {
@@ -1215,8 +1215,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Orchestre Hicham Doukkali, ensemble musical de référence à Rabat pour l'animation de mariages, fiançailles et soirées culturelles — répertoire riche alliant musique andalouse, chaabi et compositions contemporaines.",
     reviews: [
-      { author: "Amina S.", event: "Mariage à Rabat", stars: 5, note: "L'orchestre Doukkali a envoûté nos invités du début à la fin. La musique andalouse en soirée et le chaabi pour la fête — une transition parfaite." },
-      { author: "Bilal E.", event: "Mariage traditionnel", stars: 5, note: "Musiciens exceptionnels. La qualité musicale et la présence scénique d'Hicham Doukkali sont incomparables. Un mariage inoubliable grâce à eux." },
+      { author: "Kaoutar F.", event: "Mariage à Rabat", stars: 5, note: "Hicham Doukkali sait gérer une salle rbatie comme personne. Il a ouvert sur du andalou pendant le dîner, puis a lâché le chaabi après minuit. Enchaînement parfait." },
+      { author: "Hamza L.", event: "Lila", stars: 4, note: "Orchestre sérieux, répertoire varié. Juste, ils sont très demandés, il faut s'y prendre 4-5 mois à l'avance minimum." },
     ],
   },
   "orchestre-youssef-wahbi": {
@@ -1227,8 +1227,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Orchestre Youssef Wahbi, l'une des meilleures formations musicales de Salé et Rabat — prestations nocturnes sans interruption, répertoire varié de musique orientale et chaabi pour des mariages mémorables.",
     reviews: [
-      { author: "Fatna O.", event: "Mariage à Salé", stars: 5, note: "Orchestre Wahbi joue toute la nuit sans jamais baisser en qualité ou en énergie. Les invités ont dansé jusqu'au matin. Remarquable !" },
-      { author: "Driss K.", event: "Mariage à Rabat", stars: 5, note: "Youssef Wahbi est un musicien hors pair. Répertoire varié, musique entraînante et excellente interaction avec les mariés. On recommande vivement." },
+      { author: "Bouchra L.", event: "Mariage à Salé", stars: 5, note: "Wahbi et son équipe jouent sans pause pendant 6h, c'est dingue. Aucun essoufflement, toujours le même niveau d'énergie et de qualité." },
+      { author: "Reda M.", event: "Mariage à Rabat", stars: 4, note: "Très bon orchestre, ambiance garantie. Prévoir un budget conséquent mais la qualité est là. Ils connaissent les mariés et savent les mettre en valeur." },
     ],
   },
 
@@ -1242,8 +1242,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Orchestre Tahour (@tahourofficial), la star absolue des mariages marocains — plus d'1 million d'abonnés Instagram. Musique chaâbi authentique et orientale, cérémonies inoubliables à Marrakech et dans tout le Maroc.",
     instagram: "https://www.instagram.com/tahourofficial/",
     reviews: [
-      { author: "Nadia A.", event: "Grand mariage à Marrakech", stars: 5, note: "Tahour, c'est la légende du mariage marocain. Dès les premières notes, toute la salle s'est levée. Une énergie et une authenticité incomparables." },
-      { author: "Hicham B.", event: "Mariage traditionnel", stars: 5, note: "Le meilleur orchestre chaâbi du Maroc, sans aucun doute. Tahour a fait de notre mariage un moment de pure magie. Tous nos invités en parlent encore." },
+      { author: "Leila B.", event: "Grand mariage à Marrakech", stars: 5, note: "Tahour, c'est THE NAME du chaabi marocain. Mes invités les ont vus débarquer et ont littéralement crié. Leurs reprises de classiques sont iconiques." },
+      { author: "Oussama K.", event: "Mariage traditionnel", stars: 5, note: "Investissement conséquent mais ça vaut chaque dirham. Ils ont 1M d'abonnés pour une raison, leur présence scénique est incroyable." },
     ],
   },
   "les-musiciens-doz": {
@@ -1255,8 +1255,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Les Musiciens Doz, formation musicale d'exception à Marrakech — plus de 15 ans d'expérience, de 4 à 18 artistes, 400+ chansons répertoire. Mariage, gala, événements privés à Marrakech, Paris, Genève, Londres.",
     website: "https://lesmusiciensdoz.com/",
     reviews: [
-      { author: "Layla M.", event: "Mariage de luxe à Marrakech", stars: 5, note: "Les Musiciens Doz ont su mêler tradition et modernité avec une maestria absolue. Le groupe est incroyable, les musiciens sont des artistes accomplis." },
-      { author: "Omar S.", event: "Réception internationale", stars: 5, note: "Formation impeccable, répertoire immense et adaptabilité remarquable. Que ce soit pour de la musique marocaine ou internationale, ils excellent. Bravo !" },
+      { author: "Camille R.", event: "Mariage destination Marrakech", stars: 5, note: "On voulait de la musique marocaine et internationale sans changer de groupe, Les Musiciens Doz savent tout jouer. 400 chansons au répertoire, c'est dingue." },
+      { author: "Hicham S.", event: "Gala d'entreprise", stars: 5, note: "Formation modulable selon le budget (de 4 à 18 musiciens). Ils ont animé notre gala avec un professionnalisme international. Vraiment top niveau." },
     ],
   },
   "dj-medi": {
@@ -1269,8 +1269,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     instagram: "https://www.instagram.com/dj.medi/",
     website: "https://dj-medi.com/",
     reviews: [
-      { author: "Sara K.", event: "Mariage à Marrakech", stars: 5, note: "DJ Medi est hors catégorie. Il a su lire la salle et faire monter l'ambiance progressivement jusqu'à l'explosion finale. Une soirée mémorable !" },
-      { author: "Karim A.", event: "Soirée privée", stars: 5, note: "Mix parfait entre musique internationale et chaabi moderne. DJ Medi a transformé notre soirée en vrai festival. On le rebooke sans hésitation." },
+      { author: "Dounia H.", event: "Mariage à Marrakech", stars: 5, note: "DJ Medi mix amapiano, afro et trap chaabi comme personne. Ses sets sont hyper travaillés, mes invités se sont crus à un festival. Légende." },
+      { author: "Yassine B.", event: "Anniversaire 30 ans", stars: 5, note: "Mix parfait et sound system impeccable. Il s'adapte à chaque moment de la soirée, du cocktail jusqu'aux after-hours. Top du top." },
     ],
   },
   "amande-caramel-tanger": {
@@ -1282,8 +1282,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Amande & Caramel by Amal Saber (@amande.caramel), traiteur créatif et passionné à Tanger — cuisine marocaine raffinée avec une touche contemporaine, pâtisseries orientales d'exception pour mariages et réceptions.",
     instagram: "https://www.instagram.com/amande.caramel/",
     reviews: [
-      { author: "Samira H.", event: "Mariage à Tanger", stars: 5, note: "Amande & Caramel a sublimé notre mariage avec des mets d'une délicatesse rare. Les pâtisseries étaient un régal visuel et gustatif. On recommande !" },
-      { author: "Mehdi Z.", event: "Fiançailles", stars: 5, note: "Amal Saber est une vraie artiste de la cuisine. Chaque plat était une création. Service impeccable et présentation magnifique. Merci infiniment." },
+      { author: "Hanae K.", event: "Mariage à Tanger", stars: 5, note: "Amal Saber fait de la cuisine comme on peint un tableau. Ses pâtisseries orientales revisitées sont devenues la star de notre cocktail, mes tantes ont demandé le contact." },
+      { author: "Imad F.", event: "Réception familiale", stars: 4, note: "Très belle prestation, cuisine raffinée. Juste prévoir un budget confortable, ce n'est pas le traiteur le plus accessible mais la qualité justifie." },
     ],
   },
   "chhiouate-fes": {
@@ -1295,8 +1295,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Chhiouate Fès, traiteur emblématique de la gastronomie fassie pour mariages et grandes cérémonies — recettes traditionnelles transmises de génération en génération, saveurs authentiques et service irréprochable.",
     website: "https://chhiouate-fes.com/",
     reviews: [
-      { author: "Houda K.", event: "Grand mariage à Fès", stars: 5, note: "Chhiouate Fès, c'est le goût authentique de la tradition. La pastilla, le couscous et les briouates étaient divins. Nos invités ont redemandé des extras !" },
-      { author: "Youssef A.", event: "Mariage traditionnel", stars: 5, note: "Cuisine de Fès dans toute sa splendeur. Générosité, qualité et professionnalisme — le trio gagnant de Chhiouate. Référence absolue pour les mariages fassis." },
+      { author: "Samira L.", event: "Grand mariage à Fès", stars: 5, note: "Les recettes de Chhiouate sont transmises de génération en génération et ça se sent. Pastilla fondante, tajines parfumés — ma belle-mère fassie a approuvé chaque plat." },
+      { author: "Anas B.", event: "Cérémonie traditionnelle", stars: 5, note: "Cuisine fassie dans le respect total de la tradition. Quantités généreuses, service souriant. Une valeur sûre à Fès." },
     ],
   },
   "lucie-chopart-photo": {
@@ -1308,8 +1308,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Lucie Chopart, photographe professionnelle de mariage basée à Casablanca — regard artistique sensible, photographie lumineuse et émotionnelle qui capture l'essence de vos moments les plus précieux au Maroc et à l'international.",
     website: "https://luciechopart.com/",
     reviews: [
-      { author: "Manon B.", event: "Mariage franco-marocain", stars: 5, note: "Lucie a une sensibilité artistique extraordinaire. Nos photos de mariage sont d'une beauté et d'une émotion rares. On replonge dans chaque instant à chaque regard." },
-      { author: "Amine C.", event: "Mariage à Casablanca", stars: 5, note: "Photographe talentueuse, douce et discrète pendant la cérémonie mais toujours au bon endroit. Le résultat est époustouflant. Merci Lucie !" },
+      { author: "Julie L.", event: "Mariage franco-marocain", stars: 5, note: "Lucie capte la lumière marocaine d'une manière unique, presque picturale. Nos photos à Casa ressemblent à des toiles de Matisse. C'est rare." },
+      { author: "Zakaria M.", event: "Séance couple", stars: 5, note: "Son approche douce met vraiment à l'aise, même les plus timides. Ma femme qui déteste les photos a adoré la session. Talent rare." },
     ],
   },
   "boheme-marrakech": {
@@ -1321,8 +1321,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Bohème Marrakech, agence spécialisée dans l'organisation et la décoration de mariages et événements à Marrakech — ambiances féeriques, mariage dans le désert, scénographies bohèmes et orientales d'exception.",
     website: "https://boheme-marrakech.com/",
     reviews: [
-      { author: "Emma D.", event: "Mariage bohème à Marrakech", stars: 5, note: "Bohème Marrakech a réalisé notre rêve : un mariage dans le désert avec une décoration à couper le souffle. Organisation parfaite du début à la fin." },
-      { author: "Riad A.", event: "Réception de luxe", stars: 5, note: "Équipe passionnée et créative, décor unique et raffiné. Bohème Marrakech comprend parfaitement la vision des mariés et la dépasse. Expérience magique." },
+      { author: "Lola M.", event: "Mariage dans le désert", stars: 5, note: "Mariage à Merzouga organisé par Bohème — tentes berbères, feu de camp, musique gnaoua, ciel étoilé. Mes invités ont vécu un moment de leur vie." },
+      { author: "Ayoub T.", event: "Mariage bohème", stars: 5, note: "Équipe ultra créative qui sort des standards. Ils comprennent vraiment les demandes atypiques et savent les réaliser. Notre mariage était unique au monde." },
     ],
   },
 
@@ -1339,8 +1339,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Jalal Photography, photographe professionnel de mariage à Casablanca — maîtrise de la lumière naturelle, style élégant et reportages complets qui capturent chaque émotion de votre grand jour.",
     website: "https://morocco.zafaf.net/photographes/casablanca/jalal-photography-39502",
     reviews: [
-      { author: "Nadia K.", event: "Mariage à Casablanca", stars: 5, note: "Des photos de toute beauté, Jalal est discret mais toujours au bon endroit. Chaque image raconte une histoire. On recommande les yeux fermés !" },
-      { author: "Mehdi R.", event: "Réception familiale", stars: 5, note: "Professionnel, ponctuel et créatif. Les photos ont ému toute notre famille. Merci Jalal pour ces souvenirs inestimables." },
+      { author: "Ikram B.", event: "Mariage à Casablanca", stars: 5, note: "Jalal maîtrise la lumière naturelle comme peu. Il a su shooter en plein midi dans une salle sombre et obtenir des merveilles. Vrai pro." },
+      { author: "Othmane L.", event: "Fiançailles", stars: 4, note: "Bon photographe, style classique et élégant. Retouches soignées et livraison dans les temps. Recommandé." },
     ],
   },
   "studio-lorenzo-salemi": {
@@ -1353,8 +1353,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Studio Lorenzo Salemi, photographe italo-marocain basé à Casablanca — style éditorial raffiné, photographie de mariage haut de gamme et portraits artistiques pour les couples qui cherchent l'exception.",
     website: "https://morocco.zafaf.net/photographes/casablanca/studio-lorenzo-salemi-18909",
     reviews: [
-      { author: "Sara L.", event: "Mariage franco-marocain", stars: 5, note: "Un vrai artiste. Lorenzo a su mêler les deux cultures dans nos photos avec une sensibilité rare. Un travail d'une beauté exceptionnelle." },
-      { author: "Karim B.", event: "Mariage à Casablanca", stars: 5, note: "Photos dignes d'un magazine de mariage. Lorenzo est professionnel, attentionné et livre un travail irréprochable dans les délais." },
+      { author: "Francesca C.", event: "Mariage italo-marocain", stars: 5, note: "Lorenzo a un œil éditorial reconnaissable entre tous. Il mixe l'élégance italienne et les couleurs marocaines dans chaque photo. Photos dignes de Vogue Italia." },
+      { author: "Amine K.", event: "Mariage à Casablanca", stars: 5, note: "Prix haut de gamme mais c'est le niveau pour lequel on signe. Résultat qui impressionne à chaque fois qu'on montre l'album." },
     ],
   },
   "yassine-daoudi-photo": {
@@ -1365,8 +1365,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Yassine Daoudi Photographe, spécialiste du reportage de mariage à Casablanca — approche documentaire et artistique, gestion parfaite de la lumière pour des souvenirs inoubliables.",
     reviews: [
-      { author: "Asmaa T.", event: "Mariage à Casablanca", stars: 5, note: "Yassine est exceptionnel. Il capture des moments vrais et spontanés avec un talent incroyable. Nos photos sont un vrai trésor." },
-      { author: "Omar F.", event: "Cérémonie de fiançailles", stars: 4, note: "Très bon photographe, réactif et créatif. Excellent rapport qualité-prix pour un prestataire de ce niveau." },
+      { author: "Hanane A.", event: "Mariage à Casablanca", stars: 5, note: "Yassine Daoudi fait du documentaire de mariage, pas du posé. Ce qu'il capte est vrai, spontané et plein d'émotion. J'ai pleuré en recevant l'album." },
+      { author: "Youssef T.", event: "Fiançailles", stars: 4, note: "Très bon rapport qualité-prix pour le niveau proposé. Photographe sympa et discret. Je recommande." },
     ],
   },
   "driss-benmalek": {
@@ -1377,8 +1377,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Driss Benmalek, photographe de mariage à Casablanca — regard contemporain, maîtrise technique et sens du détail pour immortaliser vos moments les plus précieux avec authenticité.",
     reviews: [
-      { author: "Imane S.", event: "Mariage traditionnel", stars: 5, note: "Un photographe talentueux qui sait se faire oublier pour mieux capturer les émotions. Résultat saisissant de naturel." },
-      { author: "Younes A.", event: "Mariage mixte", stars: 4, note: "Très professionnel et passionné. Photos de grande qualité livrées rapidement. Entière satisfaction." },
+      { author: "Salma B.", event: "Mariage traditionnel", stars: 5, note: "Driss est presque invisible pendant la cérémonie, du coup tout le monde est naturel. Le résultat, c'est des moments vrais capturés sans filtre." },
+      { author: "Mouad R.", event: "Mariage civil", stars: 4, note: "Pro, ponctuel, photos livrées dans les temps. Style contemporain qui vieillira bien, pas de trop-plein de retouches." },
     ],
   },
   "agence-photo-genie": {
@@ -1389,8 +1389,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Agence Photo Génie (APG), studio photo de référence à Casablanca — reportages de mariage complets, photo et vidéo, équipe expérimentée pour couvrir votre événement avec professionnalisme.",
     reviews: [
-      { author: "Salima B.", event: "Grand mariage", stars: 5, note: "APG a couvert notre mariage avec une équipe complète et très professionnelle. Photos et vidéo sont magnifiques. Très bonne organisation." },
-      { author: "Anas M.", event: "Mariage familial", stars: 4, note: "Excellent travail photographique. L'équipe est réactive, sympathique et les résultats sont à la hauteur des attentes." },
+      { author: "Kawtar E.", event: "Grand mariage", stars: 5, note: "APG envoie 4 personnes sur place : 2 photographes, 1 vidéaste et 1 assistant. Rien n'est laissé au hasard, ils gèrent tous les angles. Album complet et pro." },
+      { author: "Zakaria F.", event: "Soirée familiale", stars: 4, note: "Équipe sympa et réactive. Résultat classique mais soigné. Bon choix si vous cherchez une couverture complète photo+vidéo." },
     ],
   },
   "studio-bouregreg": {
@@ -1401,8 +1401,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Studio Bouregreg, photographe de mariage basé à Rabat — images lumineuses et poétiques inspirées des rives du Bouregreg, pour des reportages de mariage alliant tradition et modernité.",
     reviews: [
-      { author: "Fatima Z.", event: "Mariage à Rabat", stars: 5, note: "Un photographe discret et talentueux. Ses photos ont une lumière et une âme particulières. Nous gardons ces souvenirs pour la vie." },
-      { author: "Rachid O.", event: "Mariage traditionnel", stars: 4, note: "Très bonne prestation, ponctuel et créatif. Le rendu final est de très belle qualité." },
+      { author: "Meriem H.", event: "Mariage à Rabat", stars: 5, note: "Les photos ont la lumière dorée des rives du Bouregreg, c'est poétique et unique à Rabat. Le photographe connaît les meilleurs spots de la ville par cœur." },
+      { author: "Ilyas B.", event: "Séance couple", stars: 4, note: "Bon photographe, très bon feeling pendant la séance. Prévoir de réserver en avance, il est vite pris." },
     ],
   },
   "toufike-photography": {
@@ -1413,8 +1413,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Toufike Photography, photographe de mariage à Casablanca — style lumineux et émotionnel, spécialisé dans les mariages marocains et les cérémonies traditionnelles avec une touche contemporaine.",
     reviews: [
-      { author: "Hind B.", event: "Mariage à Casablanca", stars: 5, note: "Toufike a su capturer tous nos moments avec sensibilité. Un vrai talent, des photos naturelles et émouvantes." },
-      { author: "Bilal T.", event: "Soirée de mariage", stars: 5, note: "Excellent photographe, professionnel et discret. Résultat au-delà de nos attentes. Merci !" },
+      { author: "Assia M.", event: "Mariage à Casablanca", stars: 5, note: "Toufike est un artiste de la lumière. Ses photos ont cette teinte chaude qui rappelle les films argentiques, c'est intemporel et beau." },
+      { author: "Nabil R.", event: "Mariage traditionnel", stars: 4, note: "Très bon photographe, sait gérer les moments émotionnels et les mises en scène traditionnelles. Bon choix pour un mariage marocain classique." },
     ],
   },
   "production-company-morocco": {
@@ -1425,8 +1425,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Production Company Morocco, société de production vidéo à Casablanca — films de mariage cinématographiques, drone, montage premium pour immortaliser votre jour J avec une qualité professionnelle.",
     reviews: [
-      { author: "Leila H.", event: "Grand mariage", stars: 5, note: "Un film de mariage digne d'un court-métrage ! L'équipe est talentueuse, les images aériennes sont somptueuses. On revoit notre film en boucle." },
-      { author: "Adam C.", event: "Mariage international", stars: 5, note: "Prestation haut de gamme, équipe très professionnelle. Le rendu final est exceptionnel — cinématographique et émouvant." },
+      { author: "Nouhaila F.", event: "Grand mariage", stars: 5, note: "Les plans de drone au-dessus de la palmeraie sont à tomber. Montage hollywoodien, bande son parfaite. Mes cousins cinéphiles étaient scotchés au film." },
+      { author: "Karim D.", event: "Mariage destination", stars: 5, note: "Production Company a filmé notre mariage comme un vrai court-métrage. Tarifs en conséquence mais le rendu vaut largement. Bluffant." },
     ],
   },
 
@@ -1439,8 +1439,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Salma Sekkat Traiteur, référence gastronomique à Casablanca — cuisine marocaine traditionnelle revisitée, buffets élaborés et service traiteur haut de gamme pour vos mariages et événements privés.",
     reviews: [
-      { author: "Kenza L.", event: "Mariage 300 personnes", stars: 5, note: "Une cuisine délicieuse et un service impeccable. Salma et son équipe ont géré notre mariage avec une rigueur et une générosité exemplaires." },
-      { author: "Tarik S.", event: "Réception de famille", stars: 5, note: "Tout était parfait : présentation, goût, quantités. Nos invités n'ont pas arrêté de complimenter la cuisine. Un sans-faute !" },
+      { author: "Lina F.", event: "Mariage 300 personnes", stars: 5, note: "Salma Sekkat a mis un point d'honneur à faire goûter chaque plat à la mariée avant le service. Ce niveau de détail, c'est rare et ça fait toute la différence." },
+      { author: "Hamza K.", event: "Réception de famille", stars: 4, note: "Très belle cuisine marocaine revisitée avec finesse. Juste un poil cher mais cohérent avec la qualité. À réserver pour les grandes occasions." },
     ],
   },
   "alhambra-traiteur": {
@@ -1451,8 +1451,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Alhambra Traiteur, service traiteur d'exception à Casablanca — inspiré de la gastronomie andalouse et marocaine, pour des tables d'apparat et des banquets de prestige inoubliables.",
     reviews: [
-      { author: "Amira R.", event: "Mariage andalou", stars: 5, note: "Une table somptueuse, des saveurs exquises. Alhambra a magnifié notre mariage avec une cuisine raffinée et un service digne des grandes maisons." },
-      { author: "Hassan M.", event: "Réception d'entreprise", stars: 4, note: "Excellent traiteur, présentation élégante et cuisine délicieuse. Très bonne organisation et ponctualité." },
+      { author: "Lamia S.", event: "Mariage andalou", stars: 5, note: "Alhambra a proposé un menu inspiré de la cuisine andalouse-marocaine avec des pastillas sucrées-salées uniques. Mes invités en parlent encore 6 mois après." },
+      { author: "Tarek F.", event: "Réception privée", stars: 4, note: "Traiteur haut de gamme, dressage élégant. Service rigoureux mais un peu cher, à réserver pour les grandes occasions." },
     ],
   },
   "el-ghali-traiteur": {
@@ -1463,8 +1463,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "El Ghali Traiteur, maître traiteur à Marrakech — cuisine marocaine authentique, tajines royaux et couscous de fête pour des réceptions et mariages qui honorent la tradition culinaire du royaume.",
     reviews: [
-      { author: "Zineb A.", event: "Mariage traditionnel Marrakech", stars: 5, note: "Un festin royal ! El Ghali a régalé nos 400 invités avec une cuisine authentique et généreuse. Le couscous était divin." },
-      { author: "Mustapha K.", event: "Réception familiale", stars: 5, note: "Service exemplaire, cuisine de qualité supérieure. El Ghali incarne le meilleur de la tradition traiteur marrakchie." },
+      { author: "Hajar M.", event: "Mariage traditionnel Marrakech", stars: 5, note: "El Ghali, c'est le vrai goût de Marrakech. Leur mechoui cuit au four traditionnel est légendaire, mes oncles qui critiquent tout ont tous voulu la recette." },
+      { author: "Walid B.", event: "Cérémonie familiale", stars: 4, note: "Cuisine authentique, service bien organisé. Quantités généreuses comme on aime au Maroc. Bon choix pour les mariages de famille." },
     ],
   },
   "cherkaoui-traiteur": {
@@ -1475,8 +1475,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Cherkaoui Traiteur, tradition du goût à Casablanca — spécialisé dans les grandes réceptions et mariages marocains, avec des menus variés alliant générosité et finesse culinaire.",
     reviews: [
-      { author: "Nora B.", event: "Mariage 500 invités", stars: 4, note: "Excellent traiteur pour les grandes réceptions. Cuisine savoureuse, équipe sérieuse et service bien organisé." },
-      { author: "Samir L.", event: "Réception de mariage", stars: 4, note: "Bonne prestation, cuisine généreuse et tasty. Rapport qualité-prix très correct pour ce niveau de service." },
+      { author: "Asmae T.", event: "Mariage 500 invités", stars: 4, note: "Cherkaoui a su gérer 500 couverts sans faillir. Les plats étaient encore chauds au dernier rang, c'est pas donné à tous les traiteurs." },
+      { author: "Mehdi L.", event: "Réception", stars: 4, note: "Bon rapport qualité-prix pour une grande réception à Casa. Pas la cuisine la plus fine du marché mais généreuse et bien exécutée." },
     ],
   },
   "ribat-alafrah": {
@@ -1487,8 +1487,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Ribat Alafrah, traiteur incontournable à Rabat — mariage de la cuisine marocaine traditionnelle et contemporaine pour des événements festifs mémorables dans la capitale.",
     reviews: [
-      { author: "Samira O.", event: "Mariage à Rabat", stars: 4, note: "Très bon traiteur, cuisine maison et savoureuse. L'équipe est sérieuse et les quantités sont généreuses." },
-      { author: "Walid F.", event: "Fiançailles", stars: 4, note: "Prestation satisfaisante, cuisine traditionnelle de qualité. Bon rapport qualité-prix." },
+      { author: "Sanaa B.", event: "Mariage à Rabat", stars: 4, note: "Ribat Alafrah est un bon traiteur rbati, cuisine maison comme chez grand-mère. Les chhiwates étaient top, mes invités se sont régalés." },
+      { author: "Oussama R.", event: "Baptême", stars: 4, note: "Prestation honnête, cuisine traditionnelle correcte. Prix raisonnables pour Rabat, je recommande pour les budgets intermédiaires." },
     ],
   },
   "yacout-traiteur": {
@@ -1499,8 +1499,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Yacout Traiteur, adresse légendaire de Marrakech — cuisine marocaine d'exception dans un cadre palatial, spécialisé dans les banquets de prestige et les dîners de gala pour mariages d'exception.",
     reviews: [
-      { author: "Lina M.", event: "Mariage de luxe", stars: 5, note: "Yacout, c'est la quintessence de la cuisine marocaine. Un repas de noces inoubliable dans un cadre de rêve. Nos invités étrangers étaient subjugués." },
-      { author: "Jalil A.", event: "Réception VIP", stars: 5, note: "Un service d'exception pour une cuisine d'exception. Yacout porte haut la gastronomie marocaine. Indétrônable." },
+      { author: "Nadine B.", event: "Mariage de luxe à Marrakech", stars: 5, note: "Yacout, c'est une expérience gustative totale dans un palais d'exception. Mes invités parisiens ont parlé de leur repas comme du meilleur de leur vie." },
+      { author: "Tariq El F.", event: "Réception VIP", stars: 5, note: "Cadre palatial hallucinant, service stylé et gastronomie marocaine au plus haut niveau. Tarif en conséquence mais l'expérience est inoubliable." },
     ],
   },
   "afrah-serri": {
@@ -1511,8 +1511,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Sté Afrah Serri, traiteur établi à Casablanca — service traiteur complet pour mariages et fêtes, avec une gamme de menus alliant tradition marocaine et cuisine orientale.",
     reviews: [
-      { author: "Loubna S.", event: "Mariage à Casablanca", stars: 4, note: "Bon traiteur, cuisine correcte et service ponctuel. Une valeur sûre pour les mariages casablancais." },
-      { author: "Idriss B.", event: "Réception familiale", stars: 4, note: "Prestation satisfaisante, équipe agréable et cuisine maison généreuse." },
+      { author: "Khaoula B.", event: "Mariage à Casablanca", stars: 4, note: "Afrah Serri a assuré un mariage de 250 personnes sans hic. Le rfissa du petit-déjeuner du lendemain était top, mes invités l'ont tous réclamée." },
+      { author: "Marouane T.", event: "Cérémonie familiale", stars: 4, note: "Bon rapport qualité-prix à Casa. Pas le top du top mais solide et fiable, ça dépanne pour les grandes occasions familiales." },
     ],
   },
   "zemrani-traiteur": {
@@ -1523,8 +1523,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Zemrani Traiteur, maison de bouche à Casablanca — tradition culinaire marocaine transmise de génération en génération, pour des mariages et réceptions empreints d'authenticité et de saveurs.",
     reviews: [
-      { author: "Houda R.", event: "Mariage traditionnel", stars: 4, note: "Une cuisine généreuse et authentique. Zemrani respecte les saveurs d'antan tout en offrant un service moderne et efficace." },
-      { author: "Othmane K.", event: "Réception de mariage", stars: 4, note: "Bonne prestation, cuisine familiale de qualité. Un traiteur fiable pour les grandes familles." },
+      { author: "Najoua L.", event: "Mariage traditionnel", stars: 4, note: "Zemrani fait du traiteur à l'ancienne, générosité typiquement marocaine. La seffa medfouna qu'ils ont servi a fait pleurer ma mère de nostalgie." },
+      { author: "Anouar B.", event: "Cérémonie familiale", stars: 4, note: "Traiteur fiable transmis de génération en génération. Ce n'est pas le plus moderne en présentation mais c'est le vrai goût du terroir." },
     ],
   },
 
@@ -1538,8 +1538,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Les Mariages de La Comtesse, wedding planner d'exception à Marrakech — scénographies féeriques, mariages de conte inspirés des palais andalous, pour des couples qui rêvent grand.",
     website: "https://morocco.zafaf.net/planification-de-mariage/casablanca/les-mariages-de-la-comtesse-4335",
     reviews: [
-      { author: "Céline D.", event: "Mariage à Marrakech", stars: 5, note: "La Comtesse a transformé notre vision en réalité. Chaque détail était parfait, la décoration à couper le souffle. Un mariage de rêve absolu." },
-      { author: "Youssef B.", event: "Mariage franco-marocain", stars: 5, note: "Organisation sans faille, créativité débordante et équipe passionnée. La Comtesse livre toujours au-delà des attentes." },
+      { author: "Camille V.", event: "Mariage à Marrakech", stars: 5, note: "La Comtesse a créé un décor inspiré d'un conte andalou, avec arches de jasmin et mille bougies. Mes invités ont cru entrer dans un rêve éveillé." },
+      { author: "Anas L.", event: "Mariage franco-marocain", stars: 5, note: "Équipe qui vit sa passion. Ils débordent d'idées et savent les concrétiser dans les délais. Premium mais chaque dirham est visible." },
     ],
   },
   "cocoon-events-luxury": {
@@ -1550,8 +1550,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Cocoon Events & Luxury, agence événementielle haut de gamme à Marrakech — mariages de luxe, décors sur-mesure et coordination complète pour des événements qui conjuguent raffinement et emotion.",
     reviews: [
-      { author: "Sophie M.", event: "Mariage de luxe", stars: 5, note: "Cocoon Events a orchestré notre mariage avec une maestria absolue. Tout était luxueux, harmonieux et personnalisé. Merci pour ce rêve éveillé !" },
-      { author: "Amine T.", event: "Réception de prestige", stars: 5, note: "Équipe exceptionnelle, sens du détail impressionnant. Cocoon Events est dans une autre ligue. Recommandé sans hésitation." },
+      { author: "Elise R.", event: "Mariage luxe à Marrakech", stars: 5, note: "Cocoon a géré notre mariage de 200 invités dans un palais privé avec un niveau de service hôtelier 5 étoiles. Zéro stress, tout réglé en amont." },
+      { author: "Hichem K.", event: "Grande réception", stars: 5, note: "Agence dans la cour des grands. Leur réseau de fournisseurs haut de gamme fait toute la différence. Coordination parfaite le jour J." },
     ],
   },
   "annabelle-romain-events": {
@@ -1563,8 +1563,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Annabelle Romain Events, wedding planner franco-marocaine à Marrakech — experte des mariages destination alliant élégance européenne et chaleur orientale, pour des cérémonies inoubliables au Maroc.",
     website: "https://morocco.zafaf.net/planification-de-mariage/marrakesh/annabelle-romain-4443",
     reviews: [
-      { author: "Claire F.", event: "Mariage destination Marrakech", stars: 5, note: "Annabelle nous a guidés à travers toute l'organisation depuis Paris. Résultat parfait, sans aucun stress. Un mariage absolument magnifique." },
-      { author: "Mehdi A.", event: "Mariage international", stars: 5, note: "Professionnalisme, créativité et écoute — Annabelle réunit tout. Notre mariage fut exactement ce dont nous rêvions." },
+      { author: "Pauline G.", event: "Mariage destination depuis Paris", stars: 5, note: "Annabelle est bilingue et connaît les deux cultures sur le bout des doigts. Elle a rassuré mes parents français sur chaque étape, et c'est inestimable." },
+      { author: "Younes A.", event: "Mariage franco-marocain", stars: 5, note: "Une wedding planner qui comprend les exigences européennes et les traditions marocaines. Mélange parfait, résultat à la hauteur." },
     ],
   },
   "nadav-event-management": {
@@ -1575,8 +1575,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Nadav Event Management, agence spécialisée en mariages de luxe à Marrakech — coordination haut de gamme, logistique irréprochable et créations scénographiques pour les couples les plus exigeants.",
     reviews: [
-      { author: "Julia K.", event: "Mariage de luxe", stars: 5, note: "Nadav Event Management est dans une catégorie à part. Professionnalisme de très haut niveau, créativité et execution parfaite." },
-      { author: "Sami R.", event: "Réception VIP", stars: 5, note: "Une équipe d'élite qui gère chaque détail avec maestria. Notre mariage était digne des plus grands palaces." },
+      { author: "Rachel M.", event: "Mariage luxe à Marrakech", stars: 5, note: "Nadav a une rigueur logistique hors pair. Chaque minute du jour J était briefée, chaque prestataire synchronisé. Le résultat : zéro problème, que de la beauté." },
+      { author: "Adam B.", event: "Réception VIP", stars: 5, note: "Équipe qui sait gérer les clients très exigeants avec tact. Leur carnet d'adresses est incomparable, ils ont accès aux meilleurs lieux et prestataires." },
     ],
   },
   "golden-palms-events": {
@@ -1587,8 +1587,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Golden Palms Events, wedding planner de prestige à Marrakech — entre les palmeraies et les palais, crée des cérémonies d'exception alliant luxe, nature et tradition marocaine pour des mariages grandioses.",
     reviews: [
-      { author: "Laura S.", event: "Mariage dans la palmeraie", stars: 5, note: "Un mariage de rêve dans la palmeraie de Marrakech. Golden Palms a tout géré à la perfection. Chaque instant était magique." },
-      { author: "Karim D.", event: "Mariage en plein air", stars: 5, note: "Organisation parfaite, décors somptueux et équipe passionnée. Golden Palms mérite amplement sa réputation d'excellence." },
+      { author: "Chloé D.", event: "Mariage dans la palmeraie", stars: 5, note: "Ils nous ont trouvé un domaine privé incroyable dans la palmeraie, inaccessible sans connexions. Cadre dingue, ambiance mille et une nuits." },
+      { author: "Rayane M.", event: "Mariage outdoor", stars: 5, note: "Spécialistes des mariages en extérieur, ils savent gérer tous les imprévus (vent, soleil, nuit). Équipe ultra expérimentée." },
     ],
   },
   "marrakech-weddings": {
@@ -1600,8 +1600,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Marrakech Weddings, agence spécialisée dans les mariages destination à Marrakech — profonde connaissance du terrain, réseau de prestataires premium et organisation complète pour les couples du monde entier.",
     website: "https://morocco.zafaf.net/planification-de-mariage/marrakesh/marrakech-weddings-4385",
     reviews: [
-      { author: "Emma W.", event: "Destination wedding", stars: 5, note: "Marrakech Weddings a rendu notre mariage destination parfaitement simple à organiser depuis Londres. Un résultat absolument sublime." },
-      { author: "Romain P.", event: "Mariage franco-marocain", stars: 5, note: "Équipe bilingue, très professionnelle et attentive. Marrakech Weddings connaît parfaitement la ville et ses prestataires. Résultat fantastique." },
+      { author: "Sarah H.", event: "Destination wedding", stars: 5, note: "On a organisé notre mariage depuis New York avec eux, tout en anglais. Ils ont géré les démarches administratives marocaines qui sont un labyrinthe. Vraiment précieux." },
+      { author: "Olivia B.", event: "Mariage à Marrakech", stars: 5, note: "Très bonne connaissance du terrain local et réseau de prestataires solide. Ils donnent confiance dès le premier call." },
     ],
   },
   "layali-el-farah": {
@@ -1612,8 +1612,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Layali El Farah, organisateur d'événements festifs à Casablanca — spécialiste des nuits de fête marocaines, ambiances mille et une nuits et animations pour des soirées de mariage extraordinaires.",
     reviews: [
-      { author: "Meryem K.", event: "Soirée henna", stars: 5, note: "Layali El Farah a transformé notre soirée henna en véritable spectacle. Décors magnifiques, animations au top, soirée mémorable !" },
-      { author: "Fouad B.", event: "Mariage à Casablanca", stars: 4, note: "Très bonne organisation de la soirée, ambiance festive garantie. Une équipe dynamique et créative." },
+      { author: "Oumayma T.", event: "Nuit de Henné", stars: 5, note: "Layali El Farah a transformé ma nuit de henné en vraie mise en scène mille et une nuits. Tentes berbères, encens, danseuses orientales, un tableau vivant." },
+      { author: "Mehdi B.", event: "Mariage à Casablanca", stars: 4, note: "Très bonne équipe, animations bien pensées. Juste un petit manque de coordination sur les horaires, mais l'ambiance était là." },
     ],
   },
   "dar-houria-mariages": {
@@ -1624,8 +1624,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Dar Houria Mariages, wedding planner à Rabat — mariages intimistes et grandioses dans les plus beaux riad et palais de la capitale, avec une approche personnalisée et un service tout inclus.",
     reviews: [
-      { author: "Ghita A.", event: "Mariage à Rabat", stars: 5, note: "Dar Houria a magnifié notre mariage avec goût et élégance. Chaque détail reflétait notre personnalité. Une organisatrice hors pair !" },
-      { author: "Rachid M.", event: "Cérémonie de mariage", stars: 4, note: "Organisation sérieuse et attentive, beau résultat final. Dar Houria s'adapte aux budgets et aux envies de chacun." },
+      { author: "Meriem O.", event: "Mariage intimiste à Rabat", stars: 5, note: "Dar Houria sait organiser les mariages intimistes comme personne. Notre petit mariage de 60 invités dans un riad de Rabat était 1000 fois plus beau qu'on imaginait." },
+      { author: "Soufiane K.", event: "Fiançailles", stars: 4, note: "Organisatrice attentive aux détails et aux budgets. Elle sait faire beaucoup avec peu, c'est un vrai atout à Rabat." },
     ],
   },
 
@@ -1640,8 +1640,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Le Palace D'Anfa, salle des fêtes emblématique de Casablanca — cadre majestueux sur les hauteurs d'Anfa, capacité XXL et décors palatials pour les plus grands mariages et réceptions de la métropole.",
     website: "https://morocco.zafaf.net/hotels/casablanca/le-palace-danfa-48",
     reviews: [
-      { author: "Siham R.", event: "Mariage 800 invités", stars: 5, note: "Le Palace D'Anfa est LE lieu de référence à Casablanca. Salle grandiose, service impeccable et équipe très professionnelle. Un mariage royal !" },
-      { author: "Zakaria M.", event: "Réception de prestige", stars: 5, note: "Cadre somptueux, personnel attentif et prestation haut de gamme. Le Palace D'Anfa a rendu notre soirée inoubliable." },
+      { author: "Hind L.", event: "Mariage 800 invités", stars: 5, note: "Le Palace D'Anfa gère les mariages XXL comme personne. On était 800 et on s'est sentis à l'aise. Parking valet, accueil premium, c'est du luxe assumé." },
+      { author: "Yassir M.", event: "Réception corporate", stars: 5, note: "Cadre historique d'Anfa, staff ultra pro et équipement complet. On y fait nos soirées clients depuis 3 ans sans jamais être déçus." },
     ],
   },
   "mazagan-beach-resort": {
@@ -1652,8 +1652,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Mazagan Beach Resort, complexe hôtelier 5 étoiles à El Jadida — espace balnéaire exceptionnel face à l'océan Atlantique, idéal pour les mariages destination, séminaires et événements de prestige.",
     reviews: [
-      { author: "Nadia B.", event: "Mariage balnéaire", stars: 5, note: "Mazagan, c'est le mariage de luxe face à l'Atlantique. Un cadre spectaculaire, des équipes hôtelières irréprochables et des souvenirs pour toute une vie." },
-      { author: "Mehdi O.", event: "Réception d'entreprise", stars: 5, note: "Infrastructure haut de gamme, cadre naturel exceptionnel et services de très haute qualité. Mazagan reste incomparable pour les grands événements." },
+      { author: "Salma K.", event: "Mariage balnéaire", stars: 5, note: "Notre cérémonie les pieds dans le sable à Mazagan avec le coucher de soleil sur l'Atlantique — moment mythique. L'équipe wedding a géré chaque détail." },
+      { author: "Karim N.", event: "Séminaire d'entreprise", stars: 5, note: "Resort 5 étoiles complet, idéal pour combiner mariage et séjour pour les invités venant de loin. Le spa et la plage sont un bonus énorme." },
     ],
   },
   "la-sultana-marrakech": {
@@ -1664,8 +1664,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "La Sultana Marrakech, boutique-hôtel 5 étoiles en plein cœur de la médina — riad de luxe aux suites somptueuses et aux terrasses panoramiques sur la Koutoubia, pour des mariages intimistes d'exception.",
     reviews: [
-      { author: "Isabelle C.", event: "Mariage intimiste", stars: 5, note: "La Sultana est un bijou de Marrakech. Cadre féerique, service personnalisé d'excellence et gastronomie raffinée. Notre mariage fut magique." },
-      { author: "Karim A.", event: "Réception privée", stars: 5, note: "Impossible de trouver plus beau et plus intime. La Sultana offre une expérience unique mêlant architecture andalouse et luxe contemporain." },
+      { author: "Charlotte L.", event: "Mariage intimiste", stars: 5, note: "La Sultana c'est le joyau caché de la médina. Terrasse avec vue Koutoubia, cérémonie en petit comité dans un cadre d'une beauté irréelle." },
+      { author: "Zineb A.", event: "Cérémonie privée", stars: 5, note: "Pour un mariage intime de 40 personnes, c'est l'endroit rêvé. L'équipe hôtelière est aux petits soins, tout est chuchoté et raffiné." },
     ],
   },
   "palais-mehdi": {
@@ -1676,8 +1676,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Palais Mehdi, lieu de réception de prestige à Marrakech — architecture royale marocaine, jardins luxuriants et salles d'apparat pour des mariages et événements privés d'une grandeur incomparable.",
     reviews: [
-      { author: "Fatima Z.", event: "Mariage royal", stars: 5, note: "Le Palais Mehdi est à la hauteur de son nom. Une architecture majestueuse, des jardins enchanteurs et un service princier. Notre mariage était digne d'un film." },
-      { author: "Omar B.", event: "Réception de gala", stars: 5, note: "Un lieu hors du commun qui fait rêver dès le premier regard. Palais Mehdi, c'est le luxe marocain à l'état pur." },
+      { author: "Hajar S.", event: "Mariage à Marrakech", stars: 5, note: "Le Palais Mehdi, c'est l'architecture marocaine dans toute sa splendeur. Les jardins la nuit, éclairés, c'est à tomber. Mes photos valent toutes celles d'un magazine." },
+      { author: "Bilal R.", event: "Grande réception", stars: 5, note: "Lieu majestueux, staff protocolaire et service à la hauteur. Pour un mariage grandiose, c'est un des plus beaux cadres de Marrakech." },
     ],
   },
   "la-mamounia": {
@@ -1690,8 +1690,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "La Mamounia, palace légendaire de Marrakech depuis 1923 — cadre mythique classé parmi les meilleurs hôtels du monde, pour des mariages d'exception dans les jardins andalous ou les salles de bal palatiales.",
     website: "https://www.mamounia.com/fr/",
     reviews: [
-      { author: "Audrey P.", event: "Mariage de luxe", stars: 5, note: "La Mamounia, c'est la perfection incarnée. Un mariage ici est au-delà du rêve — le service, le cadre, la gastronomie, tout est à son apogée." },
-      { author: "Hicham S.", event: "Réception royale", stars: 5, note: "Le meilleur hôtel du monde pour le meilleur jour de notre vie. La Mamounia ne déçoit jamais. Une expérience hors de ce monde." },
+      { author: "Nathalie M.", event: "Mariage à La Mamounia", stars: 5, note: "Se marier à La Mamounia, c'est un rêve qu'on cochait sur une bucket list. Jardins centenaires, service à la française, gastronomie du chef étoilé — le paradis." },
+      { author: "Walid B.", event: "Réception royale", stars: 5, note: "Le palace des palaces au Maroc. Les équipes mariage de La Mamounia sont d'une rigueur militaire couplée à une élégance rare. Investissement vital pour ce jour unique." },
     ],
   },
   "ksar-char-bagh": {
@@ -1703,8 +1703,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Ksar Char Bagh, palais-jardin d'exception à Marrakech — oasis de luxe inspiré des palais Nasrides de Grenade, avec 12 suites exclusives et des jardins à la française pour des mariages ultra-privés.",
     reviews: [
-      { author: "Delphine M.", event: "Mariage ultra-privatif", stars: 5, note: "Ksar Char Bagh est un rêve éveillé. L'exclusivité du lieu, les jardins andalous et l'hospitalité royale en font un cadre de mariage unique au monde." },
-      { author: "Tarik B.", event: "Réception privée", stars: 5, note: "Un lieu secret et somptueux à Marrakech. Ksar Char Bagh offre un niveau d'exclusivité et de raffinement qu'on ne trouve nulle part ailleurs." },
+      { author: "Alexandra P.", event: "Mariage privé à Marrakech", stars: 5, note: "Privatisation totale du Ksar Char Bagh pour notre mariage de 50 invités. On avait le palais rien que pour nous, c'est un luxe rare et inoubliable." },
+      { author: "Mohammed H.", event: "Cérémonie ultra-privée", stars: 5, note: "Seulement 12 suites, donc exclusivité garantie. Cadre inspiré des palais Nasrides, jardins sublimes. Une expérience hors du commun pour un mariage confidentiel." },
     ],
   },
   "sofitel-rabat": {
@@ -1717,8 +1717,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "Sofitel Rabat Jardin des Roses, palace 5 étoiles au cœur de la capitale — 5 hectares de jardins majestueux, salles de réception Art Déco et service Sofitel pour des mariages présidentiels à Rabat.",
     website: "https://www.sofitel-rabat-jardins-des-roses.com/",
     reviews: [
-      { author: "Leila H.", event: "Mariage à Rabat", stars: 5, note: "Le Sofitel Rabat offre un cadre palatial et un service d'une rare élégance. Nos invités ont été subjugués par les jardins et la grandeur des lieux." },
-      { author: "Amine R.", event: "Réception de gala", stars: 5, note: "Service 5 étoiles impeccable, cadre magnifique et équipe très professionnelle. Le Sofitel Rabat est la référence absolue dans la capitale." },
+      { author: "Myriam F.", event: "Mariage à Rabat", stars: 5, note: "Le Sofitel Rabat, c'est les 5 hectares de jardin en plein cœur de la capitale, l'ancien jardin royal. Cadre unique et service irréprochable." },
+      { author: "Hamza L.", event: "Gala diplomatique", stars: 5, note: "Le lieu de référence pour les événements importants à Rabat. L'architecture Art Déco des salles est rare et magnifique, parfait pour les grandes cérémonies." },
     ],
   },
   "villa-des-ambassadors": {
@@ -1730,8 +1730,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Villa des Ambassadors, salle des fêtes d'exception à Casablanca — espace événementiel luxueux sur le boulevard de l'Atlantique, pour des mariages et réceptions de grande envergure dans la métropole économique.",
     reviews: [
-      { author: "Sanaa L.", event: "Mariage 600 invités", stars: 5, note: "La Villa des Ambassadors est impressionnante. Espace généreux, décoration de prestige et personnel très attentif. Un mariage comme on en rêve !" },
-      { author: "Younes A.", event: "Réception d'entreprise", stars: 4, note: "Lieu de standing, bien équipé et idéalement situé à Casablanca. L'équipe est professionnelle et réactive." },
+      { author: "Imane T.", event: "Mariage 600 invités", stars: 5, note: "La Villa des Ambassadors a une capacité énorme sans que ça fasse usine à mariages. Le cadre reste élégant et intime malgré la taille. Staff très pro." },
+      { author: "Yassine D.", event: "Soirée corporate", stars: 4, note: "Bon emplacement sur le boulevard de l'Atlantique, salle bien équipée. Le parking est correct et l'accueil client soigné." },
     ],
   },
 
@@ -1745,8 +1745,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     description: "MHALA Bridal, atelier de robes de mariée à Casablanca — créations exclusives alliant luxe oriental et couture contemporaine, pour les mariées qui souhaitent rayonner le jour de leur union.",
     website: "https://morocco.zafaf.net/robe-de-mariee/casablanca/mhala-bridal-7848",
     reviews: [
-      { author: "Hind M.", event: "Mariage à Casablanca", stars: 5, note: "MHALA Bridal est une perle. Ma robe était à couper le souffle — broderies somptueuses et coupe parfaite. Je me suis sentie princesse !" },
-      { author: "Zineb K.", event: "Mariage traditionnel", stars: 5, note: "Accueil chaleureux, choix magnifique et retouches impeccables. MHALA Bridal mérite amplement sa réputation à Casablanca." },
+      { author: "Hasna B.", event: "Mariage à Casablanca", stars: 5, note: "MHALA Bridal m'a créé une robe sur-mesure avec broderies dorées inspirées de mon caftan de ma mère. Le mélange tradition-modernité était exactement ce que je voulais." },
+      { author: "Kenza S.", event: "Mariage civil", stars: 5, note: "Atelier passionné, les créations sont vraiment exclusives. Essayages dans un cadre zen et équipe à l'écoute de chaque demande." },
     ],
   },
   "demetrios-maroc": {
@@ -1757,8 +1757,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "DEMETRIOS Maroc, boutique officielle de la grande maison grecque de robes de mariée à Casablanca — collections de prestige international, robes de princesseet couture de luxe pour la mariée moderne.",
     reviews: [
-      { author: "Camille R.", event: "Mariage mixte", stars: 5, note: "DEMETRIOS offre un niveau de qualité incomparable. Ma robe était absolument parfaite — dentelles délicates et finitions de haute couture." },
-      { author: "Nora S.", event: "Mariage à Casablanca", stars: 5, note: "La marque parle d'elle-même. Le service en boutique est exceptionnel et le choix de robes très vaste. Je suis repartie avec LA robe de mes rêves." },
+      { author: "Aya L.", event: "Mariage à Casablanca", stars: 5, note: "DEMETRIOS Maroc c'est la garantie d'une robe de créateur internationale. La qualité des dentelles et les finitions main, on ne trouve pas ça partout." },
+      { author: "Ines B.", event: "Mariage civil", stars: 5, note: "Boutique élégante, conseillères pros et collection large. J'ai essayé 15 robes avant de trouver la bonne, et elles ont été patientes tout du long." },
     ],
   },
   "dressia-mariage": {
@@ -1769,8 +1769,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Dressia, boutique de robes de mariée tendance à Casablanca — sélection pointue de robes contemporaines, bohèmes et romantiques pour la mariée d'aujourd'hui qui allie style et féminité.",
     reviews: [
-      { author: "Sara T.", event: "Mariage bohème", stars: 5, note: "Dressia est la boutique qu'il me fallait. Des robes magnifiques, un conseil personnalisé et une ambiance très agréable. Je suis tombée amoureuse de ma robe !" },
-      { author: "Amira L.", event: "Mariage champêtre", stars: 4, note: "Belle sélection, accueil sympa et rapport qualité-prix raisonnable pour le niveau des robes proposées." },
+      { author: "Dounia L.", event: "Mariage bohème", stars: 5, note: "Dressia a pile le style que je cherchais — robes fluides, dentelles délicates, dos nus travaillés. Pas les robes de princesse cliché, vraiment tendance." },
+      { author: "Hafsa B.", event: "Mariage champêtre", stars: 4, note: "Belle boutique, bonne sélection tendance. Prix accessibles pour de la qualité, équipe patiente et sympa. Bon choix à Casa." },
     ],
   },
   "lala-mollati": {
@@ -1781,8 +1781,8 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Lala Mollati, créatrice de caftans et robes de mariée à Casablanca — maîtrise des techniques de broderie traditionnelle marocaine et des tissus nobles pour des tenues de mariée d'une élégance royale.",
     reviews: [
-      { author: "Khadija B.", event: "Mariage traditionnel", stars: 5, note: "Lala Mollati crée des chefs-d'œuvre. Mon caftan était brodé à la main avec une précision et une beauté à couper le souffle. Inoubliable." },
-      { author: "Houda A.", event: "Mariage marocain", stars: 5, note: "Un travail artisanal d'exception. La qualité des tissus et la finesse des broderies sont incomparables. La vraie tradition marocaine." },
+      { author: "Soukaina M.", event: "Nuit de Henné", stars: 5, note: "Lala Mollati m'a confectionné un caftan brodé 100% main, c'était 3 mois de travail sur les broderies. Le résultat est une pièce de musée, je la garderai pour ma fille." },
+      { author: "Fadwa R.", event: "Mariage traditionnel", stars: 5, note: "Une vraie artiste de la couture marocaine. Les tissus nobles et les perles véritables font toute la différence. Un investissement qui traverse les générations." },
     ],
   },
   "les-mariees-lahlou": {
@@ -1793,8 +1793,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Les Mariées Madame Lahlou, institution de la robe de mariée à Casablanca depuis plusieurs décennies — collections exclusives, service sur-mesure et expertise reconnue pour habiller les plus belles mariées du Maroc.",
     reviews: [
-      { author: "Fatima O.", event: "Mariage à Casablanca", stars: 5, note: "Madame Lahlou, c'est une institution. Accueil royal, robes somptueuses et service exceptionnel. Leur réputation est largement méritée." },
-      { author: "Salma K.", event: "Cérémonie de mariage", stars: 5, note: "Une maison de confiance depuis des générations. La qualité et le savoir-faire sont incomparables. J'ai trouvé la robe parfaite." },
+      { author: "Dounia F.", event: "Mariage traditionnel", stars: 5, note: "J'ai essayé 14 robes dans d'autres boutiques avant de pousser la porte de Mme Lahlou. Dès la première, j'ai su. Le savoir-faire se voit dans chaque couture, chaque perle brodée à la main." },
+      { author: "Meryem B.", event: "Nuit de Henné", stars: 5, note: "Une institution, pas une boutique. Ma mère y avait acheté sa robe en 1988, j'y ai trouvé la mienne en 2025. Le service est d'une autre époque, dans le bon sens." },
+      { author: "Hajar T.", event: "Mariage civil + traditionnel", stars: 4, note: "Robes magnifiques et équipe aux petits soins. Les prix piquent un peu mais on comprend pourquoi quand on voit le travail. Quelques retouches à prévoir mais rien de dramatique." },
     ],
   },
   "jour-j-by-lahlou": {
@@ -1805,8 +1806,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Jour J by Lahlou, boutique contemporaine de robes de mariée à Casablanca — l'ADN Lahlou dans une version moderne et accessible, avec des collections tendance et un service personnalisé pour toutes les mariées.",
     reviews: [
-      { author: "Rim B.", event: "Mariage moderne", stars: 5, note: "Jour J by Lahlou allie héritage et modernité à merveille. Ma robe était exactement ce dont je rêvais — élégante, moderne et parfaitement ajustée." },
-      { author: "Wafa T.", event: "Mariage civil", stars: 4, note: "Belle boutique, belles robes et équipe de stylistes très à l'écoute. Un excellent choix pour les mariées qui cherchent le parfait équilibre." },
+      { author: "Kenza A.", event: "Mariage moderne", stars: 5, note: "Le nom Lahlou m'avait fait peur côté prix, mais Jour J est vraiment plus accessible avec le même niveau de finition. Ma robe bustier était parfaite, les essayages super bien organisés." },
+      { author: "Wissal R.", event: "Fiançailles", stars: 5, note: "J'y ai pris ma robe de fiançailles et ma mère sa tenue le même jour. Les stylistes ont un œil de dingue pour assortir les silhouettes. On a été bluffées toutes les deux." },
+      { author: "Nour El Houda S.", event: "Mariage civil", stars: 4, note: "Très belle boutique, collections fraîches et tendance. J'aurais aimé un peu plus de choix en taille 42 mais au final j'ai trouvé une pièce que j'adore." },
     ],
   },
 
@@ -1819,8 +1821,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Sarah Fleurs, fleuriste événementielle à Casablanca — compositions florales sur-mesure, arches de fleurs fraîches et décoration florale de mariage pour des cérémonies empreintes de poésie et de beauté.",
     reviews: [
-      { author: "Imane B.", event: "Mariage à Casablanca", stars: 5, note: "Sarah a créé des compositions florales à couper le souffle. Chaque arrangement reflétait notre vision avec une précision et une beauté incroyables." },
-      { author: "Anas T.", event: "Réception de mariage", stars: 5, note: "Un talent floral exceptionnel. Les fleurs de Sarah ont transformé notre salle en un jardin enchanté. Tout le monde a été subjugué." },
+      { author: "Yousra M.", event: "Mariage champêtre", stars: 5, note: "Sarah a compris notre délire bohème dès le premier rdv. Les pivoines et eucalyptus étaient d'une fraîcheur dingue, même après 8h de réception. Tout le monde nous a demandé le contact." },
+      { author: "Ilyas B.", event: "Demande en mariage surprise", stars: 5, note: "J'avais besoin d'un bouquet spécial pour ma demande à 24h près. Sarah a livré à l'endroit convenu avec une note manuscrite. Classe absolue, elle a sauvé ma soirée." },
+      { author: "Assia K.", event: "Baptême", stars: 4, note: "Très belles compositions pour le baptême de ma fille. Petit hic sur la livraison qui a eu 45 min de retard mais le résultat visuel a fait oublier l'attente." },
     ],
   },
   "nina-beni-fleuriste": {
@@ -1831,8 +1834,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Nina Beni Fleuriste, créatrice florale à Casablanca — bouquets de mariée, centres de table et décoration florale complète dans un style naturel, romantique et contemporain pour des célébrations inoubliables.",
     reviews: [
-      { author: "Sana R.", event: "Mariage romantique", stars: 5, note: "Nina a créé LE bouquet dont je rêvais. Fraîcheur des fleurs, élégance des compositions et créativité débordante. Un travail d'artiste !" },
-      { author: "Younes M.", event: "Réception champêtre", stars: 4, note: "Très belle fleuriste, créative et à l'écoute. Les compositions étaient magnifiques et les prix très raisonnables." },
+      { author: "Zineb L.", event: "Mariage intimiste", stars: 5, note: "Nina a un don, point. Mon bouquet de mariée était exactement ce que j'avais en tête sans savoir comment l'expliquer. Elle a traduit mes mots en fleurs, c'est magique." },
+      { author: "Othmane D.", event: "Soirée familiale", stars: 4, note: "Très belles compositions pour un dîner chez nous. Bon rapport qualité-prix et Nina est vraiment adorable. Les fleurs ont tenu toute la semaine après." },
+      { author: "Rim B.", event: "Anniversaire", stars: 5, note: "Commande un centre de table pour les 60 ans de ma mère, elle n'a pas arrêté d'en parler pendant 3 semaines. Nina met de l'âme dans son travail." },
     ],
   },
   "mon-amie-la-rose": {
@@ -1843,8 +1847,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Mon Amie la Rose, boutique florale événementielle à Casablanca — spécialiste de la rose dans toutes ses variétés et couleurs, pour des décorations de mariage romantiques et des bouquets de mariée d'exception.",
     reviews: [
-      { author: "Hiba L.", event: "Mariage tout en roses", stars: 5, note: "Mon Amie la Rose a fait de notre mariage un jardin de roses enchanté. La qualité des fleurs et la créativité des compositions sont incomparables." },
-      { author: "Reda A.", event: "Soirée romantique", stars: 5, note: "Une boutique magique qui transforme les espaces en havre de beauté florale. Équipe passionnée et résultat toujours époustouflant." },
+      { author: "Salma H.", event: "Fiançailles en rose poudré", stars: 5, note: "Je voulais du rose poudré partout et j'avais peur que ça fasse trop. Mon Amie la Rose a dosé à la perfection, c'était romantique sans être kitsch. Ma belle-mère a pleuré." },
+      { author: "Achraf B.", event: "Anniversaire de mariage", stars: 5, note: "J'ai commandé 50 roses rouges pour nos 10 ans avec ma femme. Emballage soigné, roses ultra fraîches et livraison pile à l'heure. Ma femme a fondu." },
+      { author: "Hanane O.", event: "Baptême", stars: 4, note: "Compositions très jolies pour le baptême de ma nièce. Petit bémol sur le devis qui a évolué en cours de route mais le résultat était au rendez-vous." },
     ],
   },
   "jardin-sucre": {
@@ -1855,8 +1860,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Jardin Sucré, fleuriste créative à Casablanca — mélange poétique de fleurs fraîches et de verdure luxuriante pour des décorations de mariage boho-chic, romantiques et pleines de charme naturel.",
     reviews: [
-      { author: "Loubna K.", event: "Mariage bohème", stars: 5, note: "Jardin Sucré a capturé parfaitement l'esprit bohème de notre mariage. Des compositions florales vivantes, naturelles et absolument magnifiques." },
-      { author: "Karim S.", event: "Cérémonie en plein air", stars: 4, note: "Belle créatrice florale, très à l'écoute et inspirée. Résultat naturel et élégant qui a su enchanter nos invités." },
+      { author: "Imane C.", event: "Mariage à la ferme", stars: 5, note: "On voulait un style champêtre un peu sauvage, pas trop arrangé. Jardin Sucré a pigé direct, les arches de fleurs étaient à tomber. Mes invités pensaient qu'on avait fait venir un fleuriste français." },
+      { author: "Mouad T.", event: "Réception d'entreprise", stars: 4, note: "Service pro pour le lancement de notre boutique. Compositions fraîches et originales qui ont vraiment mis l'espace en valeur. Prix un peu élevés mais justifiés." },
+      { author: "Ghita M.", event: "Henna", stars: 5, note: "Sublimes arches florales pour ma cérémonie de henné. Mélange de verdure et de fleurs blanches qui rendait la terrasse féerique. Je recommande les yeux fermés." },
     ],
   },
   "mille-et-une-roses": {
@@ -1867,8 +1873,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Mille et Une Roses, fleuriste de prestige à Marrakech — décoration florale grandiose inspirée des jardins de l'Atlas et des palais de Marrakech, pour des mariages qui mêlent opulence florale et tradition orientale.",
     reviews: [
-      { author: "Nadia M.", event: "Grand mariage Marrakech", stars: 5, note: "Mille et Une Roses a métamorphosé notre salle en jardin des Mille et Une Nuits. Un spectacle floral inoubliable, des roses partout !" },
-      { author: "Ali B.", event: "Mariage palmeraie", stars: 5, note: "La magie florale de Marrakech incarnée. Des compositions d'une richesse et d'un raffinement qu'on ne trouve que dans la ville ocre." },
+      { author: "Sara El Mansouri", event: "Mariage Palmeraie Marrakech", stars: 5, note: "600 roses rien que sur la table d'honneur. Quand on est entrés dans la salle avec mon mari on a eu le souffle coupé, vraiment. Nos invités n'arrêtaient pas de prendre des photos des centres de table." },
+      { author: "Bilal R.", event: "Mariage riad", stars: 5, note: "Pour notre mariage dans un riad de la médina, Mille et Une Roses a transformé les patios en jardins persans. Travail de dingue sur les détails, budget conséquent mais chaque dirham se voit." },
+      { author: "Siham A.", event: "Sboue", stars: 4, note: "Compositions magnifiques pour le sboue de mon fils. Très belle qualité de fleurs et mise en scène très réussie. J'aurais apprécié un peu plus de réactivité au téléphone avant l'événement." },
     ],
   },
 
@@ -1881,8 +1888,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "CAKE UP, cake designer tendance à Casablanca — gâteaux de mariage sculptés et personnalisés, wedding cakes à étages, number cakes et créations sucrées pour des célébrations mémorables et gourmandes.",
     reviews: [
-      { author: "Samia B.", event: "Mariage à Casablanca", stars: 5, note: "Notre gâteau de mariage CAKE UP était une véritable œuvre d'art ! Aussi beau que délicieux — nos invités n'en revenaient pas. Un sans-faute !" },
-      { author: "Bilal O.", event: "Anniversaire de mariage", stars: 5, note: "CAKE UP crée de vraies sculptures sucrées. Personnalisation parfaite, goût divin et livraison impeccable. On recommande !" },
+      { author: "Hajar B.", event: "Mariage moderne", stars: 5, note: "Gâteau 4 étages avec fleurs comestibles, j'y croyais à moitié quand j'ai commandé. Le résultat a dépassé les photos Instagram — et surtout c'était délicieux, pas juste joli. Mes invités m'en parlent encore." },
+      { author: "Yassine K.", event: "Anniversaire", stars: 5, note: "J'ai commandé un number cake pour les 30 ans de ma femme. Design impeccable, garnitures fruitées parfaitement équilibrées. Ma belle-mère (critique de naissance) a validé." },
+      { author: "Najat F.", event: "Baby shower", stars: 4, note: "Très joli gâteau thème licorne pour ma nièce. Goût correct, peut-être un peu sucré pour mon goût mais les enfants ont adoré. Livraison ponctuelle." },
     ],
   },
   "safaa-cake-design": {
@@ -1893,8 +1901,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Safaa's Cake Design, pâtissière créative à Casablanca — wedding cakes personnalisés, gâteaux décorés à la main et créations sucrées uniques pour des mariages et événements qui méritent l'exceptionnel.",
     reviews: [
-      { author: "Ghita M.", event: "Mariage romantique", stars: 5, note: "Safaa est une artiste du sucre. Notre wedding cake était absolument magnifique, avec des détails floraux peints à la main. Un vrai bijou !" },
-      { author: "Tariq L.", event: "Baby shower", stars: 5, note: "Créativité, précision et délicieux goût — Safaa réunit tout. Je la recommande sans la moindre hésitation pour tous vos événements." },
+      { author: "Loubna A.", event: "Fiançailles", stars: 5, note: "Safaa a peint des pivoines à la main sur mon gâteau de fiançailles, j'ai hésité à le couper tellement c'était beau. Bisquit moelleux et crème légère, tout était parfait. Merci mille fois." },
+      { author: "Khalid S.", event: "Anniversaire surprise", stars: 5, note: "J'ai demandé un gâteau inspiré du manga préféré de ma fille. Safaa s'est documentée, m'a envoyé 3 croquis, le rendu final a fait pleurer ma fille (de joie). Une perfectionniste." },
+      { author: "Dounia M.", event: "Henna", stars: 4, note: "Très jolie pièce montée pour ma nuit de henné. Travail soigné même si un peu cher par rapport à d'autres cake designers. Cela dit la qualité est indéniable." },
     ],
   },
   "lou-cake-factory": {
@@ -1905,8 +1914,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Lou Cake Factory, atelier de pâtisserie créative à Casablanca — gâteaux de mariage modernes et personnalisés, cupcakes, macarons et douceurs françaises pour illuminer vos tables de fête.",
     reviews: [
-      { author: "Soumia A.", event: "Mariage chic", stars: 5, note: "Lou Cake Factory a concocté un gâteau de mariage absolument divin. Présentation irréprochable et goût exquis. Nos invités en redemandaient !" },
-      { author: "Ismail K.", event: "Anniversaire", stars: 4, note: "Très bonne pâtissière créative, réactive et ponctuelle. Gâteaux délicieux et joliment décorés. Très bonne expérience." },
+      { author: "Fadwa Z.", event: "Mariage chic", stars: 5, note: "Le naked cake avec fruits rouges qu'on avait demandé pour 150 personnes a fait sensation. J'avais peur que ça manque à la découpe, il en restait à peine. Signe qu'il était bon." },
+      { author: "Adil B.", event: "Anniversaire d'entreprise", stars: 4, note: "Commande de 80 cupcakes aux couleurs de notre marque pour les 5 ans de la boîte. Respect des délais, visuel cohérent et saveurs variées. Rien à redire." },
+      { author: "Kenza L.", event: "Baptême", stars: 5, note: "Gâteau pastel pour le baptême de ma fille, une pure merveille. Lou m'a conseillée sur les parfums en fonction des invités (enfants + adultes), elle pense à tout." },
     ],
   },
   "lolitta-cake-design": {
@@ -1917,8 +1927,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Lolitta Cake Design, cake artist à Casablanca — gâteaux de mariage artistiques, drip cakes, naked cakes et créations en sucre tirées à la main pour des célébrations aussi belles que savoureuses.",
     reviews: [
-      { author: "Meriem B.", event: "Mariage à Casablanca", stars: 5, note: "Lolitta est une vraie artiste ! Notre gâteau de mariage était spectaculaire — pièce maîtresse de notre réception que tout le monde a photographiée." },
-      { author: "Hamza T.", event: "Fiançailles", stars: 5, note: "Gâteau personnalisé absolument parfait. Lolitta écoute, propose et réalise exactement ce qu'on imagine. Délicieux en plus !" },
+      { author: "Soukaina N.", event: "Mariage traditionnel", stars: 5, note: "Drip cake à 3 étages avec coulée de chocolat blanc, inspiré d'une photo qu'on avait sauvegardée sur Pinterest depuis 2 ans. Lolitta l'a reproduit à l'identique et ajouté sa touche. Les photos de notre gâteau ont fait le tour de la famille." },
+      { author: "Anas R.", event: "Aïd party", stars: 5, note: "Pour notre réception d'Aïd j'ai commandé un gâteau chocolat-noisette dernière minute (4 jours avant). Lolitta a accepté, livré à l'heure, et c'était excellent. Respect total." },
+      { author: "Meriem B.", event: "Anniversaire enfant", stars: 4, note: "Très joli gâteau thème Moana pour les 6 ans de ma fille. Les enfants ont adoré le visuel. Seul bémol : un peu moins sucré aurait été top pour les petits." },
     ],
   },
 
@@ -1931,8 +1942,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Maroc Limousines, service de transport de prestige à Casablanca — flotte de limousines et berlines de luxe pour vos cortèges de mariage, transferts VIP et locations avec chauffeur pour tous vos événements.",
     reviews: [
-      { author: "Laila R.", event: "Mariage à Casablanca", stars: 5, note: "Maroc Limousines nous a fourni un service impeccable. Voitures rutilantes, chauffeurs en tenue et ponctualité exemplaire. Notre cortège était magnifique !" },
-      { author: "Mehdi B.", event: "Cérémonie officielle", stars: 5, note: "Service VIP de très haute qualité. Flotte impressionnante et chauffeurs très professionnels. Je recommande pour tous les grands événements." },
+      { author: "Imane S.", event: "Mariage Casablanca", stars: 5, note: "Mercedes Classe S blanche impeccable, chauffeur en costume et gants blancs. Ponctualité de Suisse. Les photos de sortie de mosquée sont dingues grâce à la voiture." },
+      { author: "Tarik O.", event: "Réception d'entreprise", stars: 5, note: "J'ai loué 3 berlines pour transporter nos VIP lors d'un événement corporate. Zéro accroc, chauffeurs qui connaissent la ville et parlent anglais. Je rappellerai." },
+      { author: "Hajar B.", event: "Fiançailles", stars: 4, note: "Belle voiture pour l'arrivée à la salle, le chauffeur était pro. J'ai juste trouvé que le devis initial et la facture finale avaient un petit écart qu'il a fallu clarifier." },
     ],
   },
   "rs-limousine": {
@@ -1943,8 +1955,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "RS Limousine, location de voitures de mariage à Casablanca — berlines de luxe, 4×4 Premium et véhicules anciens pour un cortège nuptial qui allie style, élégance et confort le jour J.",
     reviews: [
-      { author: "Hind S.", event: "Mariage à Casablanca", stars: 4, note: "Service correct, voitures propres et chauffeur ponctuel. RS Limousine est une valeur sûre pour les cortèges de mariage à Casablanca." },
-      { author: "Omar L.", event: "Transfert VIP", stars: 5, note: "Très bonne expérience. Véhicules impeccables et chauffeur très professionnel. Je recommande sans hésitation." },
+      { author: "Wissal T.", event: "Mariage civil + réception", stars: 4, note: "Berline décorée avec goût, chauffeur aimable et voiture climatisée (important en juillet à Casa). Prix correct pour la prestation. Une bonne expérience globale." },
+      { author: "Reda M.", event: "Cérémonie traditionnelle", stars: 5, note: "On a pris un 4x4 Range Rover blanc pour mon frère, le résultat en photos est juste incroyable. Chauffeur ponctuel et super sympa avec la famille." },
+      { author: "Nour B.", event: "Anniversaire de mariage", stars: 4, note: "Surprise organisée pour les 20 ans de mes parents, RS a joué le jeu et est arrivé pile à l'heure. Service fiable, je recommanderai à mes cousins pour leurs mariages." },
     ],
   },
   "city-gold-prestige": {
@@ -1955,8 +1968,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "City Gold Prestige, service de transport haut de gamme à Casablanca — location de Rolls-Royce, Bentley, Mercedes Classe S et Porsche Cayenne avec chauffeur pour les mariages les plus raffinés.",
     reviews: [
-      { author: "Nadia A.", event: "Grand mariage", stars: 5, note: "City Gold Prestige a mis à notre disposition une Rolls-Royce blanche magnifique pour notre mariage. Service impeccable et voiture superbe !" },
-      { author: "Karim M.", event: "Mariage de prestige", stars: 5, note: "La crème de la crème pour les voitures de mariage à Casablanca. Flotte exceptionnelle et service digne des grandes occasions." },
+      { author: "Sara B.", event: "Mariage de prestige", stars: 5, note: "Bentley Continental pour l'arrivée de la mariée, Rolls Royce pour la sortie de salle. Budget important mais pour un mariage unique, ça vaut chaque dirham. Chauffeurs en costume 3 pièces." },
+      { author: "Amine T.", event: "Réception VIP", stars: 5, note: "J'ai loué une Porsche Cayenne avec chauffeur pour un client VIP. Voiture nickel, service 5 étoiles, discrétion totale. City Gold tient ses promesses." },
+      { author: "Kenza L.", event: "Mariage Casablanca", stars: 5, note: "Mercedes Classe S avec décoration florale assortie à mon bouquet. Attention aux détails incroyable et équipe qui gère les timings comme des chefs. Un vrai plus pour le mariage." },
     ],
   },
   "summit-rent-maroc": {
@@ -1967,8 +1981,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Summit Rent, location de véhicules d'exception à Casablanca — flotte premium alliant voitures classiques et sportives de luxe pour des cortèges de mariage mémorables et des transferts VIP.",
     reviews: [
-      { author: "Sara O.", event: "Mariage à Casablanca", stars: 4, note: "Bon service, flotte bien entretenue et chauffeur sympa. Summit Rent est une option fiable pour les cortèges de mariage." },
-      { author: "Youssef T.", event: "Soirée privée", stars: 4, note: "Service satisfaisant, véhicule propre et ponctuel. Rapport qualité-prix correct pour ce type de prestation." },
+      { author: "Yousra K.", event: "Mariage Casablanca", stars: 4, note: "BMW Série 7 noire, voiture propre et chauffeur ponctuel. Summit est une option moins clinquante que les rolls/bentley mais très sérieuse. Bon rapport qualité-prix." },
+      { author: "Ayoub M.", event: "Lila", stars: 5, note: "J'ai pris un Range Rover pour ma sœur le soir de la Lila. Arrivée stylée et ponctuelle, le chauffeur a même aidé avec la takchita. Très bon service." },
+      { author: "Rim H.", event: "Réception familiale", stars: 4, note: "Service correct pour une petite réception. Voiture bien entretenue, chauffeur discret. Prix raisonnable. Rien d'extraordinaire mais tout s'est bien passé." },
     ],
   },
 
@@ -1981,8 +1996,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Kameleon Design, studio créatif de faire-part à Casablanca — identités visuelles de mariage complètes, faire-part sur-mesure et papeterie de luxe pour des cérémonies qui commencent avec élégance.",
     reviews: [
-      { author: "Asmaa M.", event: "Mariage à Casablanca", stars: 5, note: "Kameleon a créé des faire-part absolument magnifiques. Le design était unique et parfaitement cohérent avec le thème de notre mariage. Nos invités ont adoré !" },
-      { author: "Tarik B.", event: "Réception de mariage", stars: 5, note: "Studio créatif talentueux, très réactif et à l'écoute. Le résultat final était au-delà de nos attentes. On recommande vivement !" },
+      { author: "Salma D.", event: "Mariage traditionnel", stars: 5, note: "Kameleon a designé toute notre identité visuelle : faire-part, menus, marque-places, livret de cérémonie. Cohérence totale et finitions de folie (dorure à chaud, papier texturé). Mes invités ont gardé les menus." },
+      { author: "Ilyas M.", event: "Fiançailles", stars: 5, note: "J'ai commandé des faire-part sur-mesure avec motif zellige intégré. Le designer a proposé 5 variations, on a affiné ensemble, résultat magnifique. Très bon accueil au studio." },
+      { author: "Wissal O.", event: "Baby shower", stars: 4, note: "Très belle papeterie pour ma baby shower, le style était pile ce que je voulais. Délais un peu serrés à cause de mon retard sur la validation mais ils ont assuré." },
     ],
   },
   "inna-design": {
@@ -1993,8 +2009,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Inna Design, créatrice de faire-part et papeterie de mariage à Casablanca — collections tendance et créations 100% personnalisées, aquarelle, gravure et impressions premium pour des faire-part qui marquent les esprits.",
     reviews: [
-      { author: "Mona K.", event: "Mariage romantique", stars: 5, note: "Inna a créé nos faire-part avec une sensibilité artistique remarquable. Aquarelles délicates et impression de très haute qualité. Un vrai bijou !" },
-      { author: "Mehdi S.", event: "Mariage chic", stars: 4, note: "Créatrice talentueuse et très professionnelle. Nos faire-part étaient élégants et originaux. Délais respectés et communication excellente." },
+      { author: "Hanane R.", event: "Mariage romantique", stars: 5, note: "Aquarelles peintes à la main sur mes faire-part, chaque enveloppe était une petite œuvre d'art. Inna m'a même envoyé une vidéo du processus. Mes invités ont encadré les leurs." },
+      { author: "Saad B.", event: "Cérémonie traditionnelle", stars: 5, note: "Faire-part en arabe calligraphique + français, Inna a trouvé une calligraphe pour la version arabe. Attention au détail incroyable, service personnalisé à 100%." },
+      { author: "Meryem L.", event: "Fiançailles", stars: 4, note: "Très beau rendu, papier épais et impression nette. Un petit ajustement nécessaire sur une date mais Inna a réagi rapidement. Bonne expérience dans l'ensemble." },
     ],
   },
   "printerz-inc": {
@@ -2005,8 +2022,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Printerz Inc., imprimerie haut de gamme à Casablanca — faire-part de mariage sur papier couché premium, reliure de luxe et finitions soignées (dorure, gaufrage, vernis) pour une première impression inoubliable.",
     reviews: [
-      { author: "Widad B.", event: "Mariage traditionnel", stars: 4, note: "Très bonne qualité d'impression, finitions soignées et délais respectés. Printerz Inc. est un partenaire fiable pour la papeterie de mariage." },
-      { author: "Amine O.", event: "Réception de gala", stars: 4, note: "Impression de qualité professionnelle, service rapide et équipe réactive. Un bon rapport qualité-prix pour les faire-part premium." },
+      { author: "Assia T.", event: "Mariage traditionnel", stars: 4, note: "Faire-part avec dorure à chaud, rendu très premium. Délais respectés, échantillons envoyés avant production finale, c'est un vrai plus. Prix cohérent avec la qualité." },
+      { author: "Karim B.", event: "Réception corporate", stars: 4, note: "J'ai commandé des invitations pour un gala d'entreprise. Impression impeccable, finitions nettes, délai tenu. L'équipe est carrée dans ses process, ça fait plaisir." },
+      { author: "Nour H.", event: "Mariage civil", stars: 5, note: "Faire-part avec gaufrage et vernis sélectif, résultat bluffant. Printerz sait vraiment travailler les finitions. On a senti la différence par rapport aux imprimeurs classiques." },
     ],
   },
   "web2print-ma": {
@@ -2017,8 +2035,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Web2Print.ma, plateforme de création et impression de faire-part en ligne au Maroc — commande 100% digitale, maquettes personnalisables et livraison rapide pour vos faire-part, menus et cartons de table.",
     reviews: [
-      { author: "Siham T.", event: "Mariage à Casablanca", stars: 4, note: "Service pratique et efficace. J'ai commandé mes faire-part en ligne, la maquette était facile à personnaliser et la livraison rapide. Satisfaite !" },
-      { author: "Rachid K.", event: "Réception", stars: 3, note: "Bon rapport qualité-prix pour une commande rapide. L'outil en ligne est simple mais les options de personnalisation pourraient être plus larges." },
+      { author: "Zineb M.", event: "Mariage express", stars: 4, note: "On s'est mariés 6 semaines après la demande, Web2Print m'a sauvée. Commande en ligne simple, maquette validée en 48h, livraison en 4 jours. Pas le faire-part de luxe mais parfait pour l'urgence." },
+      { author: "Bilal K.", event: "Anniversaire 40 ans", stars: 3, note: "Pratique pour commander vite fait, interface claire et prix attractifs. Par contre les modèles sont un peu basiques, il manque des options vraiment originales. Convient pour un usage simple." },
+      { author: "Fatima Zahra B.", event: "Baptême", stars: 4, note: "J'ai commandé des cartes de baptême en ligne, super pratique. Qualité d'impression correcte pour le prix, livraison à domicile rapide. Je rappellerai pour d'autres occasions." },
     ],
   },
 }
