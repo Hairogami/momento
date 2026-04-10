@@ -196,7 +196,7 @@ export default function Landing() {
 
           <div className="md:hidden flex items-center gap-2">
             <DarkModeToggle />
-            <button className="p-2 rounded-lg" onClick={() => setMenuOpen(o => !o)} style={{ color: C.white }}>
+            <button className="p-2 rounded-lg" onClick={() => setMenuOpen(o => !o)} style={{ color: C.white }} aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}>
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
@@ -249,7 +249,7 @@ export default function Landing() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
             <Link href="/dashboard"
               className="w-full sm:w-auto flex items-center justify-center gap-2 text-xs font-semibold tracking-widest uppercase px-8 py-4 transition-all hover:opacity-90 hover:-translate-y-0.5"
-              style={{ backgroundColor: C.terra, color: "#fff", boxShadow: "0 8px 32px rgba(var(--momento-terra-rgb),0.25)", letterSpacing: "0.16em" }}>
+              style={{ backgroundColor: C.terra, color: "var(--momento-ink)", boxShadow: "0 8px 32px rgba(var(--momento-terra-rgb),0.25)", letterSpacing: "0.16em" }}>
               Créer mon événement <ArrowRight size={14} />
             </Link>
             <Link href="/explore"
@@ -450,7 +450,7 @@ export default function Landing() {
             </div>
             <Link href="/prestataires"
               className="flex-shrink-0 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-6 py-3.5 transition-all hover:opacity-90 whitespace-nowrap"
-              style={{ backgroundColor: C.terra, color: "#fff", letterSpacing: "0.16em" }}>
+              style={{ backgroundColor: C.terra, color: "var(--momento-ink)", letterSpacing: "0.16em" }}>
               Créer mon profil <ArrowRight size={14} />
             </Link>
           </div>
@@ -535,7 +535,7 @@ export default function Landing() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/dashboard"
                   className="flex items-center justify-center gap-2 text-xs font-semibold tracking-widest uppercase px-7 py-4 transition-all hover:opacity-90"
-                  style={{ backgroundColor: C.terra, color: "#fff", letterSpacing: "0.16em" }}>
+                  style={{ backgroundColor: C.terra, color: "var(--momento-ink)", letterSpacing: "0.16em" }}>
                   Créer mon événement <ArrowRight size={14} />
                 </Link>
                 <Link href="/explore"

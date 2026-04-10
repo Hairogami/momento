@@ -135,6 +135,8 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
         <div className="relative" ref={ref}>
           <button
             onClick={() => setOpen(o => !o)}
+            aria-label="Menu utilisateur"
+            aria-expanded={open}
             className="flex items-center gap-2 px-3 py-2 rounded-full transition-all"
             style={{
               backgroundColor: C.ink,
