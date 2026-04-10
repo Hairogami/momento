@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { timingSafeEqual } from "crypto"
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-
 export async function GET(req: NextRequest) {
   const key = req.nextUrl.searchParams.get("key")
   const previewKey = process.env.PREVIEW_KEY
@@ -18,10 +16,10 @@ export async function GET(req: NextRequest) {
   }
 
   if (!valid) {
-    return NextResponse.redirect(new URL("/coming-soon?error=1", BASE_URL))
+    return NextResponse.redirect(new URL("/coming-soon?error=1", req.url))
   }
 
-  const res = NextResponse.redirect(new URL("/", BASE_URL))
+  const res = NextResponse.redirect(new URL("/", req.url))
   res.cookies.set("preview_key", previewKey ?? "", {
     httpOnly: true,
     sameSite: "lax",
