@@ -9,18 +9,21 @@ export async function GET() {
   }
 
   if (IS_DEV) {
-    // Calcul dynamique depuis les planners mock retournés par /api/planners
-    // On simule avec les vraies données DB si dispo, sinon fallback
-    const planners = await prisma.planner.findMany({
-      where: { userId: session.user.id },
-      include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } },
-    }).catch((e: unknown) => { console.error("[stats] DB error:", e); return [] })
+    const [planners, stepVendors] = await Promise.all([
+      prisma.planner.findMany({
+        where: { userId: session.user.id },
+        select: { createdAt: true, weddingDate: true, steps: { select: { status: true } } },
+      }).catch((e: unknown) => { console.error("[stats] DB error:", e); return [] }),
+      prisma.stepVendor.findMany({
+        where: { step: { planner: { userId: session.user.id } } },
+        select: { vendor: { select: { category: true } } },
+      }).catch(() => []),
+    ])
 
     if (planners.length > 0) {
-      return buildStats(planners)
+      return buildStats(planners, stepVendors)
     }
 
-    // Fallback mock si DB vide
     return Response.json({
       eventsByMonth: MOCK_EVENTS_BY_MONTH,
       partnersByCategory: MOCK_PARTNERS,
@@ -28,20 +31,26 @@ export async function GET() {
     })
   }
 
-  const planners = await prisma.planner.findMany({
-    where: { userId: session.user.id },
-    take: 100,
-    include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } },
-  })
+  // PERF: separate focused queries instead of 3-level nested include
+  const [planners, stepVendors] = await Promise.all([
+    prisma.planner.findMany({
+      where: { userId: session.user.id },
+      take: 100,
+      select: { createdAt: true, weddingDate: true, steps: { select: { status: true } } },
+    }),
+    prisma.stepVendor.findMany({
+      where: { step: { planner: { userId: session.user.id } } },
+      select: { vendor: { select: { category: true } } },
+    }),
+  ])
 
-  return buildStats(planners)
+  return buildStats(planners, stepVendors)
 }
 
-type PlannerWithSteps = Awaited<ReturnType<typeof prisma.planner.findMany<{
-  include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } }
-}>>>[number]
+type PlannerSlim = { createdAt: Date; weddingDate: Date | null; steps: { status: string }[] }
+type VendorSlim  = { vendor: { category: string } }
 
-function buildStats(planners: PlannerWithSteps[]) {
+function buildStats(planners: PlannerSlim[], stepVendors: VendorSlim[]) {
   const now = new Date()
 
   // ── Événements par mois (12 derniers mois) ──────────────────────────────
@@ -71,13 +80,9 @@ function buildStats(planners: PlannerWithSteps[]) {
 
   // ── Partenaires par catégorie ────────────────────────────────────────────
   const catMap: Record<string, number> = {}
-  for (const p of planners) {
-    for (const step of p.steps) {
-      for (const sv of step.vendors) {
-        const cat = sv.vendor.category || "Autre"
-        catMap[cat] = (catMap[cat] ?? 0) + 1
-      }
-    }
+  for (const sv of stepVendors) {
+    const cat = sv.vendor.category || "Autre"
+    catMap[cat] = (catMap[cat] ?? 0) + 1
   }
 
   const COLORS = ["#e07b5a","#7b5ea7","#5a8ae0","#3a7d5c","#c4922a","#8c6a5a","#e05a7b","#5ab8e0"]
@@ -86,17 +91,19 @@ function buildStats(planners: PlannerWithSteps[]) {
     .slice(0, 6)
     .map(([label, count], i) => ({ label, count, color: COLORS[i % COLORS.length] }))
 
-  const totalCreated  = planners.length
   const totalRealized = planners.filter(p =>
     (p.weddingDate && new Date(p.weddingDate) < now) ||
     (p.steps.length > 0 && p.steps.every(s => s.status === "done"))
   ).length
-  const totalPartners = Object.values(catMap).reduce((s, v) => s + v, 0)
 
   return Response.json({
     eventsByMonth,
     partnersByCategory,
-    totals: { created: totalCreated, realized: totalRealized, partners: totalPartners },
+    totals: {
+      created: planners.length,
+      realized: totalRealized,
+      partners: Object.values(catMap).reduce((s, v) => s + v, 0),
+    },
   })
 }
 
