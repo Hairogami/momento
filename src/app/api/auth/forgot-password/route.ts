@@ -26,15 +26,17 @@ export async function POST(req: NextRequest) {
       const user = await prisma.user.findUnique({ where: { email } })
 
       if (user) {
-        await prisma.emailVerification.deleteMany({
-          where: { userId: user.id, type: "password_reset" },
-        })
-
         const token = randomUUID()
         const expiresAt = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
 
-        await prisma.emailVerification.create({
-          data: { token, userId: user.id, expiresAt, type: "password_reset" },
+        // Atomic delete + create to prevent race condition with multiple concurrent requests
+        await prisma.$transaction(async (tx) => {
+          await tx.emailVerification.deleteMany({
+            where: { userId: user.id, type: "password_reset" },
+          })
+          await tx.emailVerification.create({
+            data: { token, userId: user.id, expiresAt, type: "password_reset" },
+          })
         })
 
         try {

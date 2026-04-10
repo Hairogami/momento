@@ -17,10 +17,13 @@ function escapeHtml(s: string): string {
 const resend = new Resend(process.env.RESEND_API_KEY!)
 const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@momentoevents.app"
 
+const strongPassword = z.string().min(8).max(128)
+  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.")
+
 const ClientSchema = z.object({
   role:      z.literal("client"),
   email:     z.string().email(),
-  password:  z.string().min(8).max(128),
+  password:  strongPassword,
   firstName: z.string().min(1).max(50).optional(),
   lastName:  z.string().min(1).max(50).optional(),
 })
@@ -28,7 +31,7 @@ const ClientSchema = z.object({
 const VendorSchema = z.object({
   role:           z.literal("vendor"),
   email:          z.string().email(),
-  password:       z.string().min(8).max(128),
+  password:       strongPassword,
   companyName:    z.string().min(1).max(100).optional(),
   vendorCategory: z.string().max(50).optional(),
   phone:          z.string().max(20).optional(),

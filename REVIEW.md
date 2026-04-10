@@ -1,9 +1,12 @@
 ---
-status: findings
-reviewed_at: 2026-04-10T18:55:00Z
-critical: 4
-warning: 11
+status: fixed
+reviewed_at: 2026-04-10T19:20:00Z
+critical: 0
+warning: 2
 info: 5
+note: >
+  Itération 3 appliquée. Tous les criticals fixés.
+  W05 (admin vendor Zod) + W06 (image URL allowlist) restent skipped (voir REVIEW-FIX.md).
 ---
 
 ## CRITICAL

@@ -12,7 +12,7 @@ export async function GET() {
     // Calcul dynamique depuis les planners mock retournés par /api/planners
     // On simule avec les vraies données DB si dispo, sinon fallback
     const planners = await prisma.planner.findMany({
-      where: session?.user?.id ? { userId: session.user.id } : {},
+      where: { userId: session.user.id },
       include: { steps: { include: { vendors: { select: { vendor: { select: { category: true } } } } } } },
     }).catch(() => [])
 

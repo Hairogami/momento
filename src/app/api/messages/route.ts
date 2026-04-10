@@ -16,7 +16,7 @@ export async function GET() {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
 
-  const user = await prisma.user.findUnique({ where: { id: session.user.id } })
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { role: true, vendorSlug: true } })
   if (!user) return NextResponse.json({ error: "Introuvable." }, { status: 404 })
 
   let conversations
@@ -101,9 +101,15 @@ export async function POST(req: NextRequest) {
       if (typeof vendorSlug !== "string" || !vendorSlug.trim()) {
         return NextResponse.json({ error: "vendorSlug requis." }, { status: 400 })
       }
+      const safeSlug = vendorSlug.trim().slice(0, 100)
+      // Verify vendor exists before creating a conversation to prevent orphaned records
+      const vendorExists = await prisma.vendor.findUnique({ where: { slug: safeSlug }, select: { id: true } })
+      if (!vendorExists) {
+        return NextResponse.json({ error: "Prestataire introuvable." }, { status: 404 })
+      }
       const conv = await prisma.conversation.upsert({
-        where: { clientId_vendorSlug: { clientId: session.user.id, vendorSlug: vendorSlug.trim() } },
-        create: { clientId: session.user.id, vendorSlug: vendorSlug.trim() },
+        where: { clientId_vendorSlug: { clientId: session.user.id, vendorSlug: safeSlug } },
+        create: { clientId: session.user.id, vendorSlug: safeSlug },
         update: {},
       })
       convId = conv.id

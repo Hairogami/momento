@@ -1,7 +1,7 @@
 ---
-fixed: 13
+fixed: 18
 skipped: 2
-fixed_at: 2026-04-10T18:58:00Z
+fixed_at: 2026-04-10T19:20:00Z
 ---
 
 ## CRITICAL
@@ -31,6 +31,22 @@ fixed_at: 2026-04-10T18:58:00Z
 ## INFO
 
 I01–I05 : Non appliqués — findings informationnels, pas de vecteur d'exploitation directe.
+
+---
+
+## Itération 3 — 2026-04-10T19:20Z
+
+[APPLIED] C-NEW-01 — src/app/api/auth/forgot-password/route.ts:29-38 — Race condition corrigée : `deleteMany` + `create` enveloppés dans `prisma.$transaction(async tx => {...})`. Identique au pattern déjà utilisé dans resend-verification. Un seul token valide possible à la fois.
+
+[APPLIED] C-NEW-02 — src/app/api/messages/route.ts:101-108 — Ajout vérification existence du vendor avant upsert de conversation : `prisma.vendor.findUnique({ where: { slug: safeSlug } })` + retour 404 si absent. Empêche la création de conversations orphelines avec des slugs arbitraires.
+
+[APPLIED] W-NEW-01 — src/app/api/auth/register/route.ts:23,31 — Ajout regex de complexité sur les deux schemas (ClientSchema + VendorSchema) : `(?=.*[a-z])(?=.*[A-Z])(?=.*\d)`. Aligne register avec change-password qui avait déjà cette contrainte.
+
+[APPLIED] W-NEW-02 — src/app/api/messages/route.ts:19 — `prisma.user.findUnique` dans GET messages converti avec `select: { role: true, vendorSlug: true }`. Élimine le chargement de passwordHash et autres champs sensibles inutiles.
+
+[APPLIED] W-NEW-03 — src/app/api/stats/route.ts:14-17 — Suppression du ternaire `session?.user?.id ? ... : {}` dans la branche IS_DEV. Remplacé par `where: { userId: session.user.id }` cohérent avec la branche prod. Élimine le risque théorique de charger tous les planners.
+
+[APPLIED] W-NEW-04 — src/proxy.ts:38 — Validation du paramètre `next` avant redirection login : `path.startsWith("/") && !path.startsWith("//")`. Empêche un open redirect protocol-relative si un attaquant forge `//evil.com` comme pathname.
 
 ---
 

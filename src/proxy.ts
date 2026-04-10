@@ -35,7 +35,9 @@ export function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
   if (isProtected && (!sessionCookie || sessionCookie.length < 20) && !isDev) {
     const url = new URL("/login", request.url)
-    url.searchParams.set("next", path)
+    // Validate path to prevent open redirect: must start with / and not be protocol-relative
+    const safePath = path.startsWith("/") && !path.startsWith("//") ? path : "/dashboard"
+    url.searchParams.set("next", safePath)
     return NextResponse.redirect(url)
   }
 
