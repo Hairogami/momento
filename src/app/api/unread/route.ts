@@ -14,13 +14,27 @@ export async function GET() {
 
   let messages = 0;
   try {
-    messages = await prisma.message.count({
-      where: {
-        read: false,
-        senderId: { not: session.user.id },
-        conversation: { clientId: session.user.id },
-      },
-    });
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true, vendorSlug: true },
+    })
+    if (user?.role === "vendor" && user.vendorSlug) {
+      messages = await prisma.message.count({
+        where: {
+          read: false,
+          senderId: { not: session.user.id },
+          conversation: { vendorSlug: user.vendorSlug },
+        },
+      })
+    } else {
+      messages = await prisma.message.count({
+        where: {
+          read: false,
+          senderId: { not: session.user.id },
+          conversation: { clientId: session.user.id },
+        },
+      })
+    }
   } catch (err) {
     if (process.env.NODE_ENV !== "production") console.error("[unread]", err)
   }

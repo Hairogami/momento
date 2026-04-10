@@ -1,7 +1,7 @@
 ---
-fixed: 9
+fixed: 13
 skipped: 2
-fixed_at: 2026-04-10T18:38:00Z
+fixed_at: 2026-04-10T18:58:00Z
 ---
 
 ## CRITICAL
@@ -31,3 +31,15 @@ fixed_at: 2026-04-10T18:38:00Z
 ## INFO
 
 I01–I05 : Non appliqués — findings informationnels, pas de vecteur d'exploitation directe.
+
+---
+
+## Itération 2 — 2026-04-10T18:58Z
+
+[APPLIED] C04 — src/app/api/planners/[id]/route.ts:57-70 — Ajout try/catch sur req.json() + type-check + slice(0,200) sur title, coupleNames, location avant passage à prisma.update. Élimine mass assignment et crash 500 sur JSON malformé.
+
+[APPLIED] W09 — src/app/api/planners/[id]/route.ts:57 — Inclus dans le fix C04 (même bloc).
+
+[APPLIED] W10 — src/proxy.ts:18 — Ajout guard `!configuredKey` : si PREVIEW_KEY absent ou vide, tous les accès non-exempts sont redirigés vers /coming-soon. Empêche l'accès involontaire à l'app en cas d'env var manquante.
+
+[APPLIED] W11 — src/app/api/unread/route.ts:15-26 — Ajout branch vendor : si role="vendor" et vendorSlug défini, compte les messages non lus dans les conversations du vendor au lieu des conversations client. Badge désormais fonctionnel pour les deux rôles.

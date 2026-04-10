@@ -54,15 +54,18 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!ownership || ownership.userId !== session.user.id)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
-  const body = await req.json()
+  let body: Record<string, unknown>
+  try { body = await req.json() } catch {
+    return Response.json({ error: "Requête invalide." }, { status: 400 })
+  }
   const planner = await prisma.planner.update({
     where: { id },
     data: {
-      title:       body.title,
-      coupleNames: body.coupleNames,
+      title:       typeof body.title === "string"       ? body.title.trim().slice(0, 200)       : undefined,
+      coupleNames: typeof body.coupleNames === "string" ? body.coupleNames.trim().slice(0, 200) : undefined,
       weddingDate: parseDate(body.weddingDate),
       budget:      parseBudget(body.budget),
-      location:    body.location,
+      location:    typeof body.location === "string"    ? body.location.trim().slice(0, 200)    : undefined,
       coverColor:  typeof body.coverColor === "string" && HEX_COLOR.test(body.coverColor)
         ? body.coverColor
         : undefined,

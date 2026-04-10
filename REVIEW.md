@@ -1,8 +1,8 @@
 ---
 status: findings
-reviewed_at: 2026-04-10T18:34:46Z
-critical: 3
-warning: 8
+reviewed_at: 2026-04-10T18:55:00Z
+critical: 4
+warning: 11
 info: 5
 ---
 
@@ -95,3 +95,27 @@ info: 5
 **Fichier:** src/app/(dashboard)/budget/actions.ts:52  
 **Probleme:** `budget < 0` accepte budget=0. Si un budget nul n'a pas de sens métier, utiliser `budget <= 0`. Si 0 est valide (budget inconnu), ajouter un commentaire.  
 **Fix:** Clarifier avec un commentaire ou ajuster la condition selon la règle métier.
+
+---
+
+## Nouveaux findings — itération 2026-04-10T18:55Z
+
+### [CRITICAL] C04 — Unsanitized mass assignment dans PATCH /api/planners/[id]
+**Fichier:** src/app/api/planners/[id]/route.ts:61-65
+**Problème:** `body.title`, `body.coupleNames`, `body.location` passés directement à `prisma.planner.update` sans vérification de type ni cap de longueur. Un attaquant peut envoyer des non-strings (objets, `null`, tableaux) causant des erreurs 500 non gérées, ou des chaînes arbitrairement longues saturant la colonne Postgres.
+**Fix:** Ajouter `typeof body.X === "string" ? body.X.trim().slice(0, N) : undefined` — identique au pattern déjà utilisé dans le POST de la même route. **Appliqué.**
+
+### [WARNING] W09 — Pas de try/catch sur `req.json()` dans PATCH /api/planners/[id]
+**Fichier:** src/app/api/planners/[id]/route.ts:57
+**Problème:** Un JSON malformé lève une exception non gérée → réponse 500 au lieu d'un 400 propre.
+**Fix:** Wrap en try/catch avec retour 400. **Appliqué (inclus dans le fix C04).**
+
+### [WARNING] W10 — PREVIEW_KEY vide/absent ne bloque pas la coming-soon gate
+**Fichier:** src/proxy.ts:18
+**Problème:** Si `PREVIEW_KEY` est undefined ou `""`, la condition `previewKey !== process.env.PREVIEW_KEY` laisse passer les accès (undefined === undefined quand aucun cookie, ou `"" === ""` si cookie vide). Accès involontaire à l'app en pré-lancement.
+**Fix:** Exiger que `configuredKey` soit non-vide avant de l'accepter comme référence valide. **Appliqué.**
+
+### [WARNING] W11 — Unread count manquant pour les vendors dans /api/unread
+**Fichier:** src/app/api/unread/route.ts:17-23
+**Problème:** La requête `conversation: { clientId: session.user.id }` ne retourne jamais de résultats pour un utilisateur `role="vendor"`. Les vendors ne voient aucun badge de messages non lus même si des clients leur ont écrit.
+**Fix:** Branch sur le rôle : si vendor, compter les messages non lus dans les conversations où `vendorSlug = user.vendorSlug`. **Appliqué.**

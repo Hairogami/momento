@@ -15,7 +15,8 @@ export function proxy(request: NextRequest) {
   const previewKey = request.cookies.get("preview_key")?.value
   const isExempt   = COMING_SOON_EXEMPT.some(p => path.startsWith(p))
 
-  if (!isExempt && previewKey !== process.env.PREVIEW_KEY) {
+  const configuredKey = process.env.PREVIEW_KEY
+  if (!isExempt && (!configuredKey || previewKey !== configuredKey)) {
     return NextResponse.redirect(new URL("/coming-soon", request.url))
   }
   // ─────────────────────────────────────────────────────────────────────────
