@@ -9,7 +9,7 @@ const PROTECTED          = ["/dashboard", "/accueil", "/profile", "/planner", "/
                              "/prestataire/dashboard"]
 const AUTH_ONLY          = ["/login", "/signup"]
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   // ── COMING SOON GATE (tous les environnements) ────────────────────────────
