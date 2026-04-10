@@ -1,7 +1,7 @@
 ---
-fixed: 18
+fixed: 25
 skipped: 2
-fixed_at: 2026-04-10T19:20:00Z
+fixed_at: 2026-04-10T19:23:00Z
 ---
 
 ## CRITICAL
@@ -31,6 +31,24 @@ fixed_at: 2026-04-10T19:20:00Z
 ## INFO
 
 I01–I05 : Non appliqués — findings informationnels, pas de vecteur d'exploitation directe.
+
+---
+
+## Itération 4 — 2026-04-10T19:23Z
+
+[APPLIED] C05 — src/app/api/auth/reset-password/route.ts:8-18 — Ajout rate-limit 10 req/15min par IP via `rateLimitAsync`. Import `rateLimitAsync` + `getIp` ajouté. Guard null IP avec retour 400. Identique au pattern `forgot-password`.
+
+[APPLIED] C06 — src/app/api/contact/route.ts:24-28 — Ajout guard `if (!ip) return 400` avant le rate-limit. Empêche la clé partagée `"contact:null"` qui contournait la limite anti-spam.
+
+[APPLIED] W12 — src/app/api/auth/register/route.ts:91-105 — `prisma.user.create` enveloppé dans try/catch P2002 → 409. Race condition entre `findUnique` et `create` maintenant gérée proprement.
+
+[APPLIED] W13 — src/lib/auth.ts:60,68 — Ajout `emailVerified: true` dans le select du callback `authorize`. Retour `null` si `!user.emailVerified`. Login impossible sans vérification d'email préalable.
+
+[APPLIED] W14 — src/app/api/planners/[id]/steps/route.ts:33-37 — Validation explicite `isNaN(d.getTime())` sur dueDate avant insert. Retour 400 sur date invalide.
+
+[APPLIED] W14 — src/app/api/steps/[id]/route.ts:27-31 — Même fix sur PATCH step. Validation dueDate avant update, retour 400 sur invalide.
+
+[APPLIED] W15 — src/app/api/contact/route.ts:58 — `clientEmail.toLowerCase()` → `clientEmail.trim().toLowerCase()`. Supprime les espaces avant stockage.
 
 ---
 

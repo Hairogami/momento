@@ -21,7 +21,11 @@ export async function POST(req: NextRequest) {
   }
 
   // Rate limit: 5 contact requests per 10 minutes per IP (anti-spam)
+  // C06: Guard null IP to prevent shared rate-limit key "contact:null"
   const ip = getIp(req)
+  if (!ip) {
+    return NextResponse.json({ error: "Requête non identifiable." }, { status: 400 })
+  }
   const rl = await rateLimitAsync(`contact:${ip}`, 5, 600_000)
   if (!rl.ok) {
     return NextResponse.json(
@@ -55,7 +59,7 @@ export async function POST(req: NextRequest) {
       data: {
         vendorSlug,
         clientName,
-        clientEmail: clientEmail.toLowerCase(),
+        clientEmail: clientEmail.trim().toLowerCase(),
         clientPhone: clientPhone ?? null,
         eventType:   eventType ?? null,
         eventDate:   eventDate ?? null,

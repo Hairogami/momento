@@ -77,16 +77,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Vous avez déjà laissé un avis pour ce prestataire." }, { status: 409 })
   }
 
-  const review = await prisma.review.create({
-    data: {
-      vendorId:  vendor.id,
-      authorId:  session.user.id,
-      rating,
-      comment:   comment ?? null,
-      eventType: eventType ?? null,
-    },
-    select: { id: true, rating: true, comment: true, eventType: true, createdAt: true },
-  })
+  let review: { id: string; rating: number; comment: string | null; eventType: string | null; createdAt: Date }
+  try {
+    review = await prisma.review.create({
+      data: {
+        vendorId:  vendor.id,
+        authorId:  session.user.id,
+        rating,
+        comment:   comment ?? null,
+        eventType: eventType ?? null,
+      },
+      select: { id: true, rating: true, comment: true, eventType: true, createdAt: true },
+    })
+  } catch (createErr: unknown) {
+    // W02: race condition — two concurrent requests both passed the findUnique check
+    if ((createErr as { code?: string })?.code === "P2002") {
+      return NextResponse.json({ error: "Vous avez déjà laissé un avis pour ce prestataire." }, { status: 409 })
+    }
+    throw createErr
+  }
 
   // Mise à jour dénormalisée rating + reviewCount sur Vendor
   const agg = await prisma.review.aggregate({

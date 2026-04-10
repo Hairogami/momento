@@ -58,7 +58,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null;
         const user = await prisma.user.findUnique({
           where: { email: (credentials.email as string).toLowerCase().trim() },
-          select: { id: true, name: true, email: true, image: true, passwordHash: true },
+          select: { id: true, name: true, email: true, image: true, passwordHash: true, emailVerified: true },
         });
         if (!user?.passwordHash) return null;
         const valid = await bcrypt.compare(
@@ -66,6 +66,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           user.passwordHash,
         );
         if (!valid) return null;
+        // W13: Enforce email verification before allowing login
+        if (!user.emailVerified) return null;
         // On passe rememberMe à travers le user pour le JWT callback
         return {
           id: user.id,

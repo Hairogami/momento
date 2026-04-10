@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
 import { DarkModeToggle } from "@/components/DarkModeToggle"
+import { useTheme } from "@/components/ThemeProvider"
 
 const LAUNCH_DATE = new Date("2026-06-01T00:00:00Z")
 
@@ -27,6 +28,30 @@ function getCookie(name: string) {
 
 function ComingSoonInner() {
   const searchParams = useSearchParams()
+  const { theme } = useTheme()
+  const isDark = theme === "dark"
+
+  // Palette dynamique selon le thème
+  const T = isDark ? {
+    bg:       "#1A120A",
+    card:     "#241810",
+    border:   "#3D2A1A",
+    text:     "#F5EDD6",
+    textSoft: "#C4A882",
+    textFaint:"#8A7A65",
+    input:    "#2C1E14",
+    cookie:   "#0D0905",
+  } : {
+    bg:       "#F5EDD6",
+    card:     "#EDE4CC",
+    border:   "#DDD4BC",
+    text:     "#1A1208",
+    textSoft: "#6A5F4A",
+    textFaint:"#9A907A",
+    input:    "#F5EDD6",
+    cookie:   "#2C1A0E",
+  }
+
   const [code, setCode]               = useState("")
   const [codeError, setCodeError]     = useState(false)
   const [shake, setShake]             = useState(false)
@@ -93,8 +118,8 @@ function ComingSoonInner() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden"
-      style={{ backgroundColor: "#F5EDD6", color: "#1A1208" }}
+      className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden transition-colors duration-300"
+      style={{ backgroundColor: T.bg, color: T.text }}
     >
       {/* Dark mode toggle — top right */}
       <div className="absolute top-4 right-4 z-20">
@@ -123,7 +148,7 @@ function ComingSoonInner() {
           className="text-5xl sm:text-6xl font-normal leading-tight mb-3"
           style={{
             fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif",
-            color: "#2C1A0E",
+            color: T.text,
             fontStyle: "italic",
           }}
         >
@@ -131,28 +156,28 @@ function ComingSoonInner() {
         </h1>
 
         <div className="flex items-center justify-center gap-4 mb-8">
-          <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: "#DDD4BC" }} />
+          <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: T.border }} />
           <span style={{ color: "var(--momento-terra)" }}>✦</span>
-          <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: "#DDD4BC" }} />
+          <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: T.border }} />
         </div>
 
-        <p className="text-sm mb-8" style={{ color: "#6A5F4A" }}>
-          La plateforme des prestataires événementiels au Maroc est en cours de préparation.
+        <p className="text-sm mb-8" style={{ color: T.textSoft }}>
+          La marketplace des prestataires événementiels au Maroc est en cours de préparation.
           <br />
-          <span className="font-medium" style={{ color: "#2C1A0E" }}>Lancement le 1er juin 2026.</span>
+          <span className="font-medium" style={{ color: T.text }}>Lancement le 1er juin 2026.</span>
         </p>
 
         {/* Countdown */}
         {!launched && (
           <div className="grid grid-cols-4 gap-3 mb-10">
             {units.map(({ label, value }) => (
-              <div key={label} className="rounded-2xl py-4 px-2"
-                style={{ backgroundColor: "#EDE4CC", border: "1px solid #DDD4BC" }}>
+              <div key={label} className="rounded-2xl py-4 px-2 transition-colors duration-300"
+                style={{ backgroundColor: T.card, border: `1px solid ${T.border}` }}>
                 <p className="text-3xl sm:text-4xl font-bold tabular-nums"
-                  style={{ color: "#2C1A0E", fontFamily: "var(--font-geist-mono, monospace)" }}>
+                  style={{ color: T.text, fontFamily: "var(--font-geist-mono, monospace)" }}>
                   {String(value).padStart(2, "0")}
                 </p>
-                <p className="text-xs mt-1 uppercase tracking-wider" style={{ color: "#9A907A" }}>
+                <p className="text-xs mt-1 uppercase tracking-wider" style={{ color: T.textFaint }}>
                   {label}
                 </p>
               </div>
@@ -161,12 +186,12 @@ function ComingSoonInner() {
         )}
 
         {/* Email waitlist */}
-        <div className="rounded-2xl p-6 mb-4"
-          style={{ backgroundColor: "#EDE4CC", border: "1px solid #DDD4BC" }}>
-          <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "#9A907A" }}>
+        <div className="rounded-2xl p-6 mb-4 transition-colors duration-300"
+          style={{ backgroundColor: T.card, border: `1px solid ${T.border}` }}>
+          <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: T.textFaint }}>
             Soyez les premiers informés
           </p>
-          <p className="text-xs mb-4" style={{ color: "#6A5F4A" }}>
+          <p className="text-xs mb-4" style={{ color: T.textSoft }}>
             Inscrivez-vous pour recevoir une notification au lancement.
           </p>
 
@@ -184,9 +209,9 @@ function ComingSoonInner() {
                 placeholder="votre@email.com"
                 className="flex-1 px-4 py-3 rounded-xl text-sm outline-none"
                 style={{
-                  backgroundColor: "#F5EDD6",
-                  border: `1.5px solid ${emailStatus === "error" ? "var(--momento-terra)" : "#DDD4BC"}`,
-                  color: "#1A1208",
+                  backgroundColor: T.input,
+                  border: `1.5px solid ${emailStatus === "error" ? "var(--momento-terra)" : T.border}`,
+                  color: T.text,
                 }}
               />
               <button
@@ -207,9 +232,9 @@ function ComingSoonInner() {
         </div>
 
         {/* Passcode */}
-        <div className="rounded-2xl p-6"
-          style={{ backgroundColor: "#EDE4CC", border: "1px solid #DDD4BC" }}>
-          <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: "#9A907A" }}>
+        <div className="rounded-2xl p-6 transition-colors duration-300"
+          style={{ backgroundColor: T.card, border: `1px solid ${T.border}` }}>
+          <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: T.textFaint }}>
             Accès privé
           </p>
           <div className="flex gap-2"
@@ -223,9 +248,9 @@ function ComingSoonInner() {
               placeholder="Code d'accès"
               className="flex-1 px-4 py-3 rounded-xl text-sm outline-none"
               style={{
-                backgroundColor: "#F5EDD6",
-                border: `1.5px solid ${codeError ? "var(--momento-terra)" : "#DDD4BC"}`,
-                color: "#1A1208",
+                backgroundColor: T.input,
+                border: `1.5px solid ${codeError ? "var(--momento-terra)" : T.border}`,
+                color: T.text,
               }}
             />
             <button
@@ -243,7 +268,7 @@ function ComingSoonInner() {
           )}
         </div>
 
-        <p className="mt-10 text-xs" style={{ color: "#9A907A" }}>
+        <p className="mt-10 text-xs" style={{ color: T.textFaint }}>
           © 2026 Momento · Tous droits réservés
         </p>
       </div>
@@ -251,18 +276,18 @@ function ComingSoonInner() {
       {/* Cookie consent banner */}
       {consent === "pending" && (
         <div
-          className="fixed bottom-0 left-0 right-0 z-50 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ backgroundColor: "#2C1A0E", color: "#F5EDD6" }}
+          className="fixed bottom-0 left-0 right-0 z-50 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 transition-colors duration-300"
+          style={{ backgroundColor: T.cookie, color: T.text }}
         >
-          <p className="text-xs text-center sm:text-left" style={{ color: "#DDD4BC" }}>
+          <p className="text-xs text-center sm:text-left" style={{ color: T.textSoft }}>
             Nous utilisons des cookies pour analyser notre audience et améliorer votre expérience.{" "}
-            <a href="/legal/privacy" className="underline" style={{ color: "#F5EDD6" }}>En savoir plus</a>
+            <a href="/legal/privacy" className="underline" style={{ color: T.text }}>En savoir plus</a>
           </p>
           <div className="flex gap-3 shrink-0">
             <button
               onClick={refuseCookies}
               className="px-4 py-2 rounded-xl text-xs font-semibold border transition-all hover:opacity-80"
-              style={{ border: "1px solid #6A5F4A", color: "#9A907A" }}
+              style={{ border: `1px solid ${T.textSoft}`, color: T.textFaint }}
             >
               Refuser
             </button>

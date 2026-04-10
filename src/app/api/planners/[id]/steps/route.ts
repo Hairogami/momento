@@ -25,12 +25,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     orderBy: { order: "desc" },
   })
 
+  // W14: Validate dueDate before storing — invalid dates produce Invalid Date in JS
+  let dueDate: Date | null = null
+  if (body.dueDate) {
+    const d = new Date(body.dueDate as string)
+    if (isNaN(d.getTime())) return Response.json({ error: "dueDate invalide." }, { status: 400 })
+    dueDate = d
+  }
+
   const step = await prisma.step.create({
     data: {
       title,
       description,
       category: typeof body.category === "string" ? body.category.slice(0, 100) : "general",
-      dueDate: body.dueDate ? new Date(body.dueDate) : null,
+      dueDate,
       order: (lastStep?.order ?? -1) + 1,
       plannerId,
     },

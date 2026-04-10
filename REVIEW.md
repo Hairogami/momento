@@ -1,124 +1,130 @@
 ---
-status: fixed
-reviewed_at: 2026-04-10T19:20:00Z
-critical: 0
-warning: 2
+status: findings
+reviewed_at: 2026-04-10T19:36:00Z
+critical: 3
+warning: 9
 info: 5
-note: >
-  Itération 3 appliquée. Tous les criticals fixés.
-  W05 (admin vendor Zod) + W06 (image URL allowlist) restent skipped (voir REVIEW-FIX.md).
 ---
 
 ## CRITICAL
 
-### [CRITICAL] C01 — N+1 / over-fetch dans /api/stats
-**Fichier:** src/app/api/stats/route.ts:31-36  
-**Probleme:** `prisma.planner.findMany` charge `steps → vendors → vendor` (objet complet) pour tous les planners de l'utilisateur. Avec 10 planners × 20 steps × 5 vendors = 1000 lignes vendor complètes. Seul `vendor.category` est utilisé dans buildStats.  
-**Fix:** Remplacer `include: { vendor: true }` par `select: { vendor: { select: { category: true } } }` dans les deux appels (IS_DEV et prod).
+### [CRITICAL] C01 — registerAction Server Action sans rate-limit ni email de vérification
+**Fichier:** `src/app/(auth)/login/actions.ts:6-38`
+**Problème:** `registerAction` est un Server Action qui crée des comptes sans rate-limiting (contrairement à `/api/auth/register`), sans envoi d'email de vérification, et sans token `emailVerification`. L'user créé ne peut jamais se connecter (auth.ts bloque si `!emailVerified`) mais des milliers de comptes zombies peuvent être créés en boucle. Doublon non-sécurisé de la route API.
+**Fix:** Supprimer `registerAction` et appeler `/api/auth/register` depuis le frontend, ou ajouter rate-limit via `headers()` + création du token de vérification + envoi email.
 
-### [CRITICAL] C02 — Open Redirect via `req.url` dans /api/auth/verify-email
-**Fichier:** src/app/api/auth/verify-email/route.ts:9,26,45,48  
-**Probleme:** Toutes les redirections utilisent `new URL("/login?...", req.url)`. Si un attaquant forge un header `Host: evil.com`, `req.url` devient `https://evil.com/...` — l'utilisateur est redirigé hors du site.  
-**Fix:** Utiliser `process.env.NEXT_PUBLIC_APP_URL` comme base au lieu de `req.url`.
+---
 
-### [CRITICAL] C03 — Open Redirect via `req.url` dans /api/unlock
-**Fichier:** src/app/api/unlock/route.ts:19,22  
-**Probleme:** Même vecteur que C02 — `new URL("/coming-soon", req.url)` et `new URL("/", req.url)` utilisent `req.url` comme base, vulnérable au host header injection.  
-**Fix:** Utiliser `process.env.NEXT_PUBLIC_APP_URL` comme base.
+### [CRITICAL] C02 — forgot-password : guard null-IP retourne HTTP 200 sans blocage
+**Fichier:** `src/app/api/auth/forgot-password/route.ts:9-12`
+**Problème:** `if (!ip)` retourne `NextResponse.json({ message: "..." })` sans status code — default 200. L'endpoint continue à servir sans rate-limit pour les requêtes sans IP (proxies, Cloudflare, tests). Incohérent avec toutes les autres routes qui retournent 400.
+**Fix:** Ajouter `{ status: 400 }` au `NextResponse.json` dans le guard null-IP.
+
+---
+
+### [CRITICAL] C03 — registerAction révèle l'existence d'un email (énumération)
+**Fichier:** `src/app/(auth)/login/actions.ts:27-29`
+**Problème:** Retourne `"Un compte existe déjà avec cet email."` en clair — permet d'énumérer quels emails sont enregistrés. Les routes API (`/api/auth/register`) gèrent cela correctement avec un 409 standard mais ce Server Action expose l'info directement au client sans protection.
+**Fix:** Retourner un message générique ou supprimer ce Server Action au profit de la route API.
 
 ---
 
 ## WARNING
 
-### [WARNING] W01 — catch silencieux englobe toutes les erreurs dans /api/waitlist
-**Fichier:** src/app/api/waitlist/route.ts:26-29  
-**Probleme:** `catch {}` nu capture toutes les erreurs (pas seulement P2002 unique constraint). Une erreur DB ou schema retourne quand même `{ ok: true }` au client — comportement trompeur.  
-**Fix:** Re-throw les erreurs non-P2002.
+### [WARNING] W01 — update-profile : URLs image sans allowlist de domaines (SSRF indirect)
+**Fichier:** `src/app/api/auth/update-profile/route.ts:26-36`
+**Problème:** Validation uniquement sur le protocole (`http:`/`https:`). N'importe quelle URL externe peut être stockée comme avatar. Si `next/image` optimise cette URL côté serveur (remotePatterns), cela constitue un SSRF indirect. Permet aussi des tracking pixels.
+**Fix:** Valider que le domaine de l'URL est dans une allowlist (ex: `*.googleusercontent.com`, `*.fbcdn.net`, propre CDN) cohérente avec `remotePatterns` dans `next.config.ts`.
 
-### [WARNING] W02 — `rateLimit` synchrone (in-memory) sur POST /api/messages
-**Fichier:** src/app/api/messages/route.ts:65  
-**Probleme:** `rateLimit()` est in-memory par instance. Sur Vercel multi-instance, la limite de 30/min ne s'applique que par instance — contournable en distribuant les requêtes sur différentes instances.  
-**Fix:** Remplacer par `await rateLimitAsync(...)`.
+---
 
-### [WARNING] W03 — `rateLimit` synchrone (in-memory) sur POST /api/auth/register
-**Fichier:** src/app/api/auth/register/route.ts:48  
-**Probleme:** Même problème que W02 — limite d'inscription de 5/15min contournable en multi-instance.  
-**Fix:** Remplacer par `await rateLimitAsync(...)`.
+### [WARNING] W02 — reviews POST : race condition check-then-create sans try/catch P2002
+**Fichier:** `src/app/api/reviews/route.ts:73-89`
+**Problème:** `findUnique` vérifiant l'unicité puis `create` ne sont pas atomiques. Deux requêtes concurrentes peuvent toutes deux passer le check. La contrainte `@@unique` DB catch le second en P2002 mais ce code n'attrape pas P2002 → retourne un 500 non géré.
+**Fix:** Entourer le `prisma.review.create` dans un try/catch qui intercepte `P2002` et retourne 409.
 
-### [WARNING] W04 — `rateLimit` synchrone (in-memory) sur POST /api/ai/suggest
-**Fichier:** src/app/api/ai/suggest/route.ts:15  
-**Probleme:** Même problème que W02/W03 — limite de 10 appels/heure sur l'API Anthropic contournable. Les appels AI sont coûteux — risque d'amplification de coût.  
-**Fix:** Remplacer par `await rateLimitAsync(...)`.
+---
 
-### [WARNING] W05 — Validation Zod absente sur POST /api/vendors (route admin)
-**Fichier:** src/app/api/vendors/route.ts:42-71  
-**Probleme:** Coercion manuelle sans schéma Zod. `lat`/`lng` acceptent n'importe quel nombre (ex: lat=99999), `email` et `website` ne sont pas validés comme formats corrects.  
-**Fix:** Ajouter un schéma Zod avec `z.string().email()`, `z.string().url()`, et `z.number().min(-90).max(90)` / `z.number().min(-180).max(180)` pour lat/lng.
+### [WARNING] W03 — vendors GET public : retourne tous les champs sans select (email, phone, coordonnées GPS)
+**Fichier:** `src/app/api/vendors/route.ts:24-30`
+**Problème:** `prisma.vendor.findMany` sans `select` expose `email`, `phone`, `lat`, `lng` à des requêtes non-authentifiées. Scraping trivial de toutes les données de contact en quelques requêtes paginées.
+**Fix:** Ajouter un `select` explicite qui exclut `email`, `phone`, `lat`, `lng` pour cet endpoint public.
 
-### [WARNING] W06 — URL image sans allowlist d'hôtes dans /api/auth/update-profile
-**Fichier:** src/app/api/auth/update-profile/route.ts:26-36  
-**Probleme:** L'URL image est validée (http/https uniquement) mais n'importe quel hôte est accepté (ex: `http://evil.com/tracker.png`). Si l'image est rendue server-side, risque de tracking pixel ou SSRF-lite.  
-**Fix:** Ajouter un allowlist d'hôtes acceptés (ex: `*.googleusercontent.com`, `*.fbcdn.net`, domaine CDN propre).
+---
 
-### [WARNING] W07 — N+1 dans /api/stats (même requête dupliquée IS_DEV + prod)
-**Fichier:** src/app/api/stats/route.ts:14-17  
-**Probleme:** En mode IS_DEV, la même requête lourde est exécutée, puis si elle retourne des résultats elle est utilisée normalement — le fallback mock n'est atteint que si la DB est vide. La branche IS_DEV ne protège donc pas contre la requête lourde.  
-**Fix:** En IS_DEV sans résultats DB, retourner directement le mock sans la requête lourde (ou supprimer la branche IS_DEV).
+### [WARNING] W04 — change-password : pas de longueur max sur newPassword
+**Fichier:** `src/app/api/auth/change-password/route.ts:19-30`
+**Problème:** Seule la regex de complexité est vérifiée. Un mot de passe de plusieurs centaines de KB serait chargé en mémoire JSON puis bcrypt-haché (bcrypt tronque à 72 bytes mais le parsing charge tout). Vecteur de DoS bas débit.
+**Fix:** Ajouter `if (newPassword.length > 128) return 400` avant la regex.
 
-### [WARNING] W08 — Message d'erreur 501 fuite architecture interne dans /api/calendar/google
-**Fichier:** src/app/api/calendar/google/route.ts:15-19  
-**Probleme:** `"OAuth token must be fetched from the database."` expose les détails d'implémentation interne dans la réponse HTTP publique.  
-**Fix:** Remplacer par un message générique : `"Google Calendar integration not yet available."`.
+---
+
+### [WARNING] W05 — planners GET liste : N+1 avec include steps + events complets
+**Fichier:** `src/app/api/planners/route.ts:26-31`
+**Problème:** `findMany` avec `include: { steps: true, events: true }` charge toutes les steps (avec vendors) et tous les events pour afficher une simple liste de planners. Pour un user avec 20 planners × 50 steps = 1000 rows + joins.
+**Fix:** Pour la liste, utiliser `select` limité aux champs d'affichage (`id`, `title`, `coupleNames`, `weddingDate`, `coverColor`, `location`) + `_count` pour les steps/events.
+
+---
+
+### [WARNING] W06 — stats GET : N+1 massif avec vendors nestés sur tous les planners
+**Fichier:** `src/app/api/stats/route.ts:31-36`
+**Problème:** `findMany` avec `include: { steps: { include: { vendors: { select: { vendor... } } } } }` charge l'intégralité de la hiérarchie planner→step→vendor à chaque appel. Pas de cache ni pagination. Dégradation linéaire avec le nombre de planners/steps.
+**Fix:** Remplacer par des requêtes `groupBy` ou `aggregate` Prisma ciblées, ou mettre en cache le résultat avec revalidation.
+
+---
+
+### [WARNING] W07 — messages GET conversationId : charge le user complet depuis DB (pas de select)
+**Fichier:** `src/app/api/messages/[conversationId]/route.ts:22`
+**Problème:** `prisma.user.findUnique({ where: { id: session.user.id } })` sans `select` — retourne tous les champs user incluant `passwordHash`, `googleId`, etc. en mémoire. Risque de data leak si le retour est mal utilisé.
+**Fix:** Ajouter `select: { vendorSlug: true }` pour limiter au seul champ nécessaire.
+
+---
+
+### [WARNING] W08 — calendar/google : accessToken lu depuis session.user (jamais disponible, feature cassée)
+**Fichier:** `src/app/api/calendar/google/route.ts:13`
+**Problème:** `(session.user as { accessToken?: string }).accessToken` est toujours `undefined` car le callback `session` dans `auth.ts` n'expose pas `accessToken` intentionnellement (ligne 124 : "accessToken intentionally NOT exposed to client"). La route retourne systématiquement 501 en production — feature complètement non-fonctionnelle.
+**Fix:** Implémenter la récupération depuis `prisma.account` : `findFirst({ where: { userId, provider: "google" }, select: { access_token: true } })`.
+
+---
+
+### [WARNING] W09 — vendor-requests PATCH : status enum non-typé stocké directement
+**Fichier:** `src/app/api/vendor-requests/route.ts:48-57`
+**Problème:** `status as string` est passé directement à `prisma.contactRequest.update`. Bien que validé contre un tableau `["pending", "read", "replied"]`, l'absence de cast enum Prisma peut causer des erreurs runtime si le schéma change. Pas de type safety.
+**Fix:** Utiliser un type Prisma enum ou cast explicite vers le type généré.
 
 ---
 
 ## INFO
 
-### [INFO] I01 — accessToken Google stocké dans le JWT (TODO commenté)
-**Fichier:** src/lib/auth.ts:87-89  
-**Probleme:** `token.accessToken = account.access_token` — si le secret JWT fuit, tous les tokens Google OAuth sont exposés. Un TODO note de migrer vers le stockage DB.  
-**Fix:** Implémenter le TODO : stocker le token dans `prisma.account` et le récupérer depuis la DB dans la route calendar.
-
-### [INFO] I02 — Cast mort dans /api/calendar/google
-**Fichier:** src/app/api/calendar/google/route.ts:13  
-**Probleme:** `(session.user as { accessToken?: string }).accessToken` sera toujours `undefined` car le session callback n'expose pas accessToken côté client (by design). Dead code — la branche 501 s'exécute toujours.  
-**Fix:** Supprimer le cast ; implémenter la récupération du token depuis la DB directement.
-
-### [INFO] I03 — `deleteBudgetItem` absent des Server Actions budget
-**Fichier:** src/app/(dashboard)/budget/actions.ts  
-**Probleme:** Les actions exposent `addBudgetItem`, `togglePaid`, `updateBudget` mais pas de suppression. Si la UI permet la suppression, elle doit passer par une route API — vérifier que cette route valide l'ownership.  
-**Fix:** Vérifier l'existence et l'ownership check si une route DELETE /api/budget-items/[id] est ajoutée.
-
-### [INFO] I04 — Résumé mock non exhaustif dans /api/stats IS_DEV
-**Fichier:** src/app/api/stats/route.ts:104-126  
-**Probleme:** Les constantes MOCK_EVENTS_BY_MONTH et MOCK_PARTNERS sont du dead code si la DB n'est jamais vide en dev (elles ne s'affichent que quand planners.length === 0).  
-**Fix:** Nettoyer ou documenter explicitement le cas d'usage.
-
-### [INFO] I05 — Intention ambiguë sur `budget < 0` dans updateBudget
-**Fichier:** src/app/(dashboard)/budget/actions.ts:52  
-**Probleme:** `budget < 0` accepte budget=0. Si un budget nul n'a pas de sens métier, utiliser `budget <= 0`. Si 0 est valide (budget inconnu), ajouter un commentaire.  
-**Fix:** Clarifier avec un commentaire ou ajuster la condition selon la règle métier.
+### [INFO] I01 — Dead code : registerAction doublon non-sécurisé de /api/auth/register
+**Fichier:** `src/app/(auth)/login/actions.ts`
+**Problème:** `/api/auth/register/route.ts` est complet (Zod, rate-limit, bcrypt, email vérification, welcome email). `registerAction` est un doublon moins sécurisé. Si le frontend utilise les deux, comportement incohérent.
+**Fix:** Supprimer `registerAction`, utiliser fetch vers `/api/auth/register` depuis les composants client.
 
 ---
 
-## Nouveaux findings — itération 2026-04-10T18:55Z
+### [INFO] I02 — devMock importé dans 3 routes de production (bundle size)
+**Fichier:** `src/app/api/planners/route.ts`, `src/app/api/stats/route.ts`, `src/app/api/unread/route.ts`
+**Problème:** `IS_DEV` et `MOCK_DASHBOARD_DATA` sont importés et bundlés en production même si non exécutés. Augmente légèrement la taille du bundle serveur.
+**Fix:** Guard avec `if (process.env.NODE_ENV === 'development')` inline pour tree-shaking, ou séparer dans un module `*.dev.ts` non-importé en prod.
 
-### [CRITICAL] C04 — Unsanitized mass assignment dans PATCH /api/planners/[id]
-**Fichier:** src/app/api/planners/[id]/route.ts:61-65
-**Problème:** `body.title`, `body.coupleNames`, `body.location` passés directement à `prisma.planner.update` sans vérification de type ni cap de longueur. Un attaquant peut envoyer des non-strings (objets, `null`, tableaux) causant des erreurs 500 non gérées, ou des chaînes arbitrairement longues saturant la colonne Postgres.
-**Fix:** Ajouter `typeof body.X === "string" ? body.X.trim().slice(0, N) : undefined` — identique au pattern déjà utilisé dans le POST de la même route. **Appliqué.**
+---
 
-### [WARNING] W09 — Pas de try/catch sur `req.json()` dans PATCH /api/planners/[id]
-**Fichier:** src/app/api/planners/[id]/route.ts:57
-**Problème:** Un JSON malformé lève une exception non gérée → réponse 500 au lieu d'un 400 propre.
-**Fix:** Wrap en try/catch avec retour 400. **Appliqué (inclus dans le fix C04).**
+### [INFO] I03 — vendors POST admin : email et website sans validation de format
+**Fichier:** `src/app/api/vendors/route.ts:62-63`
+**Problème:** `email` et `website` sont stockés comme strings bruts (slice seul) sans validation email ou URL. Contrairement au reste du codebase qui utilise Zod.
+**Fix:** Ajouter `z.string().email()` et `z.string().url()` dans un schema Zod pour cette route admin.
 
-### [WARNING] W10 — PREVIEW_KEY vide/absent ne bloque pas la coming-soon gate
-**Fichier:** src/proxy.ts:18
-**Problème:** Si `PREVIEW_KEY` est undefined ou `""`, la condition `previewKey !== process.env.PREVIEW_KEY` laisse passer les accès (undefined === undefined quand aucun cookie, ou `"" === ""` si cookie vide). Accès involontaire à l'app en pré-lancement.
-**Fix:** Exiger que `configuredKey` soit non-vide avant de l'accepter comme référence valide. **Appliqué.**
+---
 
-### [WARNING] W11 — Unread count manquant pour les vendors dans /api/unread
-**Fichier:** src/app/api/unread/route.ts:17-23
-**Problème:** La requête `conversation: { clientId: session.user.id }` ne retourne jamais de résultats pour un utilisateur `role="vendor"`. Les vendors ne voient aucun badge de messages non lus même si des clients leur ont écrit.
-**Fix:** Branch sur le rôle : si vendor, compter les messages non lus dans les conversations où `vendorSlug = user.vendorSlug`. **Appliqué.**
+### [INFO] I04 — logout wrapper : CSRF token non forwardé vers NextAuth signout
+**Fichier:** `src/app/api/auth/logout/route.ts`
+**Problème:** Redirige en 303 vers `/api/auth/signout` sans le CSRF token NextAuth. En mode JWT, NextAuth vérifie le CSRF lors du signout POST — la redirection peut échouer silencieusement.
+**Fix:** Utiliser `signOut()` côté client via le hook NextAuth, ou supprimer ce wrapper.
+
+---
+
+### [INFO] I05 — getIp() : x-real-ip falsifiable par le client (pas de fallback cf-connecting-ip)
+**Fichier:** `src/lib/rateLimiter.ts:100-106`
+**Problème:** `x-real-ip` peut être injecté par un client malveillant sur certaines configs reverse-proxy. `x-vercel-forwarded-for` est prioritaire (correct sur Vercel) mais si ce header est absent, `x-real-ip` prend le relais et peut être falsifié pour contourner le rate-limit.
+**Fix:** Sur Vercel, `x-vercel-forwarded-for` suffit. Supprimer le fallback `x-real-ip` ou documenter que seul Vercel est supporté.

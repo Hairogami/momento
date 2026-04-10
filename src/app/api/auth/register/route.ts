@@ -88,20 +88,29 @@ export async function POST(req: NextRequest) {
       ? [data.firstName, data.lastName].filter(Boolean).join(" ") || null
       : data.companyName ?? null
 
-  const user = await prisma.user.create({
-    data: {
-      email:          data.email.toLowerCase(),
-      name,
-      passwordHash,
-      role:           data.role,
-      firstName:      data.role === "client" ? (data.firstName ?? null) : null,
-      lastName:       data.role === "client" ? (data.lastName ?? null) : null,
-      companyName:    data.role === "vendor" ? (data.companyName ?? null) : null,
-      vendorCategory: data.role === "vendor" ? (data.vendorCategory ?? null) : null,
-      phone:          data.role === "vendor" ? (data.phone ?? null) : null,
-    },
-    select: { id: true, email: true, name: true },
-  })
+  let user: { id: string; email: string; name: string | null }
+  try {
+    user = await prisma.user.create({
+      data: {
+        email:          data.email.toLowerCase(),
+        name,
+        passwordHash,
+        role:           data.role,
+        firstName:      data.role === "client" ? (data.firstName ?? null) : null,
+        lastName:       data.role === "client" ? (data.lastName ?? null) : null,
+        companyName:    data.role === "vendor" ? (data.companyName ?? null) : null,
+        vendorCategory: data.role === "vendor" ? (data.vendorCategory ?? null) : null,
+        phone:          data.role === "vendor" ? (data.phone ?? null) : null,
+      },
+      select: { id: true, email: true, name: true },
+    })
+  } catch (createErr: unknown) {
+    // W12: race condition — two concurrent requests both pass findUnique check
+    if ((createErr as { code?: string })?.code === "P2002") {
+      return NextResponse.json({ error: "Cet email est déjà utilisé." }, { status: 409 })
+    }
+    throw createErr
+  }
 
   // Welcome email — deferred after response via after() so the lambda doesn't
   // terminate before the send completes (WR-012 fix).

@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token")
 
   // CR-02: Validate token length before hitting the DB
   if (!token || token.length > 256) {
-    return NextResponse.redirect(new URL("/login?error=token_invalide", BASE_URL))
+    return NextResponse.redirect(new URL("/login?error=token_invalide", req.url))
   }
 
   try {
@@ -25,12 +23,12 @@ export async function GET(req: NextRequest) {
       record.usedAt ||
       record.expiresAt < new Date()
     ) {
-      return NextResponse.redirect(new URL("/login?error=token_invalide", BASE_URL))
+      return NextResponse.redirect(new URL("/login?error=token_invalide", req.url))
     }
 
     if (record.user.emailVerified) {
       // Déjà vérifié, on redirige quand même avec succès
-      return NextResponse.redirect(new URL("/login?verified=true", BASE_URL))
+      return NextResponse.redirect(new URL("/login?verified=true", req.url))
     }
 
     await prisma.$transaction([
@@ -44,9 +42,9 @@ export async function GET(req: NextRequest) {
       }),
     ])
 
-    return NextResponse.redirect(new URL("/login?verified=true", BASE_URL))
+    return NextResponse.redirect(new URL("/login?verified=true", req.url))
   } catch (err) {
     console.error("[verify-email]", err)
-    return NextResponse.redirect(new URL("/login?error=erreur_serveur", BASE_URL))
+    return NextResponse.redirect(new URL("/login?error=erreur_serveur", req.url))
   }
 }

@@ -19,7 +19,8 @@ export async function GET(
   if (!conversation) return NextResponse.json({ error: "Conversation introuvable." }, { status: 404 })
 
   // Check access: either the client or the vendor
-  const user = await prisma.user.findUnique({ where: { id: session.user.id } })
+  // W07: select only the field needed — avoid loading passwordHash etc.
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { vendorSlug: true } })
   const isClient = conversation.clientId === session.user.id
   const isVendor = user?.vendorSlug === conversation.vendorSlug
 

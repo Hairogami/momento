@@ -22,6 +22,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Mot de passe actuel et nouveau mot de passe requis." }, { status: 400 })
   }
 
+  // W04: cap max length before bcrypt to prevent DoS via oversized input
+  if (newPassword.length > 128) {
+    return NextResponse.json(
+      { error: "Le mot de passe ne peut pas dépasser 128 caractères." },
+      { status: 400 }
+    )
+  }
+
   if (!strongPassword.test(newPassword)) {
     return NextResponse.json(
       { error: "Le nouveau mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre (8 caractères min)." },

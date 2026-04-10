@@ -31,6 +31,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return Response.json({ error: "Statut invalide." }, { status: 400 })
   }
 
+  // W14: Validate dueDate — parseDate returns undefined on invalid input, which
+  // would leave the existing value unchanged. But an explicit invalid string
+  // should be rejected rather than silently ignored.
+  if (body.dueDate !== undefined && body.dueDate !== null) {
+    const d = new Date(body.dueDate as string)
+    if (isNaN(d.getTime())) return Response.json({ error: "dueDate invalide." }, { status: 400 })
+  }
+
   const step = await prisma.step.update({
     where: { id },
     data: {

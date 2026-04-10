@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 
 export async function POST(req: NextRequest) {
   try {
+    // C05: Rate limit — 10 tentatives par IP par 15 min pour éviter le brute-force de tokens
+    const ip = getIp(req)
+    if (!ip) {
+      return NextResponse.json({ error: "Requête non identifiable." }, { status: 400 })
+    }
+    const rl = await rateLimitAsync(`reset-password:${ip}`, 10, 15 * 60_000)
+    if (!rl.ok) {
+      return NextResponse.json(
+        { error: "Trop de tentatives. Réessayez dans quelques minutes." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+      )
+    }
+
     const { token, newPassword } = await req.json()
 
     // WR-08: Validate token length before hitting the DB

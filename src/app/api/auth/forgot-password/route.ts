@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     const ip = getIp(req)
     if (!ip) {
-      return NextResponse.json({ message: "Si un compte existe, un e-mail a été envoyé." })
+      return NextResponse.json({ message: "Si un compte existe, un e-mail a été envoyé." }, { status: 400 })
     }
     const rl = rateLimit(`forgot-password:${ip}`, 5, 15 * 60 * 1000)
     if (!rl.ok) {

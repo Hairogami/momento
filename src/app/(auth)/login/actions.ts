@@ -26,7 +26,8 @@ export async function registerAction({
   const normalizedEmail = email.toLowerCase().trim();
   const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) {
-    return { error: "Un compte existe déjà avec cet email." };
+    // C03: generic message to prevent email enumeration
+    return { error: "Une erreur est survenue. Veuillez réessayer." };
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
