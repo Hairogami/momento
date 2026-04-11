@@ -287,7 +287,7 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
       {claimed && (
         <div
           className="flex items-center justify-center gap-2 px-4 py-2 text-xs"
-          style={{ backgroundColor: "#1a3320", color: "#6fcf97" }}
+          style={{ backgroundColor: `${C.terra}15`, color: C.terra, borderBottom: `1px solid ${C.anthracite}` }}
         >
           <CheckCircle size={13} />
           <span>Profil revendiqué · Ce prestataire gère directement cette page</span>
@@ -370,7 +370,7 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
                 <span className="flex items-center gap-1 text-sm" style={{ color: C.mist }}>
                   <MapPin size={13} /> {vendor.city}, Maroc
                 </span>
-                <span className="flex items-center gap-1 text-xs font-medium" style={{ color: "#10B981" }}>
+                <span className="flex items-center gap-1 text-xs font-medium" style={{ color: C.terra }}>
                   <CheckCircle size={13} /> Référencé
                 </span>
               </div>
@@ -406,7 +406,7 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {[
             { icon: <Star size={18} />, value: `${vendor.rating}.0 / 5`, label: "Note" },
             { icon: <Calendar size={18} />, value: "Disponible", label: "Statut" },
