@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { jwtVerify } from "jose"
+import { getToken } from "next-auth/jwt"
 
 // Paths always allowed through regardless of gates
 const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon"]
@@ -37,20 +37,16 @@ export async function proxy(request: NextRequest) {
 
   const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
   if (isProtected && !isDev) {
-    // Validate JWT signature — cookie presence alone is not sufficient (CR-002)
+    // Validate Auth.js JWE token via getToken (handles encryption correctly)
     let jwtValid = false
-    if (sessionCookie && process.env.AUTH_SECRET) {
-      try {
-        const secret = new TextEncoder().encode(process.env.AUTH_SECRET)
-        await jwtVerify(sessionCookie, secret)
-        jwtValid = true
-      } catch {
-        jwtValid = false
-      }
+    try {
+      const token = await getToken({ req: request, secret: process.env.AUTH_SECRET })
+      jwtValid = !!token
+    } catch {
+      jwtValid = false
     }
     if (!jwtValid) {
       const url = new URL("/login", request.url)
-      // Validate path to prevent open redirect: must start with / and not be protocol-relative
       const safePath = path.startsWith("/") && !path.startsWith("//") ? path : "/dashboard"
       url.searchParams.set("next", safePath)
       return NextResponse.redirect(url)
