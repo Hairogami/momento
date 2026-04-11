@@ -63,7 +63,7 @@ export default async function BudgetPage({
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center gap-6">
         <div className="text-5xl">📅</div>
         <div>
-          <h1 className="text-xl font-semibold mb-2">Ton mariage n&apos;est pas encore créé</h1>
+          <h1 className="text-xl font-semibold mb-2">Ton événement n&apos;est pas encore créé</h1>
           <p className="text-sm text-muted-foreground max-w-sm">
             Crée d&apos;abord ton événement — ton budget suivra.
             Chaque dépense sera rattachée à ton grand jour.

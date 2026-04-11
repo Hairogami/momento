@@ -185,7 +185,7 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
 
     // Guest → legacy contact request
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      setSendError("Merci de remplir votre nom, email et message.")
+      setSendError("Merci de remplir ton nom, email et message.")
       setSending(false)
       return
     }
@@ -222,7 +222,7 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
       <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: C.ink }}>
         <p className="text-2xl font-bold" style={{ color: C.white }}>Prestataire introuvable</p>
         <Link href="/explore" className="text-sm font-medium px-4 py-2 rounded-xl" style={{ backgroundColor: C.terra, color: "#fff" }}>
-          ← Retour à l&apos;explore
+          ← Retour aux prestataires
         </Link>
       </div>
     )
@@ -260,8 +260,8 @@ export default function VendorPageClient({ slug, claimed = false, currentUserId 
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <span className="text-base flex-shrink-0">🏷️</span>
             <span>
-              <strong>Êtes-vous ce prestataire ?</strong>
-              {" "}Revendiquez cette page gratuitement et prenez le contrôle de votre profil.
+              <strong>Tu es ce prestataire ?</strong>
+              {" "}Revendique cette page gratuitement et prends le contrôle de ton profil.
             </span>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">

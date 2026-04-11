@@ -456,12 +456,12 @@ export default function Landing() {
               style={{ borderRight: `0.5px solid ${C.anthracite}` }}>
               <p className="text-xs tracking-widest uppercase" style={{ color: C.terra, letterSpacing: "0.22em" }}>Pour les clients</p>
               <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light leading-tight" style={{ color: C.white }}>
-                Votre prochain<br />
+                Ton prochain<br />
                 événement<br />
                 <em style={{ fontStyle: "italic", color: C.silver }}>commence ici.</em>
               </h2>
               <p className="text-sm leading-relaxed" style={{ color: C.mist }}>
-                Des milliers de mariés et d&apos;organisateurs au Maroc préparent leur grand jour avec Momento.
+                Des milliers d&apos;organisateurs au Maroc préparent leur événement avec Momento.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/dashboard"
@@ -482,8 +482,8 @@ export default function Landing() {
               style={{ backgroundColor: `${C.dark}` }}>
               <p className="text-xs tracking-widest uppercase" style={{ color: C.terra, letterSpacing: "0.22em" }}>Pour les prestataires</p>
               <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light leading-tight" style={{ color: C.white }}>
-                Développez<br />
-                votre <em style={{ fontStyle: "italic", color: C.terra }}>clientèle</em><br />
+                Développe<br />
+                ta <em style={{ fontStyle: "italic", color: C.terra }}>clientèle</em><br />
                 sur Momento.
               </h2>
               <p className="text-sm leading-relaxed" style={{ color: C.mist }}>

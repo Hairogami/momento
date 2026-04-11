@@ -182,21 +182,21 @@ export default function ClaimPageClient({
           style={{ backgroundColor: "#1a3320" }}>
           <Mail size={28} style={{ color: "#6fcf97" }} />
         </div>
-        <h1 className="text-xl font-bold mb-2" style={{ color: C.white }}>Vérifiez votre boîte mail</h1>
+        <h1 className="text-xl font-bold mb-2" style={{ color: C.white }}>Vérifie ta boîte mail</h1>
         <p className="text-sm mb-4" style={{ color: C.mist }}>
           Un lien de confirmation a été envoyé à <strong>{email}</strong>.
-          Cliquez dessus pour activer votre compte et accéder à votre dashboard.
+          Clique dessus pour activer ton compte et accéder à ton tableau de bord.
         </p>
         <div
           className="rounded-2xl p-4 text-sm text-left mb-6"
           style={{ backgroundColor: C.dark, border: `1px solid ${C.steel}` }}
         >
-          <p className="font-semibold mb-2" style={{ color: C.white }}>Ce que vous obtenez :</p>
+          <p className="font-semibold mb-2" style={{ color: C.white }}>Ce que tu obtiens :</p>
           {[
-            "Votre profil prestataire sur Momento",
-            "Accès à votre dashboard (contacts, stats)",
-            "Modifier vos infos, photos, tarifs",
-            "Badge ✅ Profil revendiqué sur votre page",
+            "Ton profil prestataire sur Momento",
+            "Accès à ton tableau de bord (contacts, stats)",
+            "Modifier tes infos, photos, tarifs",
+            "Badge ✅ Profil revendiqué sur ta page",
           ].map(item => (
             <div key={item} className="flex items-center gap-2 py-1" style={{ color: C.mist }}>
               <CheckCircle size={14} style={{ color: "#6fcf97" }} /> {item}
@@ -242,7 +242,7 @@ export default function ClaimPageClient({
               style={{ backgroundColor: C.dark, border: `1px solid ${C.steel}` }}
             >
               <p style={{ color: C.mist }}>
-                Connecté en tant que <strong style={{ color: C.white }}>{loggedInEmail}</strong>
+                Connecté·e en tant que <strong style={{ color: C.white }}>{loggedInEmail}</strong>
               </p>
             </div>
             {error && (
@@ -347,9 +347,9 @@ export default function ClaimPageClient({
         {/* Benefits */}
         <div className="mt-8 space-y-2">
           {[
-            ["✅", "Profil revendiqué visible sur votre page"],
-            ["📊", "Dashboard : contacts, vues, statistiques"],
-            ["✏️", "Modifiez vos infos, photos et tarifs"],
+            ["✅", "Profil revendiqué visible sur ta page"],
+            ["📊", "Tableau de bord : contacts, vues, statistiques"],
+            ["✏️", "Modifie tes infos, photos et tarifs"],
             ["🆓", "100% gratuit — toujours"],
           ].map(([icon, text]) => (
             <div key={text} className="flex items-center gap-3 text-sm" style={{ color: C.mist }}>

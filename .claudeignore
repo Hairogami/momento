@@ -1,0 +1,27 @@
+# Jamais auto-chargé
+.claude/completions/**
+.claude/sessions/**
+docs/archive/**
+
+# Build artifacts
+node_modules/**
+.next/**
+dist/**
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+review-loop.log
+REVIEW.md
+REVIEW-FIX.md
+
+# Git
+.git/**
+
+# OS
+.DS_Store
+Thumbs.db

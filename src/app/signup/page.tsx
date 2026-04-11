@@ -96,14 +96,14 @@ export default function SignupPage() {
     if (userType === "client") {
       const { nom, prenom, email, password, confirm } = client
       if (!nom || !prenom || !email || !password || !confirm) {
-        setError("Veuillez remplir tous les champs."); return
+        setError("Remplis tous les champs."); return
       }
       if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return }
       if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return }
     } else {
       const { entreprise, categorie, email, telephone, password } = vendor
       if (!entreprise || !categorie || !email || !telephone || !password) {
-        setError("Veuillez remplir tous les champs."); return
+        setError("Remplis tous les champs."); return
       }
       if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return }
     }
@@ -144,15 +144,15 @@ export default function SignupPage() {
             <div className="text-center mb-10">
               <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: C.mist }}>Inscription</p>
               <h1 className="font-display italic text-4xl sm:text-5xl font-normal leading-tight" style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif", color: C.accent }}>
-                Vous êtes…
+                Tu es…
               </h1>
-              <p className="mt-3 text-sm" style={{ color: C.mist }}>Choisissez votre profil pour commencer</p>
+              <p className="mt-3 text-sm" style={{ color: C.mist }}>Choisis ton profil pour commencer</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { type: "client" as const, icon: "🎉", title: "Je cherche des prestataires", desc: "Planifiez votre événement et trouvez les meilleurs prestataires — DJ, traiteur, photographe et plus.", cta: "Commencer" },
-                { type: "vendor" as const, icon: "🎵", title: "Je suis prestataire", desc: "Rejoignez la plateforme, présentez vos services et recevez des demandes d'événements qualifiés.", cta: "Rejoindre" },
+                { type: "client" as const, icon: "🎉", title: "Je cherche des prestataires", desc: "Planifie ton événement et trouve les meilleurs prestataires — DJ, traiteur, photographe et plus.", cta: "Commencer" },
+                { type: "vendor" as const, icon: "🎵", title: "Je suis prestataire", desc: "Rejoins la plateforme, présente tes services et reçois des demandes d'événements qualifiées.", cta: "Rejoindre" },
               ].map(card => (
                 <button
                   key={card.type}
@@ -211,7 +211,7 @@ export default function SignupPage() {
                     <InputField id="prenom" label="Prénom" value={client.prenom} onChange={v => updateClient("prenom", v)} placeholder="Yasmine" required autoComplete="given-name" />
                     <InputField id="nom" label="Nom" value={client.nom} onChange={v => updateClient("nom", v)} placeholder="Benali" required autoComplete="family-name" />
                   </div>
-                  <InputField id="email-c" label="Adresse e-mail" type="email" value={client.email} onChange={v => updateClient("email", v)} placeholder="vous@exemple.com" required autoComplete="email" />
+                  <InputField id="email-c" label="Adresse e-mail" type="email" value={client.email} onChange={v => updateClient("email", v)} placeholder="toi@exemple.com" required autoComplete="email" />
                   <InputField id="password-c" label="Mot de passe" type="password" value={client.password} onChange={v => updateClient("password", v)} placeholder="Min. 8 caractères" required autoComplete="new-password" />
                   <InputField id="confirm-c" label="Confirmer le mot de passe" type="password" value={client.confirm} onChange={v => updateClient("confirm", v)} placeholder="••••••••" required autoComplete="new-password" />
                 </>

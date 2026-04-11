@@ -150,7 +150,7 @@ export default function FavoritesPage() {
           </div>
           <div className="text-center">
             <p className="text-lg font-semibold mb-1" style={{ color: C.white }}>Aucun favori pour l&apos;instant</p>
-            <p className="text-sm" style={{ color: C.mist }}>Cliquez sur le ♡ d&apos;un prestataire pour l&apos;ajouter ici.</p>
+            <p className="text-sm" style={{ color: C.mist }}>Appuie sur le ♡ d&apos;un prestataire pour l&apos;ajouter ici.</p>
           </div>
           <Link
             href="/explore"

@@ -10,18 +10,18 @@ const STORAGE_KEY = "momento:onboarding_seen"
 const STEPS = [
   {
     icon: <Calendar size={22} />,
-    title: "Créez votre événement",
-    desc: "Donnez un nom, une date, et un budget à votre événement.",
+    title: "Crée ton événement",
+    desc: "Donne un nom, une date, et un budget à ton événement.",
   },
   {
     icon: <Users size={22} />,
-    title: "Gérez vos invités",
-    desc: "Importez votre liste, suivez les RSVP en temps réel.",
+    title: "Gère tes invités",
+    desc: "Importe ta liste, suis les RSVP en temps réel.",
   },
   {
     icon: <Wallet size={22} />,
-    title: "Pilotez votre budget",
-    desc: "Ajoutez vos dépenses et gardez le contrôle à tout moment.",
+    title: "Pilote ton budget",
+    desc: "Ajoute tes dépenses et garde le contrôle à tout moment.",
   },
 ]
 

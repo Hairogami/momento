@@ -111,7 +111,7 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
           <Link href="/prestataire/dashboard" onClick={() => setOpen(false)}
             className="text-sm font-medium py-2.5 px-4 rounded-xl"
             style={{ backgroundColor: C.anthracite, color: C.terra }}>
-            Espace partenaire
+            Espace prestataire
           </Link>
           <button onClick={handleLogout}
             className="text-sm font-medium py-2.5 px-4 rounded-xl text-left"
@@ -237,7 +237,7 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
               <Link href="/prestataire/dashboard" onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold hover:bg-black/5 transition-colors"
                 style={{ color: C.terra }}>
-                <Briefcase size={15} /> Espace partenaire
+                <Briefcase size={15} /> Espace prestataire
               </Link>
               <Link href="/help" onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
@@ -284,7 +284,7 @@ function GuestMenu({ mobile = false }: { mobile?: boolean }) {
           💬 Aide
         </Link>
         <Link href="/prestataire/dashboard" className="flex items-center gap-2 text-sm font-medium py-2.5 px-4 rounded-xl" style={{ backgroundColor: C.anthracite, color: C.terra }}>
-          🤝 Espace partenaire
+          🤝 Espace prestataire
         </Link>
         <div className="rounded-xl px-4 py-3" style={{ backgroundColor: C.anthracite }}>
           <PaletteSelector />
@@ -357,7 +357,7 @@ function GuestMenu({ mobile = false }: { mobile?: boolean }) {
             <Link href="/prestataire/dashboard" onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-3 text-sm font-semibold hover:bg-black/5 transition-colors"
               style={{ color: C.terra }}>
-              🤝 Espace partenaire
+              🤝 Espace prestataire
             </Link>
 
             <div style={{ height: 1, backgroundColor: C.anthracite, margin: "4px 0" }} />

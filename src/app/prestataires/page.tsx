@@ -7,10 +7,10 @@ import { DarkModeToggle } from "@/components/DarkModeToggle"
 import { C } from "@/lib/colors"
 
 const BENEFITS = [
-  { icon: <TrendingUp size={22} />, title: "Plus de visibilité", desc: "Votre profil vu par des milliers d'organisateurs d'événements au Maroc." },
-  { icon: <Shield size={22} />, title: "Badge vérifié", desc: "Un badge de confiance qui rassure vos clients et vous distingue de la concurrence." },
-  { icon: <Star size={22} />, title: "Avis clients", desc: "Collectez des avis authentiques et construisez votre réputation en ligne." },
-  { icon: <Clock size={22} />, title: "Gestion simplifiée", desc: "Gérez vos demandes, disponibilités et bookings depuis un seul tableau de bord." },
+  { icon: <TrendingUp size={22} />, title: "Plus de visibilité", desc: "Ton profil vu par des milliers d'organisateurs d'événements au Maroc." },
+  { icon: <Shield size={22} />, title: "Badge vérifié", desc: "Un badge de confiance qui rassure tes clients et te distingue de la concurrence." },
+  { icon: <Star size={22} />, title: "Avis clients", desc: "Collecte des avis authentiques et construis ta réputation en ligne." },
+  { icon: <Clock size={22} />, title: "Gestion simplifiée", desc: "Gère tes demandes, disponibilités et réservations depuis un seul tableau de bord." },
 ]
 
 const PLANS = [
@@ -63,8 +63,8 @@ export default function PrestatairesPage() {
             <span className="font-display italic font-normal" style={{ color: C.accent }}>avec Momento.</span>
           </h1>
           <p className="text-lg mb-10 max-w-xl mx-auto leading-relaxed" style={{ color: C.mist }}>
-            Rejoignez la plateforme de référence pour les prestataires événementiels au Maroc.
-            Des clients qualifiés, directement dans votre tableau de bord.
+            Rejoins la plateforme de référence pour les prestataires événementiels au Maroc.
+            Des clients qualifiés, directement dans ton tableau de bord.
           </p>
           <Link href="/prestataire"
             className="inline-flex items-center gap-2 font-bold text-base px-10 py-4 rounded-2xl transition-all hover:opacity-90 hover:-translate-y-0.5"
@@ -98,7 +98,7 @@ export default function PrestatairesPage() {
       <section className="py-20 px-6" style={{ backgroundColor: C.ink }}>
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4" style={{ color: C.white }}>Tarifs simples et transparents</h2>
-          <p className="text-center text-base mb-14" style={{ color: C.mist }}>Commencez gratuitement. Passez Pro quand vous êtes prêt.</p>
+          <p className="text-center text-base mb-14" style={{ color: C.mist }}>Commence gratuitement. Passe Pro quand tu es prêt·e.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {PLANS.map(plan => (
               <div key={plan.name} className="p-8 rounded-2xl flex flex-col"

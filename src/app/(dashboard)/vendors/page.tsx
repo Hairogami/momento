@@ -101,7 +101,7 @@ export default async function VendorsPage({
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center gap-6">
         <div className="text-5xl">🤝</div>
         <div>
-          <h1 className="text-xl font-semibold mb-2">Ton mariage n&apos;est pas encore créé</h1>
+          <h1 className="text-xl font-semibold mb-2">Ton événement n&apos;est pas encore créé</h1>
           <p className="text-sm text-muted-foreground max-w-sm">
             Crée ton événement pour commencer à construire ton équipe de rêve.
           </p>
@@ -147,7 +147,7 @@ export default async function VendorsPage({
               style={{ backgroundColor: activePlanner.coverColor ?? C.terra }}
             />
             <span style={{ color: activePlanner.coverColor ?? C.terra }}>
-              Vous consultez : {activePlanner.coupleNames || activePlanner.title || "Événement"}
+              Tu consultes : {activePlanner.coupleNames || activePlanner.title || "Événement"}
             </span>
           </div>
           <Link
@@ -249,7 +249,7 @@ export default async function VendorsPage({
               Ton équipe est encore à construire !
             </p>
             <p className="text-sm max-w-sm" style={{ color: C.mist }}>
-              Explore les pros disponibles et construis l&apos;équipe parfaite pour ton mariage.
+              Explore les pros disponibles et construis l&apos;équipe parfaite pour ton événement.
             </p>
           </div>
           <Link

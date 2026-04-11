@@ -3,8 +3,8 @@ import Footer from "@/components/Footer"
 import { MomentoLogo } from "@/components/MomentoLogo"
 
 export const metadata = {
-  title: "Conditions Générales de Vente — Momento",
-  description: "Conditions générales de vente et d'utilisation de la plateforme Momento.",
+  title: "Conditions Générales d'Utilisation — Momento",
+  description: "Conditions générales d'utilisation de la plateforme Momento.",
 }
 
 export default function CGVPage() {

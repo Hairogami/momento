@@ -54,7 +54,7 @@ export default async function GuestsPage({
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center gap-6">
         <div className="text-5xl">📅</div>
         <div>
-          <h1 className="text-xl font-semibold mb-2">Ton mariage n&apos;est pas encore créé</h1>
+          <h1 className="text-xl font-semibold mb-2">Ton événement n&apos;est pas encore créé</h1>
           <p className="text-sm text-muted-foreground max-sm">
             Crée ton événement pour commencer ta liste d&apos;invités.
           </p>
@@ -96,7 +96,7 @@ export default async function GuestsPage({
               style={{ backgroundColor: activePlanner.coverColor ?? C.terra }}
             />
             <span style={{ color: activePlanner.coverColor ?? C.terra }}>
-              Vous consultez : {activePlanner.coupleNames || activePlanner.title || "Événement"}
+              Tu consultes : {activePlanner.coupleNames || activePlanner.title || "Événement"}
             </span>
           </div>
           <Link

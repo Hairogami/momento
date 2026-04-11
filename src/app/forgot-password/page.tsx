@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
     setError("")
 
     if (!email) {
-      setError("Veuillez saisir votre adresse e-mail.")
+      setError("Saisis ton adresse e-mail.")
       return
     }
 
@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
                   Mot de passe oublié
                 </h1>
                 <p className="mt-3 text-sm leading-relaxed" style={{ color: C.mist }}>
-                  Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                  Saisis ton adresse e-mail et nous t&apos;enverrons un lien pour réinitialiser ton mot de passe.
                 </p>
               </div>
 
@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
                     autoComplete="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    placeholder="vous@exemple.com"
+                    placeholder="toi@exemple.com"
                     required
                     className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
                     style={{
@@ -154,10 +154,10 @@ export default function ForgotPasswordPage() {
                 E-mail envoyé !
               </h2>
               <p className="text-sm leading-relaxed mb-6" style={{ color: C.mist }}>
-                Si un compte existe pour <strong style={{ color: C.white }}>{email}</strong>, vous recevrez un lien de réinitialisation dans quelques minutes.
+                Si un compte existe pour <strong style={{ color: C.white }}>{email}</strong>, tu recevras un lien de réinitialisation dans quelques minutes.
               </p>
               <p className="text-xs mb-6" style={{ color: C.steel }}>
-                Vérifiez également vos spams.
+                Vérifie également tes spams.
               </p>
               <Link
                 href="/login"

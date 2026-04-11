@@ -19,7 +19,7 @@ export default function Footer() {
               Momento
             </p>
             <p className="text-sm leading-relaxed" style={{ color: "var(--momento-mist)" }}>
-              La plateforme événementielle dédiée aux mariages et fêtes au Maroc.
+              La plateforme événementielle du Maroc — prestataires vérifiés, zéro commission.
             </p>
             <div className="flex gap-3 mt-4">
               <a href="https://instagram.com/momentoevents.ma" target="_blank" rel="noopener noreferrer"
@@ -87,7 +87,7 @@ export default function Footer() {
               {[
                 { href: "/legal/mentions", label: "Mentions légales" },
                 { href: "/legal/privacy", label: "Politique de confidentialité" },
-                { href: "/legal/cgv", label: "CGV" },
+                { href: "/legal/cgv", label: "CGU" },
                 { href: "/help", label: "Aide & Contact" },
                 { href: "/prestataire", label: "Espace Prestataire" },
               ].map(({ href, label }) => (

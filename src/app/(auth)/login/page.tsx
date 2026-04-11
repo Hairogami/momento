@@ -27,7 +27,7 @@ export default function LoginPage() {
             <Image src="/logo-light.png" alt="Momento" width={100} height={100} className="invert dark:invert-0" style={{ objectFit: "contain" }} priority />
           </div>
           <p className="text-sm" style={{ color: C.mist }}>
-            Organisez votre evenement sans stress
+            Organise ton événement sans stress
           </p>
         </div>
 
@@ -43,7 +43,7 @@ export default function LoginPage() {
               Bienvenue
             </h2>
             <p className="text-sm mt-1" style={{ color: C.mist }}>
-              Connectez-vous pour continuer
+              Connecte-toi pour continuer
             </p>
           </div>
 
@@ -151,7 +151,8 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-xs mt-6" style={{ color: C.mist }}>
-          En continuant, vous acceptez nos conditions d&apos;utilisation.
+          En continuant, tu acceptes nos{" "}
+          <a href="/legal/cgv" className="underline hover:opacity-80">conditions d&apos;utilisation</a>.
         </p>
       </div>
     </div>
