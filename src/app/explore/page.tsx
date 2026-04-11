@@ -379,6 +379,14 @@ function ExploreContent() {
   const [toast, setToast] = useState("")
   // Vendors state: starts with static fallback, replaced by API data if available
   const [vendors, setVendors] = useState<VendorEntry[]>(VENDORS_FALLBACK)
+  // DB counts — starts with static fallback counts, replaced by live DB counts
+  const [counts, setCounts] = useState<{ total: number; byCategory: Record<string, number> }>(() => {
+    const byCategory: Record<string, number> = {}
+    for (const v of VENDORS_FALLBACK) {
+      byCategory[v.category] = (byCategory[v.category] ?? 0) + 1
+    }
+    return { total: VENDORS_FALLBACK.length, byCategory }
+  })
 
   useEffect(() => {
     const saved = localStorage.getItem(`momento_current_event${keySuffix}`)
@@ -393,6 +401,16 @@ function ExploreContent() {
     const savedFavs = localStorage.getItem("momento_favorites")
     if (savedFavs) { try { setFavorites(new Set(JSON.parse(savedFavs))) } catch {} }
   }, [keySuffix])
+
+  // Fetch live counts from DB — separate from vendor list to avoid pagination limits
+  useEffect(() => {
+    fetch("/api/vendors/counts")
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then((data: { total: number; byCategory: Record<string, number> }) => {
+        if (data.total > 0) setCounts(data)
+      })
+      .catch(() => { /* silently keep static fallback counts */ })
+  }, [])
 
   // Fetch vendors from API, fallback to static data on error
   useEffect(() => {
@@ -605,14 +623,14 @@ function ExploreContent() {
             className="shrink-0 flex flex-col items-center gap-0.5 px-3 sm:px-4 py-2 rounded-xl transition-all hover:opacity-80 group"
             style={{ minWidth: 64 }}
           >
-            <span className="text-[11px] font-bold tabular-nums" style={{ color: C.terra }}>{VENDORS.length}</span>
+            <span className="text-[11px] font-bold tabular-nums" style={{ color: C.terra }}>{counts.total}</span>
             <span className="text-2xl leading-none">🌟</span>
             <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: !activeMajor ? C.white : C.mist }}>Tout</span>
             {!activeMajor && <span className="block h-0.5 w-4 rounded-full mt-0.5" style={{ backgroundColor: C.terra }} />}
           </button>
 
           {MAJOR_CATS.map(cat => {
-            const count = VENDORS.filter(v => cat.sub.includes(v.category)).length
+            const count = cat.sub.reduce((sum, sub) => sum + (counts.byCategory[sub] ?? 0), 0)
             const isActive = activeMajor === cat.slug
             return (
               <button
@@ -646,10 +664,10 @@ function ExploreContent() {
                   border: `1px solid ${!activeSub ? C.terra : C.steel}`,
                 }}
               >
-                Tous ({VENDORS.filter(v => major.sub.includes(v.category)).length})
+                Tous ({major.sub.reduce((sum, sub) => sum + (counts.byCategory[sub] ?? 0), 0)})
               </button>
               {major.sub.map(sub => {
-                const count = VENDORS.filter(v => v.category === sub).length
+                const count = counts.byCategory[sub] ?? 0
                 const isActive = activeSub === sub
                 return (
                   <button
@@ -821,7 +839,7 @@ function ExploreContent() {
 
         {/* Footer note */}
         <p className="text-center text-xs mt-12 pb-4" style={{ color: C.steel }}>
-          {Object.keys(VENDOR_BASIC).length} prestataires référencés · 41+ villes · 31 catégories · Maroc
+          {counts.total} prestataires référencés · 41+ villes · 31 catégories · Maroc
         </p>
       </div>
       <Footer />
