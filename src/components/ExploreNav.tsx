@@ -78,10 +78,7 @@ export default function ExploreNav({
       style={{ backgroundColor: `${C.ink}F8`, backdropFilter: "blur(16px)", borderColor: C.anthracite }}
     >
       {/* ── 3-column grid row ── */}
-      <div
-        className="w-full px-4 sm:px-6 py-3 grid items-center"
-        style={{ gridTemplateColumns: "1fr auto 1fr" }}
-      >
+      <div className="w-full px-4 sm:px-6 py-3 grid grid-cols-[auto_1fr_auto] sm:grid-cols-[1fr_auto_1fr] items-center gap-3">
         {/* Logo */}
         <Link href="/" className="justify-self-start shrink-0">
           <span className="font-bold tracking-[0.2em] uppercase text-sm" style={{ color: C.white }}>
@@ -91,7 +88,7 @@ export default function ExploreNav({
 
         {/* Search pill — 66px Airbnb, 3 sections */}
         <div
-          className="flex items-center rounded-full overflow-hidden"
+          className="col-span-3 sm:col-span-1 sm:col-start-2 flex items-center rounded-full overflow-hidden min-w-0"
           style={{
             backgroundColor: C.ink,
             border: `1px solid ${C.anthracite}`,
@@ -141,6 +138,7 @@ export default function ExploreNav({
             onClick={() => setShowFilterPanel(f => !f)}
             className="hidden sm:flex flex-col justify-center px-6 h-full text-left transition-colors"
             style={{ borderRight: `1px solid ${C.anthracite}`, backgroundColor: showFilterPanel ? C.dark : "transparent" }}
+            aria-expanded={showFilterPanel}
           >
             <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Filtres</span>
             <span className="leading-none" style={{ color: filtersActive ? C.white : C.steel, fontSize: 14 }}>
@@ -153,6 +151,7 @@ export default function ExploreNav({
             onClick={() => setShowFilterPanel(false)}
             className="mx-2 shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:opacity-90"
             style={{ backgroundColor: C.terra, color: "#fff" }}
+            aria-label="Appliquer la recherche"
           >
             <Search size={16} />
           </button>
@@ -168,6 +167,7 @@ export default function ExploreNav({
               borderColor: showFilterPanel ? C.terra : C.anthracite,
               color: showFilterPanel ? "#fff" : C.white,
             }}
+            aria-label={showFilterPanel ? "Fermer les filtres" : "Ouvrir les filtres"}
           >
             <SlidersHorizontal size={15} />
           </button>
