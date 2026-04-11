@@ -68,12 +68,7 @@ export default async function VendorsPage({
           orderBy: { createdAt: "desc" },
           include: {
             vendor: {
-              select: {
-                id: true,
-                slug: true,
-                name: true,
-                category: true,
-                city: true,
+              include: {
                 media: {
                   where: { type: "image" },
                   orderBy: { order: "asc" },
@@ -276,7 +271,7 @@ export default async function VendorsPage({
             return (
               <Link
                 key={booking.id}
-                href={`/vendor/${vendor.slug}`}
+                href={`/prestataire/${vendor.id}`}
                 className="group relative flex flex-col rounded-2xl overflow-hidden transition-all hover:scale-[1.01] hover:shadow-lg"
                 style={{
                   backgroundColor: C.dark,
