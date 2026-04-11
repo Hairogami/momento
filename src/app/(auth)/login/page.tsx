@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { signIn } from "@/lib/auth";
 import Image from "next/image";
 import { C } from "@/lib/colors";
@@ -12,14 +13,15 @@ export default function LoginPage() {
       style={{ backgroundColor: C.ink }}
     >
       <div className="absolute top-4 left-4">
-        <a href="/" className="text-sm transition-opacity hover:opacity-70" style={{ color: C.mist }}>← Accueil</a>
+        <Link href="/" className="text-sm transition-opacity hover:opacity-70" style={{ color: C.mist }}>
+          ← Accueil
+        </Link>
       </div>
       <div className="absolute top-4 right-4">
         <DarkModeToggle />
       </div>
 
       <div className="w-full max-w-md">
-        {/* Brand */}
         <div className="text-center mb-10">
           <div className="flex justify-center mb-3">
             <Image src="/logo-light.png" alt="Momento" width={100} height={100} className="invert dark:invert-0" style={{ objectFit: "contain" }} priority />
@@ -29,10 +31,10 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Card */}
         <div
-          className="rounded-2xl p-8 space-y-5 shadow-lg dark:shadow-none bg-white dark:bg-[var(--momento-dark)]"
+          className="rounded-2xl p-8 space-y-5 shadow-lg dark:shadow-none"
           style={{
+            backgroundColor: C.dark,
             border: `1px solid ${C.anthracite}`,
           }}
         >
@@ -45,7 +47,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* OAuth providers */}
           <div className="space-y-2.5">
             {process.env.GOOGLE_CLIENT_ID && (
               <form
@@ -56,8 +57,9 @@ export default function LoginPage() {
               >
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90 bg-white dark:bg-[var(--momento-ink)]"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90"
                   style={{
+                    backgroundColor: C.ink,
                     color: C.white,
                     border: `1px solid ${C.anthracite}`,
                   }}
@@ -82,8 +84,9 @@ export default function LoginPage() {
               >
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90 bg-white dark:bg-[var(--momento-ink)]"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-90"
                   style={{
+                    backgroundColor: C.ink,
                     color: C.white,
                     border: `1px solid ${C.anthracite}`,
                   }}
@@ -97,24 +100,20 @@ export default function LoginPage() {
             )}
           </div>
 
-          {/* Divider */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px" style={{ backgroundColor: C.anthracite }} />
             <span className="text-xs" style={{ color: C.mist }}>ou</span>
             <div className="flex-1 h-px" style={{ backgroundColor: C.anthracite }} />
           </div>
 
-          {/* Email / Password + Register */}
           <CredentialsForm />
 
-          {/* Divider */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px" style={{ backgroundColor: C.anthracite }} />
             <span className="text-xs" style={{ color: C.mist }}>lien magique</span>
             <div className="flex-1 h-px" style={{ backgroundColor: C.anthracite }} />
           </div>
 
-          {/* Magic link */}
           <form
             action={async (formData: FormData) => {
               "use server";
@@ -130,8 +129,9 @@ export default function LoginPage() {
               type="email"
               placeholder="toi@exemple.com"
               required
-              className="rounded-xl py-3 px-4 text-sm bg-white dark:bg-[var(--momento-ink)]"
+              className="rounded-xl py-3 px-4 text-sm"
               style={{
+                backgroundColor: C.ink,
                 border: `1px solid ${C.anthracite}`,
                 color: C.white,
               }}

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { C } from "@/lib/colors";
@@ -65,14 +66,12 @@ export function CredentialsForm() {
     fontSize: "14px",
     width: "100%",
     outline: "none",
+    backgroundColor: C.ink,
   } as React.CSSProperties;
-
-  const inputClassName = "bg-white dark:bg-[var(--momento-ink)]";
 
   return (
     <div className="space-y-3">
-      {/* Tabs */}
-      <div className="flex rounded-xl p-1 gap-1 bg-white dark:bg-[var(--momento-ink)]">
+      <div className="flex rounded-xl p-1 gap-1" style={{ backgroundColor: C.ink }}>
         {(["login", "register"] as const).map((m) => (
           <button
             key={m}
@@ -84,6 +83,7 @@ export function CredentialsForm() {
               color: mode === m ? C.white : C.mist,
               border: mode === m ? `1px solid ${C.anthracite}` : "1px solid transparent",
             }}
+            aria-pressed={mode === m}
           >
             {m === "login" ? "Connexion" : "S'inscrire"}
           </button>
@@ -98,7 +98,6 @@ export function CredentialsForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className={inputClassName}
             style={inputStyle}
           />
         )}
@@ -108,7 +107,6 @@ export function CredentialsForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className={inputClassName}
           style={inputStyle}
         />
         <input
@@ -118,23 +116,17 @@ export function CredentialsForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={8}
-          className={inputClassName}
           style={inputStyle}
         />
 
         {mode === "login" && (
           <div className="text-right">
-            <a
-              href="/forgot-password"
-              className="text-xs hover:underline"
-              style={{ color: C.mist }}
-            >
+            <Link href="/forgot-password" className="text-xs hover:underline" style={{ color: C.mist }}>
               Mot de passe oublié ?
-            </a>
+            </Link>
           </div>
         )}
 
-        {/* Remember me */}
         <label className="flex items-center gap-2 cursor-pointer select-none">
           <div
             onClick={() => setRememberMe(!rememberMe)}
@@ -159,15 +151,20 @@ export function CredentialsForm() {
           </span>
         </label>
 
-        {error && <p className="text-sm" style={{ color: "#ef4444" }}>{error}</p>}
+        {error && (
+          <p className="text-sm px-3 py-2 rounded-xl" role="alert" style={{ backgroundColor: `${C.terra}18`, color: C.terra }}>
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={loading}
           className="w-full py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 disabled:opacity-50"
           style={{ backgroundColor: C.terra }}
+          aria-busy={loading}
         >
-          {loading ? "..." : mode === "login" ? "Se connecter" : "Créer un compte"}
+          {loading ? "Chargement..." : mode === "login" ? "Se connecter" : "Créer un compte"}
         </button>
       </form>
     </div>
