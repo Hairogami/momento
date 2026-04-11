@@ -485,16 +485,16 @@ function ExploreContent() {
 
       {/* ── NAV (Airbnb-style) ── */}
       <nav className="sticky top-0 z-40 border-b" style={{ backgroundColor: `${C.ink}F8`, backdropFilter: "blur(16px)", borderColor: C.anthracite }}>
-        <div className="w-full px-4 sm:px-6 py-3 grid grid-cols-[auto_1fr_auto] sm:grid-cols-[1fr_auto_1fr] items-center gap-3">
+        <div className="w-full px-4 sm:px-6 py-3 grid items-center" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
 
           <MomentoLogo iconSize={30} className="justify-self-start" />
 
           {/* ── Search pill — dimensions Airbnb ── */}
           <div
-            className="col-span-3 sm:col-span-1 sm:col-start-2 flex items-center rounded-full overflow-hidden min-w-0"
+            className="flex items-center rounded-full overflow-hidden"
             style={{
               backgroundColor: C.ink,
-              border: `1px solid ${C.anthracite}`,
+              border: "1px solid #ddd",
               boxShadow: "rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.1) 0px 8px 24px 0px",
               height: 66,
               width: "100%",
@@ -502,7 +502,7 @@ function ExploreContent() {
             }}
           >
             {/* Section 1 — Prestataire */}
-            <label className="flex-1 flex flex-col justify-center px-4 sm:px-6 cursor-text border-r h-full min-w-0" style={{ borderColor: C.anthracite }}>
+            <label className="flex-1 flex flex-col justify-center px-6 cursor-text border-r h-full" style={{ borderColor: "#ddd" }}>
               <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Prestataire</span>
               <input
                 type="text" placeholder="DJ, traiteur, photographe…"
@@ -513,7 +513,7 @@ function ExploreContent() {
             </label>
 
             {/* Section 2 — Date (custom styled) */}
-            <div className="relative hidden sm:flex items-center border-r h-full" style={{ borderColor: C.anthracite }}>
+            <div className="relative hidden sm:flex items-center border-r h-full" style={{ borderColor: "#ddd" }}>
               <button
                 type="button"
                 className="flex flex-col justify-center px-6 h-full cursor-pointer"
@@ -540,7 +540,7 @@ function ExploreContent() {
             <button
               onClick={() => setShowFilterPanel(f => !f)}
               className="hidden sm:flex flex-col justify-center px-6 h-full border-r text-left transition-colors"
-              style={{ borderColor: C.anthracite, backgroundColor: showFilterPanel ? C.dark : "transparent" }}>
+              style={{ borderColor: "#ddd", backgroundColor: showFilterPanel ? C.dark : "transparent" }}>
               <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Filtres</span>
               <span className="leading-none" style={{ color: activeSub || activeMajor || activeCity !== "Toutes les villes" ? C.white : C.steel, fontSize: 14 }}>
                 {activeSub || (activeMajor ? MAJOR_CATS.find(m => m.slug === activeMajor)?.label : "") || (activeCity !== "Toutes les villes" ? activeCity : "Ajouter des filtres")}
@@ -849,7 +849,7 @@ function ExploreContent() {
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen" style={{ backgroundColor: C.ink }} />}>
+    <Suspense fallback={<div className="min-h-screen" style={{ backgroundColor: "#F5EDD6" }} />}>
       <ExploreContent />
     </Suspense>
   )
