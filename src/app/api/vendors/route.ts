@@ -44,6 +44,9 @@ export async function GET(req: NextRequest) {
       instagram: true,
       facebook: true,
       phone: true,
+      email: true,
+      region: true,
+      verified: true,
       media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },
     },
   })

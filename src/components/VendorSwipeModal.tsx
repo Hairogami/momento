@@ -21,6 +21,9 @@ export interface VendorCard {
   instagram: string | null;
   facebook: string | null;
   phone: string | null;
+  email: string | null;
+  region: string | null;
+  verified: boolean;
   media: { url: string; order: number }[];
 }
 
@@ -34,6 +37,8 @@ interface Props {
 }
 
 const SWIPE_THRESHOLD = 80;
+
+type ReviewItem = { id: string; rating: number; comment: string | null; eventType: string | null; createdAt: string; author: { name: string | null; image: string | null } }
 
 function fmtStarting(min: number | null, max: number | null): string | null {
   const base = min ?? max;
@@ -96,7 +101,12 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
   const pageRef                       = useRef(1);
 
   // P2 — Filtre catégorie inline
-  const [activeCategory, setActiveCategory] = useState(initialCategory || categories[0] || "");
+  const [activeCategory, setActiveCategory] = useState(initialCategory || categories[0] || "")
+
+  // Reviews lazy
+  const [reviews, setReviews]           = useState<ReviewItem[]>([])
+  const [reviewsSlug, setReviewsSlug]   = useState<string | null>(null)
+  const [reviewsLoading, setReviewsLoading] = useState(false);
 
   const fetchPage = useCallback((page: number, append = false) => {
     const url = `/api/vendors?limit=20&page=${page}${activeCategory ? `&category=${encodeURIComponent(activeCategory)}` : ""}`;
@@ -123,8 +133,9 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     return fetchPage(1, false);
   }, [fetchPage]);
 
-  useEffect(() => { setPhotoIdx(0); setShowDetail(false); setDrag({ x: 0, y: 0 }); }, [index]);
+  useEffect(() => { setPhotoIdx(0); setShowDetail(false); setDrag({ x: 0, y: 0 }); setReviews([]); setReviewsSlug(null); }, [index]);
 
+  // Fetch reviews when detail opens (once per vendor)
   // Prefetch next page when 5 cards remaining
   useEffect(() => {
     if (!hasMore || loadingMore || vendors.length === 0) return;
@@ -136,6 +147,18 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
 
   const current = vendors[index];
   const photos  = current?.media?.filter(m => m.url).map(m => m.url) ?? [];
+
+  // Fetch reviews when detail opens (once per vendor)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!showDetail || !current || reviewsSlug === current.slug) return;
+    setReviewsLoading(true);
+    fetch(`/api/reviews?slug=${encodeURIComponent(current.slug)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d?.reviews) { setReviews(d.reviews); setReviewsSlug(current.slug); } })
+      .catch(() => {})
+      .finally(() => setReviewsLoading(false));
+  }, [showDetail, current?.slug]);
 
   // dragX/dragY passed explicitly so triggerSwipe doesn't capture stale closure values
   const triggerSwipe = useCallback(async (dir: "left" | "right", dragX = 0, dragY = 0) => {
@@ -532,8 +555,16 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
 
                   {/* Top row: name + close */}
                   <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="font-black text-white text-xl leading-tight drop-shadow-lg">{current.name}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-black text-white text-xl leading-tight drop-shadow-lg">{current.name}</p>
+                        {current.verified && (
+                          <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0"
+                            style={{ backgroundColor: "rgba(74,222,128,0.2)", border: "1px solid rgba(74,222,128,0.4)", color: "#4ade80" }}>
+                            ✓ Vérifié
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs font-semibold mt-0.5 drop-shadow" style={{ color: C.terra }}>{current.category}</p>
                     </div>
                     <button onClick={() => setShowDetail(false)}
@@ -555,20 +586,25 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                   )}
 
                   {/* Location → Google Maps */}
-                  {(current.city || current.address) && (() => {
+                  {(current.city || current.address || current.region) && (() => {
                     const loc = [current.address, current.city].filter(Boolean).join(", ");
-                    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc)}`;
+                    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc || current.region || "")}`;
                     return (
-                      <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                        onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: "rgba(0,0,0,0.4)", backdropFilter: "blur(6px)" }}>
-                          <MapPin size={13} style={{ color: "#4ade80" }} />
-                        </div>
-                        <span className="text-xs font-medium drop-shadow underline underline-offset-2 decoration-dotted"
-                          style={{ color: "rgba(255,255,255,0.75)" }}>{loc}</span>
-                      </a>
+                      <div className="flex flex-col gap-1">
+                        <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
+                          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                          onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
+                          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: "rgba(0,0,0,0.4)", backdropFilter: "blur(6px)" }}>
+                            <MapPin size={13} style={{ color: "#4ade80" }} />
+                          </div>
+                          <div>
+                            {loc && <span className="text-xs font-medium drop-shadow underline underline-offset-2 decoration-dotted block"
+                              style={{ color: "rgba(255,255,255,0.75)" }}>{loc}</span>}
+                            {current.region && <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>{current.region}</span>}
+                          </div>
+                        </a>
+                      </div>
                     );
                   })()}
 
@@ -652,6 +688,58 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                       </a>
                     )}
                   </div>
+
+                  {/* Email */}
+                  {current.email && (
+                    <a href={`mailto:${current.email}`}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-2xl hover:opacity-80 transition-opacity"
+                      style={{ backgroundColor: "rgba(0,0,0,0.38)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                      onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
+                      <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
+                        <span className="text-[10px]">✉️</span>
+                      </div>
+                      <span className="text-xs font-semibold truncate" style={{ color: "rgba(255,255,255,0.75)" }}>{current.email}</span>
+                      <ArrowUpRight size={11} style={{ color: "rgba(255,255,255,0.35)", marginLeft: "auto", flexShrink: 0 }} />
+                    </a>
+                  )}
+
+                  {/* Avis textuels */}
+                  {(reviews.length > 0 || reviewsLoading) && (
+                    <div className="flex flex-col gap-2">
+                      <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: "rgba(255,255,255,0.35)" }}>
+                        Avis clients
+                      </p>
+                      {reviewsLoading && (
+                        <div className="h-8 rounded-xl animate-pulse" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
+                      )}
+                      {reviews.slice(0, 3).map(r => (
+                        <div key={r.id} className="p-3 rounded-2xl flex flex-col gap-1.5"
+                          style={{ backgroundColor: "rgba(0,0,0,0.32)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-1.5">
+                              <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                                style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.6)" }}>
+                                {r.author.name?.[0]?.toUpperCase() ?? "?"}
+                              </div>
+                              <span className="text-[11px] font-semibold" style={{ color: "rgba(255,255,255,0.7)" }}>
+                                {r.author.name ?? "Anonyme"}
+                              </span>
+                              {r.eventType && (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded-md" style={{ backgroundColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}>
+                                  {r.eventType}
+                                </span>
+                              )}
+                            </div>
+                            <Stars rating={r.rating} size={9} />
+                          </div>
+                          {r.comment && (
+                            <p className="text-[11px] leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>{r.comment}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Lien profil complet */}
                   <a href={`/vendor/${current.slug}`} target="_blank" rel="noopener noreferrer"
