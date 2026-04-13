@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
   // W03: public endpoint — exclude sensitive contact/location fields
   const vendors = await prisma.vendor.findMany({
     where: category ? { category } : {},
-    orderBy: { name: "asc" },
+    orderBy: [{ media: { _count: "desc" } }, { name: "asc" }],
     skip: (page - 1) * limit,
     take: limit,
     select: {
@@ -34,10 +34,16 @@ export async function GET(req: NextRequest) {
       category: true,
       description: true,
       address: true,
+      city: true,
+      priceMin: true,
+      priceMax: true,
       priceRange: true,
       rating: true,
       reviewCount: true,
       website: true,
+      instagram: true,
+      facebook: true,
+      media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },
     },
   })
   return Response.json(vendors)
