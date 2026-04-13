@@ -458,50 +458,61 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                       </div>
                     )}
                   </div>
-                  {/* Chips de contact/social */}
-                  {(current.phone || current.instagram || current.facebook || current.website || current.address) && (
-                    <div className="flex flex-wrap gap-1.5 mt-2.5" onPointerDown={e => e.stopPropagation()}>
-                      {current.phone && (
-                        <a href={`tel:${current.phone}`} onClick={e => e.stopPropagation()}
-                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                          style={{ backgroundColor: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", color: "#4ade80" }}>
-                          📞 {current.phone}
-                        </a>
-                      )}
-                      {current.instagram && (
-                        <a href={`https://instagram.com/${current.instagram.replace("@","")}`} target="_blank" rel="noopener noreferrer"
-                          onClick={e => e.stopPropagation()}
-                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                          style={{ backgroundColor: "rgba(225,48,108,0.15)", border: "1px solid rgba(225,48,108,0.3)", color: "#f472b6" }}>
-                          <span className="text-[9px] font-black px-0.5 rounded" style={{ background: "linear-gradient(135deg,#f09433,#dc2743,#bc1888)", color: "#fff" }}>IG</span>
-                          @{current.instagram.replace("@","")}
-                        </a>
-                      )}
-                      {current.facebook && (
-                        <a href={current.facebook.startsWith("http") ? current.facebook : `https://facebook.com/${current.facebook}`}
-                          target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                          style={{ backgroundColor: "rgba(24,119,242,0.15)", border: "1px solid rgba(24,119,242,0.35)", color: "#60a5fa" }}>
-                          <span className="font-black" style={{ color: "#1877f2" }}>f</span> Facebook
-                        </a>
-                      )}
-                      {current.website && (
-                        <a href={current.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                          style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.65)" }}>
-                          🌐 Site web
-                        </a>
-                      )}
-                      {current.address && !current.city && (
-                        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(current.address)}`}
-                          target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                          style={{ backgroundColor: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.2)", color: "rgba(255,255,255,0.55)" }}>
-                          📍 {current.address}
-                        </a>
-                      )}
-                    </div>
-                  )}
+                  {/* Chips de contact/social — toujours affichées, grisées si absent */}
+                  <div className="flex flex-wrap gap-1.5 mt-2.5" onPointerDown={e => e.stopPropagation()}>
+                    {current.phone ? (
+                      <a href={`tel:${current.phone}`} onClick={e => e.stopPropagation()}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                        style={{ backgroundColor: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", color: "#4ade80" }}>
+                        📞 {current.phone}
+                      </a>
+                    ) : (
+                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
+                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
+                        📞 Non renseigné
+                      </span>
+                    )}
+                    {current.instagram ? (
+                      <a href={`https://instagram.com/${current.instagram.replace("@","")}`} target="_blank" rel="noopener noreferrer"
+                        onClick={e => e.stopPropagation()}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                        style={{ backgroundColor: "rgba(225,48,108,0.15)", border: "1px solid rgba(225,48,108,0.3)", color: "#f472b6" }}>
+                        <span className="text-[9px] font-black px-0.5 rounded" style={{ background: "linear-gradient(135deg,#f09433,#dc2743,#bc1888)", color: "#fff" }}>IG</span>
+                        @{current.instagram.replace("@","")}
+                      </a>
+                    ) : (
+                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
+                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
+                        <span className="text-[9px] font-black px-0.5 rounded" style={{ backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.2)" }}>IG</span>
+                        Non renseigné
+                      </span>
+                    )}
+                    {current.facebook ? (
+                      <a href={current.facebook.startsWith("http") ? current.facebook : `https://facebook.com/${current.facebook}`}
+                        target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                        style={{ backgroundColor: "rgba(24,119,242,0.15)", border: "1px solid rgba(24,119,242,0.35)", color: "#60a5fa" }}>
+                        <span className="font-black" style={{ color: "#1877f2" }}>f</span> Facebook
+                      </a>
+                    ) : (
+                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
+                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
+                        <span className="font-black" style={{ color: "rgba(255,255,255,0.2)" }}>f</span> Non renseigné
+                      </span>
+                    )}
+                    {current.website ? (
+                      <a href={current.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                        style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.65)" }}>
+                        🌐 Site web
+                      </a>
+                    ) : (
+                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
+                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
+                        🌐 Non renseigné
+                      </span>
+                    )}
+                  </div>
                   <p className="text-[10px] mt-2 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>Appuyer pour les détails · Glisser pour choisir</p>
                 </div>
               )}
