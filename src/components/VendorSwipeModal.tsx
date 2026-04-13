@@ -20,6 +20,7 @@ export interface VendorCard {
   website: string | null;
   instagram: string | null;
   facebook: string | null;
+  phone: string | null;
   media: { url: string; order: number }[];
 }
 
@@ -541,6 +542,19 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
 
                   {/* Social links */}
                   <div className="flex flex-col gap-2">
+                    {current.phone && (
+                      <a href={`tel:${current.phone}`}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-2xl hover:opacity-80 transition-opacity"
+                        style={{ backgroundColor: "rgba(0,0,0,0.38)", backdropFilter: "blur(8px)", border: "1px solid rgba(74,222,128,0.2)" }}
+                        onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: "rgba(74,222,128,0.15)" }}>
+                          <span className="text-[10px] font-black" style={{ color: "#4ade80" }}>📞</span>
+                        </div>
+                        <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.85)" }}>{current.phone}</span>
+                        <ArrowUpRight size={11} style={{ color: "rgba(255,255,255,0.35)", marginLeft: "auto" }} />
+                      </a>
+                    )}
                     {current.instagram && (
                       <a href={`https://instagram.com/${current.instagram.replace("@","")}`}
                         target="_blank" rel="noopener noreferrer"
@@ -583,6 +597,15 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                       </a>
                     )}
                   </div>
+
+                  {/* Lien profil complet */}
+                  <a href={`/vendor/${current.slug}`} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 py-2.5 rounded-2xl hover:opacity-80 transition-opacity mt-1"
+                    style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+                    onPointerDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()}>
+                    <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.6)" }}>Voir le profil complet</span>
+                    <ArrowUpRight size={12} style={{ color: "rgba(255,255,255,0.4)" }} />
+                  </a>
 
                   <div className="flex-1" />
                 </div>

@@ -43,6 +43,7 @@ export async function GET(req: NextRequest) {
       website: true,
       instagram: true,
       facebook: true,
+      phone: true,
       media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },
     },
   })
