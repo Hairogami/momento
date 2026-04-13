@@ -157,8 +157,8 @@ export default function AccueilStats() {
 
   const fetchStats = useCallback(() => {
     fetch("/api/stats")
-      .then(r => r.json())
-      .then(setStats)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setStats(data) })
       .catch(() => {})
   }, [])
 
