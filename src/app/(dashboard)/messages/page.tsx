@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { requireSession } from "@/lib/devAuth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import Link from "next/link"
@@ -10,8 +10,7 @@ export default async function MessagesPage({
 }: {
   searchParams: Promise<{ conv?: string }>
 }) {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/login")
+  const session = await requireSession()
 
   const { conv } = await searchParams
 
@@ -19,6 +18,7 @@ export default async function MessagesPage({
     where: { clientId: session.user.id },
     include: {
       messages: { orderBy: { createdAt: "desc" }, take: 1 },
+      planner: { select: { id: true, coverColor: true, coupleNames: true, title: true } },
     },
     orderBy: { updatedAt: "desc" },
   })
@@ -83,9 +83,19 @@ export default async function MessagesPage({
                     border: `1px solid ${activeConv?.id === c.id ? C.terra : C.anthracite}`,
                   }}
                 >
-                  <p className="font-semibold text-sm mb-1 truncate" style={{ color: C.white }}>
-                    {c.vendorSlug}
-                  </p>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {/* Bullet couleur événement si la conversation est liée à un planner */}
+                    {c.planner?.coverColor && (
+                      <span
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: c.planner.coverColor }}
+                        title={c.planner.coupleNames || c.planner.title || "Événement"}
+                      />
+                    )}
+                    <p className="font-semibold text-sm truncate" style={{ color: C.white }}>
+                      {c.vendorSlug}
+                    </p>
+                  </div>
                   {last ? (
                     <p className="text-xs truncate" style={{ color: C.mist }}>
                       {last.content}

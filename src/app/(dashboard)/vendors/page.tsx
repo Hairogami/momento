@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { requireSession } from "@/lib/devAuth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
@@ -55,8 +55,7 @@ export default async function VendorsPage({
 }: {
   searchParams: Promise<{ id?: string }>;
 }) {
-  const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  const session = await requireSession();
 
   const { id: eventFilter } = await searchParams;
 
@@ -271,7 +270,7 @@ export default async function VendorsPage({
             return (
               <Link
                 key={booking.id}
-                href={`/prestataire/${vendor.id}`}
+                href={`/vendor/${vendor.id}`}
                 className="group relative flex flex-col rounded-2xl overflow-hidden transition-all hover:scale-[1.01] hover:shadow-lg"
                 style={{
                   backgroundColor: C.dark,

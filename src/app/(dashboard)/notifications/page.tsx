@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { requireSession } from "@/lib/devAuth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Bell, CheckCircle2, MessageSquare } from "lucide-react"
@@ -6,8 +6,7 @@ import { C } from "@/lib/colors"
 import { prisma } from "@/lib/prisma"
 
 export default async function NotificationsPage() {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/login?next=/notifications")
+  const session = await requireSession()
 
   // Notifications = messages non lus reçus de prestataires
   const unreadMessages = await prisma.message.findMany({

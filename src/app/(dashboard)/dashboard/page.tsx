@@ -4,28 +4,106 @@ import { prisma } from "@/lib/prisma";
 import { type DashboardData } from "@/components/DashboardWidgets";
 import DashboardWidgets from "@/components/DashboardWidgets";
 import EventCard from "@/components/EventCard";
-import { IS_DEV, MOCK_DASHBOARD_DATA, MOCK_NEEDED_CATEGORIES, MOCK_WORKSPACE } from "@/lib/devMock";
+import { IS_DEV, MOCK_NEEDED_CATEGORIES } from "@/lib/devMock";
+import { requireSession } from "@/lib/devAuth";
+import Link from "next/link";
 
 export default async function DashboardPage({
   searchParams,
 }: {
   searchParams: Promise<{ id?: string }>
 }) {
-  // ── DEV MOCK (local only, never runs in production) ──────────────────────
+  // ── DEV (vraies données DB via requireSession) ───────────────────────────
   if (IS_DEV) {
-    const daysUntil = Math.max(0, Math.ceil(
-      (new Date(MOCK_WORKSPACE.eventDate!).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-    ))
+    const { id: devPlannerId } = await searchParams
+    const devSession = await requireSession()
+    const devUserId = devSession.user.id
+
+    let devWorkspace = await prisma.workspace.findUnique({
+      where: { userId: devUserId },
+      include: {
+        tasks:       { orderBy: { dueDate: "asc" }, take: 20 },
+        budgetItems: true,
+        bookings:    { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
+        guests:      true,
+      },
+    })
+    if (!devWorkspace) {
+      devWorkspace = await prisma.workspace.create({
+        data: { userId: devUserId },
+        include: {
+          tasks:       { orderBy: { dueDate: "asc" }, take: 20 },
+          budgetItems: true,
+          bookings:    { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
+          guests:      true,
+        },
+      })
+    }
+
+    let devUnreadCount = 0
+    try {
+      devUnreadCount = await prisma.message.count({
+        where: { read: false, senderId: { not: devUserId }, conversation: { clientId: devUserId } },
+      })
+    } catch { /* ignore */ }
+
+    const devData: DashboardData = {
+      firstName: devSession.user.name?.split(" ")[0] ?? null,
+      eventName: devWorkspace.eventName,
+      eventDate: devWorkspace.eventDate ? devWorkspace.eventDate.toISOString() : null,
+      budget: devWorkspace.budget,
+      guestCount: devWorkspace.guestCount,
+      tasks: devWorkspace.tasks.map(t => ({
+        id: t.id, title: t.title, category: t.category,
+        dueDate: t.dueDate ? t.dueDate.toISOString() : null, completed: t.completed,
+      })),
+      budgetItems: devWorkspace.budgetItems.map(b => ({
+        id: b.id, category: b.category, label: b.label, estimated: b.estimated, actual: b.actual,
+      })),
+      bookings: devWorkspace.bookings.map(b => ({
+        id: b.id, status: b.status, vendor: b.vendor ?? null,
+      })),
+      guests: devWorkspace.guests.map(g => ({ id: g.id, rsvp: g.rsvp })),
+      unreadCount: devUnreadCount,
+    }
+
+    // Si un planner est sélectionné, override eventName/budget
+    const MOCK_PLANNERS = [
+      { id: "mock-1", coupleNames: "Mariage Yasmine & Karim",   weddingDate: "2026-09-15", coverColor: "#e07b5a", budget: 120000, guestCount: 220 },
+      { id: "mock-2", coupleNames: "Mariage Sara & Adam",       weddingDate: "2026-06-21", coverColor: "#7b5ea7", budget: 85000,  guestCount: 150 },
+      { id: "mock-3", coupleNames: "Anniversaire 30 ans Leila", weddingDate: "2026-05-10", coverColor: "#e05a7b", budget: 30000,  guestCount: 60  },
+      { id: "mock-4", coupleNames: "Mariage Nadia & Youssef",   weddingDate: "2026-11-08", coverColor: "#5a8ae0", budget: 200000, guestCount: 300 },
+    ]
+    const selected = MOCK_PLANNERS.find(p => p.id === devPlannerId)
+    const eventName = selected?.coupleNames ?? devData.eventName
+    const eventDate = selected?.weddingDate ?? devData.eventDate
+    const budget    = selected?.budget ?? devData.budget
+    const guestCount = selected?.guestCount ?? devData.guestCount
+    const coverColor = selected?.coverColor ?? null
+    const daysUntil = eventDate
+      ? Math.max(0, Math.ceil((new Date(eventDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+      : null
+
+    let devNeededCategories: string[] = MOCK_NEEDED_CATEGORIES
+    try {
+      const raw = await prisma.$queryRaw<{ neededCategories: string }[]>`
+        SELECT "neededCategories" FROM "Workspace" WHERE "userId" = ${devUserId} LIMIT 1
+      `
+      if (raw[0]?.neededCategories) devNeededCategories = JSON.parse(raw[0].neededCategories)
+    } catch { /* ignore */ }
+
     return (
       <DashboardContent
-        data={MOCK_DASHBOARD_DATA}
-        eventName={MOCK_WORKSPACE.eventName}
-        eventDate={MOCK_WORKSPACE.eventDate}
+        data={{ ...devData, eventName, budget, guestCount }}
+        eventName={eventName}
+        eventDate={eventDate}
         daysUntil={daysUntil}
-        neededCategories={MOCK_NEEDED_CATEGORIES}
-        budget={MOCK_WORKSPACE.budget}
-        guestCount={MOCK_WORKSPACE.guestCount}
-        coverColor={null}
+        neededCategories={devNeededCategories}
+        budget={budget}
+        guestCount={guestCount}
+        coverColor={coverColor}
+        plannerId={devPlannerId}
+        workspaceId={devWorkspace.id}
       />
     )
   }
@@ -152,6 +230,7 @@ export default async function DashboardPage({
       guestCount={workspace.guestCount}
       coverColor={plannerOverride?.coverColor ?? null}
       plannerId={plannerId}
+      workspaceId={workspace.id}
     />
   );
 }
@@ -159,7 +238,7 @@ export default async function DashboardPage({
 // ── Shared UI ────────────────────────────────────────────────────────────────
 
 function DashboardContent({
-  data, eventName, eventDate, daysUntil, neededCategories, budget, guestCount, coverColor, plannerId,
+  data, eventName, eventDate, daysUntil, neededCategories, budget, guestCount, coverColor, plannerId, workspaceId,
 }: {
   data: DashboardData
   eventName: string
@@ -170,6 +249,7 @@ function DashboardContent({
   guestCount: number | null
   coverColor: string | null
   plannerId?: string
+  workspaceId?: string
 }) {
   return (
     <div className="p-6 w-full max-w-none space-y-6">
@@ -180,8 +260,10 @@ function DashboardContent({
         budget={budget}
         guestCount={guestCount}
         coverColor={coverColor}
+        plannerId={plannerId}
       />
-      <DashboardWidgets data={data} neededCategories={neededCategories} plannerId={plannerId} />
+
+<DashboardWidgets data={data} neededCategories={neededCategories} plannerId={plannerId} workspaceId={workspaceId} />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Calendar, Users, Wallet, Pencil, Check, X } from "lucide-react"
 import { C } from "@/lib/colors"
@@ -13,9 +13,10 @@ interface Props {
   budget: number | null
   guestCount: number | null
   coverColor?: string | null
+  plannerId?: string | null
 }
 
-export default function EventCard({ eventName, eventDate, daysUntil, budget, guestCount, coverColor }: Props) {
+export default function EventCard({ eventName, eventDate, daysUntil, budget, guestCount, coverColor, plannerId }: Props) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(eventName)
@@ -30,19 +31,46 @@ export default function EventCard({ eventName, eventDate, daysUntil, budget, gue
   const [displayBudget, setDisplayBudget] = useState(budget)
   const [displayGuests, setDisplayGuests] = useState(guestCount)
 
+  // Sync quand on change d'événement dans la sidebar
+  useEffect(() => {
+    setDisplayName(eventName)
+    setName(eventName)
+    setDisplayDate(eventDate)
+    setDate(eventDate ? eventDate.slice(0, 10) : "")
+    setDisplayBudget(budget)
+    setBudgetVal(budget !== null ? String(budget) : "")
+    setDisplayGuests(guestCount)
+    setGuestVal(guestCount !== null ? String(guestCount) : "")
+    setEditing(false)
+  }, [eventName, eventDate, budget, guestCount])
+
   async function save() {
     setSaving(true)
-    const body: Record<string, unknown> = { eventName: name }
+    const body: Record<string, unknown> = {}
     body.eventDate = date || null
     if (budgetVal !== "") body.budget = parseFloat(budgetVal)
     if (guestVal !== "") body.guestCount = parseInt(guestVal)
 
     if (!IS_DEV) {
       try {
-        const res = await fetch("/api/workspace", {
+        let url: string
+        let payload: Record<string, unknown>
+        if (plannerId) {
+          url = `/api/planners/${plannerId}`
+          payload = {
+            weddingDate: date || null,
+            budget: budgetVal !== "" ? parseFloat(budgetVal) : null,
+            guestCount: guestVal !== "" ? parseInt(guestVal) : null,
+            coupleNames: name,
+          }
+        } else {
+          url = "/api/workspace"
+          payload = { eventName: name, ...body }
+        }
+        const res = await fetch(url, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
+          body: JSON.stringify(payload),
         })
         if (!res.ok) throw new Error()
       } catch {

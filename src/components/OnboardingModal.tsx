@@ -42,7 +42,7 @@ export default function OnboardingModal({ show }: { show: boolean }) {
 
   function start() {
     dismiss()
-    router.push("/dashboard")
+    router.push("/accueil")
   }
 
   if (!visible) return null

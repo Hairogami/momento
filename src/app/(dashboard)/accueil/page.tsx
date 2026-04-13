@@ -5,6 +5,8 @@ import EventsDashboard from "@/components/EventsDashboard"
 import AccueilStats from "@/components/AccueilStats"
 import OnboardingModal from "@/components/OnboardingModal"
 
+type Planner = { id: string; title: string | null; coupleNames: string | null; weddingDate?: string | null; coverColor?: string | null }
+
 const EMPTY_DATA = {
   firstName: "",
   eventName: "Mon événement",
@@ -19,18 +21,22 @@ const EMPTY_DATA = {
 }
 
 export default function AccueilPage() {
-  const [hasExistingEvents, setHasExistingEvents] = useState(false)
+  const [planners, setPlanners] = useState<Planner[]>([])
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     fetch("/api/planners")
       .then(r => r.json())
-      .then((planners: unknown[]) => setHasExistingEvents(planners.length > 0))
+      .then((data: unknown) => { if (Array.isArray(data)) setPlanners(data as Planner[]) })
       .catch(() => {})
+      .finally(() => setLoaded(true))
   }, [])
+
+  const hasExistingEvents = planners.length > 0
 
   return (
     <div className="flex flex-col">
-      <OnboardingModal show={!hasExistingEvents} />
+      <OnboardingModal show={loaded && !hasExistingEvents} />
       <EventsDashboard
         data={EMPTY_DATA}
         eventName={null}
@@ -40,6 +46,7 @@ export default function AccueilPage() {
         daysUntil={null}
         neededCategories={[]}
         hasExistingEvents={hasExistingEvents}
+        planners={planners}
       />
       <AccueilStats />
     </div>

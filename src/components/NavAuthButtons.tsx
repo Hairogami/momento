@@ -171,17 +171,17 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
                 style={{ color: C.white }}>
                 <LayoutDashboard size={15} /> Tableau de bord
               </Link>
-              <Link href="/dashboard/vendors" onClick={() => setOpen(false)}
+              <Link href="/vendors" onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
                 <Briefcase size={15} /> Mes prestataires
               </Link>
-              <Link href="/dashboard/budget" onClick={() => setOpen(false)}
+              <Link href="/budget" onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
                 <CalendarDays size={15} /> Mon budget
               </Link>
-              <Link href="/dashboard/guests" onClick={() => setOpen(false)}
+              <Link href="/guests" onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
                 <Users size={15} /> Mes invités

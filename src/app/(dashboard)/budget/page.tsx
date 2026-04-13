@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { requireSession } from "@/lib/devAuth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { AddBudgetItem } from "./add-budget-item";
 import { TogglePaid } from "./toggle-paid";
 import { EditBudget } from "./edit-budget";
+import { BudgetLabelEdit } from "./budget-label-edit";
 import Link from "next/link";
 import { C } from "@/lib/colors";
 
@@ -30,8 +31,7 @@ export default async function BudgetPage({
 }: {
   searchParams: Promise<{ event?: string }>;
 }) {
-  const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  const session = await requireSession();
 
   const { event: eventFilter } = await searchParams;
 
@@ -55,7 +55,10 @@ export default async function BudgetPage({
     }),
   ]);
 
-  if (!workspace) redirect("/dashboard");
+  if (!workspace) {
+    await prisma.workspace.create({ data: { userId: session.user.id } })
+    redirect("/budget")
+  }
 
   // ── Gate : aucun événement créé ──────────────────────────────────────────
   if (planners.length === 0) {
@@ -316,8 +319,8 @@ export default async function BudgetPage({
                     <div key={item.id} className="flex items-center gap-3 py-2 border-b last:border-0">
                       <TogglePaid id={item.id} paid={item.paid} />
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm ${item.paid ? "line-through text-muted-foreground" : ""}`}>
-                          {item.label}
+                        <p className="text-sm">
+                          <BudgetLabelEdit id={item.id} label={item.label} paid={item.paid} />
                         </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           {item.vendor && (

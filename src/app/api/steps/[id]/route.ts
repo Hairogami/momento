@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
+import { IS_DEV } from "@/lib/devMock"
+import { requireSession } from "@/lib/devAuth"
 
 function parseDate(val: unknown): Date | undefined {
   if (typeof val !== "string" || !val) return undefined
@@ -16,12 +18,19 @@ async function getOwnedStep(id: string) {
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
-  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+  let userId: string
+  if (IS_DEV) {
+    const s = await requireSession()
+    userId = s.user.id
+  } else {
+    const session = await auth()
+    if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+    userId = session.user.id
+  }
 
   const { id } = await params
   const owned = await getOwnedStep(id)
-  if (!owned || owned.planner.userId !== session.user.id)
+  if (!owned || owned.planner.userId !== userId)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
   const body = await req.json()
@@ -54,12 +63,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
-  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+  let userId: string
+  if (IS_DEV) {
+    const s = await requireSession()
+    userId = s.user.id
+  } else {
+    const session = await auth()
+    if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+    userId = session.user.id
+  }
 
   const { id } = await params
   const owned = await getOwnedStep(id)
-  if (!owned || owned.planner.userId !== session.user.id)
+  if (!owned || owned.planner.userId !== userId)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
   await prisma.step.delete({ where: { id } })

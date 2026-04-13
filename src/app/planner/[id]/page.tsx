@@ -10,6 +10,7 @@ import Link from "next/link"
 import { format } from "date-fns"
 import { MomentoLogo } from "@/components/MomentoLogo"
 import { C } from "@/lib/colors"
+import { InlineEdit } from "@/components/InlineEdit"
 
 const CATEGORIES = [
   { value: "general", label: "Général" },
@@ -153,7 +154,7 @@ export default function PlannerPage({ params }: { params: Promise<{ id: string }
       <div className="h-32 relative" style={{ backgroundColor: planner.coverColor }}>
         <div className="absolute inset-0 opacity-20"
           style={{ background: "repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(0,0,0,0.05) 20px, rgba(0,0,0,0.05) 40px)" }} />
-        <Link href="/dashboard"
+        <Link href={`/dashboard?id=${id}`}
           className="absolute top-4 left-5 flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-xl transition-all hover:opacity-80"
           style={{ backgroundColor: "rgba(255,255,255,0.15)", color: "#fff", backdropFilter: "blur(8px)" }}>
           <ArrowLeft size={14} /> Tableau de bord
@@ -167,9 +168,13 @@ export default function PlannerPage({ params }: { params: Promise<{ id: string }
 
         {/* Title card */}
         <div className="rounded-2xl p-6 mb-6 shadow-sm" style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}` }}>
-          <h1 className="text-2xl font-bold mb-1" style={{ color: C.white }}>{planner.title}</h1>
+          <h1 className="text-2xl font-bold mb-1" style={{ color: C.white }}>
+            <InlineEdit value={planner.title} endpoint="/api/planners" id={planner.id} field="title" style={{ color: C.white }} />
+          </h1>
           {planner.coupleNames && (
-            <p className="text-sm mb-3" style={{ color: C.mist }}>{planner.coupleNames}</p>
+            <p className="text-sm mb-3" style={{ color: C.mist }}>
+              <InlineEdit value={planner.coupleNames} endpoint="/api/planners" id={planner.id} field="coupleNames" style={{ color: C.mist }} />
+            </p>
           )}
           <div className="flex flex-wrap gap-4 text-sm" style={{ color: C.mist }}>
             {planner.weddingDate && (
@@ -180,7 +185,8 @@ export default function PlannerPage({ params }: { params: Promise<{ id: string }
             )}
             {planner.location && (
               <span className="flex items-center gap-1.5">
-                <MapPin size={13} /> {planner.location}
+                <MapPin size={13} />
+                <InlineEdit value={planner.location} endpoint="/api/planners" id={planner.id} field="location" style={{ color: C.mist }} />
               </span>
             )}
             {planner.budget && (
@@ -242,10 +248,9 @@ export default function PlannerPage({ params }: { params: Promise<{ id: string }
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`text-sm font-medium ${step.status === "done" ? "line-through opacity-50" : ""}`}
-                          style={{ color: C.white }}>
-                          {step.title}
-                        </span>
+                        <InlineEdit value={step.title} endpoint="/api/steps" id={step.id} field="title"
+                          className={`text-sm font-medium ${step.status === "done" ? "line-through opacity-50" : ""}`}
+                          style={{ color: C.white }} />
                         <span className="text-xs px-2 py-0.5 rounded-full font-medium"
                           style={{ backgroundColor: sc.bg, color: sc.color }}>
                           {sc.label}

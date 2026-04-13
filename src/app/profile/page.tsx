@@ -1,12 +1,11 @@
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
-import { auth } from "@/lib/auth"
+import { requireSession } from "@/lib/devAuth"
 import { prisma } from "@/lib/prisma"
 import ProfileClient from "./ProfileClient"
 
 export default async function ProfilePage() {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/login?next=/profile")
+  const session = await requireSession()
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } })
   if (!user) redirect("/login")

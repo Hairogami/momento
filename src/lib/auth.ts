@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       Google({
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        allowDangerousEmailAccountLinking: false,
+        allowDangerousEmailAccountLinking: true,
         authorization: {
           params: {
             scope: "openid email profile https://www.googleapis.com/auth/calendar.readonly",
@@ -84,6 +84,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   pages: { signIn: "/login" },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Relative URL → prefix with baseUrl
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Same origin → allow
+      if (url.startsWith(baseUrl)) return url
+      // External or unknown → fallback to /accueil
+      return `${baseUrl}/accueil`
+    },
     async jwt({ token, user, account }) {
       if (account) {
         token.provider = account.provider
@@ -104,13 +112,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.exp = Math.floor(Date.now() / 1000) + REMEMBER_ME_MAX_AGE;
         }
 
-        const dbUser = await prisma.user.findUnique({
-          where: { id: user.id! },
-          select: { role: true, image: true },
-        });
-        if (dbUser) {
-          token.role = dbUser.role;
-          if (!token.picture) token.picture = dbUser.image;
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id! },
+            select: { role: true, image: true },
+          });
+          if (dbUser) {
+            token.role = dbUser.role;
+            if (!token.picture) token.picture = dbUser.image;
+          }
+        } catch {
+          // DB lookup failed — non-blocking, sign-in proceeds anyway
         }
       }
       return token;

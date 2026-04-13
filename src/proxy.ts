@@ -1,19 +1,17 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getToken } from "next-auth/jwt"
 
 // Paths always allowed through regardless of gates
 const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon"]
 const PROTECTED          = ["/dashboard", "/accueil", "/profile", "/planner", "/favorites",
                              "/budget", "/guests", "/messages", "/notifications", "/settings",
-                             "/prestataire/dashboard"]
+                             "/vendors", "/prestataire/dashboard"]
 const AUTH_ONLY          = ["/login", "/signup"]
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname
 
-  // ── COMING SOON GATE (tous les environnements) ────────────────────────────
-  // Mettre LAUNCH_PUBLIC=true dans les env vars Vercel pour désactiver la gate au lancement.
+  // ── COMING SOON GATE ──────────────────────────────────────────────────────
   const isLaunchPublic = process.env.LAUNCH_PUBLIC === "true"
   const previewKey     = request.cookies.get("preview_key")?.value
   const isExempt       = COMING_SOON_EXEMPT.some(p => path.startsWith(p))
@@ -25,9 +23,9 @@ export async function proxy(request: NextRequest) {
   // ─────────────────────────────────────────────────────────────────────────
 
   // ── AUTH GATE ─────────────────────────────────────────────────────────────
-  // Check session cookie directly — do NOT call auth() here.
-  // PrismaAdapter uses database sessions which require Node.js runtime,
-  // but proxy runs in Edge. Calling auth() here breaks the OAuth callback.
+  // Check session cookie presence only — JWT decryption (JWE) is not reliable
+  // in Edge runtime with Auth.js v5. Actual session validation happens in each
+  // Server Component via auth(). This gate just avoids unnecessary page loads.
   const sessionCookie =
     request.cookies.get("authjs.session-token")?.value ||
     request.cookies.get("__Secure-authjs.session-token")?.value
@@ -36,21 +34,12 @@ export async function proxy(request: NextRequest) {
   const isAuthPage  = AUTH_ONLY.some(p => path.startsWith(p))
 
   const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
-  if (isProtected && !isDev) {
-    // Validate Auth.js JWE token via getToken (handles encryption correctly)
-    let jwtValid = false
-    try {
-      const token = await getToken({ req: request, secret: process.env.AUTH_SECRET })
-      jwtValid = !!token
-    } catch {
-      jwtValid = false
-    }
-    if (!jwtValid) {
-      const url = new URL("/login", request.url)
-      const safePath = path.startsWith("/") && !path.startsWith("//") ? path : "/dashboard"
-      url.searchParams.set("next", safePath)
-      return NextResponse.redirect(url)
-    }
+
+  if (isProtected && !isDev && !sessionCookie) {
+    const url = new URL("/login", request.url)
+    const safePath = path.startsWith("/") && !path.startsWith("//") ? path : "/dashboard"
+    url.searchParams.set("next", safePath)
+    return NextResponse.redirect(url)
   }
 
   if (isAuthPage && sessionCookie) {

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import NavAuthButtons from "@/components/NavAuthButtons"
 import { MomentoLogo } from "@/components/MomentoLogo"
+import { DarkModeToggle } from "@/components/DarkModeToggle"
 import { C } from "@/lib/colors"
 
 export default function LandingNav() {
@@ -48,10 +49,12 @@ export default function LandingNav() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <DarkModeToggle />
           <NavAuthButtons />
         </div>
 
         <div className="md:hidden flex items-center gap-2">
+          <DarkModeToggle />
           <button className="p-2 rounded-lg" onClick={() => setMenuOpen(o => !o)} style={{ color: C.white }} aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}>
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { requireSession } from "@/lib/devAuth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { AddGuest } from "./add-guest";
 import { RsvpToggle } from "./rsvp-toggle";
+import { GuestNameEdit } from "./guest-name-edit";
 import Link from "next/link";
 import { C } from "@/lib/colors";
 
@@ -27,8 +28,7 @@ export default async function GuestsPage({
 }: {
   searchParams: Promise<{ id?: string }>;
 }) {
-  const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  const session = await requireSession();
 
   const { id: eventFilter } = await searchParams;
 
@@ -36,7 +36,10 @@ export default async function GuestsPage({
     prisma.workspace.findUnique({
       where: { userId: session.user.id },
       include: {
-        guests: { orderBy: { createdAt: "asc" } },
+        guests: {
+          orderBy: { createdAt: "asc" },
+          include: { planner: { select: { id: true, coupleNames: true, title: true, coverColor: true } } },
+        },
       },
     }),
     prisma.planner.findMany({
@@ -46,7 +49,10 @@ export default async function GuestsPage({
     }),
   ]);
 
-  if (!workspace) redirect("/dashboard");
+  if (!workspace) {
+    await prisma.workspace.create({ data: { userId: session.user.id } })
+    redirect("/guests")
+  }
 
   // ── Gate : aucun événement créé ──────────────────────────────────────────
   if (planners.length === 0) {
@@ -72,7 +78,11 @@ export default async function GuestsPage({
 
   const activePlanner = eventFilter ? planners.find(p => p.id === eventFilter) ?? null : null;
 
-  const guests = workspace.guests;
+  // Filtrage par événement (plannerId ou sans planner)
+  const guests = eventFilter
+    ? workspace.guests.filter(g => g.plannerId === eventFilter)
+    : workspace.guests;
+
   const confirmed = guests.filter((g) => g.rsvp === "yes").length;
   const declined = guests.filter((g) => g.rsvp === "no").length;
   const pending = guests.filter((g) => g.rsvp === "pending").length;
@@ -227,7 +237,18 @@ export default async function GuestsPage({
             <TableBody>
               {guests.map((guest) => (
                 <TableRow key={guest.id}>
-                  <TableCell className="font-medium">{guest.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <span className="flex items-center gap-2">
+                      {!eventFilter && guest.planner?.coverColor && (
+                        <span
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: guest.planner.coverColor }}
+                          title={guest.planner.coupleNames || guest.planner.title || "Événement"}
+                        />
+                      )}
+                      <GuestNameEdit id={guest.id} name={guest.name} />
+                    </span>
+                  </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {guest.email ?? guest.phone ?? "—"}
                   </TableCell>

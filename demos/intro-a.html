@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intro A — Streak</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --terra: #C5793A; }
+
+  body { background: #060402; min-height: 100vh; overflow: hidden; font-family: 'Georgia', serif; }
+
+  /* ─── INTRO ─── */
+  #intro {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    background: #060402;
+    transition: opacity 1s ease;
+  }
+  #intro.out { opacity: 0; pointer-events: none; }
+
+  .word-wrap {
+    position: relative;
+    overflow: hidden;
+    padding: 8px 0;
+  }
+
+  .momento-text {
+    font-size: clamp(72px, 12vw, 140px);
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fff;
+    display: block;
+    opacity: 0;
+    /* Appears instantly at t=400ms */
+  }
+
+  /* Light streak — diagonal bar sweeping left→right */
+  .streak {
+    position: absolute;
+    inset: -10px;
+    background: linear-gradient(
+      108deg,
+      transparent 0%,
+      transparent 38%,
+      rgba(255,255,255,0.55) 44%,
+      rgba(255,255,255,0.85) 48%,
+      rgba(255,255,255,0.55) 52%,
+      transparent 58%,
+      transparent 100%
+    );
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+
+  /* Terra underline */
+  .underline {
+    display: block;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--terra), transparent);
+    transform: scaleX(0);
+    transform-origin: center;
+    margin-top: 6px;
+    transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
+  }
+
+  /* ─── LANDING ─── */
+  #landing {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #060402;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.9s ease;
+  }
+  #landing.in { opacity: 1; pointer-events: auto; }
+
+  canvas { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 2s ease 0.5s; }
+  #landing.in canvas { opacity: 1; }
+
+  .logo { position: absolute; top: 28px; left: 36px; font-size: 17px; font-weight: 400; color: #fff; letter-spacing: 0.14em; text-transform: uppercase; z-index: 10; opacity: 0; transition: opacity 0.6s ease 0.6s; }
+  .logo span { color: var(--terra); }
+  #landing.in .logo { opacity: 1; }
+
+  .hero { position: relative; z-index: 10; text-align: center; max-width: 620px; padding: 0 24px; }
+  .eyebrow { font-size: 10px; letter-spacing: 0.42em; text-transform: uppercase; color: rgba(197,121,58,0.65); margin-bottom: 20px; opacity: 0; transition: opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s; transform: translateY(12px); }
+  #landing.in .eyebrow { opacity: 1; transform: none; }
+  .title { font-size: clamp(28px, 4vw, 48px); font-weight: 300; color: #fff; line-height: 1.35; letter-spacing: -0.01em; opacity: 0; transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s; transform: translateY(16px); }
+  .title em { color: var(--terra); font-style: normal; }
+  #landing.in .title { opacity: 1; transform: none; }
+  .btns { margin-top: 38px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; opacity: 0; transition: opacity 0.7s ease 1s, transform 0.7s ease 1s; transform: translateY(12px); }
+  #landing.in .btns { opacity: 1; transform: none; }
+  .bp { padding: 15px 34px; background: var(--terra); color: #fff; border: none; border-radius: 100px; font-size: 13px; font-family: Georgia, serif; letter-spacing: 0.07em; cursor: pointer; box-shadow: 0 8px 28px rgba(197,121,58,0.3); transition: transform 0.2s, box-shadow 0.2s; }
+  .bp:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(197,121,58,0.45); }
+  .bs { padding: 15px 34px; background: transparent; color: rgba(255,255,255,0.65); border: 1.5px solid rgba(255,255,255,0.18); border-radius: 100px; font-size: 13px; font-family: Georgia, serif; letter-spacing: 0.07em; cursor: pointer; transition: transform 0.2s, border-color 0.2s, color 0.2s; }
+  .bs:hover { transform: translateY(-2px); border-color: rgba(197,121,58,0.4); color: var(--terra); }
+
+  .switch { position: fixed; bottom: 24px; right: 24px; z-index: 200; font-size: 11px; letter-spacing: 0.15em; color: rgba(255,255,255,0.2); background: none; border: 1px solid rgba(255,255,255,0.1); padding: 7px 14px; border-radius: 100px; cursor: pointer; transition: color 0.2s, border-color 0.2s; font-family: Georgia, serif; }
+  .switch:hover { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.25); }
+  .label { position: fixed; top: 20px; right: 24px; font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.15); text-transform: uppercase; z-index: 200; }
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div>
+    <div class="word-wrap">
+      <span class="momento-text" id="mtext">MOMENTO</span>
+      <div class="streak" id="streak"></div>
+    </div>
+    <div class="underline" id="uline"></div>
+  </div>
+</div>
+
+<div id="landing">
+  <canvas id="c"></canvas>
+  <div class="logo">Momento<span>.</span></div>
+  <div class="hero">
+    <p class="eyebrow">Planifiez l'inoubliable</p>
+    <h1 class="title">Si vous voulez vivre<br><em>l'expérience Momento</em><br>créez votre événement</h1>
+    <div class="btns">
+      <button class="bp">Créer votre événement</button>
+      <button class="bs">Vous êtes prestataire ?</button>
+    </div>
+  </div>
+</div>
+
+<p class="label">Version A — Streak</p>
+<button class="switch" onclick="location.href='intro-b.html'">→ Version B</button>
+
+<script>
+const mtext  = document.getElementById('mtext');
+const streak = document.getElementById('streak');
+const uline  = document.getElementById('uline');
+const intro  = document.getElementById('intro');
+const landing= document.getElementById('landing');
+
+async function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function run() {
+  await wait(400);
+
+  // 1. Word appears — instant
+  mtext.style.transition = 'none';
+  mtext.style.opacity = '1';
+
+  await wait(80);
+
+  // 2. Streak fires
+  streak.style.transition = 'transform 0.55s cubic-bezier(0.4, 0, 0.6, 1)';
+  streak.style.transform = 'translateX(120%)';
+
+  // 3. Underline draws
+  await wait(200);
+  uline.style.transform = 'scaleX(1)';
+
+  await wait(900);
+
+  // 4. Transition
+  intro.classList.add('out');
+  await wait(200);
+  landing.classList.add('in');
+  await wait(600);
+  intro.style.display = 'none';
+  startPetals();
+}
+
+run();
+
+// ─── petals ───
+function startPetals() {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+  resize(); window.addEventListener('resize', resize);
+  const C = ['rgba(197,121,58,','rgba(220,160,90,','rgba(170,90,40,','rgba(240,190,130,'];
+  let petals = [];
+  const mp = (x, y) => ({ x: x??Math.random()*W, y: y??H+10, vx:(Math.random()-.5)*.8, vy:-(0.4+Math.random()*1.2), rot:Math.random()*Math.PI*2, rotV:(Math.random()-.5)*.03, s:8+Math.random()*14, sx:0.5+Math.random()*.7, a:0, ma:0.12+Math.random()*.18, fi:0.012, fo:0.003+Math.random()*.003, ph:'in', age:0, dt:100+Math.random()*150, w:Math.random()*Math.PI*2, c:C[Math.floor(Math.random()*C.length)] });
+  for(let i=0;i<35;i++){const p=mp(Math.random()*1000,Math.random()*600);p.a=Math.random()*p.ma;p.ph='drift';petals.push(p);}
+  function dp(p,now){const s=p.s;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot+Math.sin(p.w+now*.001)*.1);ctx.scale(p.sx,1);ctx.globalAlpha=p.a;ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-s*.4,-s*.3,-s*.2,-s*.8,0,-s);ctx.bezierCurveTo(s*.2,-s*.8,s*.4,-s*.3,0,0);const g=ctx.createLinearGradient(0,0,0,-s);g.addColorStop(0,p.c+'0.8)');g.addColorStop(1,p.c+'0.1)');ctx.fillStyle=g;ctx.fill();ctx.restore();}
+  function loop(now){ctx.clearRect(0,0,W,H);petals.forEach(p=>{p.vx+=Math.sin(now*.0003+p.x*.005)*.007;p.x+=p.vx;p.y+=p.vy;p.rot+=p.rotV;p.w+=.02;p.age++;if(p.ph==='in'){p.a=Math.min(p.ma,p.a+p.fi);if(p.a>=p.ma)p.ph='drift';}else if(p.ph==='drift'){if(p.age>p.dt)p.ph='out';}else{p.a-=p.fo;}if(p.y<-60||p.a<=0)Object.assign(p,mp());dp(p,now);});while(petals.length<45)petals.push(mp());requestAnimationFrame(loop);}
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>

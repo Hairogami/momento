@@ -14,7 +14,7 @@ export const GuestPatchSchema = z.object({
 export const BudgetItemPatchSchema = z.object({
   actual: z.number().nonnegative().finite().nullable().optional(),
   estimated: z.number().nonnegative().finite().optional(),
-  name: z.string().min(1).max(200).optional(),
+  label: z.string().min(1).max(200).optional(),
   paid: z.boolean().optional(),
 })
 

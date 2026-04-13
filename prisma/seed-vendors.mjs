@@ -23,7 +23,7 @@ const { PrismaClient } = await import("../src/generated/prisma/client.js").catch
   import("../src/generated/prisma/client.ts")
 )
 
-const { PrismaNeon } = await import("@prisma/adapter-neon")
+const { PrismaPg } = await import("@prisma/adapter-pg")
 
 const connectionString = process.env.DATABASE_URL
 if (!connectionString) {
@@ -31,7 +31,7 @@ if (!connectionString) {
   process.exit(1)
 }
 
-const adapter = new PrismaNeon({ connectionString })
+const adapter = new PrismaPg({ connectionString })
 const prisma = new PrismaClient({ adapter })
 
 // ─── VENDOR_BASIC inlined (parsed from vendorData.ts at runtime) ─────────────

@@ -10,24 +10,25 @@ datasource db {
 // ─── AUTH (NextAuth compatible) ───────────────────────────────────────────────
 
 model User {
-  id             String    @id @default(cuid())
-  email          String    @unique
-  name           String?
-  image          String?
-  emailVerified  DateTime?
-  passwordHash   String?
-  googleId       String?   @unique
-  role           String    @default("client") // client | vendor | admin
-  firstName      String?
-  lastName       String?
-  phone          String?
-  location       String?
-  companyName    String?
-  vendorCategory String?
-  vendorSlug     String?
-  username       String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String?
+  image           String?
+  emailVerified   DateTime?
+  passwordHash    String?
+  googleId        String?   @unique
+  role            String    @default("client") // client | vendor | admin
+  firstName       String?
+  lastName        String?
+  phone           String?
+  location        String?
+  companyName     String?
+  vendorCategory  String?
+  vendorSlug      String?
+  username        String?
+  completedEvents Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   accounts            Account[]
   sessions            Session[]
@@ -40,6 +41,8 @@ model User {
   sentMessages        Message[]             @relation("SentMessages")
   reviews             Review[]
   vendorClaimRequests VendorClaimRequest[]
+  favorites           Favorite[]
+  notifications       Notification[]
 }
 
 model Account {
@@ -113,6 +116,7 @@ model Workspace {
 model Task {
   id          String    @id @default(cuid())
   workspaceId String
+  plannerId   String?
   title       String
   description String?
   dueDate     DateTime?
@@ -123,6 +127,7 @@ model Task {
   updatedAt   DateTime  @updatedAt
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
 }
 
 model BudgetItem {
@@ -146,6 +151,7 @@ model BudgetItem {
 model Guest {
   id          String   @id @default(cuid())
   workspaceId String
+  plannerId   String?
   name        String
   email       String?
   phone       String?
@@ -153,9 +159,12 @@ model Guest {
   plusOne     Boolean  @default(false)
   tableNumber Int?
   notes       String?
+  city        String?
+  inviteSent  Boolean  @default(false)
   createdAt   DateTime @default(now())
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
 }
 
 // ─── ANNUAIRE PRESTATAIRES ────────────────────────────────────────────────────
@@ -195,6 +204,8 @@ model Vendor {
   media        VendorMedia[]
   stepVendors  StepVendor[]
   reviews      Review[]
+  plannerEvents PlannerEvent[]
+  favorites    Favorite[]
 }
 
 model VendorVerification {
@@ -274,6 +285,7 @@ model Package {
 model Booking {
   id          String    @id @default(cuid())
   workspaceId String
+  plannerId   String?
   vendorId    String
   packageId   String?
   status      String    @default("inquiry") // inquiry | confirmed | cancelled
@@ -284,6 +296,7 @@ model Booking {
   updatedAt   DateTime  @updatedAt
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
   vendor    Vendor    @relation(fields: [vendorId], references: [id])
   package   Package?  @relation(fields: [packageId], references: [id])
 }
@@ -309,6 +322,7 @@ model Planner {
   coupleNames String
   weddingDate DateTime?
   budget      Float?
+  guestCount  Int?
   location    String?
   coverColor  String         @default("#f9a8d4")
   userId      String?
@@ -316,6 +330,12 @@ model Planner {
   steps       Step[]
   events      PlannerEvent[]
   budgetItems BudgetItem[]
+  tasks       Task[]
+  guests      Guest[]
+  bookings    Booking[]
+  conversations Conversation[]
+  favorites     Favorite[]
+  notifications Notification[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 }
@@ -351,10 +371,13 @@ model PlannerEvent {
   title     String
   date      DateTime
   endDate   DateTime?
-  type      String    @default("task") // task | appointment | deadline
+  type      String    @default("task")        // task | appointment | deadline
+  status    String    @default("pending")     // pending | confirmed | cancelled
   color     String    @default("#f9a8d4")
+  vendorId  String?
   plannerId String
   planner   Planner   @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+  vendor    Vendor?   @relation(fields: [vendorId], references: [id], onDelete: SetNull)
   createdAt DateTime  @default(now())
 }
 
@@ -372,9 +395,11 @@ model Conversation {
   id         String    @id @default(cuid())
   clientId   String
   vendorSlug String
+  plannerId  String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   client     User      @relation("ClientConversations", fields: [clientId], references: [id], onDelete: Cascade)
+  planner    Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
   messages   Message[]
 
   @@unique([clientId, vendorSlug])
@@ -416,4 +441,38 @@ model VendorClaimRequest {
   reviewedAt  DateTime?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── FAVORIS ─────────────────────────────────────────────────────────────────
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  vendorId  String
+  plannerId String?  // associé à un événement spécifique si présent
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vendor  Vendor  @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  planner Planner? @relation(fields: [plannerId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, vendorId, plannerId])
+}
+
+// ─── NOTIFICATIONS ───────────────────────────────────────────────────────────
+
+model Notification {
+  id           String    @id @default(cuid())
+  userId       String
+  type         String    // reminder_favorite | booking_confirmed | booking_request | event_approaching | message_new | review_request
+  title        String
+  body         String?
+  read         Boolean   @default(false)
+  plannerId    String?   // événement concerné (null = global)
+  vendorId     String?   // prestataire concerné si applicable
+  scheduledFor DateTime? // pour les rappels différés
+  createdAt    DateTime  @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planner Planner? @relation(fields: [plannerId], references: [id], onDelete: SetNull)
 }

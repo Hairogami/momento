@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { requireSession } from "@/lib/devAuth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { LogOut, Palette, Bell, User } from "lucide-react"
@@ -9,8 +9,7 @@ import { PaletteSelector } from "@/components/PaletteSelector"
 import { SignOut } from "@/components/SignOut"
 
 export default async function SettingsPage() {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/login?next=/settings")
+  const session = await requireSession()
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: C.ink }}>

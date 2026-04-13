@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, Circle, Star } from "lucide-react"
 import { C } from "@/lib/colors"
 import Link from "next/link"
+import { InlineEdit } from "@/components/InlineEdit"
 
 const MONTHS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]
 const DAYS = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"]
@@ -14,6 +15,7 @@ interface LocalTask {
   dueDate: string | null
   completed: boolean
   category: string | null
+  color?: string | null
 }
 
 interface GoogleEvent {
@@ -163,9 +165,12 @@ export default function CalendarView({ tasks, eventDate, eventName, isGoogleUser
             const isEvent = dateStr === eventDateStr
             const isSelected = dateStr === selectedDay
             const dayData = eventMap[dateStr]
-            const hasTasks = (dayData?.tasks.length ?? 0) > 0
             const hasGoogle = (dayData?.google.length ?? 0) > 0
             const isPast = dateStr < todayStr
+            // Couleurs uniques des tâches de ce jour (max 3 dots)
+            const taskColors = dayData?.tasks
+              ? [...new Set(dayData.tasks.map(t => t.color ?? "var(--momento-terra)"))]
+              : []
 
             return (
               <button
@@ -199,9 +204,12 @@ export default function CalendarView({ tasks, eventDate, eventName, isGoogleUser
                 )}
 
                 {/* Dots */}
-                {!isEvent && (hasTasks || hasGoogle) && (
+                {!isEvent && (taskColors.length > 0 || hasGoogle) && (
                   <div className="flex gap-0.5 mt-0.5">
-                    {hasTasks && <span className="w-1 h-1 rounded-full" style={{ backgroundColor: isSelected ? "var(--bg)" : "var(--momento-terra)" }} />}
+                    {taskColors.slice(0, 3).map((color, idx) => (
+                      <span key={idx} className="w-1 h-1 rounded-full"
+                        style={{ backgroundColor: isSelected ? "var(--bg)" : color }} />
+                    ))}
                     {hasGoogle && <span className="w-1 h-1 rounded-full" style={{ backgroundColor: isSelected ? "var(--bg)" : "#4285F4" }} />}
                   </div>
                 )}
@@ -255,9 +263,16 @@ export default function CalendarView({ tasks, eventDate, eventName, isGoogleUser
               {selectedData.tasks.map(t => (
                 <div key={t.id} className="flex items-center gap-2.5 text-sm"
                   style={{ color: t.completed ? C.steel : C.white, textDecoration: t.completed ? "line-through" : "none" }}>
-                  <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: "var(--momento-terra)" }} />
-                  {t.title}
-                  {t.category && <span className="text-xs ml-auto" style={{ color: C.steel }}>{t.category}</span>}
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: t.color ?? "var(--momento-terra)" }} />
+                  <InlineEdit
+                    value={t.title}
+                    endpoint="/api/tasks"
+                    id={t.id}
+                    field="title"
+                    style={{ color: t.completed ? C.steel : C.white, flex: 1 }}
+                  />
+                  {t.category && <span className="text-xs ml-auto shrink-0" style={{ color: C.steel }}>{t.category}</span>}
                 </div>
               ))}
             </div>
@@ -301,8 +316,15 @@ export default function CalendarView({ tasks, eventDate, eventName, isGoogleUser
               .slice(0, 5)
               .map(t => (
                 <div key={t.id} className="flex items-center gap-3 text-sm">
-                  <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: "var(--momento-terra)" }} />
-                  <span style={{ color: C.white }}>{t.title}</span>
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: t.color ?? "var(--momento-terra)" }} />
+                  <InlineEdit
+                    value={t.title}
+                    endpoint="/api/tasks"
+                    id={t.id}
+                    field="title"
+                    style={{ color: C.white, flex: 1 }}
+                  />
                   {t.dueDate && (
                     <span className="ml-auto text-xs shrink-0" style={{ color: C.steel }}>
                       {new Date(t.dueDate + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}

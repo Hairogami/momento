@@ -29,6 +29,7 @@ export async function addGuest(formData: FormData): Promise<ActionResult> {
   });
 
   revalidatePath("/guests");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 

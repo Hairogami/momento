@@ -10,11 +10,11 @@ dotenv.config({ path: ".env" })
 dotenv.config({ path: ".env.local" })
 
 import { PrismaClient } from "../src/generated/prisma/client"
-import { PrismaNeon } from "@prisma/adapter-neon"
+import { PrismaPg } from "@prisma/adapter-pg"
 import { VENDOR_BASIC } from "../src/lib/vendorData"
 
 const connectionString = process.env.DATABASE_URL!
-const adapter = new PrismaNeon({ connectionString })
+const adapter = new PrismaPg({ connectionString })
 const prisma = new PrismaClient({ adapter })
 
 async function main() {

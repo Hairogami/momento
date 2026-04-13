@@ -124,7 +124,7 @@ export default function SignupPage() {
     if (!res.ok) { setError(data.error ?? "Une erreur est survenue."); return }
 
     router.refresh()
-    router.push("/dashboard")
+    router.push("/accueil")
   }
 
   return (

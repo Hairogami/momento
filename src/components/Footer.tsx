@@ -41,11 +41,11 @@ export default function Footer() {
             </p>
             <ul className="space-y-2">
               {[
-                { href: "/explore?cat=Photographe", label: "Photographes" },
-                { href: "/explore?cat=DJ", label: "DJs" },
-                { href: "/explore?cat=Traiteur", label: "Traiteurs" },
-                { href: "/explore?cat=Lieu+de+réception", label: "Salles de fête" },
-                { href: "/explore?cat=Décorateur", label: "Décorateurs" },
+                { href: "/explore?sub=Photographe", label: "Photographes" },
+                { href: "/explore?sub=DJ", label: "DJs" },
+                { href: "/explore?sub=Traiteur", label: "Traiteurs" },
+                { href: "/explore?sub=Lieu+de+r%C3%A9ception", label: "Salles de fête" },
+                { href: "/explore?sub=D%C3%A9corateur", label: "Décorateurs" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-sm transition-opacity hover:opacity-80" style={{ color: "var(--momento-mist)" }}>

@@ -65,6 +65,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       coupleNames: typeof body.coupleNames === "string" ? body.coupleNames.trim().slice(0, 200) : undefined,
       weddingDate: parseDate(body.weddingDate),
       budget:      parseBudget(body.budget),
+      guestCount:  typeof body.guestCount === "number" && Number.isInteger(body.guestCount) && body.guestCount >= 0
+        ? body.guestCount
+        : undefined,
       location:    typeof body.location === "string"    ? body.location.trim().slice(0, 200)    : undefined,
       coverColor:  typeof body.coverColor === "string" && HEX_COLOR.test(body.coverColor)
         ? body.coverColor

@@ -52,7 +52,7 @@ export default function LoginPage() {
               <form
                 action={async () => {
                   "use server";
-                  await signIn("google", { redirectTo: "/dashboard" });
+                  await signIn("google", { redirectTo: "/accueil" });
                 }}
               >
                 <button
@@ -79,7 +79,7 @@ export default function LoginPage() {
               <form
                 action={async () => {
                   "use server";
-                  await signIn("facebook", { redirectTo: "/dashboard" });
+                  await signIn("facebook", { redirectTo: "/accueil" });
                 }}
               >
                 <button
@@ -119,7 +119,7 @@ export default function LoginPage() {
               "use server";
               await signIn("resend", {
                 email: formData.get("email") as string,
-                redirectTo: "/dashboard",
+                redirectTo: "/accueil",
               });
             }}
             className="space-y-3"

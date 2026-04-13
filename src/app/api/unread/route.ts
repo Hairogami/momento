@@ -4,13 +4,12 @@ import { prisma } from "@/lib/prisma"
 import { IS_DEV, MOCK_DASHBOARD_DATA } from "@/lib/devMock"
 
 export async function GET() {
-  // WR-06: Auth check BEFORE IS_DEV mock — never return data without a session
-  const session = await auth()
-  if (!session?.user?.id) return NextResponse.json({ messages: 0, notifications: 0 })
-
   if (IS_DEV) {
     return NextResponse.json({ messages: MOCK_DASHBOARD_DATA.unreadCount, notifications: 0 })
   }
+
+  const session = await auth()
+  if (!session?.user?.id) return NextResponse.json({ messages: 0, notifications: 0 })
 
   let messages = 0;
   try {

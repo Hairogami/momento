@@ -103,6 +103,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   const [showAll, setShowAll] = useState(false);
   const [unread, setUnread] = useState({ messages: 0, notifications: 0 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/planners")
@@ -112,6 +113,10 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
     fetch("/api/unread")
       .then(r => r.json())
       .then(setUnread)
+      .catch(() => {});
+    fetch("/api/me")
+      .then(r => r.json())
+      .then(d => d?.email ? setUserEmail(d.email) : null)
       .catch(() => {});
   }, []);
 
@@ -182,9 +187,18 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           w-56 md:w-56 pt-[4.5rem] md:pt-5`}
         style={{ backgroundColor: C.dark, borderRight: `1px solid ${C.anthracite}` }}
       >
-        {/* DarkModeToggle seul en haut */}
-        <div className="px-2 mb-5 flex items-center justify-center">
+        {/* DarkModeToggle + lien site public */}
+        <div className="px-2 mb-5 flex items-center justify-between gap-2">
           <DarkModeToggle />
+          <Link
+            href="/prestataires"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-lg transition-all hover:opacity-90"
+            style={{ backgroundColor: `var(--momento-terra)`, color: "#fff" }}
+          >
+            <Store size={12} />
+            Prestataires
+          </Link>
         </div>
 
         <nav className="flex-1 flex flex-col gap-0.5 overflow-y-auto min-h-0">
@@ -206,8 +220,8 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
             {pathname === "/accueil" && <ChevronRight size={14} />}
           </Link>
 
-          {/* ── Section Mes Événements ── */}
-          <div className="mb-2">
+          {/* ── Section Mes Événements — masquée sur /accueil ── */}
+          <div className="mb-2" style={{ display: pathname === "/accueil" ? "none" : undefined }}>
             <div className="flex items-center justify-between px-3 py-1.5">
               <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider" style={{ color: `${C.mist}80` }}>
                 <Sparkles size={12} />
@@ -252,8 +266,8 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
                       <div className="flex items-center gap-1.5 mb-1.5">
                         <span className="text-sm leading-none">{eventIcon(p)}</span>
                         <span
-                          className="text-xs font-semibold truncate leading-tight"
-                          style={{ color: active ? "#fff" : C.mist }}
+                          className={`text-xs truncate leading-tight ${active ? "font-bold" : "font-semibold"}`}
+                          style={{ color: active ? color : C.mist }}
                         >
                           {label}
                         </span>
@@ -323,7 +337,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Séparateur */}
-          <div className="mx-2 my-1 h-px" style={{ backgroundColor: C.anthracite }} />
+          <div className="mx-2 my-1 h-px" style={{ backgroundColor: C.anthracite, display: pathname === "/accueil" ? "none" : undefined }} />
 
           {/* Nav principale */}
           {NAV.map(({ href, label, icon: Icon }) => {
@@ -388,21 +402,24 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Espace Prestataire */}
-        <div className="mt-3 px-1">
-          <Link
-            href="/prestataire/dashboard"
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:opacity-90"
-            style={{
-              backgroundColor: `${C.terra}18`,
-              color: C.terra,
-              border: `1px solid ${C.terra}40`,
-            }}
-          >
-            <Store size={13} />
-            Espace Prestataire →
-          </Link>
-        </div>
+        {/* Espace Prestataire — visible uniquement pour l'admin */}
+        {userEmail === "moumene486@gmail.com" && (
+          <div className="mt-3 px-1">
+            <Link
+              href="/prestataire/dashboard"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:opacity-90"
+              style={{
+                backgroundColor: `${C.terra}18`,
+                color: C.terra,
+                border: `1px solid ${C.terra}40`,
+              }}
+            >
+              <Store size={13} />
+              Espace Prestataire →
+            </Link>
+          </div>
+        )}
+
       </aside>
 
       <main className="flex-1 overflow-auto pt-14 md:pt-0" style={{ backgroundColor: C.ink }}>
