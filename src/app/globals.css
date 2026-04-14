@@ -503,3 +503,43 @@ body:has(.snap-scroll-container) {
   .anim-item, .hero-anim { transition: none; animation: none; opacity: 1; transform: none; }
   .scroll-indicator       { animation: none; }
 }
+
+/* ── Dashboard color system (CSS vars for dark mode) ── */
+:root {
+  --dash-bg:       #f7f7fb;
+  --dash-surface:  #ffffff;
+  --dash-border:   rgba(183,191,217,0.15);
+  --dash-sidebar:  #ffffff;
+  --dash-text:     #121317;
+  --dash-text-2:   #6a6a71;
+  --dash-text-3:   #9a9aaa;
+  --dash-faint:    rgba(183,191,217,0.07);
+  --dash-faint-2:  rgba(183,191,217,0.12);
+  --dash-divider:  rgba(183,191,217,0.10);
+}
+
+html.dark {
+  --dash-bg:       #0d0e14;
+  --dash-surface:  #16171e;
+  --dash-border:   rgba(255,255,255,0.07);
+  --dash-sidebar:  #111218;
+  --dash-text:     #eeeef5;
+  --dash-text-2:   #8888a8;
+  --dash-text-3:   #55557a;
+  --dash-faint:    rgba(255,255,255,0.04);
+  --dash-faint-2:  rgba(255,255,255,0.08);
+  --dash-divider:  rgba(255,255,255,0.06);
+}
+
+/* ── Dark mode structural overrides ── */
+html.dark .clone-surface {
+  background: var(--dash-surface) !important;
+  border-color: var(--dash-border) !important;
+}
+html.dark .clone-card-white {
+  background: var(--dash-surface) !important;
+  border-color: var(--dash-border) !important;
+}
+html.dark .clone-progress-fill {
+  opacity: 0.9;
+}
