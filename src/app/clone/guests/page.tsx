@@ -5,8 +5,9 @@ import AntNav from "@/components/clone/AntNav"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 const EVENTS = [
-  { id: "1", name: "Mariage Yasmine & Karim", date: "2026-09-15", color: "#E11D48" },
-  { id: "2", name: "Mariage Sara & Adam",     date: "2026-06-21", color: "#7b5ea7" },
+  { id: "1", name: "Mariage Yasmine & Karim",  date: "2026-09-15", color: "#E11D48" },
+  { id: "2", name: "Mariage Sara & Adam",      date: "2026-06-21", color: "#7b5ea7" },
+  { id: "3", name: "Anniversaire 30 ans Leila",date: "2026-05-10", color: "#e05a7b" },
 ]
 
 type Status = "confirmé" | "en attente" | "décliné"
@@ -37,6 +38,13 @@ const GUESTS_BY_EVENT: Record<string, Guest[]> = {
     { id:"h3", name:"Aicha Sebti",         table:"Table 2",  status:"en attente", phone:"06 66 77 88 99" },
     { id:"h4", name:"Tarik Idrissi",       table:"Table 2",  status:"décliné" },
     { id:"h5", name:"Meryem Chababi",      table:"Table 3",  status:"confirmé",   phone:"06 99 00 11 22" },
+  ],
+  "3": [
+    { id:"i1", name:"Samira Ouhbi",        table:"Table 1",  status:"confirmé",   phone:"06 44 55 66 77" },
+    { id:"i2", name:"Yassine Ouhbi",       table:"Table 1",  status:"confirmé" },
+    { id:"i3", name:"Nora Ziani",          table:"Table 2",  status:"en attente", phone:"06 88 99 00 11" },
+    { id:"i4", name:"Hicham Alaoui",       table:"Table 2",  status:"en attente" },
+    { id:"i5", name:"Dounia Chraibi",      table:"Table 3",  status:"décliné" },
   ],
 }
 

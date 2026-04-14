@@ -6,8 +6,9 @@ import AntNav from "@/components/clone/AntNav"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 const EVENTS = [
-  { id: "1", name: "Mariage Yasmine & Karim", date: "2026-09-15", color: "#E11D48" },
-  { id: "2", name: "Mariage Sara & Adam",     date: "2026-06-21", color: "#7b5ea7" },
+  { id: "1", name: "Mariage Yasmine & Karim",  date: "2026-09-15", color: "#E11D48" },
+  { id: "2", name: "Mariage Sara & Adam",      date: "2026-06-21", color: "#7b5ea7" },
+  { id: "3", name: "Anniversaire 30 ans Leila",date: "2026-05-10", color: "#e05a7b" },
 ]
 
 type Expense = { id: string; label: string; category: string; amount: number; date: string; paid: boolean }
@@ -43,6 +44,15 @@ const BUDGETS_BY_EVENT: Record<string, { total: number; expenses: Expense[] }> =
       { id:"c2", label:"Buffet marocain",             category:"Traiteur",    amount:18000, date:"2026-04-10", paid:false },
       { id:"c3", label:"Photographe",                 category:"Photographe", amount:6000,  date:"2026-04-05", paid:true  },
       { id:"c4", label:"Orchestre andalou",           category:"Musique",     amount:9000,  date:"2026-05-01", paid:false },
+    ],
+  },
+  "3": {
+    total: 30000,
+    expenses: [
+      { id:"d1", label:"Location salle",  category:"Lieu",        amount:8000, date:"2026-03-15", paid:true  },
+      { id:"d2", label:"Traiteur buffet", category:"Traiteur",    amount:6000, date:"2026-04-01", paid:false },
+      { id:"d3", label:"DJ",              category:"Musique",     amount:4000, date:"2026-04-10", paid:false },
+      { id:"d4", label:"Décoration",      category:"Décoration",  amount:2500, date:"2026-04-20", paid:false },
     ],
   },
 }

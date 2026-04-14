@@ -28,6 +28,10 @@ export default function CloneLayout({ children }: { children: React.ReactNode })
           font-weight: normal; font-style: normal; display: inline-block;
         }
       `}</style>
+      {/* Dark mode sync — avant hydration React, évite le flash */}
+      <script dangerouslySetInnerHTML={{ __html: `try{if(JSON.parse(localStorage.getItem('momento_clone_dark_mode')||'false'))document.documentElement.classList.add('dark')}catch(e){}` }} />
+      {/* Palette sync */}
+      <script dangerouslySetInnerHTML={{ __html: `try{var p=JSON.parse(localStorage.getItem('momento_clone_palette')||'null');if(p){document.documentElement.style.setProperty('--g1',p.g1);document.documentElement.style.setProperty('--g2',p.g2)}}catch(e){}` }} />
       {children}
     </>
   )

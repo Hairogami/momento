@@ -9,8 +9,9 @@ const MONTHS_SHORT = ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","O
 const DAYS = ["L","M","M","J","V","S","D"]
 
 const EVENTS = [
-  { id: "1", name: "Mariage Yasmine & Karim", date: "2026-09-15", color: "#E11D48" },
-  { id: "2", name: "Mariage Sara & Adam",     date: "2026-06-21", color: "#7b5ea7" },
+  { id: "1", name: "Mariage Yasmine & Karim",  date: "2026-09-15", color: "#E11D48" },
+  { id: "2", name: "Mariage Sara & Adam",      date: "2026-06-21", color: "#7b5ea7" },
+  { id: "3", name: "Anniversaire 30 ans Leila",date: "2026-05-10", color: "#e05a7b" },
 ]
 
 type Task = { id: string; date: string; title: string; category: string; done: boolean; color: string }
