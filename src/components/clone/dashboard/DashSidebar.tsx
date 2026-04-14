@@ -67,9 +67,9 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
       zIndex: 30,
     }}>
 
-      {/* Logo */}
-      <div style={{ padding: "18px 20px 16px", borderBottom: "1px solid var(--dash-divider, rgba(183,191,217,0.1))" }}>
-        <Link href="/clone" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
+      {/* Logo + dark mode toggle */}
+      <div style={{ padding: "18px 20px 16px", borderBottom: "1px solid var(--dash-divider, rgba(183,191,217,0.1))", display: "flex", alignItems: "center", gap: 10 }}>
+        <Link href="/clone" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
           <div style={{
             width: 30, height: 30, borderRadius: 9, background: G,
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -82,6 +82,24 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Espace client</div>
           </div>
         </Link>
+        {/* Dark mode toggle pill — toujours visible */}
+        <button
+          onClick={toggleDark}
+          title={darkMode ? "Mode clair" : "Mode sombre"}
+          style={{
+            width: 34, height: 20, borderRadius: 99, border: "none", cursor: "pointer",
+            background: darkMode ? "var(--g1,#E11D48)" : "var(--dash-faint-2, rgba(183,191,217,0.25))",
+            position: "relative", flexShrink: 0, transition: "background 0.2s", padding: 0,
+          }}
+        >
+          <div style={{
+            position: "absolute", top: 3, left: darkMode ? 17 : 3,
+            width: 14, height: 14, borderRadius: "50%",
+            background: "#fff",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+            transition: "left 0.2s",
+          }} />
+        </button>
       </div>
 
       {/* Event switcher */}
@@ -211,24 +229,6 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
           <div style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{firstName}</div>
           <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Pro · Casablanca</div>
         </div>
-        {/* Dark mode toggle pill */}
-        <button
-          onClick={toggleDark}
-          title={darkMode ? "Mode clair" : "Mode sombre"}
-          style={{
-            width: 34, height: 20, borderRadius: 99, border: "none", cursor: "pointer",
-            background: darkMode ? "var(--g1,#E11D48)" : "var(--dash-faint-2, rgba(183,191,217,0.2))",
-            position: "relative", flexShrink: 0, transition: "background 0.2s", padding: 0,
-          }}
-        >
-          <div style={{
-            position: "absolute", top: 3, left: darkMode ? 17 : 3,
-            width: 14, height: 14, borderRadius: "50%",
-            background: "#fff",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-            transition: "left 0.2s",
-          }} />
-        </button>
         <Link href="/clone/dashboard" style={{ textDecoration: "none", display: "flex" }}>
           <GIcon name="settings" size={18} color="var(--dash-text-3,#9a9aaa)" />
         </Link>
