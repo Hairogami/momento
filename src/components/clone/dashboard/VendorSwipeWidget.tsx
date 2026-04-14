@@ -42,7 +42,7 @@ const MOCK_VENDORS: VCard[] = [
 
 const SWIPE_THRESHOLD = 75
 
-export default function VendorSwipeWidget() {
+export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () => void }) {
   const [cards, setCards] = useState<VCard[]>(MOCK_VENDORS)
   const [index, setIndex] = useState(0)
   const [liked, setLiked] = useState<string[]>([])
@@ -173,6 +173,20 @@ export default function VendorSwipeWidget() {
           <span style={{ fontSize: 10, color: "#9a9aaa" }}>
             {index + 1}/{cards.length}
           </span>
+          {onOpenModal && (
+            <button
+              onClick={onOpenModal}
+              title="Ouvrir l'annuaire complet"
+              style={{
+                width: 24, height: 24, borderRadius: 7,
+                background: "rgba(183,191,217,0.1)",
+                border: "1px solid rgba(183,191,217,0.2)",
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "'Google Symbols','Material Symbols Outlined'",
+                fontSize: 13, color: "#9a9aaa", fontWeight: "normal",
+              }}
+            >open_in_full</button>
+          )}
         </div>
       </div>
 
