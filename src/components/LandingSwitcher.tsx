@@ -18,7 +18,12 @@ const CLONE_PAGES = new Set([
 function getAlternateHref(pathname: string): string {
   if (pathname.startsWith("/clone")) {
     const v1 = pathname.slice("/clone".length) || "/"
-    return v1
+    // Only return v1 path if a known v1 equivalent exists, else fallback to "/"
+    const hasV1 =
+      v1 === "/" ||
+      CLONE_PAGES.has(v1) ||
+      [...CLONE_PAGES].some(p => p !== "/" && v1.startsWith(p))
+    return hasV1 ? v1 : "/"
   }
   // Vérifier si la page clone existe (exact ou par préfixe)
   const hasClone =
