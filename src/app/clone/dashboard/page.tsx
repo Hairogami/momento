@@ -433,7 +433,7 @@ export default function CloneDashboardPage() {
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [extraWidgets,  setExtraWidgets]  = useState<string[]>([])
   const [tasksByEvent,  setTasksByEvent]  = useState<Record<string, Task[]>>(TASKS_BY_EVENT)
-  const [darkMode,      setDarkMode]      = useState(false)
+  const [darkMode,      setDarkMode]      = useState(true)
   const [palette,       setPalette]       = useState({ g1: "#E11D48", g2: "#9333EA" })
   const [isDragging,    setIsDragging]    = useState(false)
   const [dropTarget,    setDropTarget]    = useState<string | null>(null)

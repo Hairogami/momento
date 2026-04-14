@@ -39,14 +39,22 @@ function GIcon({ name, size = 18, color = "var(--dash-text-2,#6a6a71)" }: { name
 export default function DashSidebar({ events, activeEventId, onEventChange, firstName = "Y", messageUnread = 0 }: DashSidebarProps) {
   const pathname   = usePathname()
   const [eventOpen, setEventOpen] = useState(false)
-  const [darkMode,  setDarkMode]  = useState(false)
+  const [darkMode,  setDarkMode]  = useState(true)
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0]
 
-  // Lire dark mode depuis localStorage au montage
+  // Lire dark mode depuis localStorage — défaut: true (dark en premier)
   useEffect(() => {
     try {
       const saved = localStorage.getItem("momento_clone_dark_mode")
-      if (saved && JSON.parse(saved)) setDarkMode(true)
+      if (saved !== null) {
+        const val = JSON.parse(saved)
+        setDarkMode(val)
+        document.documentElement.classList.toggle("dark", val)
+      } else {
+        // Première visite → dark par défaut
+        localStorage.setItem("momento_clone_dark_mode", "true")
+        document.documentElement.classList.add("dark")
+      }
     } catch {}
   }, [])
 
