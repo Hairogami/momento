@@ -141,15 +141,15 @@ export default function AntAgentFirst() {
                 }}>
                   <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: 14, color: "#6a6a71" }}>search</span>
                   <span style={{ fontSize: 11, color: "#9a9aaa", flex: 1 }}>Photographe · Casablanca...</span>
-                  <span style={{ fontSize: 10, color: "#fff", background: "#121317", padding: "2px 8px", borderRadius: 99 }}>Filtrer</span>
+                  <span className="clone-filter-badge" style={{ fontSize: 10, color: "#fff", background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", padding: "2px 8px", borderRadius: 99 }}>Filtrer</span>
                 </div>
 
                 {/* Category chips */}
                 <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
                   {["Photographie","DJ","Traiteur","Décoration","Fleuriste"].map((cat, i) => (
-                    <span key={cat} style={{
+                    <span key={cat} className={i === 0 ? "clone-pill-active" : ""} style={{
                       fontSize: 10, padding: "3px 10px", borderRadius: 99,
-                      background: i === 0 ? "#121317" : "rgba(183,191,217,0.18)",
+                      background: i === 0 ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))" : "rgba(183,191,217,0.18)",
                       color: i === 0 ? "#fff" : "#45474D",
                       border: i === 0 ? "none" : "1px solid rgba(183,191,217,0.3)",
                     }}>{cat}</span>
@@ -188,7 +188,7 @@ export default function AntAgentFirst() {
                 <div style={{ display: "flex", gap: 12, marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(183,191,217,0.15)" }}>
                   {[["1 000+","prestataires"],["41","villes"],["31","catégories"]].map(([val, lbl]) => (
                     <div key={lbl} style={{ flex: 1, textAlign: "center" }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "#121317" }}>{val}</div>
+                      <div className="clone-stat-num" style={{ fontSize: 12, fontWeight: 700, backgroundImage: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{val}</div>
                       <div style={{ fontSize: 9, color: "#6a6a71" }}>{lbl}</div>
                     </div>
                   ))}

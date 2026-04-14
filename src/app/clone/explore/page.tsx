@@ -123,7 +123,7 @@ export default function CloneExplorePage() {
 
       {/* ── Sticky filter bar ── */}
       <div
-        className="sticky z-40 transition-all duration-300"
+        className="sticky z-40 transition-all duration-300 clone-filter-bar"
         style={{
           top: 56,
           background: scrolled ? "rgba(255,255,255,0.96)" : "#fff",

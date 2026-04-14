@@ -65,7 +65,7 @@ export default function CloneAccueilPage() {
         {/* Quick links */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12, marginBottom: 40 }}>
           {QUICK_LINKS.map(q => (
-            <Link key={q.label} href={q.href} style={{
+            <Link key={q.label} href={q.href} className="clone-card-white" style={{
               display: "flex", alignItems: "center", gap: 10,
               padding: "14px 16px", borderRadius: 14,
               background: "#fff", border: "1px solid rgba(183,191,217,0.2)",
@@ -97,7 +97,7 @@ export default function CloneAccueilPage() {
             const color = p.coverColor ?? "#E11D48"
             return (
               <Link key={p.id} href={`/dashboard?id=${p.id}`} style={{ textDecoration: "none" }}>
-                <div style={{
+                <div className="clone-card-white" style={{
                   background: "#fff", borderRadius: 20,
                   border: "1px solid rgba(183,191,217,0.15)",
                   boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
@@ -143,7 +143,7 @@ export default function CloneAccueilPage() {
 
           {/* Add event card */}
           <Link href="/planner" style={{ textDecoration: "none" }}>
-            <div style={{
+            <div className="clone-card-white" style={{
               background: "#fff", borderRadius: 20,
               border: "1px dashed rgba(183,191,217,0.5)",
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",

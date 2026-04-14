@@ -232,29 +232,114 @@ export default function AntNav() {
           les class names ajoutés explicitement.
       ───────────────────────────────────────────────────────── */}
       <style>{`
-        /* ── Logo swap light ↔ dark ── */
+        /* ════════════════════════════════════════════════════════════
+           PALETTE PROPAGATION — palette-aware elements
+           Ces classes répondent aux changements de --g1 / --g2
+           ════════════════════════════════════════════════════════════ */
+
+        /* Progress dots (feature explorer, etc.) */
+        .clone-dot-active {
+          background: linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA)) !important;
+        }
+        /* Checkboxes / tâches complétées */
+        .clone-check-done {
+          background: linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA)) !important;
+          border-color: transparent !important;
+        }
+        /* Pills / badges actifs */
+        .clone-pill-active {
+          background: linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA)) !important;
+          color: #fff !important;
+          border-color: transparent !important;
+        }
+        /* Progress bars */
+        .clone-progress-fill {
+          background: linear-gradient(90deg, var(--g1, #E11D48), var(--g2, #9333EA)) !important;
+        }
+        /* Stat numbers et chiffres-clés — gradient text */
+        .clone-stat-num {
+          background-image: linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        /* Petite badge/étiquette accent (ex: "Filtrer") */
+        .clone-filter-badge {
+          background: linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA)) !important;
+          color: #fff !important;
+        }
+        /* Icône accent (fond dégradé léger) */
+        .clone-icon-accent {
+          background: linear-gradient(140deg,
+            rgba(var(--g1-rgb, 225,29,72), 0.10),
+            rgba(var(--g2-rgb, 147,51,234), 0.10)) !important;
+        }
+        /* Séparateur / accent décoratif */
+        .clone-accent-line {
+          background: linear-gradient(90deg, var(--g1, #E11D48), var(--g2, #9333EA));
+          height: 2px;
+          border: none;
+        }
+        /* Tab active underline */
+        .clone-tab-underline {
+          border-bottom: 2px solid var(--g1, #E11D48) !important;
+          color: var(--g1, #E11D48) !important;
+        }
+        /* Input focus ring */
+        .clone-input:focus {
+          border-color: var(--g1, #E11D48) !important;
+          box-shadow: 0 0 0 3px rgba(225,29,72,0.12) !important;
+          outline: none !important;
+        }
+
+        /* ════════════════════════════════════════════════════════════
+           DARK MODE — overrides complets
+           !important est nécessaire pour écraser les inline styles React.
+           ════════════════════════════════════════════════════════════ */
+
+        /* ── Logo swap ── */
         .clone-logo-dark                     { display: none; }
         .clone-dark .clone-logo-light        { display: none !important; }
         .clone-dark .clone-logo-dark         { display: inline-block !important; }
 
-        /* ── Page background ── */
+        /* ── Page root backgrounds ── */
         .clone-dark body                     { background: #0c0d11 !important; }
+        .clone-dark .ant-root                { background: #0c0d11 !important; }
         .clone-dark section                  { background-color: #0c0d11 !important; }
         .clone-dark footer                   { background-color: #0c0d11 !important;
                                                border-top-color: rgba(255,255,255,0.07) !important; }
-        /* Video section sticky inner */
         .clone-dark .clone-video-bg          { background-color: #0c0d11 !important; }
 
-        /* ── Typography — overrides inline styles via !important ── */
+        /* ── White/gray surface divs (filter bars, tab strips, panels) ── */
+        .clone-dark .clone-surface {
+          background: rgba(255,255,255,0.05) !important;
+          border-color: rgba(255,255,255,0.09) !important;
+        }
+        .clone-dark .clone-surface-alt {
+          background: rgba(255,255,255,0.09) !important;
+          border-color: rgba(255,255,255,0.12) !important;
+        }
+        /* Generic white div override for quick-link cards, event cards */
+        .clone-dark .clone-card-white {
+          background: rgba(255,255,255,0.04) !important;
+          border-color: rgba(255,255,255,0.09) !important;
+        }
+
+        /* ── Form elements ── */
+        .clone-dark input, .clone-dark select, .clone-dark textarea {
+          background: rgba(255,255,255,0.07) !important;
+          border-color: rgba(255,255,255,0.14) !important;
+          color: #e0e0ea !important;
+        }
+        .clone-dark input::placeholder,
+        .clone-dark textarea::placeholder    { color: rgba(255,255,255,0.28) !important; }
+
+        /* ── Typography ── */
         .clone-dark h1, .clone-dark h2,
         .clone-dark h3, .clone-dark h4       { color: #f0f0f5 !important; }
         .clone-dark p                        { color: #9a9aaa !important; }
         .clone-dark a                        { color: #9a9aaa; }
-
-        /* Italic accent spans inside headings (color: #6a6a71 inline) */
         .clone-dark h2 span, .clone-dark h3 span { color: #5a5a70 !important; }
-
-        /* Clone-specific semantic classes */
         .clone-dark .clone-heading           { color: #f0f0f5 !important; }
         .clone-dark .clone-body              { color: #9a9aaa !important; }
         .clone-dark .clone-muted             { color: #6a6a80 !important; }
@@ -265,17 +350,14 @@ export default function AntNav() {
           background: rgba(255,255,255,0.06) !important;
           border-color: rgba(255,255,255,0.1) !important;
         }
-        /* Target the span icon inside ant-icon-wave (AntAgentFirst) */
         .clone-dark .ant-icon-wave {
           background: rgba(255,255,255,0.06) !important;
           border-color: rgba(255,255,255,0.1) !important;
         }
         .clone-dark .ant-icon-wave .gs-icon,
-        .clone-dark .clone-icon-item .clone-gs-icon {
-          color: #c8c8d8 !important;
-        }
+        .clone-dark .clone-icon-item .clone-gs-icon { color: #c8c8d8 !important; }
 
-        /* ── Card surfaces in mockups ── */
+        /* ── Cards ── */
         .clone-dark .clone-card {
           background: rgba(255,255,255,0.04) !important;
           border-color: rgba(255,255,255,0.09) !important;
@@ -293,39 +375,62 @@ export default function AntNav() {
         /* ── Borders ── */
         .clone-dark .clone-border            { border-color: rgba(255,255,255,0.09) !important; }
 
-        /* ── Ghost CTA buttons (light bg + dark text) ── */
-        /* "Explorer la plateforme →", step CTAs, etc. */
+        /* ── Ghost CTA ── */
         .clone-dark .clone-cta-ghost {
           color: #d0d0e0 !important;
           background: rgba(255,255,255,0.07) !important;
           border-color: rgba(255,255,255,0.12) !important;
         }
-        /* Generic anchor color fallback for dark mode — lower specificity than inline
-           so won't override deliberately white CTAs */
         .clone-dark a.clone-body,
         .clone-dark a.clone-muted             { color: #7a7a8a !important; }
         .clone-dark a.clone-body:hover,
         .clone-dark a.clone-muted:hover       { color: #c8c8d8 !important; }
 
-        /* Progress dots active state */
-        .clone-dark button[style*="background: #121317"] {
-          background: #f0f0f5 !important;
+        /* ── Inactive pills en dark mode ── */
+        .clone-dark button.clone-pill-inactive {
+          background: rgba(255,255,255,0.07) !important;
+          border-color: rgba(255,255,255,0.12) !important;
+          color: #c0c0d0 !important;
         }
 
-        /* ── Footer specific ── */
+        /* ── Footer ── */
         .clone-dark footer .clone-heading    { color: #f0f0f5 !important; }
         .clone-dark footer .clone-muted      { color: #6a6a80 !important; }
+        .clone-dark footer input             { background: rgba(255,255,255,0.07) !important;
+                                               border-color: rgba(255,255,255,0.14) !important;
+                                               color: #e0e0ea !important; }
 
-        /* ── AntAgentFirst app preview surfaces ── */
-        .clone-dark .clone-mockup             { background: rgba(255,255,255,0.04) !important;
-                                               border-color: rgba(255,255,255,0.08) !important; }
-        .clone-dark .ant-icon-wave .gs-icon  { color: #c8c8d8 !important; }
-
-        /* Cursor blink in dark mode */
+        /* ── Cursor blink ── */
         .clone-dark h2 span[style*="backgroundColor: #121317"],
         .clone-dark h1 span[style*="backgroundColor: #121317"] {
           background-color: #f0f0f5 !important;
         }
+
+        /* ── Explore page filter bar & tabs ── */
+        .clone-dark .clone-filter-bar {
+          background: rgba(12,13,17,0.97) !important;
+          border-color: rgba(255,255,255,0.08) !important;
+          box-shadow: 0 2px 16px rgba(0,0,0,0.4) !important;
+        }
+        .clone-dark .clone-tab-strip {
+          background: rgba(255,255,255,0.05) !important;
+          border-color: rgba(255,255,255,0.08) !important;
+        }
+        .clone-dark .clone-tab-strip-active {
+          background: rgba(255,255,255,0.10) !important;
+        }
+        .clone-dark .clone-tab-panel {
+          background: rgba(255,255,255,0.03) !important;
+          border-color: rgba(255,255,255,0.08) !important;
+        }
+
+        /* ── Stats inline numbers in dark sections ── */
+        .clone-dark .clone-stat-num {
+          /* gradient text stays palette-aware — no override needed */
+        }
+
+        /* ── AgentFirst internal ── */
+        .clone-dark .ant-icon-wave .gs-icon  { color: #c8c8d8 !important; }
       `}</style>
     </>
   )

@@ -118,7 +118,7 @@ export default function CloneDashboardPage() {
         </div>
 
         {/* Tabs */}
-        <div style={{
+        <div className="clone-tab-strip" style={{
           display: "flex", gap: 6, background: "#fff",
           borderRadius: 14, padding: 5, marginBottom: 20,
           border: "1px solid rgba(183,191,217,0.18)",
@@ -130,7 +130,7 @@ export default function CloneDashboardPage() {
               style={{
                 padding: "8px 16px", borderRadius: 10, border: "none",
                 fontSize: 13, fontWeight: tab === t.key ? 600 : 400,
-                background: tab === t.key ? "#f7f7fb" : "transparent",
+                background: tab === t.key ? "rgba(183,191,217,0.15)" : "transparent",
                 color: tab === t.key ? "#121317" : "#6a6a71",
                 cursor: "pointer", fontFamily: "inherit",
                 boxShadow: tab === t.key ? "0 1px 4px rgba(0,0,0,0.06)" : "none",
@@ -148,7 +148,7 @@ export default function CloneDashboardPage() {
           ))}
         </div>
 
-        <div style={{ background: "#fff", borderRadius: 20, border: "1px solid rgba(183,191,217,0.15)", overflow: "hidden" }}>
+        <div className="clone-tab-panel" style={{ background: "#fff", borderRadius: 20, border: "1px solid rgba(183,191,217,0.15)", overflow: "hidden" }}>
 
           {/* Tasks tab */}
           {tab === "tasks" && (

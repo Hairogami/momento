@@ -62,8 +62,8 @@ function SearchMockup() {
       {/* Category chips */}
       <div className="flex gap-2 mb-4 flex-wrap">
         {["Photographie", "DJ", "Traiteur", "Décoration"].map((cat, i) => (
-          <span key={cat} className="px-3 py-1 rounded-full text-xs" style={{
-            background: i === 0 ? "#121317" : "rgba(183,191,217,0.15)",
+          <span key={cat} className={`px-3 py-1 rounded-full text-xs${i === 0 ? " clone-pill-active" : ""}`} style={{
+            background: i === 0 ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))" : "rgba(183,191,217,0.15)",
             color: i === 0 ? "#fff" : "#45474D",
             border: i === 0 ? "none" : "1px solid rgba(183,191,217,0.3)",
           }}>{cat}</span>
@@ -212,7 +212,7 @@ function EventDashboardMockup() {
           <span className="clone-mockup-text-h" style={{ fontSize: 11, fontWeight: 700, color: "#121317" }}>62 000 / 100 000 MAD</span>
         </div>
         <div className="rounded-full overflow-hidden" style={{ height: 6, background: "rgba(183,191,217,0.25)" }}>
-          <div style={{ width: "62%", height: "100%", background: "linear-gradient(90deg,#E11D48,#9333EA)", borderRadius: 99 }} />
+          <div className="clone-progress-fill" style={{ width: "62%", height: "100%", background: "linear-gradient(90deg, var(--g1, #E11D48), var(--g2, #9333EA))", borderRadius: 99 }} />
         </div>
       </div>
       <div className="clone-mockup-muted" style={{ fontSize: 11, color: "#6a6a71", marginBottom: 10, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>Tâches</div>
@@ -223,8 +223,8 @@ function EventDashboardMockup() {
         { done: false, label: "DJ — devis en cours",   sub: "Réponse attendue" },
       ].map((t, i) => (
         <div key={i} className="flex items-start gap-3 mb-2.5">
-          <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-            style={{ background: t.done ? "#121317" : "transparent", border: t.done ? "none" : "1.5px solid rgba(183,191,217,0.4)" }}>
+          <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5${t.done ? " clone-check-done" : ""}`}
+            style={{ background: t.done ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))" : "transparent", border: t.done ? "none" : "1.5px solid rgba(183,191,217,0.4)" }}>
             {t.done && <span style={{ color: "#fff", fontSize: 10 }}>✓</span>}
           </div>
           <div>
@@ -329,12 +329,12 @@ export default function AntFeatureExplorer() {
                   <button
                     key={i}
                     onClick={() => itemRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "center" })}
-                    className="transition-all duration-300"
+                    className={`transition-all duration-300${i === active ? " clone-dot-active" : ""}`}
                     style={{
                       width: i === active ? 20 : 6,
                       height: 6,
                       borderRadius: 99,
-                      background: i === active ? "#121317" : "rgba(183,191,217,0.4)",
+                      background: i === active ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))" : "rgba(183,191,217,0.4)",
                       border: "none",
                       cursor: "pointer",
                     }}
