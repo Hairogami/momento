@@ -35,7 +35,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
     <div style={{ padding: "22px 24px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
       {/* Header */}
       <div style={{
-        fontSize: 10, fontWeight: 600, color: "#9a9aaa",
+        fontSize: 10, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)",
         textTransform: "uppercase", letterSpacing: "0.09em",
         marginBottom: 18,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -64,7 +64,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
             <circle
               cx={50} cy={50} r={R}
               fill="none"
-              stroke="rgba(183,191,217,0.15)"
+              stroke="var(--dash-ring-track,rgba(183,191,217,0.20))"
               strokeWidth={11}
             />
             {/* Progress */}
@@ -96,14 +96,14 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
               backgroundClip: isOverBudget ? undefined : "text",
               color: isOverBudget ? "#ef4444" : undefined,
             }}>{Math.round(pct * 100)}%</span>
-            <span style={{ fontSize: 8, color: "#9a9aaa", textTransform: "uppercase", marginTop: 1 }}>utilisé</span>
+            <span style={{ fontSize: 8, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", marginTop: 1 }}>utilisé</span>
           </div>
         </div>
 
         {/* Numbers */}
         <div style={{ flex: 1 }}>
           <div style={{ marginBottom: 10 }}>
-            <div style={{ fontSize: 9, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Dépensé</div>
+            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Dépensé</div>
             <div style={{
               fontSize: 18, fontWeight: 800, lineHeight: 1,
               backgroundImage: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
@@ -111,10 +111,10 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
             }}>
               {spent.toLocaleString("fr-MA")}
             </div>
-            <div style={{ fontSize: 9, color: "#9a9aaa", marginTop: 1 }}>MAD</div>
+            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>MAD</div>
           </div>
           <div>
-            <div style={{ fontSize: 9, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Restant</div>
+            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Restant</div>
             <div style={{
               fontSize: 14, fontWeight: 700,
               color: remaining < total * 0.1 ? "#ef4444" : "#121317",
@@ -134,8 +134,8 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
               <span style={{ fontSize: 13, flexShrink: 0 }}>{item.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "#45474D" }}>{item.label}</span>
-                  <span style={{ fontSize: 10, color: "#9a9aaa" }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--dash-text-2,#45474D)" }}>{item.label}</span>
+                  <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>
                     {Math.round(itemPct * 100)}%
                   </span>
                 </div>
@@ -158,8 +158,8 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
         paddingTop: 12, borderTop: "1px solid rgba(183,191,217,0.1)",
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}>
-        <span style={{ fontSize: 10, color: "#9a9aaa" }}>Total budget</span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#121317" }}>
+        <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Total budget</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)" }}>
           {total.toLocaleString("fr-MA")} MAD
         </span>
       </div>

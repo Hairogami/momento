@@ -47,7 +47,7 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
     <div style={{ padding: "22px 24px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
       {/* Label */}
       <div style={{
-        fontSize: 10, fontWeight: 600, color: "#9a9aaa",
+        fontSize: 10, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)",
         textTransform: "uppercase", letterSpacing: "0.09em",
         marginBottom: 18,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -69,11 +69,10 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
               from -90deg,
               var(--g1,#E11D48) 0deg,
               var(--g2,#9333EA) ${deg}deg,
-              rgba(183,191,217,0.15) ${deg}deg
+              var(--dash-ring-track,rgba(183,191,217,0.20)) ${deg}deg
             )`,
             WebkitMask: "radial-gradient(circle, transparent 38px, black 39px)",
             mask: "radial-gradient(circle, transparent 38px, black 39px)",
-            transition: "background 1s ease",
           }} />
           <div style={{
             position: "absolute", inset: 0,
@@ -85,7 +84,7 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
               backgroundImage: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}>{time.days}</span>
-            <span style={{ fontSize: 8, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.07em", marginTop: 1 }}>
+            <span style={{ fontSize: 8, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginTop: 1 }}>
               jours
             </span>
           </div>
@@ -94,10 +93,10 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
         {/* Right: breakdown + name */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{
-            fontSize: 13, fontWeight: 700, color: "#121317",
+            fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)",
             margin: "0 0 2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
           }}>{name}</p>
-          <p style={{ fontSize: 11, color: "#9a9aaa", margin: "0 0 14px" }}>{formatEventDate(date)}</p>
+          <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 14px" }}>{formatEventDate(date)}</p>
 
           {/* Hours + minutes */}
           <div style={{ display: "flex", gap: 8 }}>
@@ -112,10 +111,10 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
                 border: "1px solid rgba(183,191,217,0.15)",
                 minWidth: 36,
               }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#121317", lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
                   {String(val).padStart(2, "0")}
                 </div>
-                <div style={{ fontSize: 8, color: "#9a9aaa", textTransform: "uppercase", marginTop: 2 }}>{label}</div>
+                <div style={{ fontSize: 8, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", marginTop: 2 }}>{label}</div>
               </div>
             ))}
           </div>
@@ -126,8 +125,8 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
       {guestCount > 0 && (
         <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid rgba(183,191,217,0.1)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-            <span style={{ fontSize: 10, color: "#6a6a71" }}>Invités confirmés</span>
-            <span style={{ fontSize: 10, fontWeight: 600, color: "#121317" }}>
+            <span style={{ fontSize: 10, color: "var(--dash-text-2,#6a6a71)" }}>Invités confirmés</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: "var(--dash-text,#121317)" }}>
               {guestConfirmed} / {guestCount}
             </span>
           </div>
