@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { icon: "dashboard",               label: "Dashboard",         href: "/clone/dashboard" },
   { icon: "account_balance_wallet",  label: "Budget",            href: "/clone/budget" },
   { icon: "groups",                  label: "Invités",           href: "/clone/guests" },
-  { icon: "chat_bubble",             label: "Messages",          href: "/clone/messages", badge: 3 },
+  { icon: "chat_bubble",             label: "Messages",          href: "/clone/messages", badge: 0 },
   { icon: "event_note",              label: "Planning",          href: "/clone/planner" },
   { icon: "favorite",                label: "Favoris",           href: "/clone/favorites" },
 ]
@@ -22,6 +22,7 @@ interface DashSidebarProps {
   activeEventId: string
   onEventChange: (id: string) => void
   firstName?: string
+  messageUnread?: number
 }
 
 function GIcon({ name, size = 18, color = "#6a6a71" }: { name: string; size?: number; color?: string }) {
@@ -35,7 +36,7 @@ function GIcon({ name, size = 18, color = "#6a6a71" }: { name: string; size?: nu
   )
 }
 
-export default function DashSidebar({ events, activeEventId, onEventChange, firstName = "Y" }: DashSidebarProps) {
+export default function DashSidebar({ events, activeEventId, onEventChange, firstName = "Y", messageUnread = 0 }: DashSidebarProps) {
   const pathname = usePathname()
   const [eventOpen, setEventOpen] = useState(false)
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0]
@@ -119,7 +120,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
               </button>
             ))}
             <div style={{ borderTop: "1px solid rgba(183,191,217,0.12)", padding: "8px 14px" }}>
-              <Link href="/planner" style={{ fontSize: 11, color: "#9a9aaa", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+              <Link href="/clone/planner" style={{ fontSize: 11, color: "#9a9aaa", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
                 <GIcon name="add" size={13} color="#9a9aaa" />
                 Créer un événement
               </Link>
@@ -166,13 +167,13 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
               }}>
                 {item.label}
               </span>
-              {item.badge && (
+              {item.href === "/clone/messages" && messageUnread > 0 && (
                 <span style={{
                   fontSize: 10, fontWeight: 700,
                   background: G, color: "#fff",
                   padding: "1px 6px", borderRadius: 99,
                   minWidth: 18, textAlign: "center",
-                }}>{item.badge}</span>
+                }}>{messageUnread}</span>
               )}
             </Link>
           )
@@ -210,7 +211,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
           <div style={{ fontSize: 12, fontWeight: 600, color: "#121317" }}>{firstName}</div>
           <div style={{ fontSize: 10, color: "#9a9aaa" }}>Pro · Casablanca</div>
         </div>
-        <Link href="/settings" style={{ textDecoration: "none", display: "flex" }}>
+        <Link href="/clone/dashboard" style={{ textDecoration: "none", display: "flex" }}>
           <GIcon name="settings" size={18} color="#9a9aaa" />
         </Link>
       </div>

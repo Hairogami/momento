@@ -1,5 +1,6 @@
 "use client"
 import { useState, useRef, useEffect, useCallback } from "react"
+import Link from "next/link"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -164,11 +165,11 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {liked.length > 0 && (
-            <span style={{
+            <Link href="/clone/favorites" style={{
               fontSize: 10, fontWeight: 600,
               background: "rgba(34,197,94,0.1)", color: "#22c55e",
-              padding: "2px 7px", borderRadius: 99,
-            }}>♥ {liked.length}</span>
+              padding: "2px 7px", borderRadius: 99, textDecoration: "none",
+            }}>♥ {liked.length}</Link>
           )}
           <span style={{ fontSize: 10, color: "#9a9aaa" }}>
             {index + 1}/{cards.length}

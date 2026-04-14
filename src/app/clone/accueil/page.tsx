@@ -12,10 +12,10 @@ const MOCK_PLANNERS = [
 ]
 
 const QUICK_LINKS = [
-  { emoji: "🔍", label: "Trouver un prestataire", href: "/clone/explore" },
-  { emoji: "📋", label: "Mon planning",           href: "/clone/dashboard" },
-  { emoji: "💬", label: "Messages",               href: "/messages" },
-  { emoji: "⭐", label: "Favoris",                href: "/favoris" },
+  { emoji: "🔍", label: "Trouver un prestataire", href: "/clone/explore"    },
+  { emoji: "📋", label: "Mon planning",           href: "/clone/planner"    },
+  { emoji: "💬", label: "Messages",               href: "/clone/messages"   },
+  { emoji: "⭐", label: "Favoris",                href: "/clone/favorites"  },
 ]
 
 function daysUntil(dateStr: string): number {
@@ -81,7 +81,7 @@ export default function CloneAccueilPage() {
         {/* Events section */}
         <div style={{ marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h2 style={{ fontSize: 16, fontWeight: 700, color: "#121317", margin: 0 }}>Mes événements</h2>
-          <Link href="/planner" style={{
+          <Link href="/clone/planner" style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             padding: "8px 16px", borderRadius: 999,
             background: G, color: "#fff",
@@ -96,7 +96,7 @@ export default function CloneAccueilPage() {
             const days = date ? daysUntil(date) : null
             const color = p.coverColor ?? "#E11D48"
             return (
-              <Link key={p.id} href={`/dashboard?id=${p.id}`} style={{ textDecoration: "none" }}>
+              <Link key={p.id} href="/clone/dashboard" style={{ textDecoration: "none" }}>
                 <div className="clone-card-white" style={{
                   background: "#fff", borderRadius: 20,
                   border: "1px solid rgba(183,191,217,0.15)",
@@ -142,7 +142,7 @@ export default function CloneAccueilPage() {
           })}
 
           {/* Add event card */}
-          <Link href="/planner" style={{ textDecoration: "none" }}>
+          <Link href="/clone/planner" style={{ textDecoration: "none" }}>
             <div className="clone-card-white" style={{
               background: "#fff", borderRadius: 20,
               border: "1px dashed rgba(183,191,217,0.5)",
