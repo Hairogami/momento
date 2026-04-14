@@ -40,6 +40,24 @@ const SWIPE_THRESHOLD = 80;
 
 type ReviewItem = { id: string; rating: number; comment: string | null; eventType: string | null; createdAt: string; author: { name: string | null; image: string | null } }
 
+// Gradient + emoji par catégorie pour les cards sans photo
+function categoryTheme(cat: string): { bg: string; emoji: string } {
+  const c = cat.toLowerCase();
+  if (c.includes("photographe") || c.includes("vidéaste") || c.includes("video")) return { bg: "linear-gradient(135deg,#1a0533,#3d0b6e,#1a0533)", emoji: "📸" };
+  if (c.includes("traiteur") || c.includes("pâtissier") || c.includes("cake")) return { bg: "linear-gradient(135deg,#1a0a00,#4d2a00,#1a0a00)", emoji: "🍽️" };
+  if (c.includes("décorateur") || c.includes("fleuriste")) return { bg: "linear-gradient(135deg,#001a0a,#004d1a,#001a0a)", emoji: "💐" };
+  if (c.includes("lieu") || c.includes("réception")) return { bg: "linear-gradient(135deg,#0a0a1a,#1a1a4d,#0a0a1a)", emoji: "🏛️" };
+  if (c.includes("makeup") || c.includes("hairstylist") || c.includes("spa") || c.includes("neggafa")) return { bg: "linear-gradient(135deg,#1a0011,#4d003d,#1a0011)", emoji: "💄" };
+  if (c.includes("dj") || c.includes("orchestre") || c.includes("animateur") || c.includes("chanteur") || c.includes("violon")) return { bg: "linear-gradient(135deg,#001a1a,#00454d,#001a1a)", emoji: "🎵" };
+  if (c.includes("wedding planner") || c.includes("event planner")) return { bg: "linear-gradient(135deg,#1a0a0a,#4d1a00,#1a0a0a)", emoji: "💍" };
+  if (c.includes("transport") || c.includes("vtc") || c.includes("voiture")) return { bg: "linear-gradient(135deg,#0a1a0a,#1a3d1a,#0a1a0a)", emoji: "🚗" };
+  if (c.includes("robe") || c.includes("mariée")) return { bg: "linear-gradient(135deg,#1a1a0a,#3d3d00,#1a1a0a)", emoji: "👗" };
+  // fallback
+  const hash = cat.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const hue = hash % 360;
+  return { bg: `linear-gradient(135deg, hsl(${hue},40%,8%), hsl(${hue},50%,15%), hsl(${hue},40%,8%))`, emoji: "✨" };
+}
+
 function fmtStarting(min: number | null, max: number | null): string | null {
   const base = min ?? max;
   if (!base) return null;
@@ -113,8 +131,9 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     if (page === 1) setLoading(true); else setLoadingMore(true);
     const ctrl = new AbortController();
     fetch(url, { signal: ctrl.signal })
-      .then(r => r.json())
+      .then(r => r.ok ? r.json() : null)
       .then((d: unknown) => {
+        if (!d) return;
         if (!Array.isArray(d)) return;
         const batch = d as VendorCard[];
         if (batch.length < 20) setHasMore(false);
@@ -283,10 +302,10 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
         </div>
       )}
 
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center pointer-events-none select-none">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center pointer-events-none select-none p-3">
 
         {/* Header */}
-        <div className="pointer-events-auto w-full max-w-[360px] px-2 mb-3">
+        <div className="pointer-events-auto w-full max-w-[648px] px-2 mb-3">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-bold text-white">
               {activeCategory ? `Trouver un·e ${activeCategory}` : "Découvrir des prestataires"}
@@ -321,7 +340,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
         </div>
 
         {/* Stack */}
-        <div className="pointer-events-auto relative w-full max-w-[360px]" style={{ height: 500 }}>
+        <div className="pointer-events-auto relative w-full max-w-[648px]" style={{ height: "calc(100dvh - 133px)", maxHeight: 972 }}>
 
           {loading && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -422,9 +441,10 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                 />
               ) : (
                 <div className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, #2a1a0e 0%, #3d2510 50%, #1a0e05 100%)", filter: showDetail ? "blur(12px) brightness(0.2)" : "none", transition: "filter 0.3s ease" }}>
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-8xl opacity-20">🏢</span>
+                  style={{ background: categoryTheme(current.category).bg, filter: showDetail ? "blur(12px) brightness(0.2)" : "none", transition: "filter 0.3s ease" }}>
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+                    <span className="text-7xl opacity-30">{categoryTheme(current.category).emoji}</span>
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)" }}>Photos bientôt disponibles</span>
                   </div>
                 </div>
               )}
@@ -481,61 +501,49 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                       </div>
                     )}
                   </div>
-                  {/* Chips de contact/social — toujours affichées, grisées si absent */}
-                  <div className="flex flex-wrap gap-1.5 mt-2.5" onPointerDown={e => e.stopPropagation()}>
-                    {current.phone ? (
-                      <a href={`tel:${current.phone}`} onClick={e => e.stopPropagation()}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                        style={{ backgroundColor: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", color: "#4ade80" }}>
-                        📞 {current.phone}
-                      </a>
-                    ) : (
-                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
-                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
-                        📞 Non renseigné
+                  {/* Chips de contact/social — uniquement si renseignées */}
+                  {(current.phone || current.instagram || current.facebook || current.website) ? (
+                    <div className="flex flex-wrap gap-1.5 mt-2.5" onPointerDown={e => e.stopPropagation()}>
+                      {current.phone && (
+                        <a href={`tel:${current.phone}`} onClick={e => e.stopPropagation()}
+                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                          style={{ backgroundColor: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", color: "#4ade80" }}>
+                          📞 {current.phone}
+                        </a>
+                      )}
+                      {current.instagram && (
+                        <a href={`https://instagram.com/${current.instagram.replace("@","")}`} target="_blank" rel="noopener noreferrer"
+                          onClick={e => e.stopPropagation()}
+                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                          style={{ backgroundColor: "rgba(225,48,108,0.15)", border: "1px solid rgba(225,48,108,0.3)", color: "#f472b6" }}>
+                          <span className="text-[9px] font-black px-0.5 rounded" style={{ background: "linear-gradient(135deg,#f09433,#dc2743,#bc1888)", color: "#fff" }}>IG</span>
+                          @{current.instagram.replace("@","")}
+                        </a>
+                      )}
+                      {current.facebook && (
+                        <a href={current.facebook.startsWith("http") ? current.facebook : `https://facebook.com/${current.facebook}`}
+                          target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                          style={{ backgroundColor: "rgba(24,119,242,0.15)", border: "1px solid rgba(24,119,242,0.35)", color: "#60a5fa" }}>
+                          <span className="font-black" style={{ color: "#1877f2" }}>f</span> Facebook
+                        </a>
+                      )}
+                      {current.website && (
+                        <a href={current.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
+                          style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.65)" }}>
+                          🌐 Site web
+                        </a>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-2.5">
+                      <span className="text-[10px] px-2 py-1 rounded-lg"
+                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.25)" }}>
+                        📋 Profil en cours de mise à jour
                       </span>
-                    )}
-                    {current.instagram ? (
-                      <a href={`https://instagram.com/${current.instagram.replace("@","")}`} target="_blank" rel="noopener noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                        style={{ backgroundColor: "rgba(225,48,108,0.15)", border: "1px solid rgba(225,48,108,0.3)", color: "#f472b6" }}>
-                        <span className="text-[9px] font-black px-0.5 rounded" style={{ background: "linear-gradient(135deg,#f09433,#dc2743,#bc1888)", color: "#fff" }}>IG</span>
-                        @{current.instagram.replace("@","")}
-                      </a>
-                    ) : (
-                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
-                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
-                        <span className="text-[9px] font-black px-0.5 rounded" style={{ backgroundColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.2)" }}>IG</span>
-                        Non renseigné
-                      </span>
-                    )}
-                    {current.facebook ? (
-                      <a href={current.facebook.startsWith("http") ? current.facebook : `https://facebook.com/${current.facebook}`}
-                        target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                        style={{ backgroundColor: "rgba(24,119,242,0.15)", border: "1px solid rgba(24,119,242,0.35)", color: "#60a5fa" }}>
-                        <span className="font-black" style={{ color: "#1877f2" }}>f</span> Facebook
-                      </a>
-                    ) : (
-                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
-                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
-                        <span className="font-black" style={{ color: "rgba(255,255,255,0.2)" }}>f</span> Non renseigné
-                      </span>
-                    )}
-                    {current.website ? (
-                      <a href={current.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                        className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold hover:opacity-80 transition-opacity"
-                        style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.65)" }}>
-                        🌐 Site web
-                      </a>
-                    ) : (
-                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold"
-                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.2)" }}>
-                        🌐 Non renseigné
-                      </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <p className="text-[10px] mt-2 text-center" style={{ color: "rgba(255,255,255,0.25)" }}>Appuyer pour les détails · Glisser pour choisir</p>
                 </div>
               )}
@@ -628,6 +636,18 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                       style={{ backgroundColor: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)" }}>
                       <p className="text-[10px] uppercase tracking-widest font-semibold mb-2" style={{ color: "rgba(255,255,255,0.35)" }}>À propos</p>
                       <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>{current.description}</p>
+                    </div>
+                  )}
+
+                  {/* Message si profil incomplet */}
+                  {!current.description && !current.phone && !current.instagram && !current.facebook && !current.website && !current.email && !current.address && !current.city && (
+                    <div className="flex flex-col items-center gap-2 py-4 rounded-2xl"
+                      style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                      <span className="text-2xl opacity-50">{categoryTheme(current.category).emoji}</span>
+                      <p className="text-sm font-semibold text-center" style={{ color: "rgba(255,255,255,0.5)" }}>Profil en cours de mise à jour</p>
+                      <p className="text-[11px] text-center px-4" style={{ color: "rgba(255,255,255,0.3)" }}>
+                        Ce prestataire n'a pas encore renseigné ses informations de contact.
+                      </p>
                     </div>
                   )}
 

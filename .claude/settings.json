@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ':*)",
+      "Bash(node scripts/antigravity-recon.mjs)",
+      "Bash(ls docs/design-references/antigravity/scroll-*.png)"
+    ]
+  }
+}

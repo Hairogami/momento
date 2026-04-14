@@ -113,8 +113,37 @@ export default async function DashboardPage({
   if (!session?.user?.id) redirect("/login");
 
   const { id: plannerId } = await searchParams;
+  const userId = session.user.id;
 
-  // ── Si un planner est sélectionné, charger ses données ──────────────────
+  const WORKSPACE_INCLUDE = {
+    tasks:       { where: { completed: false } as const, orderBy: { dueDate: "asc" } as const, take: 10 },
+    budgetItems: true as const,
+    bookings:    { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
+    guests:      true as const,
+  };
+
+  // ── Toutes les requêtes DB en parallèle ─────────────────────────────────
+  const [plannerRaw, workspaceRaw, user, unreadCount, neededCategoriesRaw] = await Promise.all([
+    plannerId
+      ? prisma.planner.findUnique({ where: { id: plannerId }, include: { budgetItems: true } }).catch(() => null)
+      : Promise.resolve(null),
+    prisma.workspace.findUnique({ where: { userId }, include: WORKSPACE_INCLUDE }),
+    prisma.user.findUnique({ where: { id: userId }, select: { name: true } }).catch(() => null),
+    prisma.message.count({
+      where: { read: false, senderId: { not: userId }, conversation: { clientId: userId } },
+    }).catch(() => 0),
+    prisma.$queryRaw<{ neededCategories: string }[]>`
+      SELECT "neededCategories" FROM "Workspace" WHERE "userId" = ${userId} LIMIT 1
+    `.catch(() => [] as { neededCategories: string }[]),
+  ]);
+
+  // ── Workspace (créer si absent) ─────────────────────────────────────────
+  const workspace = workspaceRaw ?? await prisma.workspace.create({
+    data: { userId },
+    include: WORKSPACE_INCLUDE,
+  });
+
+  // ── Planner override (vérifier ownership) ────────────────────────────────
   let plannerOverride: {
     eventName: string
     eventDate: string | null
@@ -123,72 +152,32 @@ export default async function DashboardPage({
     coverColor: string | null
   } | null = null
 
-  if (plannerId) {
-    const planner = await prisma.planner.findUnique({
-      where: { id: plannerId },
-      include: { budgetItems: true },
-    })
-    if (planner && planner.userId === session.user.id) {
-      plannerOverride = {
-        eventName: planner.coupleNames || planner.title || "Mon événement",
-        eventDate: planner.weddingDate ? planner.weddingDate.toISOString() : null,
-        budget: planner.budget,
-        budgetItems: planner.budgetItems.map(b => ({
-          id: b.id, category: b.category, label: b.label,
-          estimated: b.estimated, actual: b.actual,
-        })),
-        coverColor: planner.coverColor,
-      }
+  if (plannerRaw && plannerRaw.userId === userId) {
+    plannerOverride = {
+      eventName: plannerRaw.coupleNames || plannerRaw.title || "Mon événement",
+      eventDate: plannerRaw.weddingDate ? plannerRaw.weddingDate.toISOString() : null,
+      budget: plannerRaw.budget,
+      budgetItems: plannerRaw.budgetItems.map(b => ({
+        id: b.id, category: b.category, label: b.label,
+        estimated: b.estimated, actual: b.actual,
+      })),
+      coverColor: plannerRaw.coverColor,
     }
   }
 
-  // ── Workspace (tâches, réservations, invités) ────────────────────────────
-  let workspace = await prisma.workspace.findUnique({
-    where: { userId: session.user.id },
-    include: {
-      tasks:    { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
-      budgetItems: true,
-      bookings: { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
-      guests:   true,
-    },
-  });
-
-  if (!workspace) {
-    workspace = await prisma.workspace.create({
-      data: { userId: session.user.id },
-      include: {
-        tasks:    { where: { completed: false }, orderBy: { dueDate: "asc" }, take: 10 },
-        budgetItems: true,
-        bookings: { include: { vendor: { select: { name: true, category: true } } }, take: 10 },
-        guests:   true,
-      },
-    });
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { name: true },
-  }).catch(() => null);
-
-  let unreadCount = 0;
-  try {
-    unreadCount = await prisma.message.count({
-      where: {
-        read: false,
-        senderId: { not: session.user.id },
-        conversation: { clientId: session.user.id },
-      },
-    });
-  } catch (err) { console.error("[dashboard] unreadCount query failed:", err) }
-
   // ── Calcul des jours restants ────────────────────────────────────────────
   const rawDate = plannerOverride?.eventDate ?? (workspace.eventDate ? workspace.eventDate.toISOString() : null)
-  let daysUntil: number | null = null
-  if (rawDate) {
-    daysUntil = Math.max(0, Math.ceil((new Date(rawDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-  }
+  const daysUntil = rawDate
+    ? Math.max(0, Math.ceil((new Date(rawDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null
 
   const firstName = user?.name?.split(" ")[0] ?? null;
+
+  let neededCategories: string[] = [];
+  try {
+    const raw = neededCategoriesRaw as { neededCategories: string }[]
+    if (raw[0]?.neededCategories) neededCategories = JSON.parse(raw[0].neededCategories);
+  } catch { /* ignore */ }
 
   // ── Données agrégées — planner prioritaire, workspace en fallback ─────────
   const data: DashboardData = {
@@ -210,14 +199,6 @@ export default async function DashboardPage({
     guests: workspace.guests.map((g) => ({ id: g.id, rsvp: g.rsvp })),
     unreadCount,
   };
-
-  let neededCategories: string[] = [];
-  try {
-    const raw = await prisma.$queryRaw<{ neededCategories: string }[]>`
-      SELECT "neededCategories" FROM "Workspace" WHERE "userId" = ${session.user.id} LIMIT 1
-    `;
-    if (raw[0]?.neededCategories) neededCategories = JSON.parse(raw[0].neededCategories);
-  } catch (err) { console.error("[dashboard] neededCategories raw query failed:", err) }
 
   return (
     <DashboardContent

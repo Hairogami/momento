@@ -1,0 +1,291 @@
+{
+  "tag": "SECTION",
+  "id": "",
+  "classes": "welcome-wrapper",
+  "text": null,
+  "styles": {
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+    "lineHeight": "24px",
+    "color": "rgb(18, 19, 23)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "width": "1440px",
+    "height": "900px",
+    "display": "flex",
+    "flexDirection": "row",
+    "justifyContent": "center",
+    "alignItems": "center",
+    "border": "0px none rgb(18, 19, 23)",
+    "position": "relative",
+    "textAlign": "start",
+    "opacity": "1"
+  },
+  "children": [
+    {
+      "tag": "DIV",
+      "id": "",
+      "classes": "hero-video-wrapper",
+      "text": null,
+      "styles": {
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+        "lineHeight": "24px",
+        "color": "rgb(18, 19, 23)",
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "display": "block",
+        "flexDirection": "row",
+        "border": "0px none rgb(18, 19, 23)",
+        "position": "static",
+        "textAlign": "start",
+        "opacity": "0"
+      },
+      "children": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "",
+          "text": null,
+          "styles": {
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+            "lineHeight": "24px",
+            "color": "rgb(18, 19, 23)",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "display": "block",
+            "flexDirection": "row",
+            "border": "0px none rgb(18, 19, 23)",
+            "position": "static",
+            "textAlign": "start",
+            "opacity": "1"
+          },
+          "children": [
+            {
+              "tag": "LANDING-MAIN-PARTICLES-COMPONENT",
+              "id": "",
+              "classes": "",
+              "text": null,
+              "styles": {
+                "fontSize": "16px",
+                "fontWeight": "400",
+                "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+                "lineHeight": "24px",
+                "color": "rgb(18, 19, 23)",
+                "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+                "display": "inline",
+                "flexDirection": "row",
+                "border": "0px none rgb(18, 19, 23)",
+                "position": "static",
+                "textAlign": "start",
+                "opacity": "1"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "classes": "welcome-section",
+      "text": null,
+      "styles": {
+        "fontSize": "16px",
+        "fontWeight": "450",
+        "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+        "lineHeight": "24px",
+        "color": "rgb(18, 19, 23)",
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "padding": "36px 0px 60px",
+        "width": "1344px",
+        "height": "425.422px",
+        "display": "flex",
+        "flexDirection": "column",
+        "justifyContent": "center",
+        "alignItems": "center",
+        "border": "0px none rgb(18, 19, 23)",
+        "position": "relative",
+        "textAlign": "center",
+        "opacity": "1"
+      },
+      "children": [
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "logo-container",
+          "text": null,
+          "styles": {
+            "fontSize": "16px",
+            "fontWeight": "450",
+            "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+            "lineHeight": "24px",
+            "color": "rgb(18, 19, 23)",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "width": "230.688px",
+            "height": "37px",
+            "display": "flex",
+            "flexDirection": "row",
+            "border": "0px none rgb(18, 19, 23)",
+            "position": "static",
+            "textAlign": "center",
+            "opacity": "1",
+            "transform": "matrix(1, 0, 0, 1, 0, 0)"
+          },
+          "children": [
+            {
+              "tag": "ANTIGRAVITY-LOGO",
+              "id": "",
+              "classes": "logo",
+              "text": null,
+              "styles": {
+                "fontSize": "16px",
+                "fontWeight": "450",
+                "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+                "lineHeight": "24px",
+                "color": "rgb(18, 19, 23)",
+                "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+                "width": "230.688px",
+                "height": "37px",
+                "display": "block",
+                "flexDirection": "row",
+                "border": "0px none rgb(18, 19, 23)",
+                "position": "static",
+                "textAlign": "center",
+                "opacity": "1"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "header-container",
+          "text": null,
+          "styles": {
+            "fontSize": "16px",
+            "fontWeight": "450",
+            "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+            "lineHeight": "24px",
+            "color": "rgb(18, 19, 23)",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "margin": "32px 72px 64px",
+            "width": "1200px",
+            "height": "149.047px",
+            "display": "block",
+            "flexDirection": "row",
+            "border": "0px none rgb(18, 19, 23)",
+            "position": "relative",
+            "textAlign": "center",
+            "opacity": "1"
+          },
+          "children": [
+            {
+              "tag": "H1",
+              "id": "",
+              "classes": "landing-main-header",
+              "text": null,
+              "styles": {
+                "fontSize": "80px",
+                "fontWeight": "450",
+                "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+                "lineHeight": "88px",
+                "color": "rgb(18, 19, 23)",
+                "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+                "width": "1200px",
+                "height": "149.047px",
+                "maxWidth": "1200px",
+                "display": "block",
+                "flexDirection": "row",
+                "border": "0px none rgb(18, 19, 23)",
+                "position": "static",
+                "textAlign": "center",
+                "opacity": "1"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "DIV",
+          "id": "",
+          "classes": "grid-row welcome-cta",
+          "text": null,
+          "styles": {
+            "fontSize": "16px",
+            "fontWeight": "450",
+            "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+            "lineHeight": "24px",
+            "color": "rgb(18, 19, 23)",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "margin": "0px 72px",
+            "width": "469.828px",
+            "height": "47.375px",
+            "maxWidth": "100%",
+            "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "gap": "4px",
+            "border": "0px none rgb(18, 19, 23)",
+            "position": "static",
+            "textAlign": "center",
+            "opacity": "1",
+            "transform": "matrix(1, 0, 0, 1, 0, 0)"
+          },
+          "children": [
+            {
+              "tag": "APP-BUTTON",
+              "id": "",
+              "classes": "",
+              "text": null,
+              "styles": {
+                "fontSize": "16px",
+                "fontWeight": "450",
+                "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+                "lineHeight": "24px",
+                "color": "rgb(18, 19, 23)",
+                "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+                "width": "270.203px",
+                "height": "47.375px",
+                "display": "block",
+                "flexDirection": "row",
+                "border": "0px none rgb(18, 19, 23)",
+                "position": "static",
+                "textAlign": "center",
+                "opacity": "1"
+              },
+              "children": []
+            },
+            {
+              "tag": "APP-BUTTON",
+              "id": "",
+              "classes": "",
+              "text": null,
+              "styles": {
+                "fontSize": "16px",
+                "fontWeight": "450",
+                "fontFamily": "\"Google Sans Flex\", \"Google Sans\", sans-serif",
+                "lineHeight": "24px",
+                "color": "rgb(18, 19, 23)",
+                "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+                "width": "195.625px",
+                "height": "47.375px",
+                "display": "block",
+                "flexDirection": "row",
+                "border": "0px none rgb(18, 19, 23)",
+                "position": "static",
+                "textAlign": "center",
+                "opacity": "1"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

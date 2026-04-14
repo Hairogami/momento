@@ -33,7 +33,7 @@ function PalettePicker() {
             key={p.id}
             onClick={() => setPalette(p.id)}
             title={p.label}
-            className="w-7 h-7 rounded-full transition-all hover:scale-110"
+            className="w-7 h-7 rounded-full transition-transform hover:scale-110"
             style={{
               background: `linear-gradient(135deg, ${p.color} 50%, ${p.accent} 50%)`,
               outline: palette === p.id ? `2px solid ${p.accent}` : "2px solid transparent",
@@ -107,21 +107,20 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetch("/api/planners")
-      .then(r => r.json())
-      .then(d => Array.isArray(d) ? setPlanners(d) : null)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (Array.isArray(d)) setPlanners(d) })
       .catch(() => {});
     fetch("/api/unread")
-      .then(r => r.json())
-      .then(setUnread)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setUnread(d) })
       .catch(() => {});
     fetch("/api/me")
-      .then(r => r.json())
-      .then(d => d?.email ? setUserEmail(d.email) : null)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d?.email) setUserEmail(d.email) })
       .catch(() => {});
   }, []);
 
   // Intercepteur global : émet momento:stats-refresh après toute mutation
-  // sur les routes qui affectent les stats (planners, steps, vendors)
   useEffect(() => {
     const WATCHED = ["/api/planners", "/api/steps", "/api/vendor", "/api/contact"]
     const MUTATE  = ["POST", "PUT", "PATCH", "DELETE"]
@@ -138,14 +137,15 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
     return () => { window.fetch = original }
   }, []);
 
-  // Rafraîchit les planners dans la sidebar sur evento stats-refresh
+  // Rafraîchit les planners + unread sur stats-refresh
   useEffect(() => {
     function refresh() {
-      fetch("/api/planners").then(r => r.json()).then(d => Array.isArray(d) ? setPlanners(d) : null).catch(() => {})
+      fetch("/api/planners").then(r => r.ok ? r.json() : null).then(d => { if (Array.isArray(d)) setPlanners(d) }).catch(() => {})
+      fetch("/api/unread").then(r => r.ok ? r.json() : null).then(d => { if (d) setUnread(d) }).catch(() => {})
     }
     window.addEventListener("momento:stats-refresh", refresh)
     return () => window.removeEventListener("momento:stats-refresh", refresh)
-  }, [setPlanners]);
+  }, []);
 
   function isActive(href: string) {
     return pathname.startsWith(href);
@@ -182,10 +182,10 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       )}
 
       <aside
-        className={`fixed md:sticky top-0 z-30 md:z-auto h-screen flex flex-col py-5 px-3 transition-transform duration-300
+        className={`fixed md:sticky top-0 z-30 md:z-auto h-screen flex flex-col py-5 px-3 transition-transform duration-200
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
           w-56 md:w-56 pt-[4.5rem] md:pt-5`}
-        style={{ backgroundColor: C.dark, borderRight: `1px solid ${C.anthracite}` }}
+        style={{ backgroundColor: C.dark, borderRight: `1px solid ${C.anthracite}`, willChange: "transform" }}
       >
         {/* DarkModeToggle + lien site public */}
         <div className="px-2 mb-5 flex items-center justify-between gap-2">
@@ -193,7 +193,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           <Link
             href="/prestataires"
             onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-lg transition-all hover:opacity-90"
+            className="flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-lg transition-[background-color,color,opacity] hover:opacity-90"
             style={{ backgroundColor: `var(--momento-terra)`, color: "#fff" }}
           >
             <Store size={12} />
@@ -207,7 +207,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           <Link
             href="/accueil"
             onClick={() => setSidebarOpen(false)}
-            className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90 mb-1"
+            className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-[background-color,color,opacity] hover:opacity-90 mb-1"
             style={{
               backgroundColor: pathname === "/accueil" ? C.terra : "transparent",
               color: pathname === "/accueil" ? "#fff" : C.mist,
@@ -230,7 +230,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
               <Link
                 href="/event/new"
                 title="Créer un événement"
-                className="rounded-lg p-1 transition-all hover:opacity-70"
+                className="rounded-lg p-1 transition-opacity hover:opacity-70"
                 style={{ color: C.terra }}
               >
                 <Plus size={13} />
@@ -251,7 +251,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
                     key={p.id}
                     href={href}
                     onClick={() => setSidebarOpen(false)}
-                    className="group block rounded-xl overflow-hidden transition-all hover:scale-[1.02]"
+                    className="group block rounded-xl overflow-hidden transition-[transform,box-shadow,border-color,background-color] hover:scale-[1.02]"
                     style={{
                       backgroundColor: active ? `${color}22` : `${C.anthracite}60`,
                       border: `1px solid ${active ? color : `${C.anthracite}`}`,
@@ -350,7 +350,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
                 key={href}
                 href={href}
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-[background-color,color,opacity] hover:opacity-90"
                 style={{
                   backgroundColor: active ? C.terra : "transparent",
                   color: active ? "#fff" : C.mist,
@@ -389,7 +389,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
                 key={href}
                 href={href}
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-90"
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-[background-color,color,opacity] hover:opacity-90"
                 style={{
                   backgroundColor: active ? C.terra : "transparent",
                   color: active ? "#fff" : C.mist,
@@ -407,7 +407,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           <div className="mt-3 px-1">
             <Link
               href="/prestataire/dashboard"
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:opacity-90"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-[background-color,color,opacity] hover:opacity-90"
               style={{
                 backgroundColor: `${C.terra}18`,
                 color: C.terra,

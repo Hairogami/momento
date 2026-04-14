@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages",
+      "WebFetch(domain:antigravity.google)",
+      "WebSearch",
+      "WebFetch(domain:www.bram.us)",
+      "WebFetch(domain:www.pixeldarts.com)",
+      "WebFetch(domain:websensepro.com)",
+      "WebFetch(domain:codepen.io)",
+      "Bash(npx next:*)",
+      "Bash(npm run:*)",
+      "Bash(taskkill /PID 19780 /F)"
+    ]
+  }
+}

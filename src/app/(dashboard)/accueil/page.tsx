@@ -26,7 +26,7 @@ export default function AccueilPage() {
 
   useEffect(() => {
     fetch("/api/planners")
-      .then(r => r.json())
+      .then(r => r.ok ? r.json() : null)
       .then((data: unknown) => { if (Array.isArray(data)) setPlanners(data as Planner[]) })
       .catch(() => {})
       .finally(() => setLoaded(true))
