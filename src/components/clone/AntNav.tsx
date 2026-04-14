@@ -47,7 +47,7 @@ function GsIcon({ icon, size = 16, color }: { icon: string; size?: number; color
 
 export default function AntNav() {
   const [scrolled, setScrolled]     = useState(false)
-  const [dark, setDark]             = useState(false)
+  const [dark, setDark]             = useState(true)
   const [menuOpen, setMenuOpen]     = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [paletteIdx, setPaletteIdx]   = useState(0)
@@ -58,8 +58,18 @@ export default function AntNav() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
+  // Sync avec le localStorage partagé (même clé que DashSidebar)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("momento_clone_dark_mode")
+      if (saved !== null) setDark(JSON.parse(saved))
+    } catch {}
+  }, [])
+
   useEffect(() => {
     document.documentElement.classList.toggle("clone-dark", dark)
+    document.documentElement.classList.toggle("dark", dark)
+    try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(dark)) } catch {}
   }, [dark])
 
   useEffect(() => {

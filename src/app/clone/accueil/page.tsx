@@ -47,17 +47,17 @@ export default function CloneAccueilPage() {
   }, [])
 
   return (
-    <div className="ant-root" style={{ minHeight: "100vh", background: "#f7f7fb", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <AntNav />
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 24px 80px" }}>
 
         {/* Greeting */}
         <div style={{ marginBottom: 36 }}>
-          <h1 style={{ fontSize: "clamp(1.8rem,3.5vw,2.6rem)", fontWeight: 700, color: "#121317", letterSpacing: "-0.02em", margin: "0 0 6px" }}>
+          <h1 style={{ fontSize: "clamp(1.8rem,3.5vw,2.6rem)", fontWeight: 700, color: "var(--dash-text,#121317)", letterSpacing: "-0.02em", margin: "0 0 6px" }}>
             Bonjour {loaded ? firstName : "…"} 👋
           </h1>
-          <p style={{ fontSize: 14, color: "#6a6a71", margin: 0 }}>
+          <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
             Bienvenue sur Momento. Retrouvez tous vos événements en un coup d&apos;œil.
           </p>
         </div>
@@ -68,19 +68,19 @@ export default function CloneAccueilPage() {
             <Link key={q.label} href={q.href} className="clone-card-white" style={{
               display: "flex", alignItems: "center", gap: 10,
               padding: "14px 16px", borderRadius: 14,
-              background: "#fff", border: "1px solid rgba(183,191,217,0.2)",
+              background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
               textDecoration: "none", transition: "box-shadow 0.15s",
               boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
             }}>
               <span style={{ fontSize: 20 }}>{q.emoji}</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#121317" }}>{q.label}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{q.label}</span>
             </Link>
           ))}
         </div>
 
         {/* Events section */}
         <div style={{ marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: "#121317", margin: 0 }}>Mes événements</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Mes événements</h2>
           <Link href="/clone/planner" style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             padding: "8px 16px", borderRadius: 999,
@@ -98,40 +98,40 @@ export default function CloneAccueilPage() {
             return (
               <Link key={p.id} href="/clone/dashboard" style={{ textDecoration: "none" }}>
                 <div className="clone-card-white" style={{
-                  background: "#fff", borderRadius: 20,
-                  border: "1px solid rgba(183,191,217,0.15)",
+                  background: "var(--dash-surface,#fff)", borderRadius: 20,
+                  border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
                   boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
                   overflow: "hidden", transition: "box-shadow 0.2s",
                 }}>
                   {/* Color band */}
                   <div style={{ height: 6, background: color }} />
                   <div style={{ padding: "20px 20px 18px" }}>
-                    <p style={{ fontSize: 15, fontWeight: 700, color: "#121317", margin: "0 0 4px" }}>{name}</p>
+                    <p style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 4px" }}>{name}</p>
                     {date && (
-                      <p style={{ fontSize: 12, color: "#6a6a71", margin: "0 0 14px" }}>{formatDate(date)}</p>
+                      <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 14px" }}>{formatDate(date)}</p>
                     )}
                     <div style={{ display: "flex", gap: 16 }}>
                       {days !== null && (
                         <div>
-                          <p style={{ fontSize: 20, fontWeight: 700, color: "#121317", margin: 0,
+                          <p style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0,
                             backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                             {days}
                           </p>
-                          <p style={{ fontSize: 10, color: "#9a9aaa", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>jours</p>
+                          <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>jours</p>
                         </div>
                       )}
                       {p.budget && (
                         <div>
-                          <p style={{ fontSize: 20, fontWeight: 700, color: "#121317", margin: 0 }}>
+                          <p style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                             {p.budget.toLocaleString("fr-MA")}
                           </p>
-                          <p style={{ fontSize: 10, color: "#9a9aaa", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>budget MAD</p>
+                          <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>budget MAD</p>
                         </div>
                       )}
                       {p.guestCount && (
                         <div>
-                          <p style={{ fontSize: 20, fontWeight: 700, color: "#121317", margin: 0 }}>{p.guestCount}</p>
-                          <p style={{ fontSize: 10, color: "#9a9aaa", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>invités</p>
+                          <p style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>{p.guestCount}</p>
+                          <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>invités</p>
                         </div>
                       )}
                     </div>
@@ -144,7 +144,7 @@ export default function CloneAccueilPage() {
           {/* Add event card */}
           <Link href="/clone/planner" style={{ textDecoration: "none" }}>
             <div className="clone-card-white" style={{
-              background: "#fff", borderRadius: 20,
+              background: "var(--dash-surface,#fff)", borderRadius: 20,
               border: "1px dashed rgba(183,191,217,0.5)",
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
               padding: "32px 24px", textAlign: "center", minHeight: 130,
@@ -156,15 +156,15 @@ export default function CloneAccueilPage() {
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 20,
               }}>+</div>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "#121317", margin: "0 0 4px" }}>Créer un événement</p>
-              <p style={{ fontSize: 11, color: "#9a9aaa", margin: 0 }}>Mariage, anniversaire, corporate…</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 4px" }}>Créer un événement</p>
+              <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Mariage, anniversaire, corporate…</p>
             </div>
           </Link>
         </div>
 
         {/* CTA explore */}
         <div style={{
-          background: "#121317", borderRadius: 24, padding: "32px 32px",
+          background: "var(--dash-surface-dark,#121317)", borderRadius: 24, padding: "32px 32px",
           display: "flex", alignItems: "center", justifyContent: "space-between",
           gap: 24, flexWrap: "wrap",
         }}>
