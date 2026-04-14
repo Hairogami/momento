@@ -52,7 +52,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
       <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 18 }}>
         {/* SVG Donut */}
         <div style={{ position: "relative", flexShrink: 0 }}>
-          <svg width={96} height={96} viewBox="0 0 100 100" style={{ overflow: "visible" }}>
+          <svg width={96} height={96} viewBox="0 0 100 100" style={{ overflow: "hidden", display: "block" }}>
             <defs>
               <linearGradient id="bgt-used-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="var(--g1,#E11D48)" />
@@ -77,7 +77,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
               strokeDasharray={CIRC}
               strokeDashoffset={CIRC}
               transform="rotate(-90 50 50)"
-              style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)", transformOrigin: "50px 50px" }}
+              style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)" }}
             />
           </svg>
           <div style={{
