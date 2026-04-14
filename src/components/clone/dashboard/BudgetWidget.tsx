@@ -1,5 +1,4 @@
 "use client"
-import { useEffect, useRef } from "react"
 
 export type BudgetItem = {
   label: string
@@ -16,7 +15,6 @@ interface BudgetWidgetProps {
 }
 
 export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps) {
-  const circleRef = useRef<SVGCircleElement>(null)
   const remaining = Math.max(0, total - spent)
   const pct = total > 0 ? Math.min(1, spent / total) : 0
   const isOverBudget = spent > total
@@ -24,12 +22,6 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
   const R = 42
   const CIRC = 2 * Math.PI * R
   const dash = CIRC * pct
-
-  useEffect(() => {
-    if (!circleRef.current) return
-    // Animate on mount
-    circleRef.current.style.strokeDashoffset = String(CIRC - dash)
-  }, [CIRC, dash])
 
   return (
     <div style={{ padding: "22px 24px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
@@ -69,16 +61,15 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
             />
             {/* Progress */}
             <circle
-              ref={circleRef}
               cx={50} cy={50} r={R}
               fill="none"
               stroke={isOverBudget ? "#ef4444" : "url(#bgt-used-grad)"}
               strokeWidth={11}
               strokeLinecap="round"
               strokeDasharray={CIRC}
-              strokeDashoffset={CIRC}
+              strokeDashoffset={CIRC - dash}
               transform="rotate(-90 50 50)"
-              style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)", transformOrigin: "50px 50px" }}
+              style={{ transformOrigin: "50px 50px" }}
             />
           </svg>
           <div style={{
