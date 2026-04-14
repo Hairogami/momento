@@ -16,7 +16,7 @@ export default function CloneLayout({ children }: { children: React.ReactNode })
         rel="stylesheet"
       />
       <link
-        href="https://fonts.googleapis.com/css2?family=Google+Symbols:opsz,wght,FILL,GRAD,ROND@40..48,300,0..1,0,50&display=block"
+        href="https://fonts.googleapis.com/css2?family=Google+Symbols:opsz,wght,FILL,GRAD,ROND@40..48,300,0..1,0,50&display=swap"
         rel="stylesheet"
       />
       <style>{`
