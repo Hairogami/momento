@@ -66,7 +66,7 @@ vercel env pull .env.local                        # sync env vars
 | Nouveau milestone / epic | `gsd-new-milestone` |
 | Planifier une phase | `gsd-research-phase` → `gsd-discuss-phase` → `gsd-plan-phase` |
 | Lister les hypothèses d'une phase | `gsd-list-phase-assumptions` |
-| Brainstorming feature / solution | `brainstorm` |
+| Brainstorming feature / solution | `superpowers:brainstorming` (⚠️ ancien nom `brainstorm` déprécié) |
 | Écrire un plan structuré | `write-plan` |
 | Analyser les dépendances | `gsd-analyze-dependencies` |
 

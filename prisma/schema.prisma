@@ -44,6 +44,7 @@ model User {
   favorites           Favorite[]
   notifications       Notification[]
   settings            UserSettings?
+  vendorTemplates     VendorTemplate[]
 }
 
 model UserSettings {
@@ -503,4 +504,33 @@ model Notification {
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   planner Planner? @relation(fields: [plannerId], references: [id], onDelete: SetNull)
+}
+
+// ─── DASHBOARD PRESTATAIRE (Phase 1) ─────────────────────────────────────────
+
+model VendorEvent {
+  id         String   @id @default(cuid())
+  vendorSlug String
+  type       String   // "view" | "contact_click" | "phone_click" | "whatsapp_click" | "instagram_click" | "facebook_click"
+  sessionId  String?  // cookie anonyme, dédup 30min (pas d'IP stockée)
+  referrer   String?
+  createdAt  DateTime @default(now())
+
+  @@index([vendorSlug, type, createdAt])
+  @@index([vendorSlug, createdAt])
+}
+
+model VendorTemplate {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String   // ex: "Dispo week-end", "Tarifs standard"
+  body      String   // corps du message
+  lang      String   @default("fr") // "fr" | "ar" | "darija"
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, order])
 }
