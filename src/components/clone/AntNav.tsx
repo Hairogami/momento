@@ -241,7 +241,7 @@ export default function AntNav({
 
           {/* Logo — flex-1 pour équilibrer avec les controls */}
           <div className="flex-1 flex items-center min-w-0">
-            <Link href={isLoggedIn ? "/accueil" : "/"} className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <MomentoLogo size={28} dark={dark} />
               <span style={{ fontSize: 14, fontWeight: 500, color: heading, letterSpacing: "-0.01em" }}>Momento</span>
             </Link>
