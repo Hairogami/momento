@@ -534,3 +534,21 @@ model VendorTemplate {
 
   @@index([userId, order])
 }
+
+// ─── ADMIN AUDIT LOG ──────────────────────────────────────────────────────────
+// Trace chaque action admin (édition Vendor, promotion role, etc.) pour
+// traçabilité + rollback manuel. Pas de relation inverse : log append-only,
+// jamais requêté depuis User.
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  adminId    String   // userId de l'admin qui a fait l'action
+  adminEmail String   // snapshot email (au cas où user supprimé)
+  action     String   // "vendor.update" | "vendor.delete" | "user.promote" | etc.
+  targetType String   // "Vendor" | "User" | ...
+  targetId   String   // id ou slug de l'entité touchée
+  changes    Json?    // { field: { from, to }, ... } — diff des champs modifiés
+  createdAt  DateTime @default(now())
+
+  @@index([adminId, createdAt])
+  @@index([targetType, targetId, createdAt])
+}
