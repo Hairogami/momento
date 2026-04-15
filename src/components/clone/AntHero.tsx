@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import AntConfetti from "./AntConfetti"
+import AntFireworks from "./AntFireworks"
 import Link from "next/link"
 
 type WordDef = { text: string; color: string }
@@ -109,6 +110,7 @@ export default function AntHero() {
       style={{ minHeight: "100dvh", backgroundColor: "var(--dash-bg,#fff)", paddingTop: 56 }}
     >
       <AntConfetti count={170} dark={false} />
+      <AntFireworks minInterval={1600} maxInterval={3200} sparkCount={90} />
 
       <div className="relative z-10 flex flex-col items-center gap-5 px-4" style={{ maxWidth: 1100 }}>
         {/* Brand badge */}
