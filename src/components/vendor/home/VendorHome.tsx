@@ -13,6 +13,7 @@
  */
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import CalendarWidget from "@/components/vendor/calendar/CalendarWidget"
 
 type Period = "today" | "7d" | "30d" | "custom"
 
@@ -118,6 +119,9 @@ export default function VendorHome({ publicSlug, vendorName }: { publicSlug: str
           <ScoreCard completion={completion} />
         </Card>
       </div>
+
+      {/* Calendrier privé — pipeline par date */}
+      <CalendarWidget />
 
       {/* Preview fiche publique */}
       <Card title="Votre fiche publique" subtitle={`/vendor/${publicSlug}`}>
