@@ -1,7 +1,8 @@
 "use client"
 import { useEffect, useRef } from "react"
 
-const COLORS_LIGHT = ["#C4B5FD","#A5B4FC","#93C5FD","#6EE7B7","#FDE68A","#F9A8D4","#DDD6FE","#BAE6FD"]
+// Palette brand saturée — lisible sur fond blanc ET sombre
+const COLORS_LIGHT = ["#E11D48","#9333EA","#BE185D","#EC4899","#F59E0B","#A855F7","#6366F1","#DB2777"]
 const COLORS_DARK  = ["#3B82F6","#60A5FA","#93C5FD","#1D4ED8","#2563EB","#818CF8","#38BDF8"]
 
 interface Particle {
@@ -19,7 +20,7 @@ function makeParticles(w: number, h: number, count: number, dark: boolean): Part
     h: Math.random() * 7 + 3,
     angle: Math.random() * Math.PI * 2,
     color: colors[Math.floor(Math.random() * colors.length)],
-    opacity: dark ? Math.random() * 0.8 + 0.2 : Math.random() * 0.55 + 0.15,
+    opacity: dark ? Math.random() * 0.8 + 0.2 : Math.random() * 0.45 + 0.55,
     vx: (Math.random() - 0.5) * 0.18,
     vy: (Math.random() - 0.5) * 0.18,
     va: (Math.random() - 0.5) * 0.004,
