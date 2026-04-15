@@ -43,6 +43,34 @@ model User {
   vendorClaimRequests VendorClaimRequest[]
   favorites           Favorite[]
   notifications       Notification[]
+  settings            UserSettings?
+}
+
+model UserSettings {
+  id                String     @id @default(cuid())
+  userId            String     @unique
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Notifications (JSON pour rester flexible côté front)
+  notifEmail        Json       @default("{\"messages\":true,\"contact\":true,\"reminders\":true,\"promo\":false}")
+  notifPush         Json       @default("{\"messages\":true,\"contact\":true,\"reminders\":false,\"promo\":false}")
+
+  // Apparence
+  theme             String     @default("auto")    // light | dark | auto
+  palette           String     @default("default")
+  language          String     @default("fr")      // fr | en | ar
+
+  // Sécurité
+  twoFactorEnabled  Boolean    @default(false)
+
+  // Vendor-only
+  isOnVacation      Boolean    @default(false)
+  vacationMessage   String?
+  serviceCities     String[]   @default([])
+  unavailableDates  DateTime[] @default([])
+
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 }
 
 model Account {

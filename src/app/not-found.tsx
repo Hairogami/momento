@@ -1,55 +1,77 @@
-import Link from "next/link";
-import { C } from "@/lib/colors"
-
-;
+import Link from "next/link"
 
 export default function NotFound() {
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ backgroundColor: C.ink }}
-    >
-      <div className="text-center max-w-md">
-        <h1
-          className="text-8xl font-light italic mb-4"
-          style={{
-            fontFamily:
-              "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif",
-            color: C.terra,
-          }}
-        >
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "24px",
+      background: "var(--dash-bg,#f7f7fb)",
+    }}>
+      <div style={{ textAlign: "center", maxWidth: 480 }}>
+        {/* 404 */}
+        <div style={{
+          fontSize: "clamp(80px,15vw,140px)",
+          fontWeight: 800,
+          letterSpacing: "-0.06em",
+          lineHeight: 1,
+          background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          marginBottom: 16,
+          fontFamily: "var(--font-cormorant),'Cormorant Garamond',Georgia,serif",
+          fontStyle: "italic",
+        }}>
           404
-        </h1>
-        <h2
-          className="text-2xl font-semibold mb-2"
-          style={{ color: C.white }}
-        >
+        </div>
+
+        <h1 style={{
+          fontSize: "clamp(1.2rem,3vw,1.6rem)",
+          fontWeight: 700,
+          color: "var(--dash-text,#121317)",
+          margin: "0 0 10px",
+          letterSpacing: "-0.02em",
+        }}>
           Page introuvable
-        </h2>
-        <p className="text-sm mb-8" style={{ color: C.mist }}>
-          La page que vous cherchez n&apos;existe pas ou a ete deplacee.
+        </h1>
+        <p style={{
+          fontSize: 14,
+          color: "var(--dash-text-2,#6a6a71)",
+          margin: "0 0 32px",
+          lineHeight: 1.6,
+        }}>
+          La page que vous cherchez n&apos;existe pas ou a été déplacée.
         </p>
-        <div className="flex items-center justify-center gap-3">
-          <Link
-            href="/"
-            className="px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
-            style={{ backgroundColor: C.terra }}
-          >
-            Retour a l&apos;accueil
+
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <Link href="/" style={{
+            padding: "11px 24px",
+            borderRadius: 999,
+            background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+            color: "#fff",
+            fontSize: 13,
+            fontWeight: 600,
+            textDecoration: "none",
+          }}>
+            Retour à l&apos;accueil
           </Link>
-          <Link
-            href="/explore"
-            className="px-6 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-80"
-            style={{
-              backgroundColor: "transparent",
-              color: C.white,
-              border: `1px solid ${C.anthracite}`,
-            }}
-          >
+          <Link href="/explore" style={{
+            padding: "11px 24px",
+            borderRadius: 999,
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+            color: "var(--dash-text,#121317)",
+            fontSize: 13,
+            fontWeight: 500,
+            textDecoration: "none",
+            background: "var(--dash-surface,#fff)",
+          }}>
             Explorer
           </Link>
         </div>
       </div>
     </div>
-  );
+  )
 }

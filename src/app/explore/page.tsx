@@ -1,856 +1,623 @@
 "use client"
+import { useState, useEffect, useMemo, useRef } from "react"
+import AntNav from "@/components/clone/AntNav"
+import AntVendorCard from "@/components/clone/AntVendorCard"
+import { VENDOR_BASIC, VENDOR_COUNT, VENDORS_WITH_PHOTO } from "@/lib/vendorData"
 
-import React, { useState, useMemo, useEffect, useRef, Suspense } from "react"
-import Link from "next/link"
-import dynamic from "next/dynamic"
-import { useSearchParams } from "next/navigation"
-import { Search, MapPin, Star, X, ChevronDown, ChevronLeft, ChevronRight, Plus, Check, Heart, SlidersHorizontal, Map } from "lucide-react"
-import { MomentoLogo } from "@/components/MomentoLogo"
-import NavAuthButtons from "@/components/NavAuthButtons"
-import { DarkModeToggle } from "@/components/DarkModeToggle"
-import Footer from "@/components/Footer"
-import { useSession } from "next-auth/react"
-import { VENDOR_BASIC, VENDORS_WITH_PHOTO } from "@/lib/vendorData"
-import { VENDOR_DETAILS } from "@/lib/vendorDetails"
-import { C } from "@/lib/colors"
-
-const ExploreMap = dynamic(() => import("@/components/ExploreMap"), { ssr: false })
-
-// Category cover images (Unsplash)
-const CAT_IMAGES: Record<string, string> = {
-  "DJ":                            "https://images.unsplash.com/photo-1571266028243-d220c6a18571?w=400&h=300&fit=crop&q=75",
-  "Chanteur / chanteuse":          "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=300&fit=crop&q=75",
-  "Orchestre":                     "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop&q=75",
-  "Violoniste":                    "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=400&h=300&fit=crop&q=75",
-  "Dekka Marrakchia / Issawa":     "https://images.unsplash.com/photo-1504898770365-14faca6a7320?w=400&h=300&fit=crop&q=75",
-  "Traiteur":                      "https://images.unsplash.com/photo-1555244162-803834f70033?w=400&h=300&fit=crop&q=75",
-  "Pâtissier / Cake designer":     "https://images.unsplash.com/photo-1535141192574-5f39a5847d0a?w=400&h=300&fit=crop&q=75",
-  "Service de bar / mixologue":    "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=400&h=300&fit=crop&q=75",
-  "Photographe":                   "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=300&fit=crop&q=75",
-  "Vidéaste":                      "https://images.unsplash.com/photo-1601506521793-dc748fc80b67?w=400&h=300&fit=crop&q=75",
-  "Lieu de réception":             "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&q=75",
-  "Structures événementielles":    "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&h=300&fit=crop&q=75",
-  "Fleuriste événementiel":        "https://images.unsplash.com/photo-1487530811015-780b63e1b5a7?w=400&h=300&fit=crop&q=75",
-  "Décorateur":                    "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=300&fit=crop&q=75",
-  "Créateur d'ambiance lumineuse": "https://images.unsplash.com/photo-1508997449629-303059a039c0?w=400&h=300&fit=crop&q=75",
-  "Hairstylist":                   "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=300&fit=crop&q=75",
-  "Makeup Artist":                 "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&h=300&fit=crop&q=75",
-  "Neggafa":                       "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&h=300&fit=crop&q=75",
-  "Robes de mariés":               "https://images.unsplash.com/photo-1594552072238-b8a33785b6cd?w=400&h=300&fit=crop&q=75",
-  "Event planner":                 "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=300&fit=crop&q=75",
-  "Wedding planner":               "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=300&fit=crop&q=75",
-  "Location de voiture de mariage":"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=300&fit=crop&q=75",
-  "VTC / Transport invités":       "https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=400&h=300&fit=crop&q=75",
-  "Sécurité événementielle":       "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop&q=75",
-  "Animateur enfants":             "https://images.unsplash.com/photo-1558171813-13b498fa0b47?w=400&h=300&fit=crop&q=75",
-  "Magicien":                      "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=400&h=300&fit=crop&q=75",
-  "Structures gonflables":         "https://images.unsplash.com/photo-1575783970733-1aaedde1db74?w=400&h=300&fit=crop&q=75",
-  "Créateur de cadeaux invités":   "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400&h=300&fit=crop&q=75",
-  "Créateur de faire-part":        "https://images.unsplash.com/photo-1572862881989-53f82a89e668?w=400&h=300&fit=crop&q=75",
-  "Spa / soins esthétiques":       "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=300&fit=crop&q=75",
-  "Jeux & animations enfants":     "https://images.unsplash.com/photo-1576515652033-4cb4ae1c67ed?w=400&h=300&fit=crop&q=75",
-}
-
-// Icônes par catégorie (fallback)
-const CAT_ICONS: Record<string, string> = {
-  "DJ": "🎧",
-  "Chanteur / chanteuse": "🎤",
-  "Orchestre": "🎺",
-  "Violoniste": "🎻",
-  "Dekka Marrakchia / Issawa": "🥁",
-  "Traiteur": "🍽️",
-  "Pâtissier / Cake designer": "🎂",
-  "Service de bar / mixologue": "🍹",
-  "Photographe": "📸",
-  "Vidéaste": "🎬",
-  "Lieu de réception": "🏛️",
-  "Structures événementielles": "⛺",
-  "Fleuriste événementiel": "💐",
-  "Décorateur": "✨",
-  "Créateur d'ambiance lumineuse": "💡",
-  "Hairstylist": "💇",
-  "Makeup Artist": "💄",
-  "Neggafa": "👑",
-  "Robes de mariés": "👗",
-  "Event planner": "📋",
-  "Wedding planner": "💍",
-  "Location de voiture de mariage": "🚗",
-  "VTC / Transport invités": "🚌",
-  "Sécurité événementielle": "🛡️",
-  "Animateur enfants": "🎪",
-  "Magicien": "🎩",
-  "Structures gonflables": "🎈",
-  "Créateur de cadeaux invités": "🎁",
-  "Créateur de faire-part": "📜",
-  "Spa / soins esthétiques": "🧖",
-  "Jeux & animations enfants": "🎡",
-}
-
-// Mapping event type → recommended vendor categories
-const EVENT_CATS: Record<string, string[]> = {
-  "Mariage":       ["Photo & Vidéo", "Musique & DJ", "Traiteur", "Lieu", "Décor & Lumières", "Beauté", "Planification", "Transport", "Cadeaux & Papeterie"],
-  "Anniversaire":  ["Traiteur", "Musique & DJ", "Animation", "Décor & Lumières"],
-  "Soutenance":    ["Photo & Vidéo", "Traiteur"],
-  "Baby shower":   ["Décor & Lumières", "Traiteur", "Animation"],
-  "Fiançailles":   ["Photo & Vidéo", "Traiteur", "Décor & Lumières", "Beauté"],
-  "Cérémonie":     ["Musique & DJ", "Photo & Vidéo", "Décor & Lumières"],
-  "Fête privée":   ["Musique & DJ", "Traiteur", "Animation", "Décor & Lumières"],
-  "Corporate":     ["Photo & Vidéo", "Traiteur", "Décor & Lumières", "Planification"],
-}
-
-// Catégories majeures avec sous-catégories
-const MAJOR_CATS = [
-  {
-    slug: "musique-son",
-    icon: "🎵",
-    label: "Musique & Son",
-    sub: ["DJ", "Chanteur / chanteuse", "Orchestre", "Violoniste", "Dekka Marrakchia / Issawa"],
-  },
-  {
-    slug: "gastronomie",
-    icon: "🍽️",
-    label: "Gastronomie",
-    sub: ["Traiteur", "Pâtissier / Cake designer", "Service de bar / mixologue"],
-  },
-  {
-    slug: "photo-video",
-    icon: "📸",
-    label: "Photo & Vidéo",
-    sub: ["Photographe", "Vidéaste"],
-  },
-  {
-    slug: "lieu-espace",
-    icon: "🏛️",
-    label: "Lieu & Espace",
-    sub: ["Lieu de réception", "Structures événementielles"],
-  },
-  {
-    slug: "decor-ambiance",
-    icon: "✨",
-    label: "Décor & Ambiance",
-    sub: ["Décorateur", "Fleuriste événementiel", "Créateur d'ambiance lumineuse"],
-  },
-  {
-    slug: "beaute-style",
-    icon: "💄",
-    label: "Beauté & Style",
-    sub: ["Hairstylist", "Makeup Artist", "Neggafa", "Robes de mariés", "Spa / soins esthétiques"],
-  },
-  {
-    slug: "planification",
-    icon: "📋",
-    label: "Planification",
-    sub: ["Event planner", "Wedding planner"],
-  },
-  {
-    slug: "animation",
-    icon: "🎪",
-    label: "Animation",
-    sub: ["Animateur enfants", "Magicien", "Structures gonflables", "Jeux & animations enfants"],
-  },
-  {
-    slug: "transport",
-    icon: "🚗",
-    label: "Transport",
-    sub: ["Location de voiture de mariage", "VTC / Transport invités"],
-  },
-  {
-    slug: "securite",
-    icon: "🛡️",
-    label: "Sécurité",
-    sub: ["Sécurité événementielle"],
-  },
-  {
-    slug: "cadeaux-papeterie",
-    icon: "🎁",
-    label: "Cadeaux & Papeterie",
-    sub: ["Créateur de cadeaux invités", "Créateur de faire-part"],
-  },
-]
-
-// Flat FILTER_CATS kept for backward-compat (used in filtered logic)
-const FILTER_CATS = MAJOR_CATS.map(m => ({ slug: m.slug, icon: m.icon, label: m.label, match: m.sub }))
-
-const CITIES = ["Toutes les villes", "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Meknès", "Agadir", "Kénitra", "El Jadida", "Mohammedia", "Oujda", "Tétouan", "Salé", "Béni Mellal", "Essaouira", "Khémisset", "Laâyoune", "Dakhla", "Settat", "Nador", "Ouarzazate", "Safi", "Tiznit", "Khouribga", "Errachidia", "Guelmim", "Berkane", "Al Hoceima", "Ifrane", "Chefchaouen", "Taroudant", "Azrou", "Figuig", "Témara", "Skhirat", "Asilah", "Ourika", "Bouznika", "Martil", "Saïdia"]
-
-// Fallback statique — utilisé si l'API échoue ou pendant le chargement
-const VENDORS_FALLBACK = Object.entries(VENDOR_BASIC).map(([id, v]) => ({ id, ...v }))
-
-// Alias pour la rétrocompatibilité du type
-const VENDORS = VENDORS_FALLBACK
-
-// Type partagé pour un vendor (compatible fallback + API)
-type VendorEntry = { id: string; name: string; category: string; city: string; rating: number }
-
-// Two extra ambiance photos used as slides 2 & 3 for every vendor
-const EXTRA_PHOTOS = [
-  "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&h=600&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=600&fit=crop&q=80",
-]
-
-function getVendorPhotos(vendorId: string, cat: string): string[] {
-  const detail = VENDOR_DETAILS[vendorId]
-  if (detail?.photos?.length) {
-    // Use real vendor photos + fill to 3 if needed
-    const photos = detail.photos.slice(0, 3)
-    while (photos.length < 3) photos.push(CAT_IMAGES[cat] ?? EXTRA_PHOTOS[0])
-    return photos
-  }
-  const main = CAT_IMAGES[cat]
-  return [main ?? EXTRA_PHOTOS[0], EXTRA_PHOTOS[0], EXTRA_PHOTOS[1]]
-}
-
-// ─── VendorCard (Airbnb-style) ────────────────────────────────────
-function VendorCard({
-  v, isFav, onToggleFav, isAdded, onAdd, onCoupDeCoeur, showEventBtn,
-}: {
-  v: VendorEntry
-  isFav: boolean
-  onToggleFav: (e: React.MouseEvent) => void
-  isAdded: boolean
-  onAdd: () => void
-  onCoupDeCoeur: (e: React.MouseEvent) => void
-  showEventBtn: boolean
+// ── PillSelect — custom dropdown styled avec les tokens de la page ───────────
+function PillSelect({ value, onChange, options, placeholder }: {
+  value: string
+  onChange: (v: string) => void
+  options: { value: string; label: string }[]
+  placeholder: string
 }) {
-  const [imgIdx, setImgIdx] = useState(0)
-  const [hovered, setHovered] = useState(false)
-  const photos = getVendorPhotos(v.id, v.category)
-  const isCoupDeCoeur = v.rating === 5
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const current = options.find(o => o.value === value)
 
-  function prev(e: React.MouseEvent) {
-    e.preventDefault(); e.stopPropagation()
-    setImgIdx(i => (i - 1 + photos.length) % photos.length)
-  }
-  function next(e: React.MouseEvent) {
-    e.preventDefault(); e.stopPropagation()
-    setImgIdx(i => (i + 1) % photos.length)
-  }
+  useEffect(() => {
+    if (!open) return
+    function onOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", onOutside)
+    return () => document.removeEventListener("mousedown", onOutside)
+  }, [open])
 
   return (
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} className="group transition-transform duration-200 hover:-translate-y-0.5">
-
-      {/* ── Image ── */}
-      <div className="relative aspect-square rounded-2xl overflow-hidden mb-3 ring-2 ring-transparent group-hover:ring-[var(--momento-terra)] transition-all duration-200">
-        <Link href={`/vendor/${v.id}`} className="block w-full h-full">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={photos[imgIdx]} alt={v.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-            onError={e => { const t = e.currentTarget; if (!t.dataset.fallback) { t.dataset.fallback = "1"; t.src = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=600&fit=crop&q=80" } }}
-          />
-        </Link>
-
-        {/* Heart */}
-        <button onClick={onToggleFav} className="absolute top-3 right-3 z-10 transition-transform hover:scale-110" aria-label="Favoris">
-          <Heart size={22} fill={isFav ? C.terra : "rgba(0,0,0,0.25)"} stroke={isFav ? C.terra : "#fff"} strokeWidth={1.5} />
-        </button>
-
-        {/* Photo badge */}
-        {VENDORS_WITH_PHOTO.has(v.id) && (
-          <div className="absolute top-3 left-3 z-10 text-[10px] font-bold px-2 py-1 rounded-full"
-            style={{ backgroundColor: "rgba(0,0,0,0.45)", color: "#fff" }}>
-            📷
-          </div>
-        )}
-
-        {/* Coup de cœur badge */}
-        {isCoupDeCoeur && (
-          <button onClick={onCoupDeCoeur}
-            className="absolute bottom-3 left-3 z-10 text-xs font-bold px-3 py-1.5 rounded-full shadow-md transition-transform hover:scale-105"
-            style={{ backgroundColor: C.dark, color: C.white, border: `1px solid ${C.anthracite}` }}>
-            ✦ Coup de cœur
-          </button>
-        )}
-
-        {/* Dot indicators */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-10 pointer-events-none">
-          {photos.map((_, i) => (
-            <div key={i} className="rounded-full transition-all"
-              style={{ width: i === imgIdx ? 6 : 5, height: i === imgIdx ? 6 : 5, backgroundColor: i === imgIdx ? "#fff" : "rgba(255,255,255,0.5)" }} />
+    <div ref={ref} style={{ position: "relative", flexShrink: 0 }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          height: 40, padding: "0 14px",
+          border: `1px solid ${open ? "rgba(225,29,72,0.5)" : "var(--dash-border,rgba(183,191,217,0.35))"}`,
+          borderRadius: 999,
+          background: "var(--dash-input-bg,#fafafa)",
+          fontSize: 13, color: value ? "var(--dash-text,#121317)" : "var(--dash-text-3,#9a9aaa)",
+          cursor: "pointer", fontFamily: "inherit",
+          display: "flex", alignItems: "center", gap: 6,
+          whiteSpace: "nowrap", transition: "border-color 0.15s",
+        }}
+      >
+        {current?.label ?? placeholder}
+        <svg width="8" height="5" viewBox="0 0 8 5" style={{ opacity: 0.5, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s", flexShrink: 0 }}>
+          <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        </svg>
+      </button>
+      {open && (
+        <div style={{
+          position: "absolute", top: "calc(100% + 6px)", left: 0,
+          minWidth: "100%", maxHeight: 240, overflowY: "auto",
+          background: "var(--dash-surface,#fff)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+          borderRadius: 14,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+          zIndex: 100, padding: "6px 0",
+        }}>
+          {options.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => { onChange(opt.value); setOpen(false) }}
+              style={{
+                width: "100%", padding: "8px 14px",
+                background: opt.value === value ? "rgba(225,29,72,0.06)" : "transparent",
+                border: "none", textAlign: "left",
+                fontSize: 13, color: opt.value === value ? "#E11D48" : "var(--dash-text,#121317)",
+                fontWeight: opt.value === value ? 600 : 400,
+                cursor: "pointer", fontFamily: "inherit",
+                whiteSpace: "nowrap",
+                transition: "background 0.1s",
+              }}
+              onMouseEnter={e => { if (opt.value !== value) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2,#f4f4f8)" }}
+              onMouseLeave={e => { if (opt.value !== value) (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
+            >
+              {opt.label}
+            </button>
           ))}
         </div>
-
-        {/* Prev / Next arrows */}
-        {hovered && imgIdx > 0 && (
-          <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center">
-            <ChevronLeft size={14} style={{ color: C.white }} />
-          </button>
-        )}
-        {hovered && imgIdx < photos.length - 1 && (
-          <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white shadow flex items-center justify-center">
-            <ChevronRight size={14} style={{ color: C.white }} />
-          </button>
-        )}
-
-        {/* Selected badge */}
-        {isAdded && (
-          <div className="absolute top-3 left-3 z-10 text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1"
-            style={{ backgroundColor: C.terra, color: "#fff" }}>
-            <Check size={10} /> Sélectionné
-          </div>
-        )}
-      </div>
-
-      {/* ── Info ── */}
-      <Link href={`/vendor/${v.id}`} className="block">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <p className="font-semibold text-sm leading-snug truncate" style={{ color: C.white }}>{v.name}</p>
-            <p className="text-xs mt-0.5 truncate" style={{ color: C.mist }}>{v.category}</p>
-            <p className="text-xs" style={{ color: C.steel }}>{v.city}</p>
-          </div>
-          {isCoupDeCoeur && (
-            <div className="shrink-0 flex items-center gap-1 text-xs font-semibold mt-0.5" style={{ color: C.terra }}>
-              <Star size={11} fill={C.terra} stroke="none" />
-            </div>
-          )}
-        </div>
-      </Link>
-
-      {/* Add to event */}
-      {showEventBtn && (
-        <button onClick={onAdd}
-          className="mt-2 w-full flex items-center justify-center gap-1 text-xs font-bold py-1.5 rounded-xl transition-all"
-          style={{ backgroundColor: isAdded ? `${C.terra}20` : C.terra, color: isAdded ? C.terra : "#fff", border: isAdded ? `1px solid ${C.terra}` : "none" }}>
-          {isAdded ? <><Check size={11} /> Ajouté</> : <><Plus size={11} /> Ajouter</>}
-        </button>
       )}
     </div>
   )
 }
 
-type CurrentEvent = {
-  id: string
-  type: string
-  name: string
-  date: string
-  guestCount: string
-  budget: string
-  location: string
+// ── Types ────────────────────────────────────────────────────────────────────
+type VendorEntry = { id: string; name: string; category: string; city: string; rating: number; instagram?: string; facebook?: string }
+
+// ── Category filter groups ───────────────────────────────────────────────────
+const MAJOR_CATS = [
+  { label: "Tous",              emoji: "✦"  },
+  { label: "Traiteur",          emoji: "🍽️" },
+  { label: "Lieu de réception", emoji: "🏛️" },
+  { label: "Orchestre",         emoji: "🎻" },
+  { label: "Neggafa",           emoji: "👘" },
+  { label: "Photographe",       emoji: "📸" },
+  { label: "Makeup & Beauté",   emoji: "💄" },
+  { label: "DJ",                emoji: "🎧" },
+  { label: "Décoration",        emoji: "✨" },
+  { label: "Pâtissier",         emoji: "🎂" },
+  { label: "Planner",           emoji: "📋" },
+  { label: "Dekka / Issawa",    emoji: "🥁" },
+  { label: "Vidéaste",          emoji: "🎬" },
+  { label: "Robes",             emoji: "👗" },
+  { label: "Animation",         emoji: "🎪" },
+  { label: "Transport",         emoji: "🚗" },
+  { label: "Chanteur",          emoji: "🎤" },
+  { label: "Violoniste",        emoji: "🎵" },
+  { label: "Autres",            emoji: "⚡" },
+]
+
+const MAJOR_KW: Record<string, string[]> = {
+  "Traiteur":          ["traiteur"],
+  "Lieu de réception": ["lieu de réception"],
+  "Orchestre":         ["orchestre"],
+  "Neggafa":           ["neggafa"],
+  "Photographe":       ["photographe"],
+  "Makeup & Beauté":   ["makeup", "hairstylist", "spa", "soins", "esthétique"],
+  "DJ":                ["dj"],
+  "Décoration":        ["décorateur", "fleuriste", "ambiance lumineuse"],
+  "Pâtissier":         ["pâtissier", "cake designer"],
+  "Planner":           ["wedding planner", "event planner"],
+  "Dekka / Issawa":    ["dekka", "issawa"],
+  "Vidéaste":          ["vidéaste"],
+  "Robes":             ["robes de mariés"],
+  "Animation":         ["magicien", "animateur", "gonflable", "bar / mixologue", "jeux"],
+  "Transport":         ["location de voiture", "vtc", "transport"],
+  "Chanteur":          ["chanteur"],
+  "Violoniste":        ["violoniste"],
+  "Autres":            ["faire-part", "cadeaux", "sécurité", "structures"],
 }
 
-function ExploreContent() {
-  const searchParams = useSearchParams()
-  const eventParam = searchParams.get("event") ?? ""
-  const { data: session } = useSession()
-  const user = session?.user ?? null
-  const keySuffix = `_${user?.id ?? "guest"}`
+function matchesMajor(category: string, major: string): boolean {
+  if (!major || major === "Tous") return true
+  const keywords = MAJOR_KW[major] ?? []
+  const cat = category.toLowerCase()
+  return keywords.some(k => cat.includes(k.toLowerCase()))
+}
 
-  const [search, setSearch] = useState("")
-  const categoryParam = searchParams.get("category") ?? ""
-  const subParam = searchParams.get("sub") ?? ""
-  // activeMajor = slug of major category; activeSub = specific sub-category label (or "")
-  const [activeMajor, setActiveMajor] = useState(() => {
-    // sub param takes priority — find which major contains this sub
-    if (subParam) {
-      const found = MAJOR_CATS.find(m => m.sub.includes(subParam))
-      return found ? found.slug : ""
-    }
-    if (categoryParam) {
-      const found = MAJOR_CATS.find(m => m.label === categoryParam || m.slug === categoryParam)
-      return found ? found.slug : ""
-    }
-    const recommended = EVENT_CATS[eventParam]
-    if (recommended) {
-      const found = MAJOR_CATS.find(m => recommended.some(r => m.label.includes(r) || r.includes(m.label)))
-      return found ? found.slug : ""
-    }
-    return ""
-  })
-  const [activeSub, setActiveSub] = useState(() => subParam || "")
-  // For backward compat with filtering logic, derive activeGroup from activeMajor/activeSub
-  const activeGroup = activeSub
-    ? MAJOR_CATS.find(m => m.slug === activeMajor)?.label ?? ""
-    : activeMajor
-      ? MAJOR_CATS.find(m => m.slug === activeMajor)?.label ?? ""
-      : ""
-  const [activeCity, setActiveCity] = useState("Toutes les villes")
-  const [activeDate, setActiveDate] = useState("")
-  const dateInputRef = useRef<HTMLInputElement>(null)
-  const [showFilterPanel, setShowFilterPanel] = useState(false)
-  const [sortBy, setSortBy] = useState("rating")
-  const [photoFilter, setPhotoFilter] = useState<"all" | "avec" | "sans">("all")
-  const [showMap, setShowMap] = useState(false)
-  const [currentEvent, setCurrentEvent] = useState<CurrentEvent | null>(null)
-  const [addedVendors, setAddedVendors] = useState<Set<string>>(new Set())
-  const [favorites, setFavorites] = useState<Set<string>>(new Set())
-  const [coupDeCoeurVendor, setCoupDeCoeurVendor] = useState<string | null>(null)
-  const [toast, setToast] = useState("")
-  // Vendors state: starts with static fallback, replaced by API data if available
-  const [vendors, setVendors] = useState<VendorEntry[]>(VENDORS_FALLBACK)
-  // DB counts — starts with static fallback counts, replaced by live DB counts
-  const [counts, setCounts] = useState<{ total: number; byCategory: Record<string, number> }>(() => {
-    const byCategory: Record<string, number> = {}
-    for (const v of VENDORS_FALLBACK) {
-      byCategory[v.category] = (byCategory[v.category] ?? 0) + 1
-    }
-    return { total: VENDORS_FALLBACK.length, byCategory }
-  })
+// ── Event type → category keywords ──────────────────────────────────────────
+const EVENT_TYPE_KW: Record<string, string[]> = {
+  "mariage":     ["photographe", "neggafa", "traiteur", "décorateur", "fleuriste", "orchestre", "wedding planner", "robes", "lieu de réception", "vidéaste", "makeup", "hairstylist", "pâtissier", "cake"],
+  "fiancailles": ["photographe", "orchestre", "traiteur", "neggafa", "décorateur", "fleuriste", "makeup", "pâtissier"],
+  "corporate":   ["event planner", "lieu de réception", "dj", "traiteur", "transport", "vtc", "sécurité", "animateur"],
+  "anniversaire":["dj", "animateur", "magicien", "pâtissier", "cake", "décorateur", "photographe", "bar", "gonflable"],
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem(`momento_current_event${keySuffix}`)
-    if (saved) { try { setCurrentEvent(JSON.parse(saved)) } catch {} }
-    const savedVendors = localStorage.getItem(`momento_selected_vendors${keySuffix}`)
-    if (savedVendors) {
-      try {
-        const list = JSON.parse(savedVendors) as { id: string }[]
-        setAddedVendors(new Set(list.map(v => v.id)))
-      } catch {}
-    }
-    const savedFavs = localStorage.getItem("momento_favorites")
-    if (savedFavs) { try { setFavorites(new Set(JSON.parse(savedFavs))) } catch {} }
-  }, [keySuffix])
+function matchesEventType(category: string, eventType: string): boolean {
+  if (!eventType) return true
+  const keywords = EVENT_TYPE_KW[eventType] ?? []
+  const cat = category.toLowerCase()
+  return keywords.some(k => cat.includes(k.toLowerCase()))
+}
 
-  // Fetch live counts from DB — separate from vendor list to avoid pagination limits
-  useEffect(() => {
-    fetch("/api/vendors/counts")
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then((data: { total: number; byCategory: Record<string, number> }) => {
-        if (data.total > 0) setCounts(data)
-      })
-      .catch(() => { /* silently keep static fallback counts */ })
+// ── Initial static data ──────────────────────────────────────────────────────
+const INITIAL: VendorEntry[] = Object.entries(VENDOR_BASIC).map(([id, v]) => ({
+  id, name: v.name, category: v.category, city: v.city, rating: v.rating,
+  instagram: v.instagram, facebook: v.facebook,
+}))
+
+const PAGE_SIZE = 48
+
+// ── Component ────────────────────────────────────────────────────────────────
+export default function CloneExplorePage() {
+  const [vendors, setVendors]     = useState<VendorEntry[]>(INITIAL)
+  const [search, setSearch]       = useState("")
+  const [activeCity, setActiveCity] = useState("")
+  const [activeMajor, setActiveMajor] = useState("Tous")
+  const [sortBy, setSortBy]       = useState<"rating" | "name" | "name_desc" | "city">("rating")
+  const [ratingMin, setRatingMin] = useState(0)
+  const [eventType, setEventType] = useState("")
+  const [socialFilter, setSocialFilter] = useState<Set<"instagram" | "facebook">>(new Set())
+  const [photoOnly, setPhotoOnly] = useState(false)
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const filtersRef = useRef<HTMLDivElement>(null)
+  const [page, setPage]           = useState(1)
+  const [scrolled, setScrolled]   = useState(false)
+  const catsRef = useRef<HTMLDivElement>(null)
+
+  // Unique cities from data
+  const cities = useMemo(() => {
+    const cs = new Set(INITIAL.map(v => v.city).filter(Boolean))
+    return Array.from(cs).sort()
   }, [])
 
-  // Fetch vendors from API, fallback to static data on error
+  // Close filters popover on outside click
   useEffect(() => {
-    fetch("/api/vendors?limit=1000")
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then((data: Array<{ slug: string; name: string; category: string; city?: string | null; rating?: number | null }>) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setVendors(data.map(v => ({
-            id: v.slug,
-            name: v.name,
-            category: v.category,
-            city: v.city ?? "",
-            rating: v.rating ?? 4,
+    if (!filtersOpen) return
+    function onOutside(e: MouseEvent) {
+      if (filtersRef.current && !filtersRef.current.contains(e.target as Node)) setFiltersOpen(false)
+    }
+    document.addEventListener("mousedown", onOutside)
+    return () => document.removeEventListener("mousedown", onOutside)
+  }, [filtersOpen])
+
+  // Sticky bar on scroll
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 56)
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  // Fresh data from API (same as v1)
+  useEffect(() => {
+    fetch("/api/vendors?limit=1200")
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data?.vendors)) {
+          setVendors(data.vendors.map((v: Record<string, unknown>) => ({
+            id:       (v.slug as string) || (v.id as string),
+            name:      v.name as string,
+            category:  v.category as string,
+            city:      (v.city as string) || "",
+            rating:    typeof v.rating === "number" ? v.rating : 4,
           })))
         }
       })
-      .catch(() => {
-        // Silently keep fallback static data
-      })
+      .catch(() => {}) // keep static fallback
   }, [])
 
-  function toggleFavorite(vendorId: string, e: React.MouseEvent) {
-    e.preventDefault(); e.stopPropagation()
-    setFavorites(prev => {
-      const next = new Set(prev)
-      if (next.has(vendorId)) next.delete(vendorId)
-      else next.add(vendorId)
-      localStorage.setItem("momento_favorites", JSON.stringify([...next]))
-      return next
-    })
-  }
-
-  function addVendor(vendor: VendorEntry) {
-    const saved = JSON.parse(localStorage.getItem(`momento_selected_vendors${keySuffix}`) ?? "[]")
-    if (!saved.find((v: { id: string }) => v.id === vendor.id)) {
-      saved.push(vendor)
-      localStorage.setItem(`momento_selected_vendors${keySuffix}`, JSON.stringify(saved))
-    }
-    setAddedVendors(prev => new Set([...prev, vendor.id]))
-    setToast(`${vendor.name} ajouté à votre événement !`)
-    setTimeout(() => setToast(""), 2500)
-  }
-
+  // Filter + sort
   const filtered = useMemo(() => {
-    let list = vendors.filter(v => {
-      if (search) {
-        const q = search.toLowerCase()
-        if (!v.name.toLowerCase().includes(q) && !v.category.toLowerCase().includes(q) && !v.city.toLowerCase().includes(q)) return false
-      }
-      if (activeSub) {
-        // Filter by specific sub-category
-        if (v.category !== activeSub) return false
-      } else if (activeMajor) {
-        // Filter by major category (all subs)
-        const major = MAJOR_CATS.find(m => m.slug === activeMajor)
-        if (major && !major.sub.includes(v.category)) return false
-      }
-      if (activeCity !== "Toutes les villes" && v.city !== activeCity) return false
-      if (photoFilter === "avec" && !VENDORS_WITH_PHOTO.has(v.id)) return false
-      if (photoFilter === "sans" && VENDORS_WITH_PHOTO.has(v.id)) return false
-      return true
-    })
-    if (sortBy === "rating") list = [...list].sort((a, b) => b.rating - a.rating)
-    if (sortBy === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name))
-    return list
-  }, [vendors, search, activeMajor, activeSub, activeCity, sortBy, photoFilter])
+    const q = search.toLowerCase().trim()
+    return vendors
+      .filter(v => {
+        if (q && !v.name.toLowerCase().includes(q) && !v.category.toLowerCase().includes(q) && !v.city.toLowerCase().includes(q)) return false
+        if (activeCity && v.city !== activeCity) return false
+        if (!matchesMajor(v.category, activeMajor)) return false
+        if (!matchesEventType(v.category, eventType)) return false
+        if (ratingMin > 0 && v.rating < ratingMin) return false
+        if (socialFilter.has("instagram") && !v.instagram) return false
+        if (socialFilter.has("facebook") && !v.facebook) return false
+        if (photoOnly && !VENDORS_WITH_PHOTO.has(v.id)) return false
+        return true
+      })
+      .sort((a, b) => {
+        if (sortBy === "rating")     return b.rating - a.rating
+        if (sortBy === "name")       return a.name.localeCompare(b.name, "fr")
+        if (sortBy === "name_desc")  return b.name.localeCompare(a.name, "fr")
+        if (sortBy === "city")       return a.city.localeCompare(b.city, "fr")
+        return 0
+      })
+  }, [vendors, search, activeCity, activeMajor, sortBy])
 
-  const hasFilters = !!(search || activeMajor || activeSub || activeCity !== "Toutes les villes" || activeDate || photoFilter !== "all")
+  // Reset pagination on filter change
+  useEffect(() => { setPage(1) }, [search, activeCity, activeMajor, sortBy, ratingMin, eventType, socialFilter, photoOnly])
 
+  const visible = filtered.slice(0, page * PAGE_SIZE)
+  const hasMore = visible.length < filtered.length
+
+  const hasFilters = search || activeCity || activeMajor !== "Tous" || ratingMin > 0 || eventType || socialFilter.size > 0 || photoOnly
+
+  function clearFilters() {
+    setSearch(""); setActiveCity(""); setActiveMajor("Tous")
+    setRatingMin(0); setEventType(""); setSocialFilter(new Set()); setPhotoOnly(false)
+  }
+
+  // ── Render ──────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen" style={{ backgroundColor: C.ink, color: C.white }}>
-
-      {/* ── NAV (Airbnb-style) ── */}
-      <nav className="sticky top-0 z-40 border-b" style={{ backgroundColor: `${C.ink}F8`, backdropFilter: "blur(16px)", borderColor: C.anthracite }}>
-        <div className="w-full px-4 sm:px-6 py-3 grid items-center" style={{ gridTemplateColumns: "1fr auto 1fr" }}>
-
-          <MomentoLogo iconSize={30} className="justify-self-start" />
-
-          {/* ── Search pill — dimensions Airbnb ── */}
-          <div
-            className="flex items-center rounded-full overflow-hidden"
-            style={{
-              backgroundColor: C.ink,
-              border: "1px solid #ddd",
-              boxShadow: "rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.1) 0px 8px 24px 0px",
-              height: 66,
-              width: "100%",
-              maxWidth: 760,
-            }}
-          >
-            {/* Section 1 — Prestataire */}
-            <label className="flex-1 flex flex-col justify-center px-6 cursor-text border-r h-full" style={{ borderColor: "#ddd" }}>
-              <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Prestataire</span>
-              <input
-                type="text" placeholder="DJ, traiteur, photographe…"
-                value={search} onChange={e => setSearch(e.target.value)}
-                className="w-full bg-transparent outline-none leading-none"
-                style={{ color: C.white, fontSize: 14 }}
-              />
-            </label>
-
-            {/* Section 2 — Date (custom styled) */}
-            <div className="relative hidden sm:flex items-center border-r h-full" style={{ borderColor: "#ddd" }}>
-              <button
-                type="button"
-                className="flex flex-col justify-center px-6 h-full cursor-pointer"
-                onClick={() => dateInputRef.current?.showPicker?.()}
-              >
-                <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Date</span>
-                <span className="leading-none" style={{ color: activeDate ? C.white : C.steel, fontSize: 14 }}>
-                  {activeDate
-                    ? new Date(activeDate + "T00:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
-                    : "Choisir une date"}
-                </span>
-              </button>
-              <input
-                ref={dateInputRef}
-                type="date"
-                value={activeDate}
-                onChange={e => setActiveDate(e.target.value)}
-                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                style={{ colorScheme: "light" }}
-              />
-            </div>
-
-            {/* Section 3 — Filtres */}
-            <button
-              onClick={() => setShowFilterPanel(f => !f)}
-              className="hidden sm:flex flex-col justify-center px-6 h-full border-r text-left transition-colors"
-              style={{ borderColor: "#ddd", backgroundColor: showFilterPanel ? C.dark : "transparent" }}>
-              <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Filtres</span>
-              <span className="leading-none" style={{ color: activeSub || activeMajor || activeCity !== "Toutes les villes" ? C.white : C.steel, fontSize: 14 }}>
-                {activeSub || (activeMajor ? MAJOR_CATS.find(m => m.slug === activeMajor)?.label : "") || (activeCity !== "Toutes les villes" ? activeCity : "Ajouter des filtres")}
-              </span>
-            </button>
-
-            {/* Bouton recherche — 48×48 comme Airbnb */}
-            <button
-              onClick={() => setShowFilterPanel(false)}
-              className="mx-2 shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:opacity-90"
-              style={{ backgroundColor: C.terra, color: "#fff" }}>
-              <Search size={16} />
-            </button>
+    <div
+      className="ant-root"
+      style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", paddingTop: 56 }}
+    >
+      <AntNav hideLinks centerSlot={
+        <div className="flex items-center gap-2" style={{ width: "100%", maxWidth: 616 }}>
+          {/* Search input */}
+          <div style={{ flex: 1, minWidth: 0, position: "relative" }}>
+            <span style={{
+              position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)",
+              fontSize: 14, color: "var(--dash-text-3,#9a9aaa)", pointerEvents: "none",
+              fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal",
+            }}>search</span>
+            <input
+              type="text"
+              placeholder="DJ, photographe, traiteur..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                width: "100%", height: 40,
+                paddingLeft: 34, paddingRight: 12,
+                borderRadius: 999,
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.35))",
+                background: "var(--dash-input-bg,#fafafa)",
+                fontSize: 13, color: "var(--dash-text,#121317)",
+                outline: "none", boxSizing: "border-box", fontFamily: "inherit",
+                transition: "border-color 0.15s",
+              }}
+              onFocus={e => (e.target.style.borderColor = "rgba(225,29,72,0.5)")}
+              onBlur={e => (e.target.style.borderColor = "var(--dash-border,rgba(183,191,217,0.35))")}
+            />
           </div>
-
-          <div className="justify-self-end flex items-center gap-2">
-            {/* Filtres mobile */}
-            <button onClick={() => setShowFilterPanel(f => !f)}
-              className="sm:hidden shrink-0 w-12 h-12 rounded-full flex items-center justify-center border"
-              style={{ backgroundColor: showFilterPanel ? C.terra : C.dark, borderColor: showFilterPanel ? C.terra : C.anthracite, color: showFilterPanel ? "#fff" : C.white }}>
-              <SlidersHorizontal size={15} />
-            </button>
-            <DarkModeToggle />
-            <NavAuthButtons />
-          </div>
+          {/* City */}
+          <PillSelect
+            value={activeCity}
+            onChange={setActiveCity}
+            placeholder="Ville"
+            options={[{ value: "", label: "Toutes" }, ...cities.map(c => ({ value: c, label: c }))]}
+          />
+          {/* Événement */}
+          <PillSelect
+            value={eventType}
+            onChange={setEventType}
+            placeholder="Événement"
+            options={[
+              { value: "",           label: "Tous" },
+              { value: "mariage",    label: "💍 Mariage" },
+              { value: "fiancailles",label: "💐 Fiançailles" },
+              { value: "corporate",  label: "🏢 Corporate" },
+              { value: "anniversaire",label: "🎉 Anniversaire" },
+            ]}
+          />
+          {/* Note */}
+          <PillSelect
+            value={String(ratingMin)}
+            onChange={v => setRatingMin(Number(v))}
+            placeholder="Note"
+            options={[
+              { value: "0",   label: "Toutes" },
+              { value: "4",   label: "★ 4+" },
+              { value: "4.5", label: "★ 4.5+" },
+              { value: "5",   label: "★ 5 seulement" },
+            ]}
+          />
+          {/* Sort */}
+          <PillSelect
+            value={sortBy}
+            onChange={v => setSortBy(v as "rating" | "name" | "name_desc" | "city")}
+            placeholder="Tri"
+            options={[
+              { value: "rating",    label: "Mieux notés" },
+              { value: "name",      label: "A → Z" },
+              { value: "name_desc", label: "Z → A" },
+              { value: "city",      label: "Par ville" },
+            ]}
+          />
+          {/* Clear */}
+          {hasFilters && (
+            <button onClick={clearFilters} style={{
+              height: 40, padding: "0 14px", borderRadius: 999,
+              border: "1px solid rgba(225,29,72,0.3)", background: "rgba(225,29,72,0.05)",
+              color: "#E11D48", fontSize: 12, fontWeight: 500,
+              cursor: "pointer", fontFamily: "inherit", flexShrink: 0, whiteSpace: "nowrap",
+            }}>✕</button>
+          )}
         </div>
+      }>
+      </AntNav>
 
-        {/* ── Filter dropdown panel ── */}
-        {showFilterPanel && (
-          <div className="border-t px-4 sm:px-8 py-4 flex flex-wrap gap-4 items-center justify-center" style={{ borderColor: C.anthracite, backgroundColor: C.dark }}>
-            <div className="flex items-center gap-2">
-              <MapPin size={13} style={{ color: C.steel }} />
-              <select value={activeCity} onChange={e => setActiveCity(e.target.value)}
-                className="py-1.5 px-3 rounded-lg text-xs outline-none cursor-pointer appearance-none"
-                style={{ backgroundColor: C.anthracite, color: C.white }}>
-                {CITIES.map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <ChevronDown size={13} style={{ color: C.steel }} />
-              <select value={sortBy} onChange={e => setSortBy(e.target.value)}
-                className="py-1.5 px-3 rounded-lg text-xs outline-none cursor-pointer appearance-none"
-                style={{ backgroundColor: C.anthracite, color: C.white }}>
-                <option value="rating">Mieux notés</option>
-                <option value="name">Nom A–Z</option>
-              </select>
-            </div>
-            {/* Photo filter */}
-            <div className="flex items-center gap-1 rounded-lg overflow-hidden" style={{ border: `1px solid ${C.anthracite}` }}>
-              {(["all", "avec", "sans"] as const).map((v) => (
+      {/* ── Sticky filter bar — categories only ── */}
+      <div
+        className="sticky z-40 transition-all duration-300 clone-filter-bar"
+        style={{
+          top: 56,
+          background: scrolled ? "var(--dash-surface-blur,rgba(255,255,255,0.96))" : "var(--dash-surface,#fff)",
+          backdropFilter: scrolled ? "blur(16px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
+          borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
+          boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.06)" : "none",
+        }}
+      >
+        {/* Category pills */}
+        <div style={{ padding: "10px 24px 10px", position: "relative", display: "flex", alignItems: "center", gap: 4 }}>
+          {/* Scroll left */}
+          <button onClick={() => catsRef.current?.scrollBy({ left: -200, behavior: "smooth" })} style={{
+            flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+            background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
+            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 14, lineHeight: 1,
+          }}>‹</button>
+          <style>{`.clone-explore-cats::-webkit-scrollbar { display: none; }`}</style>
+          <div ref={catsRef} className="clone-explore-cats" style={{ display: "flex", gap: 6, overflowX: "auto", scrollbarWidth: "none", flex: 1 }}>
+            {MAJOR_CATS.map(cat => {
+              const active = activeMajor === cat.label
+              return (
                 <button
-                  key={v}
-                  onClick={() => setPhotoFilter(v)}
-                  className="px-3 py-1.5 text-xs font-medium transition-colors"
+                  key={cat.label}
+                  onClick={() => setActiveMajor(cat.label)}
                   style={{
-                    backgroundColor: photoFilter === v ? C.white : "transparent",
-                    color: photoFilter === v ? C.ink : C.mist,
+                    display: "flex", alignItems: "center", gap: 6,
+                    padding: "5px 14px", borderRadius: 999,
+                    border: active ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                    background: active
+                      ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))"
+                      : "var(--dash-surface,#fff)",
+                    color: active ? "#fff" : "var(--dash-text-2,#45474D)",
+                    fontSize: 12, fontWeight: active ? 600 : 400,
+                    cursor: "pointer", transition: "all 0.15s",
+                    fontFamily: "inherit",
+                    whiteSpace: "nowrap",
+                    boxShadow: active ? "0 2px 12px rgba(225,29,72,0.25)" : "none",
                   }}
                 >
-                  {v === "all" ? "Toutes" : v === "avec" ? "📷 Avec photo" : "Sans photo"}
+                  <span style={{ fontSize: 13 }}>{cat.emoji}</span>
+                  {cat.label}
+                  {active && (
+                    <span style={{
+                      background: "rgba(255,255,255,0.25)", borderRadius: 99,
+                      padding: "1px 7px", fontSize: 11, fontWeight: 700,
+                    }}>
+                      {filtered.length}
+                    </span>
+                  )}
                 </button>
-              ))}
-            </div>
+              )
+            })}
+          </div>
+          {/* Scroll right */}
+          <button onClick={() => catsRef.current?.scrollBy({ left: 200, behavior: "smooth" })} style={{
+            flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+            background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
+            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 14, lineHeight: 1,
+          }}>›</button>
 
-            {hasFilters && (
-              <button onClick={() => { setSearch(""); setActiveMajor(""); setActiveSub(""); setActiveCity("Toutes les villes"); setActiveDate(""); setPhotoFilter("all") }}
-                className="flex items-center gap-1 text-xs" style={{ color: C.terra }}>
-                <X size={11} /> Tout effacer
-              </button>
+          {/* ── Filtres avancés ── */}
+          <div ref={filtersRef} style={{ position: "relative", flexShrink: 0, marginLeft: 8 }}>
+            {/* Trigger */}
+            {(() => {
+              const advCount = socialFilter.size + (photoOnly ? 1 : 0)
+              return (
+                <button onClick={() => setFiltersOpen(o => !o)} style={{
+                  height: 28, padding: "0 12px", borderRadius: 999,
+                  border: filtersOpen || advCount > 0
+                    ? "1px solid rgba(225,29,72,0.5)"
+                    : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                  background: advCount > 0
+                    ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))"
+                    : "var(--dash-surface,#fff)",
+                  color: advCount > 0 ? "#fff" : "var(--dash-text-2,#6a6a71)",
+                  fontSize: 12, fontWeight: advCount > 0 ? 600 : 400,
+                  cursor: "pointer", fontFamily: "inherit",
+                  display: "flex", alignItems: "center", gap: 5,
+                  transition: "all 0.15s",
+                }}>
+                  <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                    <path d="M1 2h10M3 5h6M5 8h2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  Filtres
+                  {advCount > 0 && (
+                    <span style={{
+                      background: "rgba(255,255,255,0.3)", borderRadius: 99,
+                      padding: "0 5px", fontSize: 10, fontWeight: 700,
+                    }}>{advCount}</span>
+                  )}
+                </button>
+              )
+            })()}
+
+            {/* Popover */}
+            {filtersOpen && (
+              <div style={{
+                position: "absolute", top: "calc(100% + 8px)", right: 0,
+                width: 240,
+                background: "var(--dash-surface,#fff)",
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+                borderRadius: 16,
+                boxShadow: "0 12px 40px rgba(0,0,0,0.14)",
+                zIndex: 200, overflow: "hidden",
+              }}>
+                {/* Section réseaux sociaux */}
+                <div style={{ padding: "14px 16px 10px" }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    Réseaux sociaux
+                  </p>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {(["instagram", "facebook"] as const).map(s => {
+                      const active = socialFilter.has(s)
+                      return (
+                        <button key={s} onClick={() => setSocialFilter(prev => {
+                          const next = new Set(prev)
+                          active ? next.delete(s) : next.add(s)
+                          return next
+                        })} style={{
+                          flex: 1, height: 32, borderRadius: 10, fontSize: 12,
+                          fontWeight: active ? 600 : 400,
+                          border: active ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                          background: active
+                            ? s === "instagram"
+                              ? "linear-gradient(135deg,#f09433,#dc2743,#bc1888)"
+                              : "#1877F2"
+                            : "var(--dash-faint-2,#f4f4f8)",
+                          color: active ? "#fff" : "var(--dash-text-2,#6a6a71)",
+                          cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s",
+                        }}>
+                          {s === "instagram" ? "Instagram" : "Facebook"}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.12))", margin: "0 16px" }} />
+
+                {/* Section médias */}
+                <div style={{ padding: "10px 16px 14px" }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    Médias
+                  </p>
+                  <button onClick={() => setPhotoOnly(p => !p)} style={{
+                    width: "100%", height: 32, borderRadius: 10, fontSize: 12,
+                    fontWeight: photoOnly ? 600 : 400,
+                    border: photoOnly ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                    background: photoOnly
+                      ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))"
+                      : "var(--dash-faint-2,#f4f4f8)",
+                    color: photoOnly ? "#fff" : "var(--dash-text-2,#6a6a71)",
+                    cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                  }}>
+                    🖼️ Avec photos uniquement
+                  </button>
+                </div>
+
+                {/* Footer reset */}
+                {(socialFilter.size > 0 || photoOnly) && (
+                  <>
+                    <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.12))" }} />
+                    <button onClick={() => { setSocialFilter(new Set()); setPhotoOnly(false) }} style={{
+                      width: "100%", padding: "10px 16px",
+                      background: "transparent", border: "none",
+                      fontSize: 12, color: "#E11D48",
+                      cursor: "pointer", fontFamily: "inherit",
+                      textAlign: "left",
+                    }}>
+                      ✕ Réinitialiser ces filtres
+                    </button>
+                  </>
+                )}
+              </div>
             )}
           </div>
-        )}
-
-        {/* ── Barre de catégories majeures ── */}
-        <div className="border-t overflow-x-auto scrollbar-hide" style={{ borderColor: C.anthracite }}>
-          <div className="flex gap-0 px-2 sm:px-4 py-2 w-max mx-auto">
-          {/* Tout */}
-          <button
-            onClick={() => { setActiveMajor(""); setActiveSub("") }}
-            className="shrink-0 flex flex-col items-center gap-0.5 px-3 sm:px-4 py-2 rounded-xl transition-all hover:opacity-80 group"
-            style={{ minWidth: 64 }}
-          >
-            <span className="text-[11px] font-bold tabular-nums" style={{ color: C.terra }}>{counts.total}</span>
-            <span className="text-2xl leading-none">🌟</span>
-            <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: !activeMajor ? C.white : C.mist }}>Tout</span>
-            {!activeMajor && <span className="block h-0.5 w-4 rounded-full mt-0.5" style={{ backgroundColor: C.terra }} />}
-          </button>
-
-          {MAJOR_CATS.map(cat => {
-            const count = cat.sub.reduce((sum, sub) => sum + (counts.byCategory[sub] ?? 0), 0)
-            const isActive = activeMajor === cat.slug
-            return (
-              <button
-                key={cat.slug}
-                onClick={() => { setActiveMajor(isActive ? "" : cat.slug); setActiveSub("") }}
-                className="shrink-0 flex flex-col items-center gap-0.5 px-3 sm:px-4 py-2 rounded-xl transition-all hover:opacity-80 group"
-                style={{ minWidth: 64 }}
-              >
-                <span className="text-[11px] font-bold tabular-nums" style={{ color: C.terra }}>{count}</span>
-                <span className="text-2xl leading-none">{cat.icon}</span>
-                <span className="text-[11px] font-semibold whitespace-nowrap" style={{ color: isActive ? C.white : C.mist }}>{cat.label}</span>
-                {isActive && <span className="block h-0.5 w-4 rounded-full mt-0.5" style={{ backgroundColor: C.terra }} />}
-              </button>
-            )
-          })}
-          </div>
         </div>
 
-        {/* ── Sous-catégories (pills) — apparaît quand une majeure est active ── */}
-        {activeMajor && (() => {
-          const major = MAJOR_CATS.find(m => m.slug === activeMajor)
-          if (!major || major.sub.length <= 1) return null
-          return (
-            <div className="border-t flex overflow-x-auto gap-2 px-4 py-2.5 scrollbar-hide" style={{ borderColor: C.anthracite, backgroundColor: `${C.dark}99` }}>
-              <button
-                onClick={() => setActiveSub("")}
-                className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
-                style={{
-                  backgroundColor: !activeSub ? C.terra : C.anthracite,
-                  color: !activeSub ? "#fff" : C.mist,
-                  border: `1px solid ${!activeSub ? C.terra : C.steel}`,
-                }}
-              >
-                Tous ({major.sub.reduce((sum, sub) => sum + (counts.byCategory[sub] ?? 0), 0)})
-              </button>
-              {major.sub.map(sub => {
-                const count = counts.byCategory[sub] ?? 0
-                const isActive = activeSub === sub
-                return (
-                  <button
-                    key={sub}
-                    onClick={() => setActiveSub(isActive ? "" : sub)}
-                    className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-all whitespace-nowrap"
-                    style={{
-                      backgroundColor: isActive ? C.terra : C.anthracite,
-                      color: isActive ? "#fff" : C.mist,
-                      border: `1px solid ${isActive ? C.terra : C.steel}`,
-                    }}
-                  >
-                    {CAT_ICONS[sub] ?? ""} {sub} ({count})
-                  </button>
-                )
-              })}
-            </div>
-          )
-        })()}
-      </nav>
+      </div>
 
-      {/* ── Toast ── */}
-      {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl text-sm font-semibold shadow-lg"
-          style={{ backgroundColor: C.white, color: C.ink }}>
-          <Check size={14} className="inline mr-2" style={{ color: C.terra }} />{toast}
-        </div>
-      )}
+      {/* ── Main content ── */}
+      <div
+        className="mx-auto"
+        style={{ maxWidth: 1200, padding: "40px 24px 64px" }}
+      >
+        {/* Results header supprimé */}
 
-      {/* ── Coup de cœur popup ── */}
-      {coupDeCoeurVendor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setCoupDeCoeurVendor(null)}>
-          <div className="absolute inset-0" style={{ backgroundColor: "rgba(0,0,0,0.45)" }} />
-          <div className="relative rounded-3xl p-8 max-w-xs w-full shadow-2xl text-center"
-            style={{ backgroundColor: C.ink, border: `1px solid ${C.anthracite}` }}
-            onClick={e => e.stopPropagation()}>
-            <button onClick={() => setCoupDeCoeurVendor(null)} className="absolute top-4 right-4">
-              <X size={18} style={{ color: C.steel }} />
-            </button>
-            <p className="text-3xl mb-3">✦</p>
-            <h3 className="font-bold text-lg mb-2" style={{ color: C.white }}>Coup de cœur</h3>
-            <p className="text-sm leading-relaxed mb-4" style={{ color: C.mist }}>
-              <span className="font-semibold" style={{ color: C.terra }}>{coupDeCoeurVendor}</span>{" "}
-              est plébiscité par notre communauté. Note parfaite, prestations unanimement saluées.
-            </p>
-            <div className="flex justify-center gap-1">
-              {[1,2,3,4,5].map(i => <Star key={i} size={16} fill={C.terra} stroke="none" />)}
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="w-full px-4 sm:px-8 py-6 sm:py-8">
-
-        {/* ── Event context banner ── */}
-        {(currentEvent || eventParam) && (
-          <div className="rounded-2xl px-5 py-4 mb-6 flex flex-wrap items-center justify-between gap-3"
-            style={{ backgroundColor: `${C.terra}18`, border: `1.5px solid ${C.terra}40` }}>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-0.5" style={{ color: C.terra }}>
-                🎯 Vous planifiez votre {currentEvent?.type ?? eventParam}
-              </p>
-              <p className="text-sm font-bold" style={{ color: C.white }}>
-                {currentEvent?.name ?? `Mon ${eventParam}`}
-                {currentEvent?.date && <span className="font-normal ml-2" style={{ color: C.mist }}>·{" "}
-                  {new Date(currentEvent.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
-                </span>}
-                {currentEvent?.location && <span className="font-normal ml-2" style={{ color: C.mist }}>· {currentEvent.location}</span>}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              {addedVendors.size > 0 && (
-                <span className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ backgroundColor: C.terra, color: "#fff" }}>
-                  {addedVendors.size} prestataire{addedVendors.size > 1 ? "s" : ""} sélectionné{addedVendors.size > 1 ? "s" : ""}
-                </span>
-              )}
-              <Link href="/dashboard" className="text-xs font-semibold px-3 py-1.5 rounded-xl"
-                style={{ backgroundColor: C.dark, color: C.white, border: `1px solid ${C.anthracite}` }}>
-                Voir mon projet →
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* Results count + Liste/Carte toggle pill */}
-        <div className="flex items-center justify-between mb-4 sm:mb-5">
-          <p className="text-sm" style={{ color: C.mist }}>
-            <span className="font-bold text-base sm:text-lg" style={{ color: C.white }}>{filtered.length}</span>
-            {" "}prestataire{filtered.length > 1 ? "s" : ""}
-            {activeCity !== "Toutes les villes" && <span> à <strong style={{ color: C.white }}>{activeCity}</strong></span>}
-          </p>
-          {/* Toggle pill Liste / Carte */}
-          <div
-            className="flex items-center rounded-xl overflow-hidden text-xs font-semibold"
-            style={{ border: `1px solid ${C.anthracite}`, backgroundColor: C.dark }}
-          >
-            <button
-              onClick={() => setShowMap(false)}
-              className="flex items-center gap-1.5 px-3 py-2 transition-all"
-              style={{
-                backgroundColor: !showMap ? C.terra : "transparent",
-                color: !showMap ? "#fff" : C.mist,
-              }}
-            >
-              <SlidersHorizontal size={12} />
-              Liste
-            </button>
-            <button
-              onClick={() => setShowMap(true)}
-              className="flex items-center gap-1.5 px-3 py-2 transition-all"
-              style={{
-                backgroundColor: showMap ? C.terra : "transparent",
-                color: showMap ? "#fff" : C.mist,
-              }}
-            >
-              <Map size={12} />
-              Carte
-            </button>
-          </div>
-        </div>
-
-        {/* ── Carte exclusive (remplace la grille) ── */}
-        {showMap ? (
-          <div
-            className="rounded-2xl overflow-hidden mb-4"
-            style={{ border: `1px solid ${C.anthracite}`, height: "clamp(360px, 60vh, 600px)" }}
-          >
-            <ExploreMap
-              key={activeCity + activeGroup + filtered.length}
-              vendors={filtered}
-              activeCity={activeCity}
-              activeCategory={activeGroup}
-              onCityClick={city => { setActiveCity(city); setShowMap(false) }}
-            />
-            <p className="text-xs px-4 py-2 flex items-center gap-1.5" style={{ backgroundColor: C.dark, color: C.mist }}>
-              <MapPin size={11} style={{ color: C.terra }} />
-              {activeGroup ? "Pins colorés par catégorie — cliquez pour voir le profil" : "Cliquez sur un cluster pour filtrer par ville"}
-            </p>
-          </div>
-        ) : (
-          /* ── Grille liste ── */
-          filtered.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-4xl mb-4">🔍</p>
-              <p className="font-bold text-lg mb-2" style={{ color: C.white }}>Aucun résultat</p>
-              <p className="text-sm mb-6" style={{ color: C.mist }}>Essayez d&apos;autres filtres.</p>
-              <button onClick={() => { setSearch(""); setActiveMajor(""); setActiveSub(""); setActiveCity("Toutes les villes"); setActiveDate("") }}
-                className="px-6 py-3 rounded-xl font-bold text-sm" style={{ backgroundColor: C.terra, color: "#fff" }}>
-                Réinitialiser
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-6">
-              {filtered.map(v => (
-                <VendorCard
+        {/* Grid */}
+        {visible.length > 0 ? (
+          <>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+              gap: 20,
+            }}>
+              {visible.map(v => (
+                <AntVendorCard
                   key={v.id}
-                  v={v}
-                  isFav={favorites.has(v.id)}
-                  onToggleFav={e => toggleFavorite(v.id, e)}
-                  isAdded={addedVendors.has(v.id)}
-                  onAdd={() => addVendor(v)}
-                  onCoupDeCoeur={e => { e.preventDefault(); e.stopPropagation(); setCoupDeCoeurVendor(v.name) }}
-                  showEventBtn={!!(currentEvent || eventParam)}
+                  id={v.id}
+                  name={v.name}
+                  category={v.category}
+                  city={v.city}
+                  rating={v.rating}
                 />
               ))}
             </div>
-          )
-        )}
 
-        {/* Footer note */}
-        <p className="text-center text-xs mt-12 pb-4" style={{ color: C.steel }}>
-          {counts.total} prestataires référencés · 41+ villes · 31 catégories · Maroc
+            {/* Load more */}
+            {hasMore && (
+              <div style={{ textAlign: "center", marginTop: 40 }}>
+                <p className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", marginBottom: 16 }}>
+                  {visible.length} sur {filtered.length} prestataires
+                </p>
+                <button
+                  onClick={() => setPage(p => p + 1)}
+                  style={{
+                    padding: "12px 32px", borderRadius: 999,
+                    background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))",
+                    color: "#fff", border: "none",
+                    fontSize: 14, fontWeight: 600,
+                    cursor: "pointer", fontFamily: "inherit",
+                    transition: "opacity 0.15s",
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+                >
+                  Voir plus de prestataires
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{ textAlign: "center", padding: "80px 20px" }}>
+            <p style={{ fontSize: 48, margin: "0 0 16px" }}>🔍</p>
+            <h2 className="clone-heading" style={{ fontSize: 18, fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>
+              Aucun prestataire trouvé
+            </h2>
+            <p className="clone-muted" style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", marginTop: 8 }}>
+              Essayez de modifier vos filtres ou votre recherche
+            </p>
+            <button
+              onClick={clearFilters}
+              style={{
+                marginTop: 24, padding: "10px 28px", borderRadius: 999,
+                background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))",
+                color: "#fff", border: "none",
+                fontSize: 14, fontWeight: 500,
+                cursor: "pointer", fontFamily: "inherit",
+              }}
+            >
+              Réinitialiser les filtres
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Footer-like bar */}
+      <div style={{
+        borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+        padding: "20px 24px",
+        textAlign: "center",
+      }}>
+        <p className="clone-muted" style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>
+          {VENDOR_COUNT}+ prestataires vérifiés · 41 villes · 0% commission
         </p>
       </div>
-      <Footer />
     </div>
-  )
-}
-
-export default function ExplorePage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen" style={{ backgroundColor: "#F5EDD6" }} />}>
-      <ExploreContent />
-    </Suspense>
   )
 }

@@ -35,7 +35,7 @@ export default function AntUseCases() {
   return (
     <section
       id="comment-ca-marche"
-      style={{ backgroundColor: "#fff", borderTop: "1px solid rgba(183,191,217,0.15)" }}
+      style={{ backgroundColor: "var(--dash-bg,#fff)", borderTop: "1px solid rgba(183,191,217,0.15)" }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32">
         {/* Header */}
@@ -46,13 +46,13 @@ export default function AntUseCases() {
               fontWeight: 600,
               lineHeight: 1.08,
               letterSpacing: "-0.03em",
-              color: "#121317",
+              color: "var(--dash-text,#121317)",
             }}
           >
             Comment ça<br />
-            <span style={{ color: "#6a6a71", fontWeight: 400, fontStyle: "italic" }}>marche ?</span>
+            <span style={{ color: "var(--dash-text-2,#6a6a71)", fontWeight: 400, fontStyle: "italic" }}>marche ?</span>
           </h2>
-          <p style={{ fontSize: 16, lineHeight: 1.7, color: "#45474D", paddingTop: 8 }}>
+          <p style={{ fontSize: 16, lineHeight: 1.7, color: "var(--dash-text-2,#45474D)", paddingTop: 8 }}>
             En trois étapes simples, trouvez et réservez le prestataire parfait pour votre événement au Maroc —
             sans frais cachés, sans intermédiaire, sans stress.
           </p>
@@ -114,8 +114,8 @@ export default function AntUseCases() {
                 )}
               </div>
 
-              <h3 style={{ fontSize: 22, fontWeight: 600, color: "#121317" }}>{step.title}</h3>
-              <p style={{ fontSize: 14, lineHeight: 1.75, color: "#6a6a71" }}>{step.desc}</p>
+              <h3 style={{ fontSize: 22, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{step.title}</h3>
+              <p style={{ fontSize: 14, lineHeight: 1.75, color: "var(--dash-text-2,#6a6a71)" }}>{step.desc}</p>
               <span style={{
                 fontSize: 12, fontWeight: 600,
                 padding: "3px 10px", borderRadius: 99,
@@ -129,7 +129,7 @@ export default function AntUseCases() {
               <a
                 href={step.href}
                 className="clone-cta-ghost mt-auto inline-flex items-center gap-1 text-sm font-medium transition-opacity hover:opacity-60 px-4 py-2 rounded-full"
-                style={{ color: "#121317" }}
+                style={{ color: "var(--dash-text,#121317)" }}
               >
                 {step.cta} →
               </a>

@@ -1,14 +1,8 @@
-import type { Metadata } from "next"
 import { VENDOR_BASIC } from "@/lib/vendorData"
-import { VENDOR_DETAILS } from "@/lib/vendorDetails"
-import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
-import VendorPageClient from "./VendorPageClient"
-
-// Pre-render vendors that have rich details (photos, descriptions)
-export function generateStaticParams() {
-  return Object.keys(VENDOR_DETAILS).map(slug => ({ slug }))
-}
+import { VENDOR_DETAILS, CAT_PHOTOS } from "@/lib/vendorDetails"
+import VendorProfileClient from "./VendorProfileClient"
+import { notFound } from "next/navigation"
+import type { Metadata } from "next"
 
 const CAT_IMAGES: Record<string, string> = {
   "DJ":                            "https://images.unsplash.com/photo-1571266028243-d220c6a18571?w=1200&h=630&fit=crop&q=80",
@@ -33,41 +27,28 @@ const CAT_IMAGES: Record<string, string> = {
   "Animateur enfants":             "https://images.unsplash.com/photo-1558171813-13b498fa0b47?w=1200&h=630&fit=crop&q=80",
 }
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL?.replace("localhost:3000", "momentoevents.app") ?? "https://momentoevents.app"
+export function generateStaticParams() {
+  return Object.keys(VENDOR_BASIC).map(slug => ({ slug }))
+}
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params
   const vendor = VENDOR_BASIC[slug]
-  if (!vendor) {
-    return { title: "Prestataire introuvable — Momento" }
-  }
-
-  const title = `${vendor.name} — ${vendor.category} à ${vendor.city} | Momento`
-  const description = `Découvrez ${vendor.name}, ${vendor.category.toLowerCase()} basé(e) à ${vendor.city}. Contactez ce prestataire directement sur Momento, l'annuaire #1 des prestataires événementiels au Maroc.`
-  const ogImage = CAT_IMAGES[vendor.category] ?? `${APP_URL}/og-default.jpg`
-  const canonical = `${APP_URL}/vendor/${slug}`
-
+  if (!vendor) return { title: "Prestataire introuvable — Momento" }
+  const extra = VENDOR_DETAILS[slug]
+  const heroImg = extra?.photos?.[0] ?? CAT_PHOTOS[vendor.category]?.[0] ?? CAT_IMAGES[vendor.category]
   return {
-    title,
-    description,
-    alternates: { canonical },
+    title: `${vendor.name} — ${vendor.category} · ${vendor.city} | Momento`,
+    description: extra?.description
+      ?? `Découvrez ${vendor.name}, ${vendor.category.toLowerCase()} basé(e) à ${vendor.city}. Contactez ce prestataire directement sur Momento.`,
     openGraph: {
-      title,
-      description,
-      url: canonical,
-      siteName: "Momento",
-      locale: "fr_MA",
-      type: "profile",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: `${vendor.name} — ${vendor.category}` }],
+      title: `${vendor.name} — ${vendor.category} · ${vendor.city}`,
+      description: extra?.description ?? `${vendor.category} à ${vendor.city}`,
+      images: heroImg ? [heroImg] : undefined,
     },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [ogImage],
-    },
+    alternates: { canonical: `https://momentoevents.app/vendor/${slug}` },
   }
 }
 
@@ -76,53 +57,59 @@ export default async function VendorPage(
 ) {
   const { slug } = await params
   const vendor = VENDOR_BASIC[slug]
-  const vendorProfile = await prisma.vendorProfile.findUnique({
-    where: { slug },
-    select: { id: true },
-  })
-  const vendorData = await prisma.vendor.findUnique({
-    where: { slug },
-    select: { rating: true, reviewCount: true },
-  })
-  const claimed = !!vendorProfile
+  if (!vendor) notFound()
 
-  // JSON-LD structured data (LocalBusiness)
-  const jsonLd = vendor ? {
+  const extra = VENDOR_DETAILS[slug]
+  const catPhotos = CAT_PHOTOS[vendor.category] ?? []
+  const photos: string[] = extra?.photos ?? catPhotos
+  const heroImg = photos[0] ?? CAT_IMAGES[vendor.category] ?? null
+
+  const reviews: { author: string; event: string; note: string; stars: number }[] =
+    extra?.reviews ?? []
+
+  const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": vendor.name,
-    "description": `${vendor.category} basé(e) à ${vendor.city}, Maroc. Disponible pour mariages, fiançailles et événements privés.`,
-    "url": `${APP_URL}/vendor/${slug}`,
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": vendor.city,
-      "addressCountry": "MA"
+    name: vendor.name,
+    image: heroImg ?? undefined,
+    address: { "@type": "PostalAddress", addressLocality: vendor.city, addressCountry: "MA" },
+    description: extra?.description ?? `${vendor.category} à ${vendor.city}`,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: vendor.rating,
+      reviewCount: Math.max(reviews.length, 1),
     },
-    "priceRange": "MAD",
-    ...(vendor.instagram ? { "sameAs": [vendor.instagram] } : {}),
-    ...(vendorData?.rating && (vendorData.reviewCount ?? 0) > 0 ? {
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": vendorData.rating!.toFixed(1),
-        "reviewCount": vendorData.reviewCount,
-        "bestRating": "5",
-        "worstRating": "1",
-      }
-    } : {}),
-  } : null
-
-  const session = await auth()
-  const currentUserId = session?.user?.id ?? null
+    ...(reviews.length > 0 && {
+      review: reviews.map(r => ({
+        "@type": "Review",
+        author: { "@type": "Person", name: r.author },
+        reviewRating: { "@type": "Rating", ratingValue: r.stars, bestRating: 5 },
+        reviewBody: r.note,
+      })),
+    }),
+  }
 
   return (
     <>
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
-      <VendorPageClient slug={slug} claimed={claimed} currentUserId={currentUserId} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <VendorProfileClient
+        slug={slug}
+        name={vendor.name}
+        category={vendor.category}
+        city={vendor.city}
+        rating={vendor.rating}
+        photos={photos}
+        heroImg={heroImg}
+        description={extra?.description ?? null}
+        instagram={vendor.instagram ?? extra?.instagram ?? null}
+        facebook={vendor.facebook ?? extra?.facebook ?? null}
+        website={extra?.website ?? null}
+        phone={extra?.phone ?? null}
+        reviews={reviews}
+      />
     </>
   )
 }

@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import LandingSwitcher from "@/components/LandingSwitcher";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,6 +68,37 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Google+Symbols:opsz,wght,FILL,GRAD,ROND@40..48,300,0..1,0,50&display=swap"
+          rel="stylesheet"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(JSON.parse(localStorage.getItem('momento_clone_dark_mode')||'true'))document.documentElement.classList.add('dark')}catch(e){}`,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var p=JSON.parse(localStorage.getItem('momento_clone_palette')||'null');if(p){document.documentElement.style.setProperty('--g1',p.g1);document.documentElement.style.setProperty('--g2',p.g2)}}catch(e){}`,
+          }}
+        />
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            .ant-root * {
+              font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+            }
+            .ant-root .gs-icon {
+              font-family: 'Google Symbols', 'Material Symbols Outlined';
+              font-weight: normal; font-style: normal; display: inline-block;
+            }
+          `,
+        }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -107,10 +137,7 @@ export default function RootLayout({
                 description: "Marketplace de prestataires pour événements au Maroc : mariages, anniversaires, fiançailles, corporate.",
                 image: "https://momentoevents.app/logo-badge-dark.png",
                 priceRange: "$$",
-                areaServed: {
-                  "@type": "Country",
-                  name: "Maroc",
-                },
+                areaServed: { "@type": "Country", name: "Maroc" },
                 hasOfferCatalog: {
                   "@type": "OfferCatalog",
                   name: "Prestataires événementiels",
@@ -131,7 +158,6 @@ export default function RootLayout({
         <ThemeProvider>
           <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>
-        <LandingSwitcher />
       </body>
     </html>
   );

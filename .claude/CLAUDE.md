@@ -11,9 +11,9 @@ Marketplace événementiel au **Maroc** — connecte organisateurs d'événement
 - **Domaine** : `momentoevents.app` · Vercel project : `ngf1/momento`
 
 **Features clés :**
-- Côté client : recherche/filtrage, messagerie, gestion événement (invités, budget, tâches, timeline), favoris, reviews
+- Côté client : recherche/filtrage, messagerie, gestion événement unique et séparé (invités, budget, tâches, timeline), favoris, reviews
 - Côté prestataire : profil, packages, demandes clients, vérification sociale (Instagram/Facebook)
-- Transversal : notifications, Google Calendar, reviews 5 étoiles, suggestions IA (Anthropic)
+- Transversal : notifications, Google Calendar, reviews 5 étoiles, suggestions IA (Anthropic), messagerie
 
 ## Stack
 Next.js 16 (App Router), TypeScript, Prisma 7, Neon PostgreSQL, Tailwind v4, shadcn/ui v4, Auth JWT (jose), Resend, Vercel
@@ -190,3 +190,4 @@ vercel env pull .env.local                        # sync env vars
 - `overflow-x:clip` sur homepage (pas `hidden`) — préserve les dropdowns
 - Google OAuth implémenté manuellement sans NextAuth
 - Neon port 6543 = runtime OK / port 5432 = migrations uniquement
+- Codex will review all your outputs

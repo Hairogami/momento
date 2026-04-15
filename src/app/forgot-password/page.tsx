@@ -1,25 +1,17 @@
 "use client"
-
-import Link from "next/link"
 import { useState, FormEvent } from "react"
-import { C } from "@/lib/colors"
-import { MomentoLogo } from "@/components/MomentoLogo"
+import Link from "next/link"
 
-export default function ForgotPasswordPage() {
-  const [email, setEmail]       = useState("")
-  const [loading, setLoading]   = useState(false)
+export default function CloneForgotPasswordPage() {
+  const [email, setEmail]         = useState("")
+  const [loading, setLoading]     = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [error, setError]       = useState("")
+  const [error, setError]         = useState("")
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError("")
-
-    if (!email) {
-      setError("Saisis ton adresse e-mail.")
-      return
-    }
-
+    if (!email) { setError("Saisis ton adresse e-mail."); return }
     setLoading(true)
     await fetch("/api/auth/forgot-password", {
       method: "POST",
@@ -31,151 +23,99 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: C.ink, color: C.white }}
-    >
-      {/* Top wordmark */}
-      <header className="w-full px-6 pt-8 pb-4 flex justify-center">
-        <MomentoLogo iconSize={28} />
-      </header>
+    <div className="ant-root" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)", padding: "24px" }}>
+      <div style={{ width: "100%", maxWidth: 420 }}>
 
-      <main className="flex-1 flex items-start justify-center px-4 py-12">
-        <div
-          className="w-full max-w-md rounded-3xl p-8 sm:p-10"
-          style={{
-            backgroundColor: C.dark,
-            border: `1px solid ${C.anthracite}`,
-            boxShadow: "0 8px 48px rgba(26,18,8,0.08)",
-          }}
-        >
+        {/* Logo */}
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <Link href="/" style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", textDecoration: "none", letterSpacing: "-0.03em" }}>
+            Momento
+          </Link>
+        </div>
+
+        <div style={{
+          background: "var(--dash-surface,#fff)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+          borderRadius: 24, padding: "36px 32px",
+          boxShadow: "0 8px 40px rgba(0,0,0,0.06)",
+        }}>
           {!submitted ? (
             <>
-              {/* Heading */}
-              <div className="text-center mb-8">
-                <p
-                  className="text-xs font-semibold tracking-widest uppercase mb-2"
-                  style={{ color: C.mist }}
-                >
-                  Récupération
-                </p>
-                <h1
-                  className="font-display italic text-4xl sm:text-5xl font-normal leading-tight"
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+                Mot de passe oublié
+              </h1>
+              <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 24px", lineHeight: 1.5 }}>
+                Saisis ton e-mail et nous t&apos;enverrons un lien de réinitialisation.
+              </p>
+
+              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <input
+                  type="email" placeholder="toi@exemple.com" value={email}
+                  onChange={e => setEmail(e.target.value)} required
                   style={{
-                    fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif",
-                    color: C.accent,
+                    height: 46, padding: "0 14px", borderRadius: 12,
+                    border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
+                    background: "var(--dash-input-bg,#fafafa)",
+                    fontSize: 14, color: "var(--dash-text,#121317)",
+                    outline: "none", fontFamily: "inherit", boxSizing: "border-box", width: "100%",
                   }}
-                >
-                  Mot de passe oublié
-                </h1>
-                <p className="mt-3 text-sm leading-relaxed" style={{ color: C.mist }}>
-                  Saisis ton adresse e-mail et nous t&apos;enverrons un lien pour réinitialiser ton mot de passe.
-                </p>
-              </div>
+                  onFocus={e => (e.target.style.borderColor = "#E11D48")}
+                  onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
+                />
 
-              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-                {/* Email */}
-                <div className="flex flex-col gap-1.5">
-                  <label
-                    htmlFor="email"
-                    className="text-xs font-semibold tracking-wide uppercase"
-                    style={{ color: C.mist }}
-                  >
-                    Adresse e-mail
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="toi@exemple.com"
-                    required
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
-                    style={{
-                      backgroundColor: C.ink,
-                      border: `1.5px solid ${C.anthracite}`,
-                      color: C.white,
-                    }}
-                    onFocus={e => (e.currentTarget.style.borderColor = C.accent)}
-                    onBlur={e => (e.currentTarget.style.borderColor = C.anthracite)}
-                  />
-                </div>
-
-                {/* Error */}
                 {error && (
-                  <p
-                    className="text-sm px-4 py-3 rounded-xl"
-                    style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.1)", color: C.terra }}
-                  >
+                  <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>
                     {error}
                   </p>
                 )}
 
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full font-bold text-sm py-3.5 rounded-xl transition-all hover:opacity-90 disabled:opacity-60 mt-1"
-                  style={{ backgroundColor: C.terra, color: "#fff" }}
-                >
-                  {loading ? "Envoi en cours…" : "Envoyer le lien"}
+                <button type="submit" disabled={loading} style={{
+                  height: 46, borderRadius: 12, border: "none",
+                  background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+                  color: "#fff", fontSize: 14, fontWeight: 600,
+                  cursor: loading ? "wait" : "pointer", fontFamily: "inherit",
+                  opacity: loading ? 0.7 : 1,
+                }}>
+                  {loading ? "Envoi…" : "Envoyer le lien"}
                 </button>
               </form>
 
-              <p className="text-center text-sm mt-6" style={{ color: C.mist }}>
-                <Link
-                  href="/login"
-                  className="font-semibold transition-opacity hover:opacity-70"
-                  style={{ color: C.accent }}
-                >
-                  ← Retour à la connexion
-                </Link>
+              <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "var(--dash-text-2,#6a6a71)" }}>
+                <Link href="/login" style={{ color: "var(--dash-text-2,#6a6a71)" }}>← Retour à la connexion</Link>
               </p>
             </>
           ) : (
-            /* Success state */
-            <div className="text-center py-4">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
-                style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.12)" }}
-              >
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                  <path d="M5 14L11 20L23 8" stroke={C.terra} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            <div style={{ textAlign: "center", padding: "16px 0" }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: "50%",
+                background: "rgba(225,29,72,0.08)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                margin: "0 auto 20px",
+              }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12l5 5L20 7" stroke="#E11D48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h2
-                className="font-display italic text-3xl font-normal mb-3"
-                style={{
-                  fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif",
-                  color: C.accent,
-                }}
-              >
-                E-mail envoyé !
-              </h2>
-              <p className="text-sm leading-relaxed mb-6" style={{ color: C.mist }}>
-                Si un compte existe pour <strong style={{ color: C.white }}>{email}</strong>, tu recevras un lien de réinitialisation dans quelques minutes.
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 10px" }}>E-mail envoyé !</h2>
+              <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.6, margin: "0 0 20px" }}>
+                Si un compte existe pour <strong style={{ color: "var(--dash-text,#121317)" }}>{email}</strong>, tu recevras un lien de réinitialisation.
               </p>
-              <p className="text-xs mb-6" style={{ color: C.steel }}>
-                Vérifie également tes spams.
-              </p>
-              <Link
-                href="/login"
-                className="inline-block font-bold text-sm px-8 py-3 rounded-xl transition-all hover:opacity-90"
-                style={{ backgroundColor: C.terra, color: "#fff" }}
-              >
+              <p style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", marginBottom: 24 }}>Vérifie également tes spams.</p>
+              <Link href="/login" style={{
+                display: "inline-block", padding: "12px 28px", borderRadius: 12,
+                background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+                color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none",
+              }}>
                 Retour à la connexion
               </Link>
             </div>
           )}
         </div>
-      </main>
 
-      <footer className="text-center pb-8 px-6">
-        <p className="text-xs" style={{ color: C.steel }}>
-          © 2026 Momento. Tous droits réservés.
+        <p style={{ textAlign: "center", marginTop: 24, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>
+          © 2026 Momento Events
         </p>
-      </footer>
+      </div>
     </div>
   )
 }

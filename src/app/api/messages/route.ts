@@ -49,6 +49,18 @@ export async function GET() {
       },
       orderBy: { updatedAt: "desc" },
     })
+
+    // Enrich with vendor info (batch fetch)
+    const slugs = [...new Set(conversations.map((c: { vendorSlug: string }) => c.vendorSlug))]
+    const vendors = await prisma.vendor.findMany({
+      where: { slug: { in: slugs } },
+      select: { slug: true, name: true, category: true },
+    })
+    const vendorMap = Object.fromEntries(vendors.map(v => [v.slug, v]))
+    return NextResponse.json(conversations.map((c: { vendorSlug: string }) => ({
+      ...c,
+      vendor: vendorMap[(c as { vendorSlug: string }).vendorSlug] ?? null,
+    })))
   }
 
   return NextResponse.json(conversations)

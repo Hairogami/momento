@@ -1,10 +1,7 @@
 "use client"
-
-import Link from "next/link"
 import { useState, FormEvent, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { C } from "@/lib/colors"
-import { MomentoLogo } from "@/components/MomentoLogo"
+import Link from "next/link"
 
 function ResetForm() {
   const router = useRouter()
@@ -20,12 +17,10 @@ function ResetForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError("")
-
     if (!newPassword || !confirm) { setError("Veuillez remplir tous les champs."); return }
     if (newPassword !== confirm) { setError("Les mots de passe ne correspondent pas."); return }
     if (newPassword.length < 8) { setError("Minimum 8 caractères."); return }
     if (!token) { setError("Lien invalide."); return }
-
     setLoading(true)
     const res = await fetch("/api/auth/reset-password", {
       method: "POST",
@@ -34,87 +29,98 @@ function ResetForm() {
     })
     const data = await res.json()
     setLoading(false)
-
     if (!res.ok) { setError(data.error ?? "Une erreur est survenue."); return }
-
     setDone(true)
     setTimeout(() => router.push("/login"), 2500)
   }
 
-  return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: C.ink, color: C.white }}>
-      <header className="w-full px-6 pt-8 pb-4 flex justify-center">
-        <MomentoLogo iconSize={28} />
-      </header>
+  const inputStyle: React.CSSProperties = {
+    height: 46, padding: "0 14px", borderRadius: 12,
+    border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
+    background: "var(--dash-input-bg,#fafafa)",
+    fontSize: 14, color: "var(--dash-text,#121317)",
+    outline: "none", fontFamily: "inherit", boxSizing: "border-box", width: "100%",
+  }
 
-      <main className="flex-1 flex items-start justify-center px-4 py-12">
-        <div className="w-full max-w-md rounded-3xl p-8 sm:p-10" style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}`, boxShadow: "0 8px 48px rgba(26,18,8,0.08)" }}>
+  return (
+    <div className="ant-root" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)", padding: "24px" }}>
+      <div style={{ width: "100%", maxWidth: 420 }}>
+
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <Link href="/" style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", textDecoration: "none", letterSpacing: "-0.03em" }}>
+            Momento
+          </Link>
+        </div>
+
+        <div style={{
+          background: "var(--dash-surface,#fff)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+          borderRadius: 24, padding: "36px 32px",
+          boxShadow: "0 8px 40px rgba(0,0,0,0.06)",
+        }}>
           {done ? (
-            <div className="text-center py-4">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.12)" }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14L11 20L23 8" stroke={C.terra} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <div style={{ textAlign: "center", padding: "16px 0" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(225,29,72,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12l5 5L20 7" stroke="#E11D48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
-              <h2 className="font-display italic text-3xl font-normal mb-3" style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif", color: C.accent }}>
-                Mot de passe modifié !
-              </h2>
-              <p className="text-sm" style={{ color: C.mist }}>Redirection vers la connexion…</p>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 10px" }}>Mot de passe modifié !</h2>
+              <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)" }}>Redirection vers la connexion…</p>
             </div>
           ) : (
             <>
-              <div className="text-center mb-8">
-                <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: C.mist }}>Nouveau mot de passe</p>
-                <h1 className="font-display italic text-4xl sm:text-5xl font-normal leading-tight" style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif", color: C.accent }}>
-                  Réinitialiser
-                </h1>
-              </div>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+                Nouveau mot de passe
+              </h1>
+              <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 24px" }}>
+                Choisis un nouveau mot de passe sécurisé.
+              </p>
 
-              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-                {["newPassword", "confirm"].map(field => (
-                  <div key={field} className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold tracking-wide uppercase" style={{ color: C.mist }}>
-                      {field === "newPassword" ? "Nouveau mot de passe" : "Confirmer"}
-                    </label>
-                    <input
-                      type="password"
-                      value={field === "newPassword" ? newPassword : confirm}
-                      onChange={e => field === "newPassword" ? setNewPassword(e.target.value) : setConfirm(e.target.value)}
-                      placeholder="Min. 8 caractères"
-                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
-                      style={{ backgroundColor: C.ink, border: `1.5px solid ${C.anthracite}`, color: C.white }}
-                      onFocus={e => (e.currentTarget.style.borderColor = C.accent)}
-                      onBlur={e => (e.currentTarget.style.borderColor = C.anthracite)}
-                    />
-                  </div>
-                ))}
+              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <input type="password" placeholder="Nouveau mot de passe" value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)} required minLength={8} style={inputStyle}
+                  onFocus={e => (e.target.style.borderColor = "#E11D48")}
+                  onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
+                />
+                <input type="password" placeholder="Confirmer" value={confirm}
+                  onChange={e => setConfirm(e.target.value)} required minLength={8} style={inputStyle}
+                  onFocus={e => (e.target.style.borderColor = "#E11D48")}
+                  onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
+                />
 
                 {error && (
-                  <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.1)", color: C.terra }}>
+                  <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>
                     {error}
                   </p>
                 )}
 
-                <button type="submit" disabled={loading} className="w-full font-bold text-sm py-3.5 rounded-xl transition-all hover:opacity-90 disabled:opacity-60 mt-1" style={{ backgroundColor: C.terra, color: "#fff" }}>
+                <button type="submit" disabled={loading} style={{
+                  height: 46, borderRadius: 12, border: "none",
+                  background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+                  color: "#fff", fontSize: 14, fontWeight: 600,
+                  cursor: loading ? "wait" : "pointer", fontFamily: "inherit",
+                  opacity: loading ? 0.7 : 1,
+                }}>
                   {loading ? "Modification…" : "Changer le mot de passe"}
                 </button>
               </form>
 
-              <p className="text-center text-sm mt-6">
-                <Link href="/login" className="font-semibold transition-opacity hover:opacity-70" style={{ color: C.accent }}>
-                  ← Retour à la connexion
-                </Link>
+              <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "var(--dash-text-2,#6a6a71)" }}>
+                <Link href="/login" style={{ color: "var(--dash-text-2,#6a6a71)" }}>← Retour à la connexion</Link>
               </p>
             </>
           )}
         </div>
-      </main>
 
-      <footer className="text-center pb-8 px-6">
-        <p className="text-xs" style={{ color: C.steel }}>© 2026 Momento. Tous droits réservés.</p>
-      </footer>
+        <p style={{ textAlign: "center", marginTop: 24, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>
+          © 2026 Momento Events
+        </p>
+      </div>
     </div>
   )
 }
 
-export default function ResetPasswordPage() {
+export default function CloneResetPasswordPage() {
   return <Suspense><ResetForm /></Suspense>
 }

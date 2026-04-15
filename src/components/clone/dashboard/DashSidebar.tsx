@@ -1,18 +1,19 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { signOut } from "next-auth/react"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 const NAV_ITEMS = [
-  { icon: "home",                    label: "Accueil",  href: "/clone/accueil"   },
-  { icon: "dashboard",               label: "Dashboard",href: "/clone/dashboard" },
-  { icon: "account_balance_wallet",  label: "Budget",   href: "/clone/budget"    },
-  { icon: "groups",                  label: "Invités",  href: "/clone/guests"    },
-  { icon: "chat_bubble",             label: "Messages", href: "/clone/messages"  },
-  { icon: "event_note",              label: "Planning", href: "/clone/planner"   },
-  { icon: "favorite",                label: "Favoris",  href: "/clone/favorites" },
+  { icon: "home",                    label: "Accueil",  href: "/accueil"   },
+  { icon: "dashboard",               label: "Dashboard",href: "/dashboard" },
+  { icon: "account_balance_wallet",  label: "Budget",   href: "/budget"    },
+  { icon: "groups",                  label: "Invités",  href: "/guests"    },
+  { icon: "chat_bubble",             label: "Messages", href: "/messages"  },
+  { icon: "event_note",              label: "Planning", href: "/planner"   },
+  { icon: "favorite",                label: "Favoris",  href: "/favorites" },
 ]
 
 type Event = { id: string; name: string; date: string; color: string }
@@ -40,6 +41,8 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const pathname   = usePathname()
   const [eventOpen, setEventOpen] = useState(false)
   const [darkMode,  setDarkMode]  = useState(true)
+  const [menuOpen,  setMenuOpen]  = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0]
 
   // Lire dark mode depuis localStorage — défaut: true (dark en premier)
@@ -57,6 +60,16 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
       }
     } catch {}
   }, [])
+
+  // Fermer le menu sur clic extérieur
+  useEffect(() => {
+    if (!menuOpen) return
+    function onOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false)
+    }
+    document.addEventListener("mousedown", onOutside)
+    return () => document.removeEventListener("mousedown", onOutside)
+  }, [menuOpen])
 
   function toggleDark() {
     const next = !darkMode
@@ -77,7 +90,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
 
       {/* Logo + dark mode toggle */}
       <div style={{ padding: "18px 20px 16px", borderBottom: "1px solid var(--dash-divider, rgba(183,191,217,0.1))", display: "flex", alignItems: "center", gap: 10 }}>
-        <Link href="/clone" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
+        <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
           <div style={{
             width: 30, height: 30, borderRadius: 9, background: G,
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -113,14 +126,14 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
       {/* Event switcher */}
       <div style={{ padding: "10px 14px", borderBottom: "1px solid var(--dash-divider, rgba(183,191,217,0.08))", position: "relative" }}>
         <button
-          onClick={() => setEventOpen(o => !o)}
+          onClick={() => events.length > 0 && setEventOpen(o => !o)}
           style={{
             width: "100%", padding: "9px 12px",
             background: "var(--dash-faint, rgba(183,191,217,0.07))",
             border: "1px solid var(--dash-border, rgba(183,191,217,0.18))",
             borderRadius: 11,
             display: "flex", alignItems: "center", gap: 9,
-            cursor: "pointer", fontFamily: "inherit", textAlign: "left",
+            cursor: events.length > 0 ? "pointer" : "default", fontFamily: "inherit", textAlign: "left",
           }}
         >
           <div style={{
@@ -130,7 +143,10 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
           }} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              {activeEvent?.name ?? "Mon événement"}
+              {events.length === 0
+                ? <span style={{ display: "inline-block", width: 90, height: 10, borderRadius: 4, background: "var(--dash-border,rgba(183,191,217,0.25))" }} />
+                : (activeEvent?.name ?? "Mon événement")
+              }
             </div>
             <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Événement actif</div>
           </div>
@@ -162,7 +178,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
               </button>
             ))}
             <div style={{ borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.12))", padding: "8px 14px" }}>
-              <Link href="/clone/planner" style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+              <Link href="/planner" style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
                 <GIcon name="add" size={13} color="var(--dash-text-3,#9a9aaa)" />
                 Créer un événement
               </Link>
@@ -199,7 +215,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
               <span style={{ fontSize: 13, fontWeight: isCurrent ? 600 : 400, color: isCurrent ? "var(--dash-text,#121317)" : "var(--dash-text-2,#45474D)", flex: 1 }}>
                 {item.label}
               </span>
-              {item.href === "/clone/messages" && messageUnread > 0 && (
+              {item.href === "/messages" && messageUnread > 0 && (
                 <span style={{ fontSize: 10, fontWeight: 700, background: G, color: "#fff", padding: "1px 6px", borderRadius: 99, minWidth: 18, textAlign: "center" }}>
                   {messageUnread}
                 </span>
@@ -211,7 +227,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
 
       {/* CTA */}
       <div style={{ padding: "10px 14px", borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.1))" }}>
-        <Link href="/clone/explore" style={{
+        <Link href="/explore" style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
           padding: "10px 14px", borderRadius: 11, background: G, color: "#fff",
           fontSize: 12, fontWeight: 600, textDecoration: "none",
@@ -222,24 +238,84 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
         </Link>
       </div>
 
-      {/* User profile + dark mode toggle */}
-      <div style={{
-        padding: "10px 14px",
-        display: "flex", alignItems: "center", gap: 10,
-        borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.1))",
-      }}>
-        <div style={{
-          width: 32, height: 32, borderRadius: "50%", background: G, flexShrink: 0,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 12, fontWeight: 700, color: "#fff",
-        }}>{firstName[0]?.toUpperCase() ?? "U"}</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{firstName}</div>
-          <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Pro · Casablanca</div>
-        </div>
-        <Link href="/clone/dashboard" style={{ textDecoration: "none", display: "flex" }}>
-          <GIcon name="settings" size={18} color="var(--dash-text-3,#9a9aaa)" />
-        </Link>
+      {/* User profile + menu montant */}
+      <div ref={menuRef} style={{ position: "relative", borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.1))" }}>
+
+        {/* Popover menu — monte vers le haut */}
+        {menuOpen && (
+          <div style={{
+            position: "absolute", bottom: "calc(100% + 8px)", left: 10, right: 10,
+            background: "var(--dash-surface,#fff)",
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+            borderRadius: 16,
+            boxShadow: "0 -8px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)",
+            overflow: "hidden", zIndex: 50,
+          }}>
+            {/* Header utilisateur */}
+            <Link href="/profile" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, padding: "14px 14px 10px" }}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: G, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, color: "#fff" }}>
+                {firstName[0]?.toUpperCase() ?? "U"}
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{firstName}</div>
+                <div style={{ fontSize: 11, color: "var(--g1,#E11D48)", fontWeight: 500 }}>Voir mon profil →</div>
+              </div>
+            </Link>
+
+            <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.12))", margin: "0 10px" }} />
+
+            {/* Liens rapides */}
+            {[
+              { icon: "person",        label: "Profil",        href: "/profile"       },
+              { icon: "settings",      label: "Paramètres",    href: "/settings"      },
+              { icon: "notifications", label: "Notifications", href: "/notifications" },
+              { icon: "favorite",      label: "Favoris",       href: "/favorites"     },
+              { icon: "chat_bubble",   label: "Messages",      href: "/messages"      },
+            ].map(item => (
+              <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}
+                style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px", textDecoration: "none",
+                  background: pathname === item.href ? "rgba(225,29,72,0.06)" : "transparent",
+                  color: pathname === item.href ? "var(--g1,#E11D48)" : "var(--dash-text,#121317)",
+                  fontSize: 13, fontWeight: pathname === item.href ? 600 : 400,
+                  transition: "background 0.1s",
+                }}
+                onMouseEnter={e => { if (pathname !== item.href) (e.currentTarget as HTMLElement).style.background = "var(--dash-faint-2,#f4f4f8)" }}
+                onMouseLeave={e => { if (pathname !== item.href) (e.currentTarget as HTMLElement).style.background = "transparent" }}
+              >
+                <GIcon name={item.icon} size={16} color={pathname === item.href ? "var(--g1,#E11D48)" : "var(--dash-text-2,#6a6a71)"} />
+                {item.label}
+              </Link>
+            ))}
+
+            {/* Déconnexion */}
+            <button onClick={() => signOut({ callbackUrl: "/" })}
+              style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px 14px", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: 13, color: "#ef4444", textAlign: "left" }}>
+              <GIcon name="logout" size={16} color="#ef4444" />
+              Se déconnecter
+            </button>
+          </div>
+        )}
+
+        {/* Bouton déclencheur */}
+        <button
+          onClick={() => setMenuOpen(o => !o)}
+          style={{
+            width: "100%", padding: "10px 14px",
+            display: "flex", alignItems: "center", gap: 10,
+            background: menuOpen ? "var(--dash-faint-2,rgba(183,191,217,0.08))" : "transparent",
+            border: "none", cursor: "pointer", fontFamily: "inherit",
+            transition: "background 0.15s",
+          }}
+        >
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: G, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff" }}>
+            {firstName[0]?.toUpperCase() ?? "U"}
+          </div>
+          <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{firstName}</div>
+            <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Mon compte</div>
+          </div>
+          <GIcon name={menuOpen ? "expand_more" : "expand_less"} size={16} color="var(--dash-text-3,#9a9aaa)" />
+        </button>
       </div>
     </aside>
   )

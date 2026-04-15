@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export type BudgetItem = {
   label: string
@@ -17,6 +17,20 @@ interface BudgetWidgetProps {
 
 export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps) {
   const circleRef = useRef<SVGCircleElement>(null)
+  const inputRef  = useRef<HTMLInputElement>(null)
+  const [spentOverrides, setSpentOverrides] = useState<Record<number, number>>({})
+  const [editingIdx, setEditingIdx] = useState<number | null>(null)
+  const [editValue, setEditValue]   = useState("")
+
+  function startEdit(idx: number, currentSpent: number) {
+    setEditingIdx(idx); setEditValue(String(currentSpent))
+    setTimeout(() => inputRef.current?.select(), 10)
+  }
+  function commitEdit(idx: number) {
+    const v = parseFloat(editValue)
+    if (!isNaN(v) && v >= 0) setSpentOverrides(p => ({ ...p, [idx]: v }))
+    setEditingIdx(null)
+  }
   const remaining = Math.max(0, total - spent)
   const pct = total > 0 ? Math.min(1, spent / total) : 0
   const isOverBudget = spent > total
@@ -116,7 +130,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
             <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Restant</div>
             <div style={{
               fontSize: 14, fontWeight: 700,
-              color: remaining < total * 0.1 ? "#ef4444" : "#121317",
+              color: remaining < total * 0.1 ? "#ef4444" : "var(--dash-text,#121317)",
             }}>
               {remaining.toLocaleString("fr-MA")} MAD
             </div>
@@ -124,26 +138,37 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
         </div>
       </div>
 
-      {/* Category breakdown */}
+      {/* Category breakdown — click montant pour éditer */}
       <div style={{ flex: 1, overflow: "auto", scrollbarWidth: "none" }}>
-        {items.slice(0, 5).map(item => {
-          const itemPct = item.allocated > 0 ? Math.min(1, item.spent / item.allocated) : 0
+        {items.slice(0, 5).map((item, idx) => {
+          const effectiveSpent = spentOverrides[idx] ?? item.spent
+          const itemPct = item.allocated > 0 ? Math.min(1, effectiveSpent / item.allocated) : 0
+          const isEditing = editingIdx === idx
           return (
             <div key={item.label} style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontSize: 13, flexShrink: 0 }}>{item.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, alignItems: "center" }}>
                   <span style={{ fontSize: 10, fontWeight: 500, color: "var(--dash-text-2,#45474D)" }}>{item.label}</span>
-                  <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>
-                    {Math.round(itemPct * 100)}%
-                  </span>
+                  {isEditing ? (
+                    <input ref={inputRef} type="number" value={editValue}
+                      onChange={e => setEditValue(e.target.value)}
+                      onBlur={() => commitEdit(idx)}
+                      onKeyDown={e => { if (e.key === "Enter") commitEdit(idx); if (e.key === "Escape") setEditingIdx(null) }}
+                      style={{ width: 72, fontSize: 10, padding: "1px 5px", borderRadius: 6, border: "1.5px solid var(--g1,#E11D48)", background: "var(--dash-faint,rgba(183,191,217,0.06))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)", textAlign: "right" }} />
+                  ) : (
+                    <button onClick={() => startEdit(idx, effectiveSpent)} title="Modifier"
+                      style={{ fontSize: 10, fontWeight: 600, color: item.color, background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "1px 4px", borderRadius: 4 }}>
+                      {effectiveSpent.toLocaleString("fr-MA")} ✎
+                    </button>
+                  )}
                 </div>
                 <div style={{ height: 3, background: "rgba(183,191,217,0.12)", borderRadius: 99, overflow: "hidden" }}>
                   <div style={{
                     height: "100%", borderRadius: 99,
                     width: `${itemPct * 100}%`,
                     background: item.color,
-                    transition: "width 1.2s cubic-bezier(0.4,0,0.2,1)",
+                    transition: "width 0.4s",
                   }} />
                 </div>
               </div>

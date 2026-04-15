@@ -35,7 +35,13 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     where: { id },
     include: {
       steps: {
-        include: { vendors: { include: { vendor: true } } },
+        include: {
+          vendors: {
+            include: {
+              vendor: { select: { id: true, name: true, slug: true, category: true } },
+            },
+          },
+        },
         orderBy: { order: "asc" },
       },
       events: { orderBy: { date: "asc" } },

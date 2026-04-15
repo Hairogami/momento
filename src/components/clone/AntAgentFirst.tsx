@@ -48,7 +48,7 @@ export default function AntAgentFirst() {
   }, [])
 
   return (
-    <section ref={ref} style={{ backgroundColor: "#fff", overflow: "hidden", paddingBottom: 0 }}>
+    <section ref={ref} style={{ backgroundColor: "var(--dash-bg,#fff)", overflow: "hidden", paddingBottom: 0 }}>
 
       {/* ── Icon strip — event icons ─────────────────────────── */}
       <div className="overflow-hidden" style={{ paddingBlock: 24, marginBottom: 72 }}>
@@ -76,7 +76,7 @@ export default function AntAgentFirst() {
               fontWeight: 600,
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
-              color: "#121317",
+              color: "var(--dash-text,#121317)",
               minHeight: "8rem",
             }}>
               {typed}
@@ -90,7 +90,7 @@ export default function AntAgentFirst() {
             </h2>
 
             <p className="clone-body" style={{
-              fontSize: 15, lineHeight: 1.7, color: "#6a6a71",
+              fontSize: 15, lineHeight: 1.7, color: "var(--dash-text-2,#6a6a71)",
               marginTop: 16, maxWidth: 380,
               opacity: typed.length >= TEXT.length ? 1 : 0,
               transition: "opacity 0.6s ease",
@@ -107,7 +107,7 @@ export default function AntAgentFirst() {
           }}>
             <div className="clone-mockup" style={{
               borderRadius: 16, overflow: "hidden",
-              background: "#f8f9fc",
+              background: "var(--dash-faint,#f8f9fc)",
               border: "1px solid rgba(183,191,217,0.28)",
               boxShadow: "0 12px 48px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)",
             }}>
@@ -116,7 +116,7 @@ export default function AntAgentFirst() {
                 display: "flex", alignItems: "center", gap: 8,
                 padding: "10px 16px",
                 borderBottom: "1px solid rgba(183,191,217,0.18)",
-                background: "rgba(255,255,255,0.9)",
+                background: "var(--dash-surface,#fff)",
               }}>
                 <div style={{ display: "flex", gap: 6 }}>
                   {["#ff5f57","#febc2e","#28c840"].map(c => (
@@ -124,7 +124,7 @@ export default function AntAgentFirst() {
                   ))}
                 </div>
                 <div style={{
-                  flex: 1, textAlign: "center", fontSize: 10, color: "#6a6a71",
+                  flex: 1, textAlign: "center", fontSize: 10, color: "var(--dash-text-2,#6a6a71)",
                   background: "rgba(183,191,217,0.15)", borderRadius: 99, padding: "2px 8px",
                 }}>
                   momentoevents.app/explore
@@ -132,15 +132,15 @@ export default function AntAgentFirst() {
               </div>
 
               {/* App content */}
-              <div style={{ padding: "14px 16px", background: "#f8f9fc" }}>
+              <div style={{ padding: "14px 16px", background: "var(--dash-faint,#f8f9fc)" }}>
                 {/* Search bar */}
                 <div style={{
                   display: "flex", alignItems: "center", gap: 8,
-                  background: "#fff", border: "1px solid rgba(183,191,217,0.3)",
+                  background: "var(--dash-surface,#fff)", border: "1px solid rgba(183,191,217,0.3)",
                   borderRadius: 99, padding: "7px 14px", marginBottom: 10,
                 }}>
-                  <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: 14, color: "#6a6a71" }}>search</span>
-                  <span style={{ fontSize: 11, color: "#9a9aaa", flex: 1 }}>Photographe · Casablanca...</span>
+                  <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: 14, color: "var(--dash-text-2,#6a6a71)" }}>search</span>
+                  <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", flex: 1 }}>Photographe · Casablanca...</span>
                   <span className="clone-filter-badge" style={{ fontSize: 10, color: "#fff", background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", padding: "2px 8px", borderRadius: 99 }}>Filtrer</span>
                 </div>
 
@@ -164,7 +164,7 @@ export default function AntAgentFirst() {
                 ].map((v, i) => (
                   <div key={i} style={{
                     display: "flex", alignItems: "center", gap: 10,
-                    background: "#fff", border: "1px solid rgba(183,191,217,0.2)",
+                    background: "var(--dash-surface,#fff)", border: "1px solid rgba(183,191,217,0.2)",
                     borderRadius: 10, padding: "8px 10px", marginBottom: 6,
                   }}>
                     <div style={{
@@ -174,12 +174,12 @@ export default function AntAgentFirst() {
                       color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0,
                     }}>{v.name[0]}</div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: "#121317" }}>{v.name}</div>
-                      <div style={{ fontSize: 10, color: "#6a6a71" }}>Photographe · {v.city}</div>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{v.name}</div>
+                      <div style={{ fontSize: 10, color: "var(--dash-text-2,#6a6a71)" }}>Photographe · {v.city}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 10, fontWeight: 700, color: "#F59E0B" }}>★ {v.r}</div>
-                      <div style={{ fontSize: 10, color: "#9a9aaa" }}>{v.price}</div>
+                      <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>{v.price}</div>
                     </div>
                   </div>
                 ))}
@@ -189,7 +189,7 @@ export default function AntAgentFirst() {
                   {[["1 000+","prestataires"],["41","villes"],["31","catégories"]].map(([val, lbl]) => (
                     <div key={lbl} style={{ flex: 1, textAlign: "center" }}>
                       <div className="clone-stat-num" style={{ fontSize: 12, fontWeight: 700, backgroundImage: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{val}</div>
-                      <div style={{ fontSize: 9, color: "#6a6a71" }}>{lbl}</div>
+                      <div style={{ fontSize: 9, color: "var(--dash-text-2,#6a6a71)" }}>{lbl}</div>
                     </div>
                   ))}
                 </div>

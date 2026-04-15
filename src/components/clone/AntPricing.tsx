@@ -30,21 +30,21 @@ export default function AntPricing() {
     <section
       id="pricing"
       className="relative overflow-hidden"
-      style={{ backgroundColor: "#fff", borderTop: "1px solid rgba(183,191,217,0.15)" }}
+      style={{ backgroundColor: "var(--dash-bg,#fff)", borderTop: "1px solid rgba(183,191,217,0.15)" }}
     >
       <AntConfetti count={80} dark={false} />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-24 lg:py-32">
         {/* Header */}
         <div className="text-center mb-12">
-          <p className="clone-label" style={{ fontSize: 12, color: "#6a6a71", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+          <p className="clone-label" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
             Pour les organisateurs uniquement
           </p>
-          <h2 className="clone-heading" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 600, lineHeight: 1.1, letterSpacing: "-0.03em", color: "#121317" }}>
+          <h2 className="clone-heading" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 600, lineHeight: 1.1, letterSpacing: "-0.03em", color: "var(--dash-text,#121317)" }}>
             Simple, transparent,<br />
-            <span style={{ color: "#6a6a71", fontWeight: 400, fontStyle: "italic" }}>sans surprise</span>
+            <span style={{ color: "var(--dash-text-2,#6a6a71)", fontWeight: 400, fontStyle: "italic" }}>sans surprise</span>
           </h2>
-          <p className="clone-body" style={{ fontSize: 15, color: "#6a6a71", marginTop: 16, maxWidth: 480, marginInline: "auto", lineHeight: 1.7 }}>
+          <p className="clone-body" style={{ fontSize: 15, color: "var(--dash-text-2,#6a6a71)", marginTop: 16, maxWidth: 480, marginInline: "auto", lineHeight: 1.7 }}>
             Utiliser Momento, c&apos;est gratuit. Pour aller plus loin, on a pensé à tout.
           </p>
         </div>
@@ -57,11 +57,11 @@ export default function AntPricing() {
             style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(183,191,217,0.25)", backdropFilter: "blur(8px)" }}
           >
             <div>
-              <p style={{ fontSize: 11, color: "#6a6a71", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>Gratuit · Pour toujours</p>
-              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 700, lineHeight: 1.1, color: "#121317" }}>Essentiel</div>
-              <p className="clone-muted" style={{ fontSize: 13, color: "#6a6a71", marginTop: 6 }}>Tout pour trouver le bon prestataire</p>
+              <p style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>Gratuit · Pour toujours</p>
+              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 700, lineHeight: 1.1, color: "var(--dash-text,#121317)" }}>Essentiel</div>
+              <p className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", marginTop: 6 }}>Tout pour trouver le bon prestataire</p>
             </div>
-            <ul className="clone-body" style={{ fontSize: 13, color: "#45474D", lineHeight: 2.2, listStyle: "none", padding: 0, flex: 1 }}>
+            <ul className="clone-body" style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", lineHeight: 2.2, listStyle: "none", padding: 0, flex: 1 }}>
               {ESSENTIAL.map(f => (
                 <li key={f} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ color: "#16A34A", fontWeight: 700 }}>✓</span> {f}
@@ -69,7 +69,7 @@ export default function AntPricing() {
               ))}
             </ul>
             <a
-              href="/signup"
+              href="/login"
               className="inline-flex items-center justify-center px-6 py-3 rounded-full text-sm font-medium transition-all hover:opacity-80"
               style={{ background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", color: "#fff" }}
             >
@@ -109,9 +109,9 @@ export default function AntPricing() {
               ))}
             </ul>
             <a
-              href="/signup"
+              href="/login"
               className="relative inline-flex items-center justify-center px-6 py-3 rounded-full text-sm font-medium transition-all hover:opacity-90"
-              style={{ background: "#fff", color: "#121317" }}
+              style={{ background: "var(--dash-surface,#fff)", color: "var(--dash-text,#121317)" }}
             >
               Rejoindre la liste d&apos;attente
             </a>
@@ -133,10 +133,10 @@ export default function AntPricing() {
             }} />
             <div className="relative">
               <p style={{ fontSize: 11, color: "#9333EA", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>Sur mesure · Disponible maintenant</p>
-              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 700, lineHeight: 1.1, color: "#121317" }}>Platine</div>
-              <p className="clone-muted" style={{ fontSize: 13, color: "#6a6a71", marginTop: 6 }}>Un event planner dédié, pour vous</p>
+              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 700, lineHeight: 1.1, color: "var(--dash-text,#121317)" }}>Platine</div>
+              <p className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", marginTop: 6 }}>Un event planner dédié, pour vous</p>
             </div>
-            <ul className="clone-body relative" style={{ fontSize: 13, color: "#45474D", lineHeight: 2.2, listStyle: "none", padding: 0, flex: 1 }}>
+            <ul className="clone-body relative" style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", lineHeight: 2.2, listStyle: "none", padding: 0, flex: 1 }}>
               {PLATINE_EXTRA.map(f => (
                 <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                   <span style={{ color: "#9333EA", fontWeight: 700, marginTop: 2, flexShrink: 0 }}>✦</span>
@@ -145,7 +145,7 @@ export default function AntPricing() {
               ))}
             </ul>
             <a
-              href="/signup"
+              href="/login"
               className="relative inline-flex items-center justify-center px-6 py-3 rounded-full text-sm font-medium transition-all hover:opacity-80"
               style={{ background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", color: "#fff" }}
             >

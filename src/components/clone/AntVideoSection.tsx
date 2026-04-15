@@ -75,7 +75,7 @@ export default function AntVideoSection() {
           position: "sticky",
           top: 0,
           height: "100dvh",
-          backgroundColor: "#fff",
+          backgroundColor: "var(--dash-bg,#fff)",
           overflow: "hidden",
           display: "flex",
           alignItems: "center",

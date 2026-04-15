@@ -25,7 +25,7 @@ const TESTIMONIALS = [
 export default function AntTestimonials() {
   return (
     <section
-      style={{ backgroundColor: "#fff", borderTop: "1px solid rgba(183,191,217,0.15)" }}
+      style={{ backgroundColor: "var(--dash-bg,#fff)", borderTop: "1px solid rgba(183,191,217,0.15)" }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32">
 
@@ -38,22 +38,22 @@ export default function AntTestimonials() {
               fontWeight: 600,
               lineHeight: 1.08,
               letterSpacing: "-0.03em",
-              color: "#121317",
+              color: "var(--dash-text,#121317)",
             }}
           >
             Ils ont créé<br />
-            <span style={{ color: "#6a6a71", fontWeight: 400, fontStyle: "italic" }}>
+            <span style={{ color: "var(--dash-text-2,#6a6a71)", fontWeight: 400, fontStyle: "italic" }}>
               l&apos;événement parfait
             </span>
           </h2>
           <div style={{ paddingTop: 8 }}>
-            <p className="clone-body" style={{ fontSize: 16, lineHeight: 1.7, color: "#45474D" }}>
+            <p className="clone-body" style={{ fontSize: 16, lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
               2 300+ organisateurs ont déjà fait confiance à Momento pour leurs mariages,
               fiançailles et événements corporate au Maroc.
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16 }}>
               <span style={{ color: "#F59E0B", fontSize: 16 }}>★★★★★</span>
-              <span className="clone-body" style={{ fontSize: 14, color: "#45474D" }}>
+              <span className="clone-body" style={{ fontSize: 14, color: "var(--dash-text-2,#45474D)" }}>
                 4.8 / 5 de moyenne · 2 300+ événements
               </span>
             </div>
@@ -73,7 +73,7 @@ export default function AntTestimonials() {
             >
               <span style={{ color: "#F59E0B", fontSize: 14 }}>★★★★★</span>
 
-              <p className="clone-body" style={{ fontSize: 14, lineHeight: 1.75, color: "#45474D", flex: 1 }}>
+              <p className="clone-body" style={{ fontSize: 14, lineHeight: 1.75, color: "var(--dash-text-2,#45474D)", flex: 1 }}>
                 &ldquo;{t.quote}&rdquo;
               </p>
 
@@ -87,8 +87,8 @@ export default function AntTestimonials() {
                   {t.initials}
                 </div>
                 <div>
-                  <div className="clone-heading" style={{ fontSize: 13, fontWeight: 600, color: "#121317" }}>{t.author}</div>
-                  <div className="clone-muted" style={{ fontSize: 12, color: "#6a6a71" }}>{t.event}</div>
+                  <div className="clone-heading" style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{t.author}</div>
+                  <div className="clone-muted" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>{t.event}</div>
                 </div>
               </div>
             </div>

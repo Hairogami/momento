@@ -81,6 +81,29 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   return Response.json(link, { status: 201 })
 }
 
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+
+  const { id: stepId } = await params
+  const owned = await getOwnedStep(stepId)
+  if (!owned || owned.planner.userId !== session.user.id)
+    return Response.json({ error: "Forbidden" }, { status: 403 })
+
+  const body = await req.json()
+  const { vendorId, confirmed, notes } = body
+  if (typeof vendorId !== "string") {
+    return Response.json({ error: "vendorId requis." }, { status: 400 })
+  }
+  const data: { confirmed?: boolean; notes?: string } = {}
+  if (typeof confirmed === "boolean") data.confirmed = confirmed
+  if (typeof notes === "string") data.notes = notes.slice(0, 500)
+  const updated = await prisma.stepVendor.updateMany({ where: { stepId, vendorId }, data })
+  if (updated.count === 0) return Response.json({ error: "Not found" }, { status: 404 })
+  const link = await prisma.stepVendor.findFirst({ where: { stepId, vendorId }, include: { vendor: true } })
+  return Response.json(link)
+}
+
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })

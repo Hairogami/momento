@@ -29,9 +29,9 @@ export default function AntDownload() {
 
         <div className="flex flex-col sm:flex-row gap-3 mt-10">
           <a
-            href="/signup"
+            href="/login"
             className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-full text-sm font-medium transition-all hover:opacity-90"
-            style={{ background: "#fff", color: "#121317" }}
+            style={{ background: "var(--dash-surface,#fff)", color: "var(--dash-text,#121317)" }}
           >
             Trouver un prestataire
           </a>

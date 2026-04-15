@@ -139,7 +139,7 @@ export default function AntVendorCard({ id, name, category, city, rating }: Prop
             style={{
               position: "absolute", top: 12, right: 12,
               width: 34, height: 34, borderRadius: "50%",
-              background: "rgba(255,255,255,0.88)",
+              background: fav ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.35)",
               backdropFilter: "blur(8px)",
               WebkitBackdropFilter: "blur(8px)",
               border: "none", cursor: "pointer",

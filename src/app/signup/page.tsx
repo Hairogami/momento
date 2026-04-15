@@ -1,260 +1,251 @@
 "use client"
-
+import { useState } from "react"
 import Link from "next/link"
-import { useState, FormEvent } from "react"
 import { useRouter } from "next/navigation"
-import { C } from "@/lib/colors"
-import { MomentoLogo } from "@/components/MomentoLogo"
+import { signIn } from "next-auth/react"
 
-const VENDOR_CATEGORIES = [
-  "DJ","Traiteur","Photo/Vidéo","Salle","Fleurs","Gâteau","Animation","Transport",
-]
+type Role = "client" | "vendor" | null
 
-type UserType = "client" | "vendor" | null
-
-interface ClientForm {
-  nom: string; prenom: string; email: string; password: string; confirm: string
-}
-interface VendorForm {
-  entreprise: string; categorie: string; email: string; telephone: string; password: string
+const inputStyle: React.CSSProperties = {
+  width: "100%", height: 46, padding: "0 14px", borderRadius: 12,
+  border: "1px solid rgba(183,191,217,0.4)", background: "#fafafa",
+  fontSize: 14, color: "#121317", outline: "none",
+  boxSizing: "border-box", fontFamily: "inherit", transition: "border-color 0.15s",
 }
 
-function InputField({
-  id, label, type = "text", value, onChange, placeholder, required, autoComplete,
-}: {
-  id: string; label: string; type?: string; value: string
-  onChange: (v: string) => void; placeholder?: string; required?: boolean; autoComplete?: string
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-xs font-semibold tracking-wide uppercase" style={{ color: C.mist }}>
-        {label}
-      </label>
-      <input
-        id={id} type={type} value={value} onChange={e => onChange(e.target.value)}
-        placeholder={placeholder} required={required} autoComplete={autoComplete}
-        className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
-        style={{ backgroundColor: C.ink, border: `1.5px solid ${C.anthracite}`, color: C.white }}
-        onFocus={e => (e.currentTarget.style.borderColor = C.accent)}
-        onBlur={e => (e.currentTarget.style.borderColor = C.anthracite)}
-      />
-    </div>
-  )
-}
+const GRADIENT = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
-function SelectField({
-  id, label, value, onChange, options,
-}: {
-  id: string; label: string; value: string; onChange: (v: string) => void; options: string[]
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-xs font-semibold tracking-wide uppercase" style={{ color: C.mist }}>
-        {label}
-      </label>
-      <select
-        id={id} value={value} onChange={e => onChange(e.target.value)}
-        className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all appearance-none cursor-pointer"
-        style={{
-          backgroundColor: C.ink, border: `1.5px solid ${C.anthracite}`,
-          color: value ? C.white : C.steel,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%236A5F4A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
-          backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center", paddingRight: "38px",
-        }}
-        onFocus={e => (e.currentTarget.style.borderColor = C.accent)}
-        onBlur={e => (e.currentTarget.style.borderColor = C.anthracite)}
-      >
-        <option value="" disabled style={{ color: C.steel }}>Choisir une catégorie</option>
-        {options.map(opt => (
-          <option key={opt} value={opt} style={{ color: C.white, backgroundColor: C.dark }}>{opt}</option>
-        ))}
-      </select>
-    </div>
-  )
-}
-
-export default function SignupPage() {
+export default function CloneSignupPage() {
   const router = useRouter()
-  const [step, setStep]           = useState<1 | 2>(1)
-  const [userType, setUserType]   = useState<UserType>(null)
-  const [loading, setLoading]     = useState(false)
-  const [error, setError]         = useState("")
+  const [step, setStep]     = useState<1 | 2>(1)
+  const [role, setRole]     = useState<Role>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError]   = useState("")
 
-  const [client, setClient] = useState<ClientForm>({ nom:"", prenom:"", email:"", password:"", confirm:"" })
-  const [vendor, setVendor] = useState<VendorForm>({ entreprise:"", categorie:"", email:"", telephone:"", password:"" })
+  // Client fields
+  const [nom, setNom]       = useState("")
+  const [prenom, setPrenom] = useState("")
+  const [email, setEmail]   = useState("")
+  const [password, setPassword] = useState("")
+  const [confirm, setConfirm]   = useState("")
 
-  function updateClient(k: keyof ClientForm, v: string) { setClient(prev => ({ ...prev, [k]: v })) }
-  function updateVendor(k: keyof VendorForm, v: string) { setVendor(prev => ({ ...prev, [k]: v })) }
+  // Vendor fields
+  const [entreprise, setEntreprise] = useState("")
+  const [categorie, setCategorie]   = useState("")
+  const [telephone, setTelephone]   = useState("")
+  const [vEmail, setVEmail]         = useState("")
+  const [vPassword, setVPassword]   = useState("")
 
-  function handleTypeSelect(type: UserType) { setUserType(type); setError(""); setStep(2) }
-  function handleBack() { setError(""); setStep(1); setUserType(null) }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault(); setError(""); setLoading(true)
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    setError("")
-
-    if (userType === "client") {
-      const { nom, prenom, email, password, confirm } = client
-      if (!nom || !prenom || !email || !password || !confirm) {
-        setError("Remplis tous les champs."); return
-      }
-      if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return }
-      if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return }
-    } else {
-      const { entreprise, categorie, email, telephone, password } = vendor
-      if (!entreprise || !categorie || !email || !telephone || !password) {
-        setError("Remplis tous les champs."); return
-      }
-      if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return }
+    if (role === "client" && password !== confirm) {
+      setError("Les mots de passe ne correspondent pas."); setLoading(false); return
     }
 
-    setLoading(true)
-    const payload = userType === "client"
-      ? { role: "client", email: client.email, password: client.password, firstName: client.prenom, lastName: client.nom }
-      : { role: "vendor", email: vendor.email, password: vendor.password, companyName: vendor.entreprise, vendorCategory: vendor.categorie, phone: vendor.telephone }
+    const body = role === "client"
+      ? { name: `${prenom} ${nom}`, email, password, role: "CLIENT" }
+      : { name: entreprise, email: vEmail, password: vPassword, phone: telephone, category: categorie, role: "VENDOR" }
 
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+    const r = await fetch("/api/auth/register", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     })
-    const data = await res.json()
+
+    if (!r.ok) {
+      const d = await r.json()
+      setError(d.error || "Erreur lors de l'inscription"); setLoading(false); return
+    }
+
+    const res = await signIn("credentials", {
+      email: role === "client" ? email : vEmail,
+      password: role === "client" ? password : vPassword,
+      rememberMe: "true", redirect: false,
+    })
     setLoading(false)
-
-    if (!res.ok) { setError(data.error ?? "Une erreur est survenue."); return }
-
-    router.refresh()
-    router.push("/accueil")
+    if (res?.error) { setError("Compte créé ! Connectez-vous."); router.push("/login") }
+    else router.push("/accueil")
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: C.ink, color: C.white }}>
-      <header className="w-full px-6 pt-8 pb-4 flex items-center justify-center relative">
-        <Link href="/login" className="absolute left-6 text-sm transition-opacity hover:opacity-70" style={{ color: C.mist }}>
-          ← Connexion
-        </Link>
-        <MomentoLogo iconSize={28} />
-      </header>
+    <div className="ant-root" style={{
+      minHeight: "100vh", background: "#f7f7fb",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "48px 20px",
+      fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+    }}>
+      <div style={{ width: "100%", maxWidth: 480 }}>
 
-      <main className="flex-1 flex items-start justify-center px-4 py-12">
+        {/* Logo */}
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-icon.png" alt="Momento" width={28} height={28} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
+            <span style={{ fontSize: 16, fontWeight: 700, color: "#121317" }}>Momento</span>
+          </Link>
+        </div>
 
-        {/* ── STEP 1 ── */}
-        {step === 1 && (
-          <div className="w-full max-w-2xl">
-            <div className="text-center mb-10">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: C.mist }}>Inscription</p>
-              <h1 className="font-display italic text-4xl sm:text-5xl font-normal leading-tight" style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif", color: C.accent }}>
-                Tu es…
-              </h1>
-              <p className="mt-3 text-sm" style={{ color: C.mist }}>Choisis ton profil pour commencer</p>
-            </div>
+        <div style={{
+          background: "#fff", borderRadius: 24, padding: "36px 32px",
+          border: "1px solid rgba(183,191,217,0.18)",
+          boxShadow: "0 4px 32px rgba(0,0,0,0.06)",
+        }}>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { type: "client" as const, icon: "🎉", title: "Je cherche des prestataires", desc: "Planifie ton événement et trouve les meilleurs prestataires — DJ, traiteur, photographe et plus.", cta: "Commencer" },
-                { type: "vendor" as const, icon: "🎵", title: "Je suis prestataire", desc: "Rejoins la plateforme, présente tes services et reçois des demandes d'événements qualifiées.", cta: "Rejoindre" },
-              ].map(card => (
-                <button
-                  key={card.type}
-                  onClick={() => handleTypeSelect(card.type)}
-                  className="group flex flex-col items-start gap-4 p-8 rounded-3xl text-left transition-all hover:-translate-y-1"
-                  style={{ backgroundColor: C.dark, border: `1.5px solid ${C.anthracite}`, boxShadow: "0 4px 24px rgba(26,18,8,0.06)" }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.boxShadow = "0 8px 40px rgba(44,26,14,0.12)" }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = C.anthracite; e.currentTarget.style.boxShadow = "0 4px 24px rgba(26,18,8,0.06)" }}
-                >
-                  <span className="text-4xl">{card.icon}</span>
-                  <div>
-                    <h2 className="font-bold text-lg mb-1" style={{ color: C.white }}>{card.title}</h2>
-                    <p className="text-sm leading-relaxed" style={{ color: C.mist }}>{card.desc}</p>
-                  </div>
-                  <div className="mt-auto text-xs font-semibold flex items-center gap-1.5 transition-opacity group-hover:opacity-100 opacity-60" style={{ color: C.terra }}>
-                    {card.cta} →
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <p className="text-center text-sm mt-8" style={{ color: C.mist }}>
-              Déjà un compte ?{" "}
-              <Link href="/login" className="font-semibold transition-opacity hover:opacity-70" style={{ color: C.accent }}>Se connecter</Link>
-            </p>
-          </div>
-        )}
-
-        {/* ── STEP 2 ── */}
-        {step === 2 && userType && (
-          <div className="w-full max-w-md rounded-3xl p-8 sm:p-10" style={{ backgroundColor: C.dark, border: `1px solid ${C.anthracite}`, boxShadow: "0 8px 48px rgba(26,18,8,0.08)" }}>
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex-1 h-1 rounded-full" style={{ backgroundColor: C.anthracite }}>
-                <div className="h-1 rounded-full transition-all" style={{ backgroundColor: C.terra, width: "100%" }} />
+          {/* Step indicator */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 28 }}>
+            {[1, 2].map(s => (
+              <div key={s} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: "50%",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 12, fontWeight: 700,
+                  background: s <= step ? GRADIENT : "rgba(183,191,217,0.2)",
+                  color: s <= step ? "#fff" : "#9a9aaa",
+                  transition: "all 0.3s",
+                }}>{s}</div>
+                {s === 1 && (
+                  <div style={{
+                    width: 40, height: 2, borderRadius: 1,
+                    background: step >= 2 ? "linear-gradient(90deg, #E11D48, #9333EA)" : "rgba(183,191,217,0.3)",
+                    transition: "background 0.3s",
+                  }} />
+                )}
               </div>
-            </div>
+            ))}
+            <span style={{ fontSize: 12, color: "#6a6a71", marginLeft: 4 }}>
+              {step === 1 ? "Type de compte" : "Informations"}
+            </span>
+          </div>
 
-            <button onClick={handleBack} className="flex items-center gap-1.5 text-xs font-semibold mb-6 transition-opacity hover:opacity-70" style={{ color: C.mist }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              Retour
-            </button>
-
-            <div className="text-center mb-8">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: C.mist }}>
-                {userType === "client" ? "Compte client" : "Compte prestataire"}
+          {/* Step 1 — Role selection */}
+          {step === 1 && (
+            <div>
+              <h2 style={{ fontSize: 22, fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+                Créer un compte
+              </h2>
+              <p style={{ fontSize: 14, color: "#6a6a71", margin: "0 0 28px" }}>
+                Tu es ici pour…
               </p>
-              <h1 className="font-display italic text-4xl sm:text-5xl font-normal leading-tight" style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif", color: C.accent }}>
-                {userType === "client" ? "Créer mon compte" : "Rejoindre Momento"}
-              </h1>
-            </div>
 
-            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-              {userType === "client" && (
-                <>
-                  <div className="grid grid-cols-2 gap-3">
-                    <InputField id="prenom" label="Prénom" value={client.prenom} onChange={v => updateClient("prenom", v)} placeholder="Yasmine" required autoComplete="given-name" />
-                    <InputField id="nom" label="Nom" value={client.nom} onChange={v => updateClient("nom", v)} placeholder="Benali" required autoComplete="family-name" />
-                  </div>
-                  <InputField id="email-c" label="Adresse e-mail" type="email" value={client.email} onChange={v => updateClient("email", v)} placeholder="toi@exemple.com" required autoComplete="email" />
-                  <InputField id="password-c" label="Mot de passe" type="password" value={client.password} onChange={v => updateClient("password", v)} placeholder="Min. 8 caractères" required autoComplete="new-password" />
-                  <InputField id="confirm-c" label="Confirmer le mot de passe" type="password" value={client.confirm} onChange={v => updateClient("confirm", v)} placeholder="••••••••" required autoComplete="new-password" />
-                </>
-              )}
-
-              {userType === "vendor" && (
-                <>
-                  <InputField id="entreprise" label="Nom de l'entreprise" value={vendor.entreprise} onChange={v => updateVendor("entreprise", v)} placeholder="Studio Lumière" required autoComplete="organization" />
-                  <SelectField id="categorie" label="Catégorie" value={vendor.categorie} onChange={v => updateVendor("categorie", v)} options={VENDOR_CATEGORIES} />
-                  <InputField id="email-v" label="Adresse e-mail" type="email" value={vendor.email} onChange={v => updateVendor("email", v)} placeholder="contact@entreprise.com" required autoComplete="email" />
-                  <InputField id="telephone" label="Téléphone" type="tel" value={vendor.telephone} onChange={v => updateVendor("telephone", v)} placeholder="+212 6 00 00 00 00" required autoComplete="tel" />
-                  <InputField id="password-v" label="Mot de passe" type="password" value={vendor.password} onChange={v => updateVendor("password", v)} placeholder="Min. 8 caractères" required autoComplete="new-password" />
-                </>
-              )}
-
-              {error && (
-                <p className="text-sm px-4 py-3 rounded-xl" style={{ backgroundColor: "rgba(var(--momento-terra-rgb),0.1)", color: C.terra }}>
-                  {error}
-                </p>
-              )}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {([
+                  { value: "client" as Role, emoji: "🎉", title: "Organiser un événement", desc: "Trouver et contacter des prestataires pour mon mariage, anniversaire, etc." },
+                  { value: "vendor" as Role, emoji: "🎧", title: "Proposer mes services", desc: "Créer mon profil prestataire et recevoir des demandes clients." },
+                ] as { value: Role; emoji: string; title: string; desc: string }[]).map(opt => (
+                  <button
+                    key={opt.value!}
+                    onClick={() => setRole(opt.value)}
+                    style={{
+                      display: "flex", alignItems: "flex-start", gap: 14,
+                      padding: "16px 18px", borderRadius: 16, textAlign: "left",
+                      border: role === opt.value
+                        ? "2px solid #E11D48"
+                        : "1px solid rgba(183,191,217,0.3)",
+                      background: role === opt.value ? "rgba(225,29,72,0.04)" : "#fafafa",
+                      cursor: "pointer", transition: "all 0.15s", fontFamily: "inherit",
+                    }}
+                  >
+                    <span style={{ fontSize: 28, flexShrink: 0 }}>{opt.emoji}</span>
+                    <div>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: "#121317", margin: "0 0 4px" }}>{opt.title}</p>
+                      <p style={{ fontSize: 12, color: "#6a6a71", margin: 0, lineHeight: 1.5 }}>{opt.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
 
               <button
-                type="submit"
-                disabled={loading}
-                className="w-full font-bold text-sm py-3.5 rounded-xl transition-all hover:opacity-90 disabled:opacity-60 mt-1"
-                style={{ backgroundColor: C.terra, color: "#fff" }}
+                onClick={() => role && setStep(2)}
+                disabled={!role}
+                style={{
+                  width: "100%", height: 46, borderRadius: 12, border: "none",
+                  background: role ? GRADIENT : "rgba(183,191,217,0.3)",
+                  color: role ? "#fff" : "#9a9aaa",
+                  fontSize: 14, fontWeight: 600, cursor: role ? "pointer" : "not-allowed",
+                  marginTop: 24, fontFamily: "inherit", transition: "all 0.2s",
+                }}
               >
-                {loading ? "Création en cours…" : userType === "client" ? "Créer mon compte" : "Rejoindre la plateforme"}
+                Continuer →
               </button>
-            </form>
+            </div>
+          )}
 
-            <p className="text-center text-sm mt-6" style={{ color: C.mist }}>
-              Déjà un compte ?{" "}
-              <Link href="/login" className="font-semibold transition-opacity hover:opacity-70" style={{ color: C.accent }}>Se connecter</Link>
-            </p>
-          </div>
-        )}
+          {/* Step 2 — Form */}
+          {step === 2 && (
+            <div>
+              <button onClick={() => setStep(1)} style={{
+                display: "flex", alignItems: "center", gap: 6,
+                fontSize: 13, color: "#6a6a71", background: "none",
+                border: "none", cursor: "pointer", marginBottom: 20, fontFamily: "inherit",
+              }}>
+                ← Retour
+              </button>
 
-      </main>
+              <h2 style={{ fontSize: 22, fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+                {role === "client" ? "Mon compte" : "Mon profil prestataire"}
+              </h2>
+              <p style={{ fontSize: 14, color: "#6a6a71", margin: "0 0 24px" }}>
+                {role === "client" ? "Quelques infos pour commencer." : "Quelques infos sur ton activité."}
+              </p>
 
-      <footer className="text-center pb-8 px-6">
-        <p className="text-xs" style={{ color: C.steel }}>© 2026 Momento. Tous droits réservés.</p>
-      </footer>
+              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {role === "client" ? (
+                  <>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                      <input placeholder="Prénom *" value={prenom} onChange={e => setPrenom(e.target.value)} required style={inputStyle}
+                        onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                      <input placeholder="Nom *" value={nom} onChange={e => setNom(e.target.value)} required style={inputStyle}
+                        onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    </div>
+                    <input type="email" placeholder="Email *" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <input type="password" placeholder="Mot de passe (8+ car.) *" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <input type="password" placeholder="Confirmer le mot de passe *" value={confirm} onChange={e => setConfirm(e.target.value)} required style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                  </>
+                ) : (
+                  <>
+                    <input placeholder="Nom de l'entreprise *" value={entreprise} onChange={e => setEntreprise(e.target.value)} required style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <input placeholder="Catégorie (ex: DJ, Photographe…) *" value={categorie} onChange={e => setCategorie(e.target.value)} required style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <input type="email" placeholder="Email *" value={vEmail} onChange={e => setVEmail(e.target.value)} required style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <input placeholder="Téléphone" value={telephone} onChange={e => setTelephone(e.target.value)} style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <input type="password" placeholder="Mot de passe (8+ car.) *" value={vPassword} onChange={e => setVPassword(e.target.value)} required minLength={8} style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                  </>
+                )}
+
+                {error && (
+                  <p style={{
+                    fontSize: 13, padding: "10px 14px", borderRadius: 10,
+                    background: "rgba(225,29,72,0.07)", color: "#E11D48",
+                  }}>{error}</p>
+                )}
+
+                <button type="submit" disabled={loading} style={{
+                  height: 46, borderRadius: 12, border: "none",
+                  background: GRADIENT, color: "#fff",
+                  fontSize: 14, fontWeight: 600, cursor: loading ? "wait" : "pointer",
+                  fontFamily: "inherit", opacity: loading ? 0.7 : 1, marginTop: 4,
+                }}>
+                  {loading ? "Création…" : "Créer mon compte"}
+                </button>
+              </form>
+            </div>
+          )}
+
+          <p style={{ fontSize: 12, color: "#9a9aaa", textAlign: "center", marginTop: 20 }}>
+            Déjà un compte ?{" "}
+            <Link href="/login" style={{ color: "#E11D48", fontWeight: 600, textDecoration: "none" }}>
+              Se connecter
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   )
 }

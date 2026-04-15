@@ -23,6 +23,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     maxAge: REMEMBER_ME_MAX_AGE, // max possible — le JWT peut expirer plus tôt
     updateAge: 60 * 60,           // renouvelle le token toutes les heures
   },
+  // Forcer le cookie à persister 30j (sinon NextAuth v5 peut créer un session cookie)
+  cookies: {
+    sessionToken: {
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: REMEMBER_ME_MAX_AGE,
+      },
+    },
+  },
   providers: [
     ...(process.env.GOOGLE_CLIENT_ID ? [
       Google({
@@ -92,7 +104,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // External or unknown → fallback to /accueil
       return `${baseUrl}/accueil`
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session: sessionUpdate }) {
+      // Sync JWT after profile update (useSession().update())
+      if (trigger === "update" && sessionUpdate) {
+        if (sessionUpdate.name)    token.name    = sessionUpdate.name
+        if (sessionUpdate.picture) token.picture = sessionUpdate.picture
+        if (sessionUpdate.role)    token.role    = sessionUpdate.role
+      }
       if (account) {
         token.provider = account.provider
         // C01: access_token/refresh_token are stored in the DB via PrismaAdapter (Account table).

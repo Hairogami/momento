@@ -518,6 +518,8 @@ body:has(.snap-scroll-container) {
   --dash-divider:    rgba(183,191,217,0.10);
   --dash-ring-track:    rgba(183,191,217,0.20);
   --dash-surface-dark: #121317;
+  --dash-input-bg:     #fafafa;
+  --dash-surface-blur: rgba(255,255,255,0.96);
 }
 
 html.dark {
@@ -533,6 +535,8 @@ html.dark {
   --dash-divider:    rgba(255,255,255,0.06);
   --dash-ring-track:    rgba(255,255,255,0.18);
   --dash-surface-dark: #1e1f28;
+  --dash-input-bg:     #1c1d25;
+  --dash-surface-blur: rgba(22,23,30,0.88);
 }
 
 /* ── Dark mode structural overrides ── */
