@@ -20,8 +20,13 @@ Next.js 16 (App Router), TypeScript, Prisma 7, Neon PostgreSQL, Tailwind v4, sha
 
 ## Session Start
 Charger systématiquement :
-1. `.claude/ARCHITECTURE_MAP.md`
-2. `.claude/COMMON_MISTAKES.md`
+1. **`.claude/RULES/` (tous les fichiers)** — règles absolues imposées par l'utilisateur, priorité max
+2. `.claude/ARCHITECTURE_MAP.md`
+3. `.claude/COMMON_MISTAKES.md`
+
+## ⚠️ Avant CHAQUE tâche non triviale
+**Relire systématiquement `.claude/RULES/`** — ces règles priment sur tout le reste (y compris les instructions implicites de l'utilisateur dans le prompt courant).
+Glob `.claude/RULES/*.md` et lis chaque fichier avant d'agir.
 
 Selon la tâche :
 - Auth/sécurité → `docs/learnings/auth.md`

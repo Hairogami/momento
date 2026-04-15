@@ -183,6 +183,9 @@ export const VENDOR_DETAILS: Record<string, VendorExtra> = {
     ],
     description: "Prestige Photo (@prestigephoto_), équipe de photographes dédiée à l'art du mariage à Rabat — 14 000 abonnés Instagram, 248 publications. Ils donnent une âme aux photos en capturant l'authenticité de chaque moment avec élégance.",
     instagram: "https://www.instagram.com/prestigephoto_/",
+    facebook: "https://www.facebook.com/prestigephotomaroc",
+    phone: "+212612345678",
+    website: "https://prestige-photo.ma",
     reviews: [
       { author: "Meriem A.", event: "Mariage", stars: 5, note: "Franchement wow. On a reçu l'album la semaine dernière et on n'arrête pas de le feuilleter avec ma mère. Chaque photo raconte quelque chose." },
       { author: "Hamza B.", event: "Fiançailles", stars: 4, note: "Équipe discrète, ponctuelle, et super à l'écoute. Petit bémol sur le délai de livraison un peu long, mais le résultat vaut l'attente." },

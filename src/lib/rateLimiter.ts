@@ -96,11 +96,18 @@ export async function rateLimitAsync(
  * être falsifié par le client, contrairement à x-forwarded-for.
  * Retourne null si aucune IP disponible — les appelants doivent gérer null
  * plutôt que d'utiliser "unknown" comme clé de rate-limit partagée.
+ *
+ * Fallback dev : en non-production on retourne "dev-local" pour débloquer
+ * les tests locaux (Vercel n'injecte pas les headers quand on run via
+ * `next dev`). En prod, si aucun header trusted n'est présent, on retourne
+ * null pour que l'appelant rejette la requête (sécurité préservée).
  */
 export function getIp(req: Request | NextRequest): string | null {
-  return (
+  const fromHeader =
     (req as NextRequest).headers?.get("x-vercel-forwarded-for") ??
     (req as NextRequest).headers?.get("x-real-ip") ??
     null
-  )
+  if (fromHeader) return fromHeader
+  if (process.env.NODE_ENV !== "production") return "dev-local"
+  return null
 }
