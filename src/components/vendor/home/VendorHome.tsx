@@ -101,7 +101,7 @@ export default function VendorHome({ publicSlug, vendorName }: { publicSlug: str
       <KPIStrip stats={stats} loading={loading} period={period} />
 
       {/* Row 1 : Sparkline + Donut */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 14 }}>
         <Card title="Vues de votre fiche" subtitle={windowLabel(stats)}>
           <Sparkline series={stats?.series ?? []} bucket={stats?.window.bucket ?? "day"} />
         </Card>
@@ -111,7 +111,7 @@ export default function VendorHome({ publicSlug, vendorName }: { publicSlug: str
       </div>
 
       {/* Row 2 : Funnel + ScoreCard */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 14 }}>
         <Card title="Entonnoir de conversion" subtitle={windowLabel(stats)}>
           <Funnel funnel={stats?.funnel} />
         </Card>
@@ -204,7 +204,7 @@ function KPIStrip({ stats, loading, period }: { stats: StatsPayload | null; load
   ] as const
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
       {items.map(it => {
         const k = stats?.kpis[it.key]
         return (

@@ -12,6 +12,7 @@
  * Starter pack 1-clic : 3 templates FR + 3 darija + 3 AR pour bootstrapper.
  */
 import { useEffect, useMemo, useState } from "react"
+import EmptyState from "@/components/vendor/_shared/EmptyState"
 
 type Lang = "fr" | "darija" | "ar"
 type Template = {
@@ -409,12 +410,13 @@ export default function TemplatesManager() {
       )}
 
       {filtered.length === 0 && templates && templates.length > 0 && filter !== "all" && (
-        <div style={{
-          background: "#fff", borderRadius: 14, padding: 30, textAlign: "center",
-          border: "1px solid rgba(183,191,217,0.18)",
-          fontSize: 13, color: "#6b7280",
-        }}>
-          Aucun template dans cette langue.
+        <div style={{ background: "#fff", borderRadius: 14, border: "1px solid rgba(183,191,217,0.18)" }}>
+          <EmptyState
+            icon="💬"
+            title="Aucun template dans cette langue"
+            subtitle="Créez-en un nouveau ou changez de langue au-dessus."
+            compact
+          />
         </div>
       )}
 

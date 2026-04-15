@@ -353,6 +353,27 @@ export default function ProfileEditor() {
         </Row>
       </Section>
 
+      {/* Photos — Phase 2 (placeholder pour cibler l'ancre #photos) */}
+      <Section id="photos" title="Galerie photos" icon="photo_library">
+        <div style={{
+          padding: 14, borderRadius: 10,
+          background: "linear-gradient(135deg,#fdf2f8,#faf5ff)",
+          border: "1px solid rgba(233,213,255,0.5)",
+          fontSize: 13, color: "#45474D",
+          display: "flex", gap: 12, alignItems: "flex-start",
+        }}>
+          <span style={{ fontSize: 22, lineHeight: 1 }}>📸</span>
+          <div>
+            <div style={{ fontWeight: 600, color: "#121317", marginBottom: 4 }}>Upload de photos : bientôt</div>
+            <div>
+              En attendant, ajoute quelques photos sur ton Instagram ou Facebook puis connecte-les
+              dans la section <a href="#social" style={{ color: "#E11D48", textDecoration: "none", fontWeight: 500 }}>Réseaux sociaux</a>
+              &nbsp;— elles apparaîtront sur ta fiche publique.
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* Vérification */}
       <Section id="verify" title="Badge Vérifié" icon="verified">
         <div style={{
@@ -474,7 +495,7 @@ function Section({ id, title, icon, children }: {
 
 function Row({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 10 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 10 }}>
       {children}
     </div>
   )

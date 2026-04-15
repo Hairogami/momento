@@ -137,7 +137,7 @@ export default function CalendarWidget() {
 
       <div style={{
         display: "grid",
-        gridTemplateColumns: selectedData ? "1fr 240px" : "1fr",
+        gridTemplateColumns: selectedData ? "repeat(auto-fit, minmax(260px, 1fr))" : "1fr",
         gap: 16,
       }}>
         {/* Grille */}

@@ -12,6 +12,7 @@
  * {{name}}, {{eventType}}, {{eventDate}} substituées depuis la demande.
  */
 import { useEffect, useMemo, useState } from "react"
+import EmptyState from "@/components/vendor/_shared/EmptyState"
 
 // ── Types ────────────────────────────────────────────────────────────────────
 type Status = "new" | "read" | "replied" | "won" | "lost"
@@ -243,12 +244,20 @@ export default function InboxClient() {
             Chargement…
           </div>
         ) : requests.length === 0 ? (
-          <div style={{ padding: 60, textAlign: "center" }}>
-            <div style={{ fontSize: 36, marginBottom: 8, opacity: 0.4 }}>📭</div>
-            <p style={{ fontSize: 14, color: "#6b7280", margin: 0 }}>
-              {qDebounced ? "Aucun résultat pour cette recherche." : "Aucune demande pour ce filtre."}
-            </p>
-          </div>
+          qDebounced ? (
+            <EmptyState
+              icon="🔍"
+              title="Aucun résultat"
+              subtitle="Aucune demande ne correspond à votre recherche. Essayez avec un autre mot-clé."
+            />
+          ) : (
+            <EmptyState
+              icon="📭"
+              title="Pas encore de demandes"
+              subtitle={<>Les demandes des clients apparaîtront ici. En attendant, complétez votre profil pour être plus visible.</>}
+              cta={{ label: "Améliorer mon profil", href: "/vendor/dashboard/profil" }}
+            />
+          )
         ) : (
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
