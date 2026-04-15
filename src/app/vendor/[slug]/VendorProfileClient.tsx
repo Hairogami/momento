@@ -2,6 +2,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import AntNav from "@/components/clone/AntNav"
+import { useTrack } from "@/lib/useTrack"
 
 type Review = { author: string; event: string; note: string; stars: number }
 
@@ -39,6 +40,7 @@ export default function VendorProfileClient({
   const [contactOpen, setContactOpen] = useState(false)
   const [shareDone, setShareDone] = useState(false)
   const [favorited, setFavorited] = useState(false)
+  const { trackClick } = useTrack(slug)
 
   const allPhotos = photos.length > 0 ? photos : (heroImg ? [heroImg] : [])
   const displayHero = allPhotos[activePhoto] ?? heroImg
@@ -290,7 +292,7 @@ export default function VendorProfileClient({
 
               {/* CTA */}
               <button
-                onClick={() => setContactOpen(true)}
+                onClick={() => { trackClick("contact_click"); setContactOpen(true) }}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   padding: "13px 20px", borderRadius: 999, width: "100%",
@@ -302,7 +304,7 @@ export default function VendorProfileClient({
                 ✉ Envoyer un message
               </button>
               {phone && (
-                <a href={`tel:${phone}`} style={{
+                <a href={`tel:${phone}`} onClick={() => trackClick("phone_click")} style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                   padding: "11px 20px", borderRadius: 999,
                   background: "var(--dash-faint,rgba(183,191,217,0.1))",
@@ -321,6 +323,7 @@ export default function VendorProfileClient({
                     <a
                       href={`https://instagram.com/${instagram.replace("@", "")}`}
                       target="_blank" rel="noopener noreferrer"
+                      onClick={() => trackClick("instagram_click")}
                       style={{
                         padding: "6px 14px", borderRadius: 999,
                         background: "var(--dash-faint,rgba(183,191,217,0.1))",
@@ -336,6 +339,7 @@ export default function VendorProfileClient({
                     <a
                       href={`https://facebook.com/${facebook}`}
                       target="_blank" rel="noopener noreferrer"
+                      onClick={() => trackClick("facebook_click")}
                       style={{
                         padding: "6px 14px", borderRadius: 999,
                         background: "var(--dash-faint,rgba(183,191,217,0.1))",
