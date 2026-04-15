@@ -339,8 +339,14 @@ model ContactRequest {
   eventType   String?
   eventDate   String?
   message     String
-  status      String   @default("pending")
+  // Statut : "new" | "read" | "replied" | "won" | "lost"
+  // Legacy : "pending" / "confirmed" / "declined" (mappés côté UI : pending→new, confirmed→won, declined→lost)
+  status      String   @default("new")
+  readAt      DateTime? // vu par le prestataire (côté client : "vu à HH:mm")
+  repliedAt   DateTime? // répondu par le prestataire (côté client : "répondu à HH:mm")
   createdAt   DateTime @default(now())
+
+  @@index([vendorSlug, status, createdAt])
 }
 
 // ─── PLANNER (organisation étape par étape) ───────────────────────────────────
