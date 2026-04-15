@@ -1,6 +1,5 @@
 "use client"
 import { useEffect, useState } from "react"
-import AntNav from "@/components/clone/AntNav"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 
@@ -95,9 +94,7 @@ export default function VendorDashboardPage() {
   const textMuted = "var(--dash-text-3,#9a9aaa)"
 
   return (
-    <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <AntNav />
-
+    <>
       {/* Dev switcher — retour vers la vue client (moumene486@gmail.com uniquement) */}
       {canSwitch && (
         <Link
@@ -308,6 +305,6 @@ export default function VendorDashboardPage() {
           </>
         )}
       </main>
-    </div>
+    </>
   )
 }
