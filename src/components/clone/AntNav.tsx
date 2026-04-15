@@ -180,12 +180,12 @@ export default function AntNav({
     return () => document.removeEventListener("mousedown", handler)
   }, [])
 
-  const navLinks = isLoggedIn
-    ? (isVendor ? NAV_LINKS_VENDOR : NAV_LINKS_CLIENT)
-    : NAV_LINKS_PUBLIC.map(l =>
-        // "Dashboard" → /login si non-connecté, sinon /accueil (géré par la branche isLoggedIn ci-dessus)
-        l.label === "Dashboard" ? { ...l, href: "/login" } : l
-      )
+  // Nav stable pour tous les états d'auth — seul le href de "Dashboard" change.
+  // Pour les prestataires, on remplace la CTA "Vous êtes prestataire ?" par le shortcut Espace pro.
+  const dashboardHref = !isLoggedIn ? "/login" : isVendor ? "/vendor/dashboard" : "/accueil"
+  const navLinks = NAV_LINKS_PUBLIC
+    .filter(l => !(isVendor && l.label === "Vous êtes prestataire ?"))
+    .map(l => (l.label === "Dashboard" ? { ...l, href: dashboardHref } : l))
   const dropdown = (isVendor ? DROPDOWN_VENDOR : DROPDOWN_CLIENT) as DropdownItem[]
 
   const bg      = dark
