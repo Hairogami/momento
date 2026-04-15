@@ -237,13 +237,15 @@ export default function AntNav({
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{ backgroundColor: bg, backdropFilter: "blur(14px)", borderBottom: border }}
       >
-        <div className="px-6 h-14 flex items-center justify-between relative">
+        <div className="px-6 h-14 flex items-center gap-4">
 
-          {/* Logo */}
-          <Link href={isLoggedIn ? "/accueil" : "/"} className="flex items-center gap-2">
-            <MomentoLogo size={28} dark={dark} />
-            <span style={{ fontSize: 14, fontWeight: 500, color: heading, letterSpacing: "-0.01em" }}>Momento</span>
-          </Link>
+          {/* Logo — flex-1 pour équilibrer avec les controls */}
+          <div className="flex-1 flex items-center min-w-0">
+            <Link href={isLoggedIn ? "/accueil" : "/"} className="flex items-center gap-2">
+              <MomentoLogo size={28} dark={dark} />
+              <span style={{ fontSize: 14, fontWeight: 500, color: heading, letterSpacing: "-0.01em" }}>Momento</span>
+            </Link>
+          </div>
 
           {/* Center slot (ex: search bar) */}
           {centerSlot && (
@@ -252,11 +254,8 @@ export default function AntNav({
             </div>
           )}
 
-          {/* Desktop nav — centré absolument au milieu de la page */}
-          <nav
-            className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2"
-            style={{ pointerEvents: "auto" }}
-          >
+          {/* Desktop nav — dans le flux, toujours visible, pas d'overlap */}
+          <nav className="hidden md:flex items-center gap-1 flex-shrink-0">
             {!hideLinks && navLinks.map(link => {
               const isProCta = link.label === "Vous êtes prestataire ?"
               if (isProCta) {
@@ -264,7 +263,7 @@ export default function AntNav({
                   <Link
                     key={link.label}
                     href={link.href}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all hover:opacity-90 ml-1 mr-2"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all hover:opacity-90 ml-1 mr-2 whitespace-nowrap"
                     style={{ background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", color: "#fff" }}
                   >
                     {link.label}
@@ -273,7 +272,7 @@ export default function AntNav({
               }
               return (
                 <Link key={link.label} href={link.href}
-                  className="flex items-center px-3 py-1.5 rounded-full text-sm transition-colors"
+                  className="flex items-center px-3 py-1.5 rounded-full text-sm transition-colors whitespace-nowrap"
                   style={{ color: text }}
                   onMouseEnter={e => (e.currentTarget.style.background = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)")}
                   onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
@@ -282,8 +281,8 @@ export default function AntNav({
             })}
           </nav>
 
-          {/* Right controls */}
-          <div className="flex items-center gap-2">
+          {/* Right controls — flex-1 + justify-end pour miroir du logo */}
+          <div className="flex-1 flex items-center justify-end gap-2">
 
             {/* Dark mode toggle */}
             <button onClick={() => setDark(d => !d)}
