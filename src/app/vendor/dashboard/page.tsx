@@ -2,6 +2,10 @@
 import { useEffect, useState } from "react"
 import AntNav from "@/components/clone/AntNav"
 import Link from "next/link"
+import { useSession } from "next-auth/react"
+
+// Dev-mode : cet email a accès au switcher Client ↔ Prestataire
+const DEV_SWITCH_EMAIL = "moumene486@gmail.com"
 
 type ContactRequest = {
   id: string
@@ -43,6 +47,8 @@ function GsIcon({ icon, size = 16, color }: { icon: string; size?: number; color
 }
 
 export default function VendorDashboardPage() {
+  const { data: session } = useSession()
+  const canSwitch = session?.user?.email === DEV_SWITCH_EMAIL
   const [data,    setData]    = useState<DashData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error,   setError]   = useState<string | null>(null)
@@ -91,6 +97,31 @@ export default function VendorDashboardPage() {
   return (
     <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
       <AntNav />
+
+      {/* Dev switcher — retour vers la vue client (moumene486@gmail.com uniquement) */}
+      {canSwitch && (
+        <Link
+          href="/accueil"
+          style={{
+            position: "fixed", top: 72, left: 24, zIndex: 40,
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "8px 14px", borderRadius: 999,
+            background: "rgba(255,255,255,0.9)",
+            border: "1px dashed var(--g1,#E11D48)",
+            color: "var(--dash-text,#121317)",
+            fontSize: 12, fontWeight: 600, textDecoration: "none",
+            backdropFilter: "blur(8px)",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
+          }}
+          title="Mode dev — basculer vers le dashboard client"
+        >
+          <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: 15, color: "var(--g1,#E11D48)" }}>swap_horiz</span>
+          Vue client
+          <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--g1,#E11D48)", background: "rgba(225,29,72,0.1)", padding: "2px 5px", borderRadius: 4 }}>
+            DEV
+          </span>
+        </Link>
+      )}
 
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "80px 24px 64px" }}>
 

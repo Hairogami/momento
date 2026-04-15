@@ -2,7 +2,10 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
+
+// Dev-mode : cet email a accès au switcher Client ↔ Prestataire
+const DEV_SWITCH_EMAIL = "moumene486@gmail.com"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -39,6 +42,8 @@ function GIcon({ name, size = 18, color = "var(--dash-text-2,#6a6a71)" }: { name
 
 export default function DashSidebar({ events, activeEventId, onEventChange, firstName = "Y", messageUnread = 0 }: DashSidebarProps) {
   const pathname   = usePathname()
+  const { data: session } = useSession()
+  const canSwitch = session?.user?.email === DEV_SWITCH_EMAIL
   const [eventOpen, setEventOpen] = useState(false)
   const [darkMode,  setDarkMode]  = useState(true)
   const [menuOpen,  setMenuOpen]  = useState(false)
@@ -224,6 +229,39 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
           )
         })}
       </nav>
+
+      {/* Dev switcher Client ↔ Prestataire (moumene486@gmail.com uniquement) */}
+      {canSwitch && (
+        <div style={{ padding: "10px 14px 0" }}>
+          <Link
+            href="/vendor/dashboard"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+              padding: "9px 12px", borderRadius: 10,
+              background: "var(--dash-faint, rgba(183,191,217,0.08))",
+              border: "1px dashed var(--g1,#E11D48)",
+              color: "var(--dash-text,#121317)",
+              fontSize: 11, fontWeight: 600, textDecoration: "none",
+              transition: "background 0.15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "rgba(225,29,72,0.08)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "var(--dash-faint, rgba(183,191,217,0.08))")}
+            title="Mode dev — basculer vers le dashboard prestataire"
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <GIcon name="swap_horiz" size={15} color="var(--g1,#E11D48)" />
+              <span>Vue prestataire</span>
+            </span>
+            <span style={{
+              fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+              color: "var(--g1,#E11D48)", background: "rgba(225,29,72,0.1)",
+              padding: "2px 5px", borderRadius: 4,
+            }}>
+              DEV
+            </span>
+          </Link>
+        </div>
+      )}
 
       {/* CTA */}
       <div style={{ padding: "10px 14px", borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.1))" }}>
