@@ -114,10 +114,7 @@ export default function AntFireworks({
           vy: Math.sin(angle) * speed,
           life: 1,
           maxLife,
-          color:
-            Math.random() < 0.12 ? "#FFFFFF"
-            : Math.random() < 0.55 ? baseColor
-            : pickColor(),
+          color: Math.random() < 0.55 ? baseColor : pickColor(),
           size: rand(1.8, 3.4),
         })
       }
@@ -157,11 +154,11 @@ export default function AntFireworks({
           ctx.arc(tp.x, tp.y, 1.8, 0, Math.PI * 2)
           ctx.fill()
         }
-        // Tête de fusée
+        // Tête de fusée — couleur de la fusée (visible sur light & dark)
         ctx.globalAlpha = 1
-        ctx.fillStyle = "#FFFFFF"
+        ctx.fillStyle = r.color
         ctx.beginPath()
-        ctx.arc(x, y, 2.4, 0, Math.PI * 2)
+        ctx.arc(x, y, 2.6, 0, Math.PI * 2)
         ctx.fill()
       }
 
@@ -224,7 +221,6 @@ export default function AntFireworks({
         width: "100%",
         height: "100%",
         zIndex: 5,
-        mixBlendMode: "screen",
       }}
     />
   )
