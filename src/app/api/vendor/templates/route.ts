@@ -27,7 +27,7 @@ async function authVendorUser() {
     where: { id: session.user.id },
     select: { id: true, role: true, vendorSlug: true },
   })
-  if (!user || user.role !== "vendor" || !user.vendorSlug) {
+  if (!user || !user.vendorSlug || (user.role !== "vendor" && user.role !== "admin")) {
     return { error: "Accès réservé aux prestataires.", status: 403 as const }
   }
   return { userId: user.id }

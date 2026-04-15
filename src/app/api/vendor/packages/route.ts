@@ -27,7 +27,7 @@ async function authVendor() {
     where: { id: session.user.id },
     select: { role: true, vendorSlug: true },
   })
-  if (!user || user.role !== "vendor" || !user.vendorSlug) {
+  if (!user || !user.vendorSlug || (user.role !== "vendor" && user.role !== "admin")) {
     return { error: "Accès réservé aux prestataires.", status: 403 as const }
   }
   const vendor = await prisma.vendor.findUnique({

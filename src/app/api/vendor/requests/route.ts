@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     where: { id: session.user.id },
     select: { role: true, vendorSlug: true },
   })
-  if (!user || user.role !== "vendor" || !user.vendorSlug) {
+  if (!user || !user.vendorSlug || (user.role !== "vendor" && user.role !== "admin")) {
     return NextResponse.json({ error: "Accès réservé aux prestataires." }, { status: 403 })
   }
 

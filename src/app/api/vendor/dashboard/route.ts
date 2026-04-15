@@ -13,7 +13,7 @@ export async function GET() {
     select: { role: true, vendorSlug: true, vendorProfile: true },
   })
 
-  if (!user || user.role !== "vendor" || !user.vendorSlug) {
+  if (!user || !user.vendorSlug || (user.role !== "vendor" && user.role !== "admin")) {
     return NextResponse.json({ error: "Accès réservé aux prestataires." }, { status: 403 })
   }
 
@@ -86,7 +86,7 @@ export async function PATCH(req: Request) {
     select: { role: true, vendorSlug: true },
   })
 
-  if (!user || user.role !== "vendor" || !user.vendorSlug) {
+  if (!user || !user.vendorSlug || (user.role !== "vendor" && user.role !== "admin")) {
     return NextResponse.json({ error: "Accès refusé." }, { status: 403 })
   }
 

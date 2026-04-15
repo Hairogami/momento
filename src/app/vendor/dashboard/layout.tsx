@@ -30,8 +30,9 @@ export default async function VendorDashboardLayout({
     select: { id: true, email: true, role: true, vendorSlug: true },
   })
 
-  if (!user || user.role !== "vendor" || !user.vendorSlug) {
-    // Pas un prestataire → renvoyer au dashboard client
+  // Accès : vendor avec slug, OU admin avec slug (pour test / support)
+  const canAccess = user && user.vendorSlug && (user.role === "vendor" || user.role === "admin")
+  if (!canAccess) {
     redirect("/dashboard")
   }
 
