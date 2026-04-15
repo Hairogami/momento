@@ -33,7 +33,7 @@ type Request = {
 
 type Template = {
   id: string
-  name: string
+  title: string
   lang: string // "fr" | "ar" | "darija"
   body: string
   order: number
@@ -512,7 +512,7 @@ function ReplyModal({
                       cursor: "pointer", fontFamily: "inherit", fontWeight: 500,
                     }}
                   >
-                    {t.name}
+                    {t.title}
                   </button>
                 ))}
                 {(byLang[lang] ?? []).length === 0 && (
