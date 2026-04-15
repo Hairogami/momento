@@ -3,6 +3,7 @@ import { useState } from "react"
 import Link from "next/link"
 import AntNav from "@/components/clone/AntNav"
 import { useTrack } from "@/lib/useTrack"
+import PublicCalendar from "@/components/vendor/public/PublicCalendar"
 
 type Review = { author: string; event: string; note: string; stars: number }
 
@@ -38,6 +39,7 @@ export default function VendorProfileClient({
 }: Props) {
   const [activePhoto, setActivePhoto] = useState(0)
   const [contactOpen, setContactOpen] = useState(false)
+  const [prefillDate, setPrefillDate] = useState<string | null>(null)
   const [shareDone, setShareDone] = useState(false)
   const [favorited, setFavorited] = useState(false)
   const { trackClick } = useTrack(slug)
@@ -369,6 +371,18 @@ export default function VendorProfileClient({
                 </div>
               )}
             </div>
+
+            {/* Calendrier public — dates libres cliquables → ouvre le modal contact pré-rempli */}
+            <div style={{ marginTop: 16 }}>
+              <PublicCalendar
+                slug={slug}
+                onDateClick={(date) => {
+                  trackClick("contact_click")
+                  setPrefillDate(date)
+                  setContactOpen(true)
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -378,7 +392,8 @@ export default function VendorProfileClient({
         <ContactModal
           slug={slug}
           vendorName={name}
-          onClose={() => setContactOpen(false)}
+          prefillDate={prefillDate}
+          onClose={() => { setContactOpen(false); setPrefillDate(null) }}
         />
       )}
     </div>
@@ -388,13 +403,13 @@ export default function VendorProfileClient({
 // ─────────────────────────────────────────────────────────────────────────────
 // Contact modal — inline pour éviter un fichier séparé
 // ─────────────────────────────────────────────────────────────────────────────
-function ContactModal({ slug, vendorName, onClose }: { slug: string; vendorName: string; onClose: () => void }) {
+function ContactModal({ slug, vendorName, prefillDate, onClose }: { slug: string; vendorName: string; prefillDate?: string | null; onClose: () => void }) {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({
     clientName: "", clientEmail: "", clientPhone: "",
-    eventDate: "", eventType: "Mariage", message: "",
+    eventDate: prefillDate ?? "", eventType: "Mariage", message: "",
   })
 
   async function handleSubmit(e: React.FormEvent) {

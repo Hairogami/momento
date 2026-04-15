@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import VendorEditForm from "./VendorEditForm"
+import CalendarWidget from "@/components/vendor/calendar/CalendarWidget"
 
 export const dynamic = "force-dynamic"
 
@@ -63,6 +64,18 @@ export default async function AdminVendorEditPage(
       </div>
 
       <VendorEditForm vendor={vendor} />
+
+      {/* Calendrier — édition admin (bloque/débloque pour le compte du prestataire) */}
+      <section style={{ marginTop: 32 }}>
+        <h2 style={{ fontSize: 14, fontWeight: 600, color: "#121317", marginBottom: 10 }}>
+          Calendrier du prestataire
+        </h2>
+        <p style={{ fontSize: 12, color: "#6a6a71", marginBottom: 12 }}>
+          Toute modification est auditée (AdminAuditLog). Utilise ceci quand le prestataire
+          t&apos;appelle pour ajouter/retirer une date.
+        </p>
+        <CalendarWidget slugOverride={vendor.slug} isAdminMode />
+      </section>
 
       {/* Audit log */}
       <section style={{ marginTop: 32 }}>

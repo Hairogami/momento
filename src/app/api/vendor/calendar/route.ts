@@ -45,11 +45,30 @@ export async function GET(req: NextRequest) {
     where: { id: session.user.id },
     select: { role: true, vendorSlug: true },
   })
-  if (!user || user.role !== "vendor" || !user.vendorSlug) {
-    return NextResponse.json({ error: "Accès réservé aux prestataires." }, { status: 403 })
+  if (!user) {
+    return NextResponse.json({ error: "Utilisateur introuvable." }, { status: 401 })
   }
 
   const sp = req.nextUrl.searchParams
+  const slugParam = sp.get("slug")
+
+  // Résolution du slug ciblé (admin peut passer ?slug=..., vendor forcé sur son propre)
+  let targetSlug: string
+  let targetVendorId: string
+  if (user.role === "admin" && slugParam) {
+    const v = await prisma.vendor.findUnique({ where: { slug: slugParam }, select: { id: true, slug: true } })
+    if (!v) return NextResponse.json({ error: "Prestataire introuvable." }, { status: 404 })
+    targetSlug = v.slug
+    targetVendorId = v.id
+  } else if (user.role === "vendor" && user.vendorSlug) {
+    const v = await prisma.vendor.findUnique({ where: { slug: user.vendorSlug }, select: { id: true, slug: true } })
+    if (!v) return NextResponse.json({ error: "Fiche prestataire introuvable." }, { status: 404 })
+    targetSlug = v.slug
+    targetVendorId = v.id
+  } else {
+    return NextResponse.json({ error: "Accès réservé aux prestataires et admins." }, { status: 403 })
+  }
+
   const now = new Date()
   const defaultFrom = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
   const defaultTo   = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 6, 0))
@@ -59,11 +78,10 @@ export async function GET(req: NextRequest) {
   const fromKey = dayKey(from)
   const toKey   = dayKey(to)
 
-  // On récupère toutes les demandes avec eventDate non vide (le filtre string
-  // range fait le reste en mémoire — volume faible par prestataire).
+  // 1. Demandes avec eventDate
   const requests = await prisma.contactRequest.findMany({
     where: {
-      vendorSlug: user.vendorSlug,
+      vendorSlug: targetSlug,
       eventDate: { not: null },
     },
     select: {
@@ -74,6 +92,16 @@ export async function GET(req: NextRequest) {
     take: 500,
   })
 
+  // 2. Dates bloquées manuellement
+  const blocks = await prisma.vendorBlockedDate.findMany({
+    where: {
+      vendorId: targetVendorId,
+      date: { gte: from, lte: to },
+    },
+    select: { date: true, reason: true },
+    take: 500,
+  })
+
   type Entry = {
     id: string
     clientName: string
@@ -81,16 +109,21 @@ export async function GET(req: NextRequest) {
     status: string
   }
 
-  const byDate = new Map<string, { booked: Entry[]; pending: Entry[] }>()
+  type DayBucket = {
+    booked: Entry[]
+    pending: Entry[]
+    blocked: { reason: string | null } | null
+  }
+
+  const byDate = new Map<string, DayBucket>()
 
   for (const r of requests) {
     if (!r.eventDate) continue
-    // eventDate est libre — on accepte "YYYY-MM-DD" et ISO complet
     const key = r.eventDate.length >= 10 ? r.eventDate.slice(0, 10) : null
     if (!key || !/^\d{4}-\d{2}-\d{2}$/.test(key)) continue
     if (key < fromKey || key > toKey) continue
 
-    const bucket = byDate.get(key) ?? { booked: [], pending: [] }
+    const bucket = byDate.get(key) ?? { booked: [], pending: [], blocked: null }
     const entry: Entry = {
       id: r.id,
       clientName: r.clientName,
@@ -102,6 +135,13 @@ export async function GET(req: NextRequest) {
     byDate.set(key, bucket)
   }
 
+  for (const b of blocks) {
+    const key = b.date.toISOString().slice(0, 10)
+    const bucket = byDate.get(key) ?? { booked: [], pending: [], blocked: null }
+    bucket.blocked = { reason: b.reason ?? null }
+    byDate.set(key, bucket)
+  }
+
   const dates = Array.from(byDate.entries())
     .map(([date, v]) => ({ date, ...v }))
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -109,6 +149,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     dates,
     range: { from: fromKey, to: toKey },
+    slug: targetSlug,
+    isAdmin: user.role === "admin",
     generatedAt: new Date().toISOString(),
   })
 }

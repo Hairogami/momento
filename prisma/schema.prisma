@@ -235,6 +235,7 @@ model Vendor {
   reviews      Review[]
   plannerEvents PlannerEvent[]
   favorites    Favorite[]
+  blockedDates VendorBlockedDate[]
 }
 
 model VendorVerification {
@@ -539,6 +540,24 @@ model VendorTemplate {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, order])
+}
+
+// ─── VENDOR BLOCKED DATE ──────────────────────────────────────────────────────
+// Dates bloquées manuellement par le prestataire (ou par l'admin s'il le
+// demande par téléphone). Apparaissent comme "indisponible" sur la fiche
+// publique au même titre que les ContactRequest.status=won.
+model VendorBlockedDate {
+  id        String   @id @default(cuid())
+  vendorId  String
+  date      DateTime // jour complet, toujours normalisé à 00:00:00 UTC
+  reason    String?  // optionnel : "vacances", "mariage privé", etc.
+  createdBy String   // userId du créateur (vendor lui-même OU admin)
+  createdAt DateTime @default(now())
+
+  vendor Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, date])
+  @@index([vendorId, date])
 }
 
 // ─── ADMIN AUDIT LOG ──────────────────────────────────────────────────────────
