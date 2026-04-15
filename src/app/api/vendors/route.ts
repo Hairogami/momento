@@ -5,14 +5,15 @@ import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 
 export async function GET(req: NextRequest) {
   const ip = getIp(req)
-  if (ip) {
-    const rl = await rateLimitAsync(`vendors-list:${ip}`, 60, 60_000)
-    if (!rl.ok) {
-      return Response.json(
-        { error: "Trop de requêtes. Réessayez dans une minute." },
-        { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
-      )
-    }
+  if (!ip) {
+    return Response.json({ error: "Requête non identifiable." }, { status: 400 })
+  }
+  const rl = await rateLimitAsync(`vendors-list:${ip}`, 60, 60_000)
+  if (!rl.ok) {
+    return Response.json(
+      { error: "Trop de requêtes. Réessayez dans une minute." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+    )
   }
 
   const { searchParams } = req.nextUrl

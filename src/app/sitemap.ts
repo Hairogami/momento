@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { VENDOR_BASIC } from "@/lib/vendorData";
+import { getAllVendorSlugs } from "@/lib/vendorQueries";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://momentoevents.app";
 
   const categories = [
@@ -10,7 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "securite", "cadeaux",
   ];
 
-  const vendorEntries = Object.keys(VENDOR_BASIC).map((slug) => ({
+  const slugs = await getAllVendorSlugs();
+  const vendorEntries = slugs.map((slug) => ({
     url: `${base}/vendor/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,

@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "DATABASE_URL=$DIRECT_URL prisma db push --accept-data-loss && next build",
     "start": "next start",
-    "lint": "eslint",
-    "seed": "tsx prisma/seed-vendors.ts"
+    "lint": "eslint"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.85.0",

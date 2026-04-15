@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { sendVerificationEmail } from "@/lib/email"
-import { VENDOR_BASIC } from "@/lib/vendorData"
+import { vendorSlugExists } from "@/lib/vendorQueries"
 import { randomBytes } from "crypto"
 import { rateLimit, getIp } from "@/lib/rateLimiter"
 import { z } from "zod"
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Trop de tentatives. Réessayez dans quelques minutes." }, { status: 429 })
     }
 
-    if (!slug || !VENDOR_BASIC[slug]) {
+    if (!slug || !(await vendorSlugExists(slug))) {
       return NextResponse.json({ error: "Prestataire introuvable." }, { status: 404 })
     }
 
