@@ -35,28 +35,10 @@ Pivot validé par l'utilisateur (2026-04-15 19:15) :
   - Idempotent, rejouable
   - Valider : `prisma.vendor.count() >= 828`
 
-- [ ] **M2** — Refactor `/vendor/[slug]/page.tsx` → DB
-  - `generateStaticParams` via `prisma.vendor.findMany()`
-  - `findUnique` avec include `media`, `reviews`, `packages`
-  - `export const revalidate = 3600`
-  - Props de `VendorProfileClient` inchangées (même interface)
-
-- [ ] **M3** — Supprimer fichiers statiques
-  - Delete `src/lib/vendorData.ts`
-  - Delete `src/lib/vendorDetails.ts`
-  - Grep/remplacer tous les usages restants (favorites, explore, etc.)
-  - Build vert : `npx next build`
-
-- [ ] **M4** — Route admin `/admin/vendors`
-  - Protection middleware + check `role === "admin"`
-  - Liste paginée + recherche (slug/nom/catégorie/ville)
-  - `/admin/vendors/[slug]` : form édition complet
-  - `revalidatePath` après save
-  - Audit log (qui/quand/quoi modifié)
-
-- [ ] **M5** — Promotion admin + test E2E
-  - Script `scripts/make-me-admin.ts` → moumene486@gmail.com role=admin
-  - Test : admin édite phone → rafraîchir `/vendor/prestige-photo` → chip Appel visible
+- [x] **M2** — Refactor `/vendor/[slug]/page.tsx` → DB (commit e02d6c8)
+- [x] **M3** — Supprimer fichiers statiques (commit e02d6c8)
+- [x] **M4** — Route admin `/admin/vendors` (commit 5b4b264)
+- [x] **M5** — Promotion admin (commit 5b4b264) — moumene486@gmail.com = admin ✅
 
 ### 📊 Dashboard prestataire (APRÈS MIGRATION)
 

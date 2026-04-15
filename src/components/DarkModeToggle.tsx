@@ -24,7 +24,7 @@ export function DarkModeToggle({ className = "" }: { className?: string }) {
     <button
       onClick={handleToggle}
       aria-label={isDark ? "Passer en mode clair" : "Passer en mode sombre"}
-      title={isDark ? "Mode clair" : "Bonne nuit 🌙"}
+      title={isDark ? "Bonjour ☀️" : "Bonne nuit 🌙"}
       className={`relative w-14 h-7 rounded-full transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${className}`}
       style={{
         backgroundColor: isDark ? "var(--bg)" : "var(--momento-anthracite)",
