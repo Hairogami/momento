@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState, useCallback } from "react"
 import AntNav from "@/components/clone/AntNav"
+import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import VendorDiscoverCard, { type DiscoverVendor } from "@/components/prestataires/VendorDiscoverCard"
 import { usePlanners } from "@/hooks/usePlanners"
 
@@ -100,23 +101,29 @@ export default function MesPrestatairesPage() {
 
   if (!activeEventId && events.length === 0) {
     return (
-      <div style={pageStyle}>
-        <AntNav />
-        <div style={contentStyle}>
+      <div className="ant-root" style={pageStyle}>
+        <div className="hidden lg:flex">
+          <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
+        </div>
+        <div className="lg:hidden"><AntNav /></div>
+        <main className="pb-20 md:pb-0" style={contentStyle}>
           <div style={{ textAlign: "center", padding: "80px 24px" }}>
             <p style={{ fontSize: 40, marginBottom: 16 }}>🎉</p>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>Aucun événement</h2>
             <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)" }}>Créez un événement pour commencer à sélectionner vos prestataires.</p>
           </div>
-        </div>
+        </main>
       </div>
     )
   }
 
   return (
-    <div style={pageStyle}>
-      <AntNav />
-      <div style={contentStyle}>
+    <div className="ant-root" style={pageStyle}>
+      <div className="hidden lg:flex">
+        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
+      </div>
+      <div className="lg:hidden"><AntNav /></div>
+      <main className="pb-20 md:pb-0" style={contentStyle}>
         {/* Header */}
         <div style={{ marginBottom: 32, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
           <div>
@@ -235,7 +242,7 @@ export default function MesPrestatairesPage() {
             ))}
           </div>
         )}
-      </div>
+      </main>
 
       {/* Category picker overlay */}
       {addingCategory && (
@@ -293,11 +300,11 @@ export default function MesPrestatairesPage() {
 }
 
 const pageStyle: React.CSSProperties = {
-  minHeight: "100vh",
+  display: "flex", minHeight: "100vh",
   background: "var(--dash-bg,#f7f7fb)",
   fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
 }
 
 const contentStyle: React.CSSProperties = {
-  maxWidth: 1100, margin: "0 auto", padding: "100px 24px 80px",
+  flex: 1, padding: "clamp(16px, 4vw, 32px)", overflowY: "auto",
 }

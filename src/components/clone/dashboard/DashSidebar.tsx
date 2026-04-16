@@ -378,9 +378,8 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
       onClose={() => setShowCreateModal(false)}
       onCreated={(planner) => {
         setShowCreateModal(false)
+        try { localStorage.setItem("momento_active_event", planner.id) } catch {}
         router.push("/mes-prestataires")
-        // Trigger a page refresh so the new planner appears in the event switcher
-        router.refresh()
       }}
     />
   </>

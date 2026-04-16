@@ -152,8 +152,24 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
         display: "flex", alignItems: "center", justifyContent: "space-between",
         marginBottom: 12,
       }}>
-        <div style={{ fontSize: 10, fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em" }}>
-          Découvrir
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: 10, fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em" }}>
+            Découvrir
+          </span>
+          {onOpenModal && (
+            <button
+              onClick={onOpenModal}
+              title="Ouvrir l'annuaire complet"
+              style={{
+                width: 20, height: 20, borderRadius: 6,
+                background: "rgba(183,191,217,0.1)",
+                border: "1px solid rgba(183,191,217,0.2)",
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "'Google Symbols','Material Symbols Outlined'",
+                fontSize: 11, color: "#9a9aaa", fontWeight: "normal",
+              }}
+            >open_in_full</button>
+          )}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {liked.length > 0 && (
@@ -166,20 +182,6 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
           <span style={{ fontSize: 10, color: "#9a9aaa" }}>
             {index + 1}/{cards.length}
           </span>
-          {onOpenModal && (
-            <button
-              onClick={onOpenModal}
-              title="Ouvrir l'annuaire complet"
-              style={{
-                width: 24, height: 24, borderRadius: 7,
-                background: "rgba(183,191,217,0.1)",
-                border: "1px solid rgba(183,191,217,0.2)",
-                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                fontSize: 13, color: "#9a9aaa", fontWeight: "normal",
-              }}
-            >open_in_full</button>
-          )}
         </div>
       </div>
 

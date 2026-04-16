@@ -6,6 +6,7 @@ import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import BudgetWidget, { type BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
 import VendorSwipeWidget from "@/components/clone/dashboard/VendorSwipeWidget"
+import MesPrestatairesWidget from "@/components/clone/dashboard/MesPrestatairesWidget"
 
 const VendorSwipeModal = dynamic(
   () => import("@/components/VendorSwipeModal"),
@@ -38,24 +39,25 @@ const PALETTES = [
 
 // ── Widget system ─────────────────────────────────────────────────────────────
 type WidgetSize = 1 | 2 | 3 | 4
-type WidgetId   = "countdown" | "budget" | "swipe" | "tasks" | "bookings" | "messages"
+type WidgetId   = "countdown" | "budget" | "swipe" | "tasks" | "bookings" | "messages" | "prestataires"
 
 function colSpan(size: WidgetSize): number {
   if (size === 4) return 12; if (size === 3) return 8; if (size === 2) return 6; return 4
 }
 
 const DEFAULT_SIZES: Record<WidgetId, WidgetSize> = {
-  countdown: 1, budget: 1, swipe: 1, tasks: 3, bookings: 1, messages: 3,
+  countdown: 1, budget: 1, swipe: 1, tasks: 3, bookings: 1, messages: 3, prestataires: 2,
 }
-const DEFAULT_ORDER: WidgetId[] = ["countdown", "budget", "swipe", "tasks", "bookings", "messages"]
+const DEFAULT_ORDER: WidgetId[] = ["countdown", "budget", "swipe", "prestataires", "tasks", "bookings", "messages"]
 
 const WIDGET_META: Record<WidgetId, { title: string; href: string; rowSpan?: number }> = {
-  countdown: { title: "Compte à rebours", href: "/planner"  },
-  budget:    { title: "Budget",           href: "/budget"   },
-  swipe:     { title: "Découvrir",        href: "/explore", rowSpan: 2 },
-  tasks:     { title: "Tâches",           href: "/planner"  },
-  bookings:  { title: "Réservations",     href: "/explore"  },
-  messages:  { title: "Messages",         href: "/messages" },
+  countdown:    { title: "Compte à rebours", href: "/planner"          },
+  budget:       { title: "Budget",           href: "/budget"            },
+  swipe:        { title: "Découvrir",        href: "/explore", rowSpan: 2 },
+  prestataires: { title: "Mes Prestataires", href: "/mes-prestataires"  },
+  tasks:        { title: "Tâches",           href: "/planner"           },
+  bookings:     { title: "Réservations",     href: "/explore"           },
+  messages:     { title: "Messages",         href: "/messages"          },
 }
 
 const WIDGET_CATALOG = [
@@ -1420,7 +1422,8 @@ export default function CloneDashboardPage() {
     switch (id as WidgetId) {
       case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
       case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} />
-      case "swipe":     return <VendorSwipeWidget onOpenModal={() => setSwipeOpen(true)} />
+      case "swipe":         return <VendorSwipeWidget onOpenModal={() => setSwipeOpen(true)} />
+      case "prestataires":  return <MesPrestatairesWidget />
       case "tasks":     return renderTasks()
       case "bookings":  return renderBookings()
       case "messages":  return renderMessages()

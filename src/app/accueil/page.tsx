@@ -178,7 +178,11 @@ export default function CloneAccueilPage() {
           <CreateEventModal
             open={showCreateModal}
             onClose={() => setShowCreateModal(false)}
-            onCreated={() => { setShowCreateModal(false); router.push("/mes-prestataires"); router.refresh() }}
+            onCreated={(planner) => {
+              setShowCreateModal(false)
+              try { localStorage.setItem("momento_active_event", planner.id) } catch {}
+              router.push("/mes-prestataires")
+            }}
           />
 
           <Link href="/explore" style={{
