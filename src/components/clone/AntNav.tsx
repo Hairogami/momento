@@ -240,7 +240,7 @@ export default function AntNav({
         <div className="px-6 h-14 flex items-center gap-4">
 
           {/* Logo — flex-1 pour équilibrer avec les controls */}
-          <div className="flex-1 flex items-center min-w-0">
+          <div className={hideLinks ? "hidden md:flex md:flex-1 items-center min-w-0" : "flex-1 flex items-center min-w-0"}>
             <Link href="/" className="flex items-center gap-2">
               <MomentoLogo size={28} dark={dark} />
               <span style={{ fontSize: 14, fontWeight: 500, color: heading, letterSpacing: "-0.01em" }}>Momento</span>

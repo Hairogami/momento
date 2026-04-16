@@ -162,6 +162,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   const [socialFilter, setSocialFilter] = useState<Set<"instagram" | "facebook">>(new Set())
   const [photoOnly, setPhotoOnly] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [catModalOpen, setCatModalOpen] = useState(false)
   const filtersRef = useRef<HTMLDivElement>(null)
   const [page, setPage]           = useState(1)
   const [scrolled, setScrolled]   = useState(false)
@@ -261,59 +262,61 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               onBlur={e => (e.target.style.borderColor = "var(--dash-border,rgba(183,191,217,0.35))")}
             />
           </div>
-          {/* City */}
-          <PillSelect
-            value={activeCity}
-            onChange={setActiveCity}
-            placeholder="Ville"
-            options={[{ value: "", label: "Toutes" }, ...cities.map(c => ({ value: c, label: c }))]}
-          />
-          {/* Événement */}
-          <PillSelect
-            value={eventType}
-            onChange={setEventType}
-            placeholder="Événement"
-            options={[
-              { value: "",           label: "Tous" },
-              { value: "mariage",    label: "💍 Mariage" },
-              { value: "fiancailles",label: "💐 Fiançailles" },
-              { value: "corporate",  label: "🏢 Corporate" },
-              { value: "anniversaire",label: "🎉 Anniversaire" },
-            ]}
-          />
-          {/* Note */}
-          <PillSelect
-            value={String(ratingMin)}
-            onChange={v => setRatingMin(Number(v))}
-            placeholder="Note"
-            options={[
-              { value: "0",   label: "Toutes" },
-              { value: "4",   label: "★ 4+" },
-              { value: "4.5", label: "★ 4.5+" },
-              { value: "5",   label: "★ 5 seulement" },
-            ]}
-          />
-          {/* Sort */}
-          <PillSelect
-            value={sortBy}
-            onChange={v => setSortBy(v as "rating" | "name" | "name_desc" | "city")}
-            placeholder="Tri"
-            options={[
-              { value: "rating",    label: "Mieux notés" },
-              { value: "name",      label: "A → Z" },
-              { value: "name_desc", label: "Z → A" },
-              { value: "city",      label: "Par ville" },
-            ]}
-          />
-          {/* Clear */}
-          {hasFilters && (
-            <button onClick={clearFilters} style={{
-              height: 40, padding: "0 14px", borderRadius: 999,
-              border: "1px solid rgba(225,29,72,0.3)", background: "rgba(225,29,72,0.05)",
-              color: "#E11D48", fontSize: 12, fontWeight: 500,
-              cursor: "pointer", fontFamily: "inherit", flexShrink: 0, whiteSpace: "nowrap",
-            }}>✕</button>
-          )}
+          <div className="hidden md:flex items-center gap-2">
+            {/* City */}
+            <PillSelect
+              value={activeCity}
+              onChange={setActiveCity}
+              placeholder="Ville"
+              options={[{ value: "", label: "Toutes" }, ...cities.map(c => ({ value: c, label: c }))]}
+            />
+            {/* Événement */}
+            <PillSelect
+              value={eventType}
+              onChange={setEventType}
+              placeholder="Événement"
+              options={[
+                { value: "",           label: "Tous" },
+                { value: "mariage",    label: "💍 Mariage" },
+                { value: "fiancailles",label: "💐 Fiançailles" },
+                { value: "corporate",  label: "🏢 Corporate" },
+                { value: "anniversaire",label: "🎉 Anniversaire" },
+              ]}
+            />
+            {/* Note */}
+            <PillSelect
+              value={String(ratingMin)}
+              onChange={v => setRatingMin(Number(v))}
+              placeholder="Note"
+              options={[
+                { value: "0",   label: "Toutes" },
+                { value: "4",   label: "★ 4+" },
+                { value: "4.5", label: "★ 4.5+" },
+                { value: "5",   label: "★ 5 seulement" },
+              ]}
+            />
+            {/* Sort */}
+            <PillSelect
+              value={sortBy}
+              onChange={v => setSortBy(v as "rating" | "name" | "name_desc" | "city")}
+              placeholder="Tri"
+              options={[
+                { value: "rating",    label: "Mieux notés" },
+                { value: "name",      label: "A → Z" },
+                { value: "name_desc", label: "Z → A" },
+                { value: "city",      label: "Par ville" },
+              ]}
+            />
+            {/* Clear */}
+            {hasFilters && (
+              <button onClick={clearFilters} style={{
+                height: 40, padding: "0 14px", borderRadius: 999,
+                border: "1px solid rgba(225,29,72,0.3)", background: "rgba(225,29,72,0.05)",
+                color: "#E11D48", fontSize: 12, fontWeight: 500,
+                cursor: "pointer", fontFamily: "inherit", flexShrink: 0, whiteSpace: "nowrap",
+              }}>✕</button>
+            )}
+          </div>
         </div>
       }>
       </AntNav>
@@ -331,17 +334,40 @@ export default function ExploreClient({ initialVendors, totalCount }: {
         }}
       >
         {/* Category pills */}
-        <div style={{ padding: "10px 24px 10px", position: "relative", display: "flex", alignItems: "center", gap: 4 }}>
-          {/* Scroll left */}
-          <button onClick={() => catsRef.current?.scrollBy({ left: -200, behavior: "smooth" })} style={{
+        <div style={{ padding: "10px 16px 10px", position: "relative", display: "flex", alignItems: "center", gap: 4 }}>
+          {/* Mobile: bouton catégorie → bottom sheet */}
+          <button
+            className="md:hidden flex items-center gap-1.5"
+            onClick={() => setCatModalOpen(true)}
+            style={{
+              height: 34, padding: "0 14px", borderRadius: 999,
+              border: activeMajor !== "Tous" ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+              background: activeMajor !== "Tous"
+                ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))"
+                : "var(--dash-surface,#fff)",
+              color: activeMajor !== "Tous" ? "#fff" : "var(--dash-text-2,#45474D)",
+              fontSize: 13, fontWeight: activeMajor !== "Tous" ? 600 : 400,
+              cursor: "pointer", fontFamily: "inherit",
+              boxShadow: activeMajor !== "Tous" ? "0 2px 12px rgba(225,29,72,0.25)" : "none",
+            }}
+          >
+            <span>{MAJOR_CATS.find(c => c.label === activeMajor)?.emoji ?? "✦"}</span>
+            {activeMajor !== "Tous" ? activeMajor : "Catégorie"}
+            {activeMajor !== "Tous" && (
+              <span style={{ background: "rgba(255,255,255,0.25)", borderRadius: 99, padding: "1px 7px", fontSize: 11, fontWeight: 700 }}>
+                {filtered.length}
+              </span>
+            )}
+          </button>
+          {/* Desktop: Scroll left */}
+          <button className="hidden md:flex items-center justify-center" onClick={() => catsRef.current?.scrollBy({ left: -200, behavior: "smooth" })} style={{
             flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
-            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 14, lineHeight: 1,
+            cursor: "pointer", fontSize: 14, lineHeight: 1,
           }}>‹</button>
           <style>{`.clone-explore-cats::-webkit-scrollbar { display: none; }`}</style>
-          <div ref={catsRef} className="clone-explore-cats" style={{ display: "flex", gap: 6, overflowX: "auto", scrollbarWidth: "none", flex: 1 }}>
+          <div ref={catsRef} className="clone-explore-cats hidden md:flex" style={{ gap: 6, overflowX: "auto", scrollbarWidth: "none", flex: 1 }}>
             {MAJOR_CATS.map(cat => {
               const active = activeMajor === cat.label
               return (
@@ -377,17 +403,16 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               )
             })}
           </div>
-          {/* Scroll right */}
-          <button onClick={() => catsRef.current?.scrollBy({ left: 200, behavior: "smooth" })} style={{
+          {/* Desktop: Scroll right */}
+          <button className="hidden md:flex items-center justify-center" onClick={() => catsRef.current?.scrollBy({ left: 200, behavior: "smooth" })} style={{
             flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
-            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 14, lineHeight: 1,
+            cursor: "pointer", fontSize: 14, lineHeight: 1,
           }}>›</button>
 
           {/* ── Filtres avancés ── */}
-          <div ref={filtersRef} style={{ position: "relative", flexShrink: 0, marginLeft: 8 }}>
+          <div ref={filtersRef} style={{ position: "relative", flexShrink: 0, marginLeft: "auto" }}>
             {/* Trigger */}
             {(() => {
               const advCount = socialFilter.size + (photoOnly ? 1 : 0)
@@ -591,6 +616,57 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           {totalCount}+ prestataires vérifiés · 41 villes · 0% commission
         </p>
       </div>
+
+      {/* ── Category picker bottom sheet (mobile) ── */}
+      {catModalOpen && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "flex-end" }}>
+          <div onClick={() => setCatModalOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
+          <div style={{
+            position: "relative", width: "100%",
+            background: "var(--dash-surface,#fff)",
+            borderRadius: "20px 20px 0 0",
+            padding: "20px 16px calc(40px + env(safe-area-inset-bottom, 0px)) 16px",
+            maxHeight: "82vh", overflowY: "auto",
+          }}>
+            {/* Header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Catégorie</h3>
+              <button
+                onClick={() => setCatModalOpen(false)}
+                style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}
+              >✕</button>
+            </div>
+            {/* Grid 3 colonnes */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+              {MAJOR_CATS.map(cat => {
+                const active = activeMajor === cat.label
+                return (
+                  <button
+                    key={cat.label}
+                    onClick={() => { setActiveMajor(cat.label); setCatModalOpen(false) }}
+                    style={{
+                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                      gap: 6, padding: "14px 8px", borderRadius: 14,
+                      border: active ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+                      background: active
+                        ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))"
+                        : "var(--dash-surface,#fff)",
+                      color: active ? "#fff" : "var(--dash-text,#121317)",
+                      cursor: "pointer", fontFamily: "inherit",
+                      boxShadow: active ? "0 4px 16px rgba(225,29,72,0.3)" : "0 1px 4px rgba(0,0,0,0.06)",
+                      transition: "all 0.15s",
+                      minHeight: 80,
+                    }}
+                  >
+                    <span style={{ fontSize: 24 }}>{cat.emoji}</span>
+                    <span style={{ fontSize: 11, fontWeight: active ? 600 : 500, textAlign: "center", lineHeight: 1.3 }}>{cat.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
