@@ -239,8 +239,8 @@ export default function AntNav({
       >
         <div className="px-6 h-14 flex items-center gap-4">
 
-          {/* Logo — flex-1 pour équilibrer avec les controls */}
-          <div className="flex-1 flex items-center min-w-0">
+          {/* Logo — flex-1 desktop, shrink-only mobile en mode search */}
+          <div className={hideLinks ? "flex-shrink-0 flex items-center min-w-0" : "flex-1 flex items-center min-w-0"}>
             <Link href="/" className="flex items-center gap-2">
               <MomentoLogo size={28} dark={dark} />
               <span className={hideLinks ? "hidden md:inline" : ""} style={{ fontSize: 14, fontWeight: 500, color: heading, letterSpacing: "-0.01em" }}>Momento</span>
@@ -281,8 +281,8 @@ export default function AntNav({
             })}
           </nav>
 
-          {/* Right controls — flex-1 + justify-end pour miroir du logo */}
-          <div className="flex-1 flex items-center justify-end gap-2">
+          {/* Right controls — flex-1 desktop, shrink-only mobile en mode search */}
+          <div className={hideLinks ? "flex-shrink-0 flex items-center justify-end gap-2 ml-auto" : "flex-1 flex items-center justify-end gap-2"}>
 
             {/* Dark mode toggle */}
             <button onClick={() => setDark(d => !d)}
