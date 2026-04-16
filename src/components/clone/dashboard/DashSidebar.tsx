@@ -3,6 +3,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { signOut, useSession } from "next-auth/react"
+import { useIsMobile } from "@/hooks/useIsMobile"
+import MobileDashNav from "./MobileDashNav"
 
 // Dev-mode : cet email a accès au switcher Client ↔ Prestataire
 const DEV_SWITCH_EMAIL = "moumene486@gmail.com"
@@ -49,6 +51,11 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const [menuOpen,  setMenuOpen]  = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0]
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return <MobileDashNav messageUnread={messageUnread} />
+  }
 
   // Lire dark mode depuis localStorage — défaut: true (dark en premier)
   useEffect(() => {
