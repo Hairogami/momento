@@ -237,7 +237,7 @@ export default function AntNav({
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{ backgroundColor: bg, backdropFilter: "blur(14px)", borderBottom: border }}
       >
-        <div className="px-6 h-14 flex items-center gap-4">
+        <div className="px-6 h-14 flex items-center gap-4" style={{ position: "relative" }}>
 
           {/* Logo — flex-1 desktop, shrink-only mobile en mode search */}
           <div className={hideLinks ? "flex-shrink-0 flex items-center min-w-0" : "flex-1 flex items-center min-w-0"}>
@@ -247,13 +247,20 @@ export default function AntNav({
             </Link>
           </div>
 
-          {/* Center slot (ex: search bar) — masqué sur mobile en mode explore */}
+          {/* Center slot — centré absolument, indépendant de la largeur logo/controls */}
           {centerSlot && (
-            <div
-              className={hideLinks ? "hidden md:flex" : "flex"}
-              style={{ flex: 1, justifyContent: "center", padding: "0 16px" }}
-            >
-              {centerSlot}
+            <div style={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "min(600px, calc(100% - 180px))",
+              display: "flex",
+              justifyContent: "center",
+              pointerEvents: "none",
+            }}>
+              <div style={{ width: "100%", pointerEvents: "auto" }}>
+                {centerSlot}
+              </div>
             </div>
           )}
 
