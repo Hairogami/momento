@@ -9,13 +9,6 @@ const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 type Fav = { id: string; name: string; category: string; city: string; rating: number; priceMin?: number }
 
-const MOCK_FAVS: Fav[] = [
-  { id: "studio-lumiere",    name: "Studio Lumière",     category: "Photographe",  city: "Casablanca", rating: 4.9, priceMin: 3000 },
-  { id: "dj-karim",         name: "DJ Karim Beat",       category: "DJ",           city: "Marrakech",  rating: 4.8, priceMin: 2500 },
-  { id: "traiteur-elbab",   name: "Traiteur El Bab",     category: "Traiteur",     city: "Fès",        rating: 4.7, priceMin: 180  },
-  { id: "fleurs-art",       name: "Fleurs & Art",        category: "Fleuriste",    city: "Rabat",      rating: 4.6, priceMin: 800  },
-  { id: "cine-mariage",     name: "Ciné Mariage",        category: "Vidéographe",  city: "Casablanca", rating: 4.8, priceMin: 4500 },
-]
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Photographe": "#818cf8",
@@ -27,7 +20,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export default function CloneFavoritesPage() {
   const { events, activeEventId } = usePlanners()
-  const [favs, setFavs] = useState<Fav[]>(MOCK_FAVS)
+  const [favs, setFavs] = useState<Fav[]>([])
 
   function remove(id: string) {
     setFavs(fs => fs.filter(f => f.id !== id))

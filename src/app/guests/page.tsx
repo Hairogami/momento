@@ -15,34 +15,6 @@ const STATUS_COLORS: Record<Status, string> = {
   "décliné":    "#ef4444",
 }
 
-const GUESTS_BY_EVENT: Record<string, Guest[]> = {
-  "1": [
-    { id:"g1",  name:"Karima Benali",      table:"Table 1",  status:"confirmé",   phone:"06 12 34 56 78" },
-    { id:"g2",  name:"Hassan Benali",      table:"Table 1",  status:"confirmé",   phone:"06 12 34 56 79" },
-    { id:"g3",  name:"Salma Amrani",       table:"Table 2",  status:"en attente", phone:"06 55 44 33 22" },
-    { id:"g4",  name:"Mohamed Amrani",     table:"Table 2",  status:"en attente" },
-    { id:"g5",  name:"Fatima Oukili",      table:"Table 3",  status:"confirmé",   phone:"06 77 88 99 11" },
-    { id:"g6",  name:"Omar Berrada",       table:"Table 3",  status:"décliné" },
-    { id:"g7",  name:"Nadia Cherkaoui",    table:"Table 4",  status:"confirmé",   phone:"06 22 33 44 55" },
-    { id:"g8",  name:"Youssef El Alami",   table:"Table 4",  status:"en attente" },
-    { id:"g9",  name:"Zineb Tahiri",       table:"Table 5",  status:"confirmé",   phone:"06 11 22 33 44" },
-    { id:"g10", name:"Rachid Fassi",       table:"Table 5",  status:"en attente" },
-  ],
-  "2": [
-    { id:"h1", name:"Laila Bennani",       table:"Table 1",  status:"confirmé",   phone:"06 33 44 55 66" },
-    { id:"h2", name:"Khalid Tazi",         table:"Table 1",  status:"confirmé" },
-    { id:"h3", name:"Aicha Sebti",         table:"Table 2",  status:"en attente", phone:"06 66 77 88 99" },
-    { id:"h4", name:"Tarik Idrissi",       table:"Table 2",  status:"décliné" },
-    { id:"h5", name:"Meryem Chababi",      table:"Table 3",  status:"confirmé",   phone:"06 99 00 11 22" },
-  ],
-  "3": [
-    { id:"i1", name:"Samira Ouhbi",        table:"Table 1",  status:"confirmé",   phone:"06 44 55 66 77" },
-    { id:"i2", name:"Yassine Ouhbi",       table:"Table 1",  status:"confirmé" },
-    { id:"i3", name:"Nora Ziani",          table:"Table 2",  status:"en attente", phone:"06 88 99 00 11" },
-    { id:"i4", name:"Hicham Alaoui",       table:"Table 2",  status:"en attente" },
-    { id:"i5", name:"Dounia Chraibi",      table:"Table 3",  status:"décliné" },
-  ],
-}
 
 const FILTERS: { label: string; value: Status | "tous" }[] = [
   { label: "Tous",       value: "tous"       },
@@ -53,7 +25,7 @@ const FILTERS: { label: string; value: Status | "tous" }[] = [
 
 export default function CloneGuestsPage() {
   const { events, activeEventId, setActiveEventId } = usePlanners()
-  const [guestsByEvent, setGuestsByEvent] = useState(GUESTS_BY_EVENT)
+  const [guestsByEvent, setGuestsByEvent] = useState<Record<string, Guest[]>>({})
   const [filter, setFilter]   = useState<Status | "tous">("tous")
   const [search, setSearch]   = useState("")
   const [showAdd, setShowAdd] = useState(false)

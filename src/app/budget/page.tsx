@@ -21,38 +21,6 @@ const CAT_COLORS: Record<string, string> = {
   "Divers":       "#9a9aaa",
 }
 
-const BUDGETS_BY_EVENT: Record<string, { total: number; expenses: Expense[] }> = {
-  "1": {
-    total: 120000,
-    expenses: [
-      { id:"b1", label:"Location Villa Doha",        category:"Lieu",        amount:35000, date:"2026-03-10", paid:true  },
-      { id:"b2", label:"Traiteur Al Fassia",          category:"Traiteur",    amount:28000, date:"2026-04-01", paid:true  },
-      { id:"b3", label:"Photographe + vidéaste",      category:"Photographe", amount:12000, date:"2026-03-20", paid:false },
-      { id:"b4", label:"DJ & sono",                   category:"Musique",     amount:7000,  date:"2026-04-15", paid:false },
-      { id:"b5", label:"Fleurs & décoration",         category:"Décoration",  amount:9500,  date:"2026-05-01", paid:false },
-      { id:"b6", label:"Transport invités",           category:"Transport",   amount:4000,  date:"2026-06-01", paid:false },
-      { id:"b7", label:"Robes & costumes",            category:"Tenue",       amount:8000,  date:"2026-04-20", paid:true  },
-    ],
-  },
-  "2": {
-    total: 85000,
-    expenses: [
-      { id:"c1", label:"Salle Palais des Roses",     category:"Lieu",        amount:22000, date:"2026-03-05", paid:true  },
-      { id:"c2", label:"Buffet marocain",             category:"Traiteur",    amount:18000, date:"2026-04-10", paid:false },
-      { id:"c3", label:"Photographe",                 category:"Photographe", amount:6000,  date:"2026-04-05", paid:true  },
-      { id:"c4", label:"Orchestre andalou",           category:"Musique",     amount:9000,  date:"2026-05-01", paid:false },
-    ],
-  },
-  "3": {
-    total: 30000,
-    expenses: [
-      { id:"d1", label:"Location salle",  category:"Lieu",        amount:8000, date:"2026-03-15", paid:true  },
-      { id:"d2", label:"Traiteur buffet", category:"Traiteur",    amount:6000, date:"2026-04-01", paid:false },
-      { id:"d3", label:"DJ",              category:"Musique",     amount:4000, date:"2026-04-10", paid:false },
-      { id:"d4", label:"Décoration",      category:"Décoration",  amount:2500, date:"2026-04-20", paid:false },
-    ],
-  },
-}
 
 function DonutChart({ segments, size = 120 }: { segments: { pct: number; color: string }[]; size?: number }) {
   const r = 44; const cx = 60; const cy = 60; const circ = 2 * Math.PI * r
@@ -81,7 +49,7 @@ function DonutChart({ segments, size = 120 }: { segments: { pct: number; color: 
 
 export default function CloneBudgetPage() {
   const { events, activeEventId, setActiveEventId } = usePlanners()
-  const [dataByEvent, setDataByEvent] = useState(BUDGETS_BY_EVENT)
+  const [dataByEvent, setDataByEvent] = useState<Record<string, { total: number; expenses: Expense[] }>>({})
   const [showAdd, setShowAdd] = useState(false)
   const [newLabel, setNewLabel]     = useState("")
   const [newCat, setNewCat]         = useState("Divers")
@@ -93,7 +61,7 @@ export default function CloneBudgetPage() {
   }
 
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0] ?? { id: "", name: "", date: "", color: "#E11D48" }
-  const data = dataByEvent[activeEventId] ?? { total: 100000, expenses: [] }
+  const data = dataByEvent[activeEventId] ?? { total: 0, expenses: [] }
   const expenses = data.expenses
   const spent    = expenses.reduce((s, e) => s + e.amount, 0)
   const paid     = expenses.filter(e => e.paid).reduce((s, e) => s + e.amount, 0)
@@ -114,7 +82,7 @@ export default function CloneBudgetPage() {
       ...prev,
       [activeEventId]: {
         ...prev[activeEventId],
-        expenses: prev[activeEventId].expenses.map(e => e.id === id ? { ...e, paid: !e.paid } : e),
+        expenses: (prev[activeEventId]?.expenses ?? []).map(e => e.id === id ? { ...e, paid: !e.paid } : e),
       },
     }))
   }
@@ -126,7 +94,7 @@ export default function CloneBudgetPage() {
     const exp: Expense = { id: `e${Date.now()}`, label, category: newCat, amount, date: new Date().toISOString().slice(0, 10), paid: false }
     setDataByEvent(prev => ({
       ...prev,
-      [activeEventId]: { ...prev[activeEventId], expenses: [...prev[activeEventId].expenses, exp] },
+      [activeEventId]: { total: prev[activeEventId]?.total ?? 0, expenses: [...(prev[activeEventId]?.expenses ?? []), exp] },
     }))
     setNewLabel(""); setNewCat("Divers"); setNewAmount(""); setShowAdd(false)
   }
