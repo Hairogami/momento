@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, XCircle, Star, MapPin, ChevronLeft, ChevronRight, ArrowUpRight, RotateCcw } from "lucide-react";
+import { X, XCircle, Star, MapPin, ChevronLeft, ArrowUpRight, RotateCcw } from "lucide-react";
 import { C } from "@/lib/colors";
 
 export interface VendorCard {
@@ -420,7 +420,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                   // Start at finger release position → no snap, 0 latency
                   transform: exitLaunched ? txFinal : txStart,
                   transition: exitLaunched ? "transform 0.28s cubic-bezier(0.4,0,1,1)" : "none",
-                  boxShadow: "0 32px 80px rgba(0,0,0,0.7)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
                 }}>
                 {gp[0] ? (
                   <img src={gp[0]} draggable={false} className="absolute inset-0 w-full h-full object-cover" />
@@ -446,7 +446,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               className="absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing"
-              style={{ ...cardTransform(), touchAction: "none", boxShadow: "0 32px 80px rgba(0,0,0,0.7)", zIndex: 10 }}
+              style={{ ...cardTransform(), touchAction: "none", boxShadow: "0 8px 24px rgba(0,0,0,0.25)", zIndex: 10 }}
             >
               {/* ── Photo (full card) ── */}
               {photos.length > 0 ? (
@@ -809,24 +809,29 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
         {/* Action buttons */}
         {current && !loading && (
           <div className="pointer-events-auto flex items-center gap-4 mt-5">
+            {/* ✕ Skip */}
             <button
               onClick={() => triggerSwipe("left")}
               className="w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
               style={{ backgroundColor: "rgba(239,68,68,0.1)", border: "2px solid rgba(239,68,68,0.3)" }}>
               <XCircle size={26} style={{ color: "#ef4444" }} />
             </button>
-            {/* Undo */}
+            {/* ↩ Rewind */}
             <button onClick={undo} disabled={history.length === 0}
               className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 disabled:opacity-20"
               style={{ backgroundColor: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}
               title="Annuler">
               <ChevronLeft size={16} color="rgba(255,255,255,0.7)" />
             </button>
-            <button onClick={() => setShowDetail(v => !v)}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110"
-              style={{ backgroundColor: showDetail ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)" }}>
-              <ChevronRight size={15} color="rgba(255,255,255,0.6)" style={{ transform: showDetail ? "rotate(90deg)" : "rotate(-90deg)", transition: "transform 0.2s" }} />
+            {/* ♥ Favori */}
+            <button
+              onClick={() => current && fetch(`/api/vendor/${current.slug ?? current.id}/favorite`, { method: "POST" }).catch(() => {})}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              style={{ backgroundColor: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}
+              title="Ajouter aux favoris">
+              <span style={{ fontSize: 18 }}>♥</span>
             </button>
+            {/* 🎉 Sélectionner */}
             <button
               onClick={() => triggerSwipe("right")}
               className="w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"

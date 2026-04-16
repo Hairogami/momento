@@ -255,7 +255,7 @@ export default function VendorSwipeWidget({
             <div style={{ position: "absolute", top: 14, right: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #ef4444", color: "#ef4444", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (-drag.x - 25) / 55), transform: "rotate(14deg)", background: "rgba(239,68,68,0.1)" }}>SKIP ✕</div>
           )}
           {card.coverPhoto && (
-            <div style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.88) 100%)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.70) 100%)", pointerEvents: "none" }} />
           )}
           {!card.coverPhoto && (
             <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: theme.accent, opacity: 0.08, filter: "blur(30px)", pointerEvents: "none" }} />
@@ -278,12 +278,12 @@ export default function VendorSwipeWidget({
       <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "center", marginTop: 14 }}>
         {/* ✕ Skip */}
         <button onClick={() => swipe("left")} style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.35)", background: "rgba(239,68,68,0.06)", color: "#ef4444", cursor: "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>close</button>
-        {/* ↩ Rewind — toujours disponible */}
+        {/* ↩ Rewind */}
         <button onClick={() => setIndex(i => Math.max(0, i - 1))} disabled={index === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: index === 0 ? "#c9cad0" : "#6a6a71", cursor: index === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
-        {/* 🎉 Sélectionné */}
-        <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(225,29,72,0.35)", transition: "all 0.15s" }}>🎉</button>
         {/* ♥ Favori */}
         <button onClick={() => fetch(`/api/vendor/${card.id}/favorite`, { method: "POST" }).catch(() => {})} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.25)", background: "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
+        {/* 🎉 Sélectionné */}
+        <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(225,29,72,0.35)", transition: "all 0.15s" }}>🎉</button>
       </div>
     </div>
   )
