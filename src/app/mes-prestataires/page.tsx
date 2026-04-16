@@ -7,6 +7,29 @@ import { usePlanners } from "@/hooks/usePlanners"
 
 const G = "linear-gradient(135deg, #E11D48, #9333EA)"
 
+const ALL_CATEGORIES = [
+  { value: "Photographe",               emoji: "📸" },
+  { value: "Vidéaste",                  emoji: "🎬" },
+  { value: "DJ",                        emoji: "🎧" },
+  { value: "Orchestre",                 emoji: "🎻" },
+  { value: "Chanteur / chanteuse",      emoji: "🎤" },
+  { value: "Traiteur",                  emoji: "🍽️" },
+  { value: "Pâtissier / Cake designer", emoji: "🎂" },
+  { value: "Service de bar / mixologue",emoji: "🍹" },
+  { value: "Lieu de réception",         emoji: "🏛️" },
+  { value: "Décorateur",                emoji: "✨" },
+  { value: "Fleuriste événementiel",    emoji: "🌸" },
+  { value: "Hairstylist",               emoji: "💇" },
+  { value: "Makeup Artist",             emoji: "💄" },
+  { value: "Neggafa",                   emoji: "👘" },
+  { value: "Robes de mariés",           emoji: "👗" },
+  { value: "Wedding planner",           emoji: "📋" },
+  { value: "Event planner",             emoji: "🗓️" },
+  { value: "Animateur enfants",         emoji: "🎪" },
+  { value: "Magicien",                  emoji: "🎩" },
+  { value: "Violoniste",                emoji: "🎵" },
+]
+
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   contacted: { label: "Contacté",  color: "#f59e0b" },
   replied:   { label: "A répondu", color: "#3b82f6" },
@@ -37,6 +60,8 @@ export default function MesPrestatairesPage() {
   const [addingCategory, setAddingCategory] = useState<string | null>(null)
   const [categoryVendors, setCategoryVendors] = useState<DiscoverVendor[]>([])
   const [loadingCatVendors, setLoadingCatVendors] = useState(false)
+  const [showNewCategoryPicker, setShowNewCategoryPicker] = useState(false)
+  const [savingCategory, setSavingCategory] = useState(false)
 
   const loadPlanner = useCallback(async (id: string) => {
     setLoading(true)
@@ -84,6 +109,27 @@ export default function MesPrestatairesPage() {
       if (Array.isArray(data?.vendors)) setCategoryVendors(data.vendors)
     } finally {
       setLoadingCatVendors(false)
+    }
+  }
+
+  async function addNewCategory(category: string) {
+    if (!planner) return
+    setSavingCategory(true)
+    try {
+      const updated = [...planner.categories, category]
+      const res = await fetch(`/api/planners/${planner.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ categories: updated }),
+      })
+      if (res.ok) {
+        setShowNewCategoryPicker(false)
+        await loadPlanner(planner.id)
+        // Auto-open the vendor picker for the new category
+        openCategoryPicker(category)
+      }
+    } finally {
+      setSavingCategory(false)
     }
   }
 
@@ -137,7 +183,18 @@ export default function MesPrestatairesPage() {
             )}
           </div>
 
-          {/* Event switcher */}
+          {/* Add category + event switcher */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {planner && (
+              <button
+                onClick={() => setShowNewCategoryPicker(true)}
+                style={{
+                  padding: "8px 16px", borderRadius: 99, fontSize: 12, fontWeight: 600,
+                  border: "none", background: G, color: "#fff",
+                  cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
+                }}
+              >+ Catégorie</button>
+            )}
           {events.length > 1 && (
             <select
               value={activeEventId}
@@ -151,6 +208,7 @@ export default function MesPrestatairesPage() {
               {events.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
             </select>
           )}
+          </div>
         </div>
 
         {loading ? (
@@ -243,6 +301,67 @@ export default function MesPrestatairesPage() {
           </div>
         )}
       </main>
+
+      {/* New category picker overlay */}
+      {showNewCategoryPicker && planner && (
+        <div
+          onClick={() => setShowNewCategoryPicker(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 900,
+            background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
+            display: "flex", alignItems: "flex-end", justifyContent: "center",
+            padding: 16,
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: "var(--dash-surface,#fff)", borderRadius: "20px 20px 0 0",
+              width: "100%", maxWidth: 600, maxHeight: "80vh",
+              overflow: "hidden", display: "flex", flexDirection: "column",
+            }}
+          >
+            <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(183,191,217,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>
+                  Ajouter une catégorie
+                </h3>
+                <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
+                  Sélectionne une catégorie à ajouter à ton événement
+                </p>
+              </div>
+              <button onClick={() => setShowNewCategoryPicker(false)} style={{ background: "none", border: "none", fontSize: 18, color: "var(--dash-text-3,#9a9aaa)", cursor: "pointer" }}>✕</button>
+            </div>
+            <div style={{ overflowY: "auto", padding: 16 }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {ALL_CATEGORIES.filter(cat => !planner.categories.includes(cat.value)).map(cat => (
+                  <button
+                    key={cat.value}
+                    onClick={() => addNewCategory(cat.value)}
+                    disabled={savingCategory}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6,
+                      padding: "10px 16px", borderRadius: 12, fontSize: 12, fontWeight: 600,
+                      border: "1.5px solid rgba(183,191,217,0.35)",
+                      background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)",
+                      cursor: savingCategory ? "not-allowed" : "pointer",
+                      fontFamily: "inherit", transition: "all 0.15s",
+                    }}
+                  >
+                    <span>{cat.emoji}</span>
+                    <span>{cat.value}</span>
+                  </button>
+                ))}
+                {ALL_CATEGORIES.filter(cat => !planner.categories.includes(cat.value)).length === 0 && (
+                  <p style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)", padding: "20px 0" }}>
+                    Toutes les catégories sont déjà ajoutées.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Category picker overlay */}
       {addingCategory && (
