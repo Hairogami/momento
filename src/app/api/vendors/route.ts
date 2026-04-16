@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
+import { getRankingWeights, sortByScore } from "@/lib/rankingScore"
 
 export async function GET(req: NextRequest) {
   const ip = getIp(req)
@@ -22,36 +23,47 @@ export async function GET(req: NextRequest) {
   const page = Math.min(1000, Math.max(1, parseInt(searchParams.get("page") ?? "1", 10)))
   // WR-09: Cap at 50 per request on public endpoint to prevent bulk scraping
   const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10) || 20))
-  // W03: public endpoint — exclude sensitive contact/location fields
-  const vendors = await prisma.vendor.findMany({
-    where: category ? { category } : {},
-    orderBy: [{ media: { _count: "desc" } }, { name: "asc" }],
-    skip: (page - 1) * limit,
-    take: limit,
-    select: {
-      id: true,
-      slug: true,
-      name: true,
-      category: true,
-      description: true,
-      address: true,
-      city: true,
-      priceMin: true,
-      priceMax: true,
-      priceRange: true,
-      rating: true,
-      reviewCount: true,
-      website: true,
-      instagram: true,
-      facebook: true,
-      phone: true,
-      email: true,
-      region: true,
-      verified: true,
-      media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },
-    },
-  })
-  return Response.json(vendors)
+
+  // Smart ranking: fetch all matching vendors, score in memory, paginate
+  const [weights, rows] = await Promise.all([
+    getRankingWeights(),
+    prisma.vendor.findMany({
+      where: category
+        ? { category: { contains: category, mode: "insensitive" } }
+        : {},
+      // W03: public endpoint — exclude sensitive contact/location fields
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        category: true,
+        description: true,
+        address: true,
+        city: true,
+        priceMin: true,
+        priceMax: true,
+        priceRange: true,
+        rating: true,
+        reviewCount: true,
+        featured: true,
+        website: true,
+        instagram: true,
+        facebook: true,
+        phone: true,
+        email: true,
+        region: true,
+        verified: true,
+        media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },
+      },
+    }),
+  ])
+
+  const scored = sortByScore(
+    rows.map(v => ({ ...v, mediaCount: v.media.length })),
+    weights
+  )
+  const vendors = scored.slice((page - 1) * limit, page * limit)
+  return Response.json({ vendors, total: scored.length, page, limit })
 }
 
 export async function POST(req: NextRequest) {

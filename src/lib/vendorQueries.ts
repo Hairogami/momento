@@ -6,6 +6,7 @@
  * sitemap.ts, et les routes API qui valident l'existence d'un slug.
  */
 import { prisma } from "@/lib/prisma"
+import { getRankingWeights, sortByScore } from "@/lib/rankingScore"
 
 // ─── Fallback images par catégorie (quand un vendor n'a aucune photo en DB) ──
 // Garde ce mapping ici en server-only, réutilisé par plusieurs pages.
@@ -146,20 +147,30 @@ export async function vendorSlugExists(slug: string): Promise<boolean> {
  * pour filtrage + affichage de card. `hasPhoto` remplace l'ancien VENDORS_WITH_PHOTO.
  */
 export async function getAllVendorsForExplore(): Promise<VendorListItem[]> {
-  const rows = await prisma.vendor.findMany({
-    select: {
-      slug: true,
-      name: true,
-      category: true,
-      city: true,
-      rating: true,
-      instagram: true,
-      facebook: true,
-      _count: { select: { media: true } },
-    },
-    orderBy: { name: "asc" },
-  })
-  return rows.map(r => ({
+  const [weights, rows] = await Promise.all([
+    getRankingWeights(),
+    prisma.vendor.findMany({
+      select: {
+        slug: true,
+        name: true,
+        category: true,
+        city: true,
+        rating: true,
+        reviewCount: true,
+        featured: true,
+        instagram: true,
+        facebook: true,
+        _count: { select: { media: true } },
+      },
+    }),
+  ])
+
+  const scored = sortByScore(
+    rows.map(r => ({ ...r, mediaCount: r._count.media })),
+    weights
+  )
+
+  return scored.map(r => ({
     id: r.slug,
     name: r.name,
     category: r.category,
