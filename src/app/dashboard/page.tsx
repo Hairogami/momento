@@ -1670,7 +1670,6 @@ export default function CloneDashboardPage() {
         {/* Widget grid */}
         <div style={{ padding: "12px 24px 64px", flex: 1 }}>
           <div className="dash-widget-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 14, gridAutoRows: "minmax(220px, auto)" }}>
-            <style>{`.dash-widget-grid > * { min-width: 0; } @media (max-width: 767px) { .dash-widget-grid { grid-template-columns: 1fr !important; } .dash-widget-grid > * { grid-column: span 1 !important; } }`}</style>
             {widgetOrder.map(id => {
               const meta = getWidgetMeta(id)
               if (!meta) return null

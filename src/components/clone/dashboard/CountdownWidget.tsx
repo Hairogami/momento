@@ -24,20 +24,19 @@ function formatEventDate(dateStr: string) {
 }
 
 export default function CountdownWidget({ name, date, guestCount = 0, guestConfirmed = 0 }: CountdownWidgetProps) {
-  const [time, setTime] = useState(() => getTimeLeft(date))
+  const [time, setTime] = useState<ReturnType<typeof getTimeLeft> | null>(null)
 
   useEffect(() => {
+    setTime(getTimeLeft(date))
     const t = setInterval(() => setTime(getTimeLeft(date)), 1000)
     return () => clearInterval(t)
   }, [date])
 
+  const t = time ?? { days: 0, hours: 0, minutes: 0, seconds: 0 }
+
   // Ring progress: inverse of days remaining vs total days
-  const totalDaysFromToday = Math.max(1, Math.ceil(
-    (new Date(date).getTime() - new Date().setHours(0, 0, 0, 0)) / 86400000
-  ))
-  // Assume ~365 days total event planning horizon
   const PLANNING_HORIZON = 365
-  const elapsed = Math.max(0, PLANNING_HORIZON - time.days)
+  const elapsed = Math.max(0, PLANNING_HORIZON - t.days)
   const pct = Math.min(1, elapsed / PLANNING_HORIZON)
   const deg = pct * 360
 
@@ -83,7 +82,7 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
               fontSize: 28, fontWeight: 900, lineHeight: 1,
               backgroundImage: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-            }}>{time.days}</span>
+            }}>{t.days}</span>
             <span style={{ fontSize: 8, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginTop: 1 }}>
               jours
             </span>
@@ -101,9 +100,9 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
           {/* Hours + minutes */}
           <div style={{ display: "flex", gap: 8 }}>
             {[
-              { val: time.hours,   label: "heures" },
-              { val: time.minutes, label: "min" },
-              { val: time.seconds, label: "sec" },
+              { val: t.hours,   label: "heures" },
+              { val: t.minutes, label: "min" },
+              { val: t.seconds, label: "sec" },
             ].map(({ val, label }) => (
               <div key={label} style={{
                 background: "rgba(183,191,217,0.09)",

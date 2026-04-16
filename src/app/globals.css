@@ -551,3 +551,10 @@ html.dark .clone-card-white {
 html.dark .clone-progress-fill {
   opacity: 0.9;
 }
+
+/* dash-widget-grid — moved from dashboard/page.tsx inline style */
+.dash-widget-grid > * { min-width: 0; }
+@media (max-width: 767px) {
+  .dash-widget-grid { grid-template-columns: 1fr !important; }
+  .dash-widget-grid > * { grid-column: span 1 !important; }
+}
