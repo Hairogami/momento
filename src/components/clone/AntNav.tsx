@@ -127,7 +127,15 @@ export default function AntNav({
   const isVendor   = role === "vendor"
 
   const [scrolled,    setScrolled]    = useState(false)
-  const [dark,        setDark]        = useState(true)
+  const [dark,        setDark]        = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("momento_clone_dark_mode")
+        if (saved !== null) return JSON.parse(saved) as boolean
+      } catch {}
+    }
+    return true
+  })
   const [menuOpen,    setMenuOpen]    = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [paletteIdx,  setPaletteIdx]  = useState(0)
@@ -142,15 +150,8 @@ export default function AntNav({
 
   // Dark mode
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("momento_clone_dark_mode")
-      if (saved !== null) setDark(JSON.parse(saved))
-    } catch {}
-  }, [])
-  useEffect(() => {
     document.documentElement.classList.toggle("clone-dark", dark)
     document.documentElement.classList.toggle("dark", dark)
-    try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(dark)) } catch {}
   }, [dark])
 
   // Palette
@@ -297,7 +298,7 @@ export default function AntNav({
           <div className={hideLinks ? "flex-shrink-0 flex items-center justify-end gap-2 ml-auto" : "flex-1 flex items-center justify-end gap-2"}>
 
             {/* Dark mode toggle */}
-            {!hideDarkToggle && <button onClick={() => setDark(d => !d)}
+            {!hideDarkToggle && <button onClick={() => { const next = !dark; setDark(next); try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next)) } catch {} }}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
               style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}
               title={dark ? "Mode clair" : "Mode sombre"}>

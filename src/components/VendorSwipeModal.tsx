@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { X, XCircle, Star, MapPin, ChevronLeft, ArrowUpRight, RotateCcw } from "lucide-react";
 import { C } from "@/lib/colors";
 
@@ -222,7 +223,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     // 5. Haptic + preload next image
     try { navigator.vibrate?.(dir === "right" ? [12, 40, 20] : 8); } catch {}
     const nextPhoto = vendors[index + 1]?.media?.[0]?.url;
-    if (nextPhoto) { const img = new Image(); img.src = nextPhoto; }
+    if (nextPhoto) { const img = new window.Image(); img.src = nextPhoto; }
 
     // 6. Booking + match animation
     if (dir === "right" && !bookedIds.has(current.id)) {
@@ -392,8 +393,8 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                   boxShadow: "0 24px 60px rgba(0,0,0,0.45)",
                 }}>
                 {np[0] ? (
-                  <img src={np[0]} draggable={false} className="absolute inset-0 w-full h-full object-cover"
-                    style={{ filter: launched ? "none" : "blur(4px) brightness(0.5) saturate(0.6)", transition: "filter 0.44s ease" }} />
+                  <Image fill src={np[0]} alt="" sizes="800px"
+                    style={{ objectFit: "cover", filter: launched ? "none" : "blur(4px) brightness(0.5) saturate(0.6)", transition: "filter 0.44s ease" }} />
                 ) : (
                   <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#2a1a0e,#3d2510,#1a0e05)" }} />
                 )}
@@ -423,7 +424,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                   boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
                 }}>
                 {gp[0] ? (
-                  <img src={gp[0]} draggable={false} className="absolute inset-0 w-full h-full object-cover" />
+                  <Image fill src={gp[0]} alt="" sizes="800px" style={{ objectFit: "cover" }} />
                 ) : (
                   <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#2a1a0e,#3d2510,#1a0e05)" }} />
                 )}
@@ -450,13 +451,13 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
             >
               {/* ── Photo (full card) ── */}
               {photos.length > 0 ? (
-                <img
+                <Image
+                  fill
                   src={photos[photoIdx]}
                   alt={current.name}
-                  draggable={false}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  style={{ transition: "filter 0.3s ease", filter: showDetail ? "blur(12px) brightness(0.25) saturate(0.4)" : "none" }}
-                  onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  style={{ objectFit: "cover", transition: "filter 0.3s ease", filter: showDetail ? "blur(12px) brightness(0.25) saturate(0.4)" : "none" }}
+                  priority
                 />
               ) : (
                 <div className="absolute inset-0"

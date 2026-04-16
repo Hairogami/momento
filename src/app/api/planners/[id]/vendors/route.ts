@@ -72,9 +72,20 @@ export async function POST(
 
   if (!vendorSlug) return Response.json({ error: "vendorSlug requis." }, { status: 400 })
 
-  // Verify vendor exists
-  const vendor = await prisma.vendor.findUnique({ where: { slug: vendorSlug }, select: { slug: true } })
+  // Verify vendor exists and get its category
+  const vendor = await prisma.vendor.findUnique({ where: { slug: vendorSlug }, select: { slug: true, category: true } })
   if (!vendor) return Response.json({ error: "Prestataire introuvable." }, { status: 404 })
+
+  // Auto-add vendor category to planner if not already present
+  if (vendor.category) {
+    const planner = await prisma.planner.findUnique({ where: { id }, select: { categories: true } })
+    if (planner && !planner.categories.includes(vendor.category)) {
+      await prisma.planner.update({
+        where: { id },
+        data: { categories: { push: vendor.category } },
+      })
+    }
+  }
 
   const plannerVendor = await prisma.plannerVendor.upsert({
     where: { plannerId_vendorSlug: { plannerId: id, vendorSlug } },

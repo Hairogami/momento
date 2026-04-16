@@ -9,7 +9,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
       { protocol: "https", hostname: "platform-lookaside.fbsbx.com" },
       { protocol: "https", hostname: "i.zafaf.net" },
+      { protocol: "https", hostname: "**" }, // vendor media URLs (domaines variés)
     ],
+    minimumCacheTTL: 2592000, // 30 jours — réduit les transformations Vercel
   },
   async headers() {
     return [

@@ -27,7 +27,7 @@ export default function CloneFavoritesPage() {
   }
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "#f7f7fb" }}>
+    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
       <div className="hidden lg:flex">
         <DashSidebar events={events} activeEventId={activeEventId} onEventChange={() => {}} />
       </div>
@@ -37,7 +37,7 @@ export default function CloneFavoritesPage() {
         {/* Header */}
         <div style={{ marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <h1 style={{ fontSize: "clamp(1.3rem,2vw,1.7rem)", fontWeight: 800, color: "#121317", letterSpacing: "-0.03em", margin: "0 0 4px" }}>
+            <h1 style={{ fontSize: "clamp(1.3rem,2vw,1.7rem)", fontWeight: 800, color: "var(--dash-text,#121317)", letterSpacing: "-0.03em", margin: "0 0 4px" }}>
               Favoris
             </h1>
             <p style={{ fontSize: 13, color: "#6a6a71", margin: 0 }}>
@@ -58,7 +58,7 @@ export default function CloneFavoritesPage() {
         {favs.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 20px" }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>💔</div>
-            <h2 style={{ fontSize: 18, fontWeight: 600, color: "#121317", margin: "0 0 8px" }}>Aucun favori</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>Aucun favori</h2>
             <p style={{ fontSize: 13, color: "#9a9aaa", marginBottom: 24 }}>
               Explorez l&apos;annuaire et cliquez ♥ pour sauvegarder des prestataires
             </p>
@@ -79,7 +79,7 @@ export default function CloneFavoritesPage() {
               const color = CATEGORY_COLORS[fav.category] ?? "#9a9aaa"
               return (
                 <div key={fav.id} style={{
-                  background: "#fff", borderRadius: 18,
+                  background: "var(--dash-surface,#fff)", borderRadius: 18,
                   border: "1px solid rgba(183,191,217,0.15)",
                   boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
                   overflow: "hidden",
@@ -100,7 +100,7 @@ export default function CloneFavoritesPage() {
                         {fav.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "#121317", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {fav.name}
                         </div>
                         <div style={{ fontSize: 11, color: "#9a9aaa" }}>{fav.category} · {fav.city}</div>

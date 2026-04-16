@@ -52,7 +52,15 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const [eventOpen, setEventOpen] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const router = useRouter()
-  const [darkMode,  setDarkMode]  = useState(true)
+  const [darkMode,  setDarkMode]  = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("momento_clone_dark_mode")
+        if (saved !== null) return JSON.parse(saved) as boolean
+      } catch {}
+    }
+    return true
+  })
   const [menuOpen,  setMenuOpen]  = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0]
@@ -62,21 +70,10 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     return <MobileDashNav messageUnread={messageUnread} />
   }
 
-  // Lire dark mode depuis localStorage — défaut: true (dark en premier)
+  // Sync dark class on mount (state already initialized from localStorage)
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("momento_clone_dark_mode")
-      if (saved !== null) {
-        const val = JSON.parse(saved)
-        setDarkMode(val)
-        document.documentElement.classList.toggle("dark", val)
-      } else {
-        // Première visite → dark par défaut
-        localStorage.setItem("momento_clone_dark_mode", "true")
-        document.documentElement.classList.add("dark")
-      }
-    } catch {}
-  }, [])
+    document.documentElement.classList.toggle("dark", darkMode)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fermer le menu sur clic extérieur
   useEffect(() => {

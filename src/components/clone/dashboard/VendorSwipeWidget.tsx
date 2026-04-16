@@ -1,6 +1,7 @@
 "use client"
 import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
+import Image from "next/image"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 const LS_LIKED   = (pid: string) => `momento_vsw_liked_${pid}`
@@ -239,7 +240,7 @@ export default function VendorSwipeWidget({
           onPointerUp={onPointerUp} onPointerCancel={onPointerUp}
           style={{
             position: "absolute", inset: 0, borderRadius: 16,
-            background: card.coverPhoto ? `url(${card.coverPhoto}) center/cover no-repeat` : theme.bg,
+            background: card.coverPhoto ? "transparent" : theme.bg,
             cursor: dragActive.current ? "grabbing" : "grab",
             userSelect: "none", touchAction: "none",
             transform: `translateX(${exitX}px) translateY(${exitY}px) rotate(${exitRot}deg)`,
@@ -253,6 +254,16 @@ export default function VendorSwipeWidget({
           )}
           {drag.x < -25 && (
             <div style={{ position: "absolute", top: 14, right: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #ef4444", color: "#ef4444", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (-drag.x - 25) / 55), transform: "rotate(14deg)", background: "rgba(239,68,68,0.1)" }}>SKIP ✕</div>
+          )}
+          {card.coverPhoto && (
+            <Image
+              fill
+              src={card.coverPhoto}
+              alt={card.name}
+              sizes="(max-width: 768px) 100vw, 400px"
+              style={{ objectFit: "cover", borderRadius: 16 }}
+              priority
+            />
           )}
           {card.coverPhoto && (
             <div style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.70) 100%)", pointerEvents: "none" }} />

@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import { invalidatePlannerCache } from "@/hooks/usePlanners"
 
 const G = "linear-gradient(135deg, #E11D48, #9333EA)"
 
@@ -87,6 +88,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? "Erreur lors de la création."); return }
+      invalidatePlannerCache()
       reset()
       onCreated(data)
     } catch {
