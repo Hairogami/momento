@@ -154,15 +154,12 @@ export default function VendorProfileClient({
 
       {/* ── Content ── */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "20px 16px 80px" }}>
-        <style>{`.vpgrid{display:flex;flex-direction:column;gap:24px}@media(min-width:1024px){.vpgrid{display:grid;grid-template-columns:1fr min(340px,35%);gap:32px;align-items:start}}`}</style>
+        <style>{`.vpgrid{display:flex;flex-direction:column;gap:24px}@media(min-width:1024px){.vpgrid{display:grid;grid-template-columns:1fr min(340px,35%);gap:32px;align-items:start}.vp-sidebar{grid-column:2;grid-row:1/span 10;position:sticky;top:120px}}`}</style>
         <div className="vpgrid">
 
-          {/* ── Left col ── */}
-          <div style={{ minWidth: 0 }}>
-
-            {/* Description */}
-            {description && (
-              <section style={{ marginBottom: 32 }}>
+          {/* Description */}
+          {description && (
+            <section>
                 <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 12 }}>À propos</h2>
                 <p style={{
                   fontSize: 14, color: "var(--dash-text-2,#45474D)", lineHeight: 1.75,
@@ -175,9 +172,9 @@ export default function VendorProfileClient({
               </section>
             )}
 
-            {/* Photo gallery */}
-            {allPhotos.length > 1 && (
-              <section style={{ marginBottom: 32 }}>
+          {/* Photo gallery */}
+          {allPhotos.length > 1 && (
+            <section>
                 <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 12 }}>
                   Photos ({allPhotos.length})
                 </h2>
@@ -213,55 +210,8 @@ export default function VendorProfileClient({
               </section>
             )}
 
-            {/* Reviews */}
-            <section>
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 16 }}>
-                Avis clients {reviews.length > 0 && `(${reviews.length})`}
-              </h2>
-              {reviews.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  {reviews.map((r, i) => (
-                    <div key={i} style={{
-                      background: "var(--dash-surface,#fff)", borderRadius: 16, padding: "16px 20px",
-                      border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <div style={{
-                            width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
-                            background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            color: "#fff", fontWeight: 700, fontSize: 13,
-                          }}>
-                            {r.author.charAt(0)}
-                          </div>
-                          <div>
-                            <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>{r.author}</p>
-                            <p style={{ fontSize: 11, color: "var(--dash-text-3,#6a6a71)", margin: "2px 0 0" }}>{r.event}</p>
-                          </div>
-                        </div>
-                        <StarRow count={r.stars} size={13} />
-                      </div>
-                      <p style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", margin: 0, lineHeight: 1.6 }}>{r.note}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{
-                  background: "var(--dash-surface,#fff)", borderRadius: 16, padding: "28px 20px",
-                  border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
-                  textAlign: "center",
-                }}>
-                  <p style={{ fontSize: 13, color: "var(--dash-text-3,#6a6a71)", margin: 0 }}>
-                    Pas encore d&apos;avis. Soyez le premier à laisser votre avis après votre événement.
-                  </p>
-                </div>
-              )}
-            </section>
-          </div>
-
-          {/* ── Right col — Contact card ── */}
-          <div className="order-first lg:order-last" style={{ position: "sticky", top: 120 }}>
+          {/* ── Sidebar — Contact card + Calendar ── */}
+          <div className="vp-sidebar">
             <div style={{
               background: "var(--dash-surface,#fff)", borderRadius: 24, padding: 24,
               border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
@@ -384,6 +334,52 @@ export default function VendorProfileClient({
               />
             </div>
           </div>
+
+          {/* Reviews */}
+          <section>
+            <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 16 }}>
+              Avis clients {reviews.length > 0 && `(${reviews.length})`}
+            </h2>
+            {reviews.length > 0 ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {reviews.map((r, i) => (
+                  <div key={i} style={{
+                    background: "var(--dash-surface,#fff)", borderRadius: 16, padding: "16px 20px",
+                    border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+                          background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          color: "#fff", fontWeight: 700, fontSize: 13,
+                        }}>
+                          {r.author.charAt(0)}
+                        </div>
+                        <div>
+                          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>{r.author}</p>
+                          <p style={{ fontSize: 11, color: "var(--dash-text-3,#6a6a71)", margin: "2px 0 0" }}>{r.event}</p>
+                        </div>
+                      </div>
+                      <StarRow count={r.stars} size={13} />
+                    </div>
+                    <p style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", margin: 0, lineHeight: 1.6 }}>{r.note}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{
+                background: "var(--dash-surface,#fff)", borderRadius: 16, padding: "28px 20px",
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
+                textAlign: "center",
+              }}>
+                <p style={{ fontSize: 13, color: "var(--dash-text-3,#6a6a71)", margin: 0 }}>
+                  Pas encore d&apos;avis. Soyez le premier à laisser votre avis après votre événement.
+                </p>
+              </div>
+            )}
+          </section>
         </div>
       </div>
 
