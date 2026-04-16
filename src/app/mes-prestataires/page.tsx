@@ -105,8 +105,8 @@ export default function MesPrestatairesPage() {
         <div style={contentStyle}>
           <div style={{ textAlign: "center", padding: "80px 24px" }}>
             <p style={{ fontSize: 40, marginBottom: 16 }}>🎉</p>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: "#121317", margin: "0 0 8px" }}>Aucun événement</h2>
-            <p style={{ fontSize: 13, color: "#6a6a71" }}>Créez un événement pour commencer à sélectionner vos prestataires.</p>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>Aucun événement</h2>
+            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)" }}>Créez un événement pour commencer à sélectionner vos prestataires.</p>
           </div>
         </div>
       </div>
@@ -120,11 +120,11 @@ export default function MesPrestatairesPage() {
         {/* Header */}
         <div style={{ marginBottom: 32, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+            <h1 style={{ fontSize: "clamp(1.5rem,3vw,2rem)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
               Mes prestataires
             </h1>
             {planner && (
-              <p style={{ fontSize: 13, color: "#6a6a71", margin: 0 }}>
+              <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
                 {planner.title} {planner.weddingDate ? `· ${new Date(planner.weddingDate).toLocaleDateString("fr-MA", { day: "numeric", month: "long", year: "numeric" })}` : ""}
               </p>
             )}
@@ -137,7 +137,7 @@ export default function MesPrestatairesPage() {
               onChange={e => setActiveEventId(e.target.value)}
               style={{
                 padding: "8px 14px", borderRadius: 12, fontSize: 12, fontWeight: 600,
-                border: "1.5px solid rgba(183,191,217,0.4)", background: "#fff", color: "#121317",
+                border: "1.5px solid rgba(183,191,217,0.4)", background: "var(--dash-surface,#fff)", color: "var(--dash-text,#121317)",
                 cursor: "pointer", fontFamily: "inherit",
               }}
             >
@@ -147,7 +147,7 @@ export default function MesPrestatairesPage() {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: 60, color: "#9a9aaa", fontSize: 13 }}>Chargement…</div>
+          <div style={{ textAlign: "center", padding: 60, color: "var(--dash-text-3,#9a9aaa)", fontSize: 13 }}>Chargement…</div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
             {Object.entries(vendorsByCategory).map(([category, vendors]) => (
@@ -155,11 +155,11 @@ export default function MesPrestatairesPage() {
                 {/* Category header */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <h2 style={{ fontSize: 16, fontWeight: 700, color: "#121317", margin: 0 }}>{category}</h2>
+                    <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>{category}</h2>
                     <span style={{
                       fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99,
                       background: vendors.length > 0 ? "rgba(34,197,94,0.1)" : "rgba(183,191,217,0.15)",
-                      color: vendors.length > 0 ? "#22c55e" : "#9a9aaa",
+                      color: vendors.length > 0 ? "#22c55e" : "var(--dash-text-3,#9a9aaa)",
                     }}>
                       {vendors.length} sélectionné{vendors.length !== 1 ? "s" : ""}
                     </span>
@@ -169,7 +169,7 @@ export default function MesPrestatairesPage() {
                     style={{
                       padding: "6px 14px", borderRadius: 99, fontSize: 11, fontWeight: 600,
                       border: "1.5px solid rgba(183,191,217,0.4)",
-                      background: "transparent", color: "#6a6a71", cursor: "pointer",
+                      background: "transparent", color: "var(--dash-text-2,#6a6a71)", cursor: "pointer",
                     }}
                   >+ Ajouter</button>
                 </div>
@@ -218,7 +218,7 @@ export default function MesPrestatairesPage() {
                     border: "1.5px dashed rgba(183,191,217,0.4)", borderRadius: 16,
                     padding: "28px 24px", textAlign: "center",
                   }}>
-                    <p style={{ fontSize: 13, color: "#9a9aaa", margin: "0 0 12px" }}>
+                    <p style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 12px" }}>
                       Aucun {category.toLowerCase()} sélectionné
                     </p>
                     <button
@@ -251,19 +251,19 @@ export default function MesPrestatairesPage() {
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600,
+              background: "var(--dash-surface,#fff)", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600,
               maxHeight: "80vh", overflow: "hidden", display: "flex", flexDirection: "column",
             }}
           >
             <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(183,191,217,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: "#121317", margin: 0 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                 Choisir un {addingCategory}
               </h3>
-              <button onClick={() => setAddingCategory(null)} style={{ background: "none", border: "none", fontSize: 18, color: "#9a9aaa", cursor: "pointer" }}>✕</button>
+              <button onClick={() => setAddingCategory(null)} style={{ background: "none", border: "none", fontSize: 18, color: "var(--dash-text-3,#9a9aaa)", cursor: "pointer" }}>✕</button>
             </div>
             <div style={{ overflowY: "auto", padding: 16 }}>
               {loadingCatVendors ? (
-                <p style={{ textAlign: "center", color: "#9a9aaa", padding: 40, fontSize: 13 }}>Chargement…</p>
+                <p style={{ textAlign: "center", color: "var(--dash-text-3,#9a9aaa)", padding: 40, fontSize: 13 }}>Chargement…</p>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {categoryVendors.map(v => (
@@ -278,7 +278,7 @@ export default function MesPrestatairesPage() {
                     />
                   ))}
                   {categoryVendors.length === 0 && (
-                    <p style={{ textAlign: "center", color: "#9a9aaa", padding: 40, fontSize: 13 }}>
+                    <p style={{ textAlign: "center", color: "var(--dash-text-3,#9a9aaa)", padding: 40, fontSize: 13 }}>
                       Aucun prestataire trouvé dans cette catégorie.
                     </p>
                   )}

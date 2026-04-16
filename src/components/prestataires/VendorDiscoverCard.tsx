@@ -63,12 +63,12 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Pr
 
   return (
     <div style={{
-      background: "#fff", borderRadius: 20, overflow: "hidden",
-      border: "1px solid rgba(183,191,217,0.2)",
+      background: "var(--dash-surface,#fff)", borderRadius: 20, overflow: "hidden",
+      border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
       boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
     }}>
       {/* Photo area */}
-      <div style={{ position: "relative", height: 180, background: "#f0f0f5", overflow: "hidden" }}>
+      <div style={{ position: "relative", height: 180, background: "var(--dash-border,#f0f0f5)", overflow: "hidden" }}>
         {hasPhotos ? (
           <>
             <img
@@ -119,8 +119,8 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Pr
       <div style={{ padding: "14px 16px 16px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 6 }}>
           <div>
-            <p style={{ fontSize: 15, fontWeight: 700, color: "#121317", margin: "0 0 2px" }}>{vendor.name}</p>
-            <p style={{ fontSize: 11, color: "#9a9aaa", margin: 0 }}>{vendor.category}{vendor.city ? ` · ${vendor.city}` : ""}</p>
+            <p style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>{vendor.name}</p>
+            <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{vendor.category}{vendor.city ? ` · ${vendor.city}` : ""}</p>
           </div>
           {vendor.rating && (
             <span style={{
@@ -167,7 +167,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Pr
                     border: "1px solid",
                     borderColor: lang === l.value ? "#9333EA" : "rgba(183,191,217,0.35)",
                     background: lang === l.value ? "rgba(147,51,234,0.07)" : "transparent",
-                    color: lang === l.value ? "#9333EA" : "#9a9aaa",
+                    color: lang === l.value ? "#9333EA" : "var(--dash-text-3,#9a9aaa)",
                     cursor: "pointer",
                   }}
                 >{l.label}</button>
@@ -202,7 +202,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Pr
               width: 36, height: 36, borderRadius: 10,
               border: "1px solid rgba(183,191,217,0.3)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              textDecoration: "none", fontSize: 14, color: "#9a9aaa",
+              textDecoration: "none", fontSize: 14, color: "var(--dash-text-3,#9a9aaa)",
               flexShrink: 0,
             }}
           >↗</Link>
