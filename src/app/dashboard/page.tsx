@@ -1426,7 +1426,7 @@ export default function CloneDashboardPage() {
     switch (id as WidgetId) {
       case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
       case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} />
-      case "swipe":         return <VendorSwipeWidget onOpenModal={() => setSwipeOpen(true)} />
+      case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={() => setSwipeOpen(true)} />
       case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} />
       case "tasks":     return renderTasks()
       case "bookings":  return renderBookings()
