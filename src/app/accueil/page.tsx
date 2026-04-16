@@ -5,11 +5,6 @@ import AntNav from "@/components/clone/AntNav"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
-const MOCK_PLANNERS = [
-  { id: "1", coupleNames: "Mariage Yasmine & Karim",   weddingDate: "2026-09-15", coverColor: "#e07b5a", budget: 120000, guestCount: 220 },
-  { id: "2", coupleNames: "Mariage Sara & Adam",       weddingDate: "2026-06-21", coverColor: "#7b5ea7", budget: 85000,  guestCount: 150 },
-  { id: "3", coupleNames: "Anniversaire 30 ans Leila", weddingDate: "2026-05-10", coverColor: "#e05a7b", budget: 30000,  guestCount: 60  },
-]
 
 const QUICK_LINKS = [
   { emoji: "🔍", label: "Trouver un prestataire", href: "/explore"    },
@@ -29,9 +24,9 @@ function formatDate(dateStr: string): string {
 type Planner = { id: string; coupleNames?: string | null; title?: string | null; weddingDate?: string | null; coverColor?: string | null; budget?: number | null; guestCount?: number | null }
 
 export default function CloneAccueilPage() {
-  const [planners, setPlanners] = useState<Planner[]>(MOCK_PLANNERS)
+  const [planners, setPlanners] = useState<Planner[]>([])
   const [loaded, setLoaded] = useState(false)
-  const [firstName, setFirstName] = useState("Yazid")
+  const [firstName, setFirstName] = useState("")
 
   useEffect(() => {
     fetch("/api/planners")

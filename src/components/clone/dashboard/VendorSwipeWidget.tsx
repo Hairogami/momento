@@ -32,19 +32,11 @@ function categoryTheme(cat: string) {
   return CATEGORY_THEMES[key]
 }
 
-const MOCK_VENDORS: VCard[] = [
-  { id: "m1", name: "Studio Lumière",     category: "Photographe",  city: "Casablanca", rating: 4.9, priceMin: 3000 },
-  { id: "m2", name: "DJ Karim Beat",      category: "DJ",           city: "Marrakech",  rating: 4.8, priceMin: 2500 },
-  { id: "m3", name: "Traiteur El Bab",    category: "Traiteur",     city: "Fès",        rating: 4.7, priceMin: 180  },
-  { id: "m4", name: "Fleurs & Art",       category: "Fleuriste",    city: "Rabat",      rating: 4.6, priceMin: 800  },
-  { id: "m5", name: "Ciné Mariage",       category: "Vidéographe",  city: "Casablanca", rating: 4.8, priceMin: 4500 },
-  { id: "m6", name: "Orchestre Andalou",  category: "Musique",      city: "Fès",        rating: 4.9, priceMin: 6000 },
-]
 
 const SWIPE_THRESHOLD = 75
 
 export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () => void }) {
-  const [cards, setCards] = useState<VCard[]>(MOCK_VENDORS)
+  const [cards, setCards] = useState<VCard[]>([])
   const [index, setIndex] = useState(0)
   const [liked, setLiked] = useState<string[]>([])
   const [skipped, setSkipped] = useState<string[]>([])
