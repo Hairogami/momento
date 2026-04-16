@@ -177,6 +177,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   const [photoOnly, setPhotoOnly] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [catModalOpen, setCatModalOpen] = useState(false)
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false)
   const filtersRef = useRef<HTMLDivElement>(null)
   const [page, setPage]           = useState(1)
   const [scrolled, setScrolled]   = useState(false)
@@ -448,7 +449,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             {(() => {
               const advCount = socialFilter.size + (photoOnly ? 1 : 0)
               return (
-                <button onClick={() => setFiltersOpen(o => !o)} style={{
+                <button onClick={() => { if (window.innerWidth < 768) setFiltersModalOpen(true); else setFiltersOpen(o => !o) }} style={{
                   height: 28, padding: "0 12px", borderRadius: 999,
                   border: filtersOpen || advCount > 0
                     ? "1px solid rgba(225,29,72,0.5)"
@@ -696,6 +697,76 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                 )
               })}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Filters bottom sheet (mobile) ── */}
+      {filtersModalOpen && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "flex-end" }}>
+          <div onClick={() => setFiltersModalOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
+          <div style={{
+            position: "relative", width: "100%",
+            background: "var(--dash-surface,#fff)",
+            borderRadius: "20px 20px 0 0",
+            padding: "20px 16px calc(40px + env(safe-area-inset-bottom, 0px)) 16px",
+            maxHeight: "70vh", overflowY: "auto",
+          }}>
+            {/* Header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Filtres</h3>
+              <button onClick={() => setFiltersModalOpen(false)} style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}>✕</button>
+            </div>
+
+            {/* Réseaux sociaux */}
+            <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Réseaux sociaux</p>
+            <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
+              {(["instagram", "facebook"] as const).map(s => {
+                const active = socialFilter.has(s)
+                return (
+                  <button key={s} onClick={() => setSocialFilter(prev => {
+                    const next = new Set(prev); if (active) next.delete(s); else next.add(s); return next
+                  })} style={{
+                    flex: 1, height: 48, borderRadius: 14, fontSize: 14,
+                    fontWeight: active ? 600 : 400,
+                    border: active ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                    background: active
+                      ? s === "instagram" ? "linear-gradient(135deg,#f09433,#dc2743,#bc1888)" : "#1877F2"
+                      : "var(--dash-faint-2,#f4f4f8)",
+                    color: active ? "#fff" : "var(--dash-text-2,#6a6a71)",
+                    cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s",
+                  }}>
+                    {s === "instagram" ? "📸 Instagram" : "📘 Facebook"}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Médias */}
+            <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Médias</p>
+            <button onClick={() => setPhotoOnly(p => !p)} style={{
+              width: "100%", height: 48, borderRadius: 14, fontSize: 14,
+              fontWeight: photoOnly ? 600 : 400,
+              border: photoOnly ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+              background: photoOnly ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))" : "var(--dash-faint-2,#f4f4f8)",
+              color: photoOnly ? "#fff" : "var(--dash-text-2,#6a6a71)",
+              cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            }}>
+              🖼️ Avec photos uniquement
+            </button>
+
+            {/* Reset */}
+            {(socialFilter.size > 0 || photoOnly) && (
+              <button onClick={() => { setSocialFilter(new Set()); setPhotoOnly(false) }} style={{
+                width: "100%", marginTop: 16, padding: "12px 0",
+                background: "transparent", border: "1px solid rgba(225,29,72,0.3)",
+                borderRadius: 14, fontSize: 13, color: "#E11D48",
+                cursor: "pointer", fontFamily: "inherit",
+              }}>
+                ✕ Réinitialiser
+              </button>
+            )}
           </div>
         </div>
       )}
