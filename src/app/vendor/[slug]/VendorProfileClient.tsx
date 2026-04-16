@@ -154,8 +154,8 @@ export default function VendorProfileClient({
 
       {/* ── Content ── */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "20px 16px 80px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr min(340px, 35%)", gap: 32, alignItems: "start" }}
-          className="flex flex-col lg:grid">
+        <style>{`.vpgrid{display:flex;flex-direction:column;gap:24px}@media(min-width:1024px){.vpgrid{display:grid;grid-template-columns:1fr min(340px,35%);gap:32px;align-items:start}}`}</style>
+        <div className="vpgrid">
 
           {/* ── Left col ── */}
           <div style={{ minWidth: 0 }}>
