@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
+import { IS_DEV } from "@/lib/devMock"
+import { requireSession } from "@/lib/devAuth"
 import { NextRequest } from "next/server"
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
+  const session = IS_DEV ? await requireSession() : await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id: plannerId } = await params

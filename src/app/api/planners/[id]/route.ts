@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
+import { IS_DEV } from "@/lib/devMock"
+import { requireSession } from "@/lib/devAuth"
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/
 
@@ -23,7 +25,7 @@ async function findPlannerOwnership(id: string) {
 }
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
+  const session = IS_DEV ? await requireSession() : await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
@@ -52,7 +54,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
+  const session = IS_DEV ? await requireSession() : await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
@@ -84,7 +86,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
+  const session = IS_DEV ? await requireSession() : await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params

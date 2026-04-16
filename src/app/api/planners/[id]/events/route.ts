@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
+import { IS_DEV } from "@/lib/devMock"
+import { requireSession } from "@/lib/devAuth"
 import { NextRequest } from "next/server"
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/
@@ -17,7 +19,7 @@ function parseDateOpt(val: unknown): Date | null {
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
+  const session = IS_DEV ? await requireSession() : await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id: plannerId } = await params
