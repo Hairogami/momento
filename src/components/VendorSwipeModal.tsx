@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, Heart, XCircle, Star, MapPin, ChevronLeft, ChevronRight, ArrowUpRight, RotateCcw } from "lucide-react";
+import { X, XCircle, Star, MapPin, ChevronLeft, ChevronRight, ArrowUpRight, RotateCcw } from "lucide-react";
 import { C } from "@/lib/colors";
 
 export interface VendorCard {
@@ -812,7 +812,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
               onClick={() => triggerSwipe("right")}
               className="w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
               style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "2px solid rgba(34,197,94,0.3)" }}>
-              <Heart size={26} style={{ color: "#22c55e" }} />
+              <span style={{ fontSize: 26 }}>🎉</span>
             </button>
           </div>
         )}
