@@ -126,6 +126,18 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
   const [reviewsSlug, setReviewsSlug]   = useState<string | null>(null)
   const [reviewsLoading, setReviewsLoading] = useState(false);
 
+  // Pré-charger les slugs déjà ajoutés à l'événement → auto-skip
+  useEffect(() => {
+    if (!plannerId) return
+    fetch(`/api/planners/${plannerId}/vendors`)
+      .then(r => r.ok ? r.json() : [])
+      .then((data: unknown[]) => {
+        const slugs = new Set((data as { vendorSlug: string }[]).map(pv => pv.vendorSlug))
+        if (slugs.size > 0) setBookedIds(prev => new Set([...prev, ...slugs]))
+      })
+      .catch(() => {})
+  }, [plannerId])
+
   const fetchPage = useCallback((page: number, append = false) => {
     const url = `/api/vendors?limit=20&page=${page}${activeCategory ? `&category=${encodeURIComponent(activeCategory)}` : ""}`;
     if (page === 1) setLoading(true); else setLoadingMore(true);
@@ -166,6 +178,13 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
 
   const current = vendors[index];
   const photos  = current?.media?.filter(m => m.url).map(m => m.url) ?? [];
+
+  // Auto-skip vendor already in bookedIds (déjà ajouté à l'événement)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (!current || !bookedIds.has(current.id)) return
+    setIndex(i => i + 1)
+  }, [current, bookedIds])
 
   // Fetch reviews when detail opens (once per vendor)
   // eslint-disable-next-line react-hooks/exhaustive-deps

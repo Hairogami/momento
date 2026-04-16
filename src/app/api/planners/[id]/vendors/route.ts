@@ -78,7 +78,7 @@ export async function POST(
 
   const plannerVendor = await prisma.plannerVendor.upsert({
     where: { plannerId_vendorSlug: { plannerId: id, vendorSlug } },
-    create: { plannerId: id, vendorSlug, status: "contacted" },
+    create: { plannerId: id, vendorSlug, status: "pending" },
     update: {}, // ne pas écraser le statut si déjà existant
     include: {
       vendor: {

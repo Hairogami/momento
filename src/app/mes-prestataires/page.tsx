@@ -31,9 +31,10 @@ const ALL_CATEGORIES = [
 ]
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  contacted: { label: "Contacté",  color: "#f59e0b" },
-  replied:   { label: "A répondu", color: "#3b82f6" },
-  confirmed: { label: "Confirmé",  color: "#22c55e" },
+  pending:   { label: "Sélectionné", color: "#8b5cf6" },
+  contacted: { label: "Contacté",    color: "#f59e0b" },
+  replied:   { label: "A répondu",   color: "#3b82f6" },
+  confirmed: { label: "Confirmé",    color: "#22c55e" },
 }
 
 type PlannerVendor = {
@@ -134,9 +135,12 @@ export default function MesPrestatairesPage() {
   }
 
   function handleInterestResult(vendorSlug: string, result: { type: string; conversationId?: string; phone?: string | null }) {
-    if (planner) loadPlanner(planner.id)
     if (result.type === "message") {
-      // Could show a toast here — for now just reload
+      // Passer en "contacté" automatiquement après envoi du message
+      updateStatus(vendorSlug, "contacted")
+    } else {
+      // WhatsApp ou autre — recharger pour sync
+      if (planner) loadPlanner(planner.id)
     }
   }
 

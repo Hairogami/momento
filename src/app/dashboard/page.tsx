@@ -1535,7 +1535,7 @@ export default function CloneDashboardPage() {
         <div style={{ position: "fixed", inset: 0, zIndex: 70, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", background: "rgba(18,19,23,0.7)" }} onClick={() => setSwipeOpen(false)}>
           <div onClick={e => e.stopPropagation()}>
             <VendorSwipeModal
-              workspaceId="clone-workspace-1" plannerId={null}
+              workspaceId="clone-workspace-1" plannerId={activeEventId ?? null}
               categories={["Photographe","DJ","Traiteur","Décorateur","Fleuriste","Lieu de réception","Videaste","Makeup Artist"]}
               initialCategory="Photographe"
               onClose={() => setSwipeOpen(false)} onBooked={() => { /* ne pas fermer la modal sur swipe */ }}
