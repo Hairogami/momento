@@ -153,7 +153,7 @@ export default function VendorProfileClient({
       </div>
 
       {/* ── Content ── */}
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px 64px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "20px 16px 80px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr min(340px, 35%)", gap: 32, alignItems: "start" }}
           className="flex flex-col lg:grid">
 
@@ -261,7 +261,7 @@ export default function VendorProfileClient({
           </div>
 
           {/* ── Right col — Contact card ── */}
-          <div style={{ position: "sticky", top: 120 }}>
+          <div className="order-first lg:order-last" style={{ position: "sticky", top: 120 }}>
             <div style={{
               background: "var(--dash-surface,#fff)", borderRadius: 24, padding: 24,
               border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
