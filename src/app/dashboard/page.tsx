@@ -1234,12 +1234,13 @@ function EnvoiFairepartWidget({ guests, eventId }: { guests: Guest[]; eventId: s
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function CloneDashboardPage() {
   // Active event — persisté en localStorage pour synchroniser toutes les pages
-  const [events,        setEvents]        = useState<EventMeta[]>(FALLBACK_EVENTS)
-  const [activeEventId, setActiveEventId] = useState("1")
+  const [events,        setEvents]        = useState<EventMeta[]>([])
+  const [activeEventId, setActiveEventId] = useState("")
+  const [eventsLoaded,  setEventsLoaded]  = useState(false)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [extraWidgets,  setExtraWidgets]  = useState<string[]>([])
-  const [tasksByEvent,  setTasksByEvent]  = useState<Record<string, Task[]>>(TASKS_BY_EVENT)
+  const [tasksByEvent,  setTasksByEvent]  = useState<Record<string, Task[]>>({})
   const [darkMode,      setDarkMode]      = useState(true)
   const [palette,       setPalette]       = useState({ g1: "#E11D48", g2: "#9333EA" })
   const [isDragging,    setIsDragging]    = useState(false)
@@ -1248,21 +1249,21 @@ export default function CloneDashboardPage() {
   const [showPalette,   setShowPalette]   = useState(false)
   const [swipeOpen,     setSwipeOpen]     = useState(false)
   const [mobileOpen,    setMobileOpen]    = useState(false)
-  const [firstName,     setFirstName]     = useState("Yazid")
+  const [firstName,     setFirstName]     = useState("")
   const [addingTask,    setAddingTask]    = useState(false)
   const [newTaskLabel,  setNewTaskLabel]  = useState("")
 
   const draggingId = useRef<string | null>(null)
 
-  const event    = events.find(e => e.id === activeEventId) ?? events[0]
-  const edata    = EVENT_DATA[activeEventId]    ?? EVENT_DATA["1"]
+  const event    = events.find(e => e.id === activeEventId) ?? events[0] ?? null
+  const edata    = { budget: 0, budgetSpent: 0, guestCount: 0, guestConfirmed: 0 }
   const tasks    = tasksByEvent[activeEventId]  ?? []
-  const bookings = BOOKINGS_BY_EVENT[activeEventId] ?? []
-  const messages = MESSAGES_BY_EVENT[activeEventId] ?? []
-  const budgetItems = BUDGET_BY_EVENT[activeEventId] ?? []
-  const guests = GUESTS_BY_EVENT[activeEventId] ?? []
+  const bookings: Booking[]    = []
+  const messages: Message[]    = []
+  const budgetItems: BudgetItem[] = []
+  const guests: Guest[]        = []
 
-  const daysLeft       = Math.max(0, Math.ceil((new Date(event.date).getTime() - Date.now()) / 86400000))
+  const daysLeft       = event ? Math.max(0, Math.ceil((new Date(event.date).getTime() - Date.now()) / 86400000)) : 0
   const completedTasks = tasks.filter(t => t.done).length
   const taskPct        = tasks.length > 0 ? completedTasks / tasks.length : 0
   const totalUnread    = messages.reduce((s, m) => s + m.unread, 0)
@@ -1280,19 +1281,21 @@ export default function CloneDashboardPage() {
     fetch("/api/planners")
       .then(r => r.ok ? r.json() : null)
       .then((data: unknown) => {
-        if (!Array.isArray(data) || data.length === 0) return
-        const mapped: EventMeta[] = (data as Array<Record<string, unknown>>).map(p => ({
-          id:    String(p.id ?? ""),
-          name:  String(p.coupleNames ?? p.title ?? "Mon événement"),
-          date:  String(p.weddingDate ?? ""),
-          color: String(p.coverColor ?? "#E11D48"),
-        })).filter(e => e.id && e.date)
-        if (mapped.length > 0) {
-          setEvents(mapped)
-          setActiveEventId(prev => mapped.some(e => e.id === prev) ? prev : mapped[0].id)
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped: EventMeta[] = (data as Array<Record<string, unknown>>).map(p => ({
+            id:    String(p.id ?? ""),
+            name:  String(p.coupleNames ?? p.title ?? "Mon événement"),
+            date:  String(p.weddingDate ?? ""),
+            color: String(p.coverColor ?? "#E11D48"),
+          })).filter(e => e.id && e.date)
+          if (mapped.length > 0) {
+            setEvents(mapped)
+            setActiveEventId(prev => mapped.some(e => e.id === prev) ? prev : mapped[0].id)
+          }
         }
+        setEventsLoaded(true)
       })
-      .catch(() => {})
+      .catch(() => { setEventsLoaded(true) })
 
     fetch("/api/me")
       .then(r => r.ok ? r.json() : null)
@@ -1561,6 +1564,22 @@ export default function CloneDashboardPage() {
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
+  if (!eventsLoaded) return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)" }}>
+      <p style={{ color: "var(--dash-text-3,#9a9aaa)", fontSize: 14 }}>Chargement…</p>
+    </div>
+  )
+
+  if (events.length === 0 || !event) return (
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, background: "var(--dash-bg,#f7f7fb)" }}>
+      <p style={{ color: "var(--dash-text,#121317)", fontSize: 18, fontWeight: 700 }}>Bienvenue sur Momento !</p>
+      <p style={{ color: "var(--dash-text-3,#9a9aaa)", fontSize: 13 }}>Créez votre premier événement pour commencer.</p>
+      <Link href="/planner" style={{ padding: "10px 20px", borderRadius: 12, background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff", textDecoration: "none", fontSize: 13, fontWeight: 600 }}>
+        Créer un événement
+      </Link>
+    </div>
+  )
+
   return (
     <div
       className="ant-root"
