@@ -509,7 +509,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
 
       {/* ── Main content ── */}
       <div
-        className="mx-auto"
+        className="mx-auto pb-20 md:pb-0"
         style={{ maxWidth: 1200, padding: "40px 24px 64px" }}
       >
         {/* Grid */}
@@ -517,7 +517,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           <>
             <div style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
               gap: 20,
             }}>
               {visible.map(v => (
