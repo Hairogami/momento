@@ -276,10 +276,14 @@ export default function VendorSwipeWidget({
       </div>
 
       <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "center", marginTop: 14 }}>
-        <button onClick={undo} disabled={history.length === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: history.length === 0 ? "#c9cad0" : "#6a6a71", cursor: history.length === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
+        {/* ✕ Skip */}
         <button onClick={() => swipe("left")} style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.35)", background: "rgba(239,68,68,0.06)", color: "#ef4444", cursor: "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>close</button>
+        {/* ↩ Rewind — toujours disponible */}
+        <button onClick={() => setIndex(i => Math.max(0, i - 1))} disabled={index === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: index === 0 ? "#c9cad0" : "#6a6a71", cursor: index === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
+        {/* 🎉 Sélectionné */}
         <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(225,29,72,0.35)", transition: "all 0.15s" }}>🎉</button>
-        <button onClick={() => window.open(`/vendor/${card.id}`, "_blank")} style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: "#6a6a71", cursor: "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>open_in_new</button>
+        {/* ♥ Favori */}
+        <button onClick={() => fetch(`/api/vendor/${card.id}/favorite`, { method: "POST" }).catch(() => {})} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.25)", background: "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
       </div>
     </div>
   )
