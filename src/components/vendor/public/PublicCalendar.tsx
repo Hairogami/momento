@@ -1,12 +1,8 @@
 "use client"
 /**
- * PublicCalendar — mini-calendrier 3 mois pour la fiche publique /vendor/[slug].
- *
- * - Fetch client-side au mount (PAS de SSG — les dates doivent être fraîches)
- * - Affiche les dates déjà prises (rouge) sur 3 mois (courant + 2)
- * - Les jours futurs non pris sont cliquables → onDateClick(date)
- *   consommé par le parent pour ouvrir le modal contact avec la date pré-remplie
- * - Aucune info client n'est exposée — uniquement des dates "occupé"
+ * PublicCalendar — calendrier 1 mois navigable pour la fiche publique /vendor/[slug].
+ * Flèches ‹ › pour changer de mois (max 12 mois à l'avance).
+ * Dates prises = rouge, libres = cliquables → onDateClick(date).
  */
 import { useEffect, useMemo, useState } from "react"
 
@@ -33,6 +29,7 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
   const [booked, setBooked] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [offset, setOffset] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -46,17 +43,15 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
     return () => { cancelled = true }
   }, [slug])
 
-  // 3 mois : courant + 2 suivants
-  const months = useMemo(() => {
+  const { year, month } = useMemo(() => {
     const now = new Date()
     const y = now.getUTCFullYear()
     const m = now.getUTCMonth()
-    return [0, 1, 2].map(offset => {
-      const yy = y + Math.floor((m + offset) / 12)
-      const mm = (m + offset) % 12
-      return { year: yy, month: mm }
-    })
-  }, [])
+    return {
+      year: y + Math.floor((m + offset) / 12),
+      month: (m + offset) % 12,
+    }
+  }, [offset])
 
   const todayKey = useMemo(() => {
     const n = new Date()
@@ -68,15 +63,37 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
       background: "var(--dash-surface,#fff)", borderRadius: 20, padding: 20,
       border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
     }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
         <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
           Disponibilités
         </h3>
-        <span style={{ fontSize: 11, color: "var(--dash-text-3,#6a6a71)" }}>3 prochains mois</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <button
+            onClick={() => setOffset(o => Math.max(0, o - 1))}
+            disabled={offset === 0}
+            style={{
+              width: 28, height: 28, borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+              background: offset === 0 ? "var(--dash-faint,#f7f7fb)" : "var(--dash-surface,#fff)",
+              color: offset === 0 ? "#c7c9d2" : "var(--dash-text,#121317)",
+              cursor: offset === 0 ? "default" : "pointer",
+              fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "inherit",
+            }}
+          >‹</button>
+          <button
+            onClick={() => setOffset(o => Math.min(11, o + 1))}
+            disabled={offset === 11}
+            style={{
+              width: 28, height: 28, borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+              background: offset === 11 ? "var(--dash-faint,#f7f7fb)" : "var(--dash-surface,#fff)",
+              color: offset === 11 ? "#c7c9d2" : "var(--dash-text,#121317)",
+              cursor: offset === 11 ? "default" : "pointer",
+              fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "inherit",
+            }}
+          >›</button>
+        </div>
       </div>
-      <p style={{ fontSize: 12, color: "var(--dash-text-3,#6a6a71)", margin: "0 0 14px" }}>
-        Cases rouges = dates déjà prises. Cliquez une date libre pour envoyer une demande.
-      </p>
 
       {loading ? (
         <div style={{ padding: 24, textAlign: "center", color: "#9a9aaa", fontSize: 12 }}>Chargement…</div>
@@ -85,20 +102,16 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
           Calendrier indisponible pour le moment.
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {months.map(({ year, month }) => (
-            <MonthGrid
-              key={`${year}-${month}`}
-              year={year} month={month}
-              bookedSet={booked}
-              todayKey={todayKey}
-              onDateClick={onDateClick}
-            />
-          ))}
-        </div>
+        <MonthGrid
+          key={`${year}-${month}`}
+          year={year} month={month}
+          bookedSet={booked}
+          todayKey={todayKey}
+          onDateClick={onDateClick}
+        />
       )}
 
-      <div style={{ display: "flex", gap: 14, marginTop: 14, fontSize: 11, color: "#6b7280", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 14, marginTop: 14, fontSize: 11, color: "var(--dash-text-3,#6b7280)", flexWrap: "wrap" }}>
         <LegendDot color="#E11D48" label="Pris" />
         <LegendDot color="#16a34a" label="Libre" outline />
         <LegendDot color="#d1d5db" label="Passé" />
@@ -122,15 +135,15 @@ function MonthGrid({
   return (
     <div>
       <div style={{
-        fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)",
-        marginBottom: 6, textTransform: "capitalize",
+        fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)",
+        marginBottom: 8, textTransform: "capitalize", textAlign: "center",
       }}>
         {MONTHS_FULL[month]} {year}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, marginBottom: 3 }}>
         {WEEKDAYS.map((w, i) => (
-          <div key={i} style={{ fontSize: 10, fontWeight: 700, color: "#9a9aaa", textAlign: "center" }}>{w}</div>
+          <div key={i} style={{ fontSize: 10, fontWeight: 700, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center" }}>{w}</div>
         ))}
       </div>
 
@@ -148,16 +161,16 @@ function MonthGrid({
           const bg = isBooked
             ? "#E11D48"
             : isPast
-              ? "#f0f1f6"
+              ? "var(--dash-faint,#f0f1f6)"
               : isToday
                 ? "rgba(147,51,234,0.08)"
-                : "#fff"
-          const color = isBooked ? "#fff" : isPast ? "#c7c9d2" : "#121317"
+                : "var(--dash-surface,#fff)"
+          const color = isBooked ? "#fff" : isPast ? "var(--dash-text-3,#9a9aaa)" : "var(--dash-text,#121317)"
           const border = isBooked
             ? "1px solid #E11D48"
             : isToday
               ? "1px solid #9333EA"
-              : "1px solid rgba(183,191,217,0.22)"
+              : "1px solid var(--dash-border,rgba(183,191,217,0.22))"
 
           return (
             <button
