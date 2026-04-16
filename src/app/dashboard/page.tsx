@@ -16,16 +16,6 @@ const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 // ── Static data ───────────────────────────────────────────────────────────────
 type EventMeta = { id: string; name: string; date: string; color: string }
-const FALLBACK_EVENTS: EventMeta[] = [
-  { id: "1", name: "Mariage Yasmine & Karim",   date: "2026-09-15", color: "#E11D48" },
-  { id: "2", name: "Mariage Sara & Adam",        date: "2026-06-21", color: "#7b5ea7" },
-  { id: "3", name: "Anniversaire 30 ans Leila",  date: "2026-05-10", color: "#e05a7b" },
-]
-const EVENT_DATA: Record<string, { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }> = {
-  "1": { budget: 120000, budgetSpent: 72500, guestCount: 220, guestConfirmed: 145 },
-  "2": { budget: 85000,  budgetSpent: 41000, guestCount: 150, guestConfirmed: 98  },
-  "3": { budget: 30000,  budgetSpent: 8500,  guestCount: 60,  guestConfirmed: 22  },
-}
 
 type TaskPriority = "haute" | "moyenne" | "basse"
 type Task = { id: string; label: string; done: boolean; priority: TaskPriority; dueDate: string; category: string }
@@ -33,115 +23,8 @@ type BookingStatus = "CONFIRMED" | "PENDING" | "INQUIRY"
 type Booking = { id: string; vendor: string; category: string; status: BookingStatus; amount?: number }
 type Message = { id: string; vendor: string; lastMsg: string; time: string; unread: number; avatar: string }
 
-const TASKS_BY_EVENT: Record<string, Task[]> = {
-  "1": [
-    { id:"t1", label:"Confirmer le photographe",         done:true,  priority:"haute",   dueDate:"2026-04-20", category:"Prestataire" },
-    { id:"t2", label:"Envoyer les invitations digitales", done:true,  priority:"haute",   dueDate:"2026-04-18", category:"Invités"    },
-    { id:"t3", label:"Dégustation traiteur",              done:false, priority:"haute",   dueDate:"2026-05-02", category:"Prestataire" },
-    { id:"t4", label:"Choisir la robe / costume",         done:false, priority:"moyenne", dueDate:"2026-05-15", category:"Style"      },
-    { id:"t5", label:"Réserver le transport VIP",         done:false, priority:"moyenne", dueDate:"2026-06-01", category:"Logistique" },
-    { id:"t6", label:"Préparer le plan de table",         done:false, priority:"basse",   dueDate:"2026-08-01", category:"Invités"    },
-    { id:"t7", label:"Commander les faire-part papier",   done:false, priority:"basse",   dueDate:"2026-05-30", category:"Invités"    },
-    { id:"t8", label:"Valider la playlist DJ",            done:false, priority:"basse",   dueDate:"2026-07-15", category:"Musique"    },
-  ],
-  "2": [
-    { id:"t1", label:"Réserver la salle de réception",   done:true,  priority:"haute",   dueDate:"2026-03-10", category:"Lieu"       },
-    { id:"t2", label:"Signer le contrat DJ",              done:false, priority:"haute",   dueDate:"2026-04-25", category:"Prestataire" },
-    { id:"t3", label:"Envoyer les invitations",           done:false, priority:"haute",   dueDate:"2026-05-01", category:"Invités"    },
-    { id:"t4", label:"Choisir le menu traiteur",          done:false, priority:"moyenne", dueDate:"2026-05-10", category:"Prestataire" },
-    { id:"t5", label:"Commander les alliances",           done:false, priority:"haute",   dueDate:"2026-04-30", category:"Style"      },
-  ],
-  "3": [
-    { id:"t1", label:"Réserver le lieu",                  done:true,  priority:"haute",   dueDate:"2026-03-15", category:"Lieu"       },
-    { id:"t2", label:"Envoyer les invitations",           done:true,  priority:"haute",   dueDate:"2026-04-01", category:"Invités"    },
-    { id:"t3", label:"Commander le gâteau",               done:false, priority:"moyenne", dueDate:"2026-05-01", category:"Traiteur"   },
-    { id:"t4", label:"Préparer la playlist",              done:false, priority:"basse",   dueDate:"2026-05-05", category:"Musique"    },
-  ],
-}
-const BOOKINGS_BY_EVENT: Record<string, Booking[]> = {
-  "1": [
-    { id:"b1", vendor:"Studio Lumière",   category:"Photographe", status:"CONFIRMED", amount:18000 },
-    { id:"b2", vendor:"DJ Karim Beat",    category:"DJ",          status:"CONFIRMED", amount:12000 },
-    { id:"b3", vendor:"Traiteur El Bab",  category:"Traiteur",    status:"PENDING",   amount:28000 },
-    { id:"b4", vendor:"Villa Majorelle",  category:"Lieu",        status:"INQUIRY"               },
-  ],
-  "2": [
-    { id:"b1", vendor:"Riad Al Bacha",    category:"Lieu",        status:"CONFIRMED", amount:35000 },
-    { id:"b2", vendor:"Ciné Mariage",     category:"Vidéographe", status:"PENDING",   amount:15000 },
-    { id:"b3", vendor:"Fleurs & Art",     category:"Fleuriste",   status:"INQUIRY"               },
-  ],
-  "3": [
-    { id:"b1", vendor:"Orchestre Andalou", category:"Musique",   status:"CONFIRMED", amount:6000 },
-    { id:"b2", vendor:"Café Nomad",        category:"Lieu",      status:"CONFIRMED", amount:8000 },
-  ],
-}
-const MESSAGES_BY_EVENT: Record<string, Message[]> = {
-  "1": [
-    { id:"m1", vendor:"Studio Lumière",   lastMsg:"Parfait ! On confirme le 15 septembre.",          time:"10:32", unread:2, avatar:"SL" },
-    { id:"m2", vendor:"DJ Karim Beat",    lastMsg:"Avez-vous une playlist de référence à partager ?", time:"Hier",  unread:1, avatar:"DK" },
-    { id:"m3", vendor:"Traiteur El Bab",  lastMsg:"La dégustation est prévue pour le 2 mai.",         time:"Lun",   unread:0, avatar:"TE" },
-  ],
-  "2": [
-    { id:"m1", vendor:"Riad Al Bacha",    lastMsg:"Les dates sont bien bloquées pour vous.",          time:"09:15", unread:1, avatar:"RA" },
-    { id:"m2", vendor:"Ciné Mariage",     lastMsg:"Quel style de montage préférez-vous ?",            time:"Hier",  unread:0, avatar:"CM" },
-  ],
-  "3": [
-    { id:"m1", vendor:"Orchestre Andalou", lastMsg:"Répertoire envoyé par email.",                    time:"14:00", unread:1, avatar:"OA" },
-  ],
-}
-const BUDGET_BY_EVENT: Record<string, BudgetItem[]> = {
-  "1": [
-    { label:"Photographie", allocated:20000, spent:18000, color:"#818cf8", icon:"📸" },
-    { label:"Traiteur",     allocated:35000, spent:28000, color:"#f59e0b", icon:"🍽️" },
-    { label:"DJ & Musique", allocated:15000, spent:12000, color:"#a855f7", icon:"🎧" },
-    { label:"Décoration",   allocated:18000, spent:9000,  color:"#22c55e", icon:"✨" },
-    { label:"Lieu",         allocated:22000, spent:5500,  color:"#60a5fa", icon:"🏛️" },
-    { label:"Divers",       allocated:10000, spent:0,     color:"#9a9aaa", icon:"📦" },
-  ],
-  "2": [
-    { label:"Lieu",         allocated:40000, spent:35000, color:"#60a5fa", icon:"🏛️" },
-    { label:"Vidéographie", allocated:18000, spent:0,     color:"#818cf8", icon:"🎬" },
-    { label:"Fleurs",       allocated:12000, spent:0,     color:"#f472b6", icon:"🌸" },
-    { label:"Traiteur",     allocated:10000, spent:6000,  color:"#f59e0b", icon:"🍽️" },
-    { label:"Divers",       allocated:5000,  spent:0,     color:"#9a9aaa", icon:"📦" },
-  ],
-  "3": [
-    { label:"Lieu",         allocated:12000, spent:8000,  color:"#60a5fa", icon:"🏛️" },
-    { label:"Musique",      allocated:8000,  spent:6000,  color:"#a855f7", icon:"🎵" },
-    { label:"Traiteur",     allocated:6000,  spent:500,   color:"#f59e0b", icon:"🍽️" },
-    { label:"Divers",       allocated:4000,  spent:0,     color:"#9a9aaa", icon:"📦" },
-  ],
-}
 
 type Guest = { id: string; name: string; rsvp: "yes" | "pending" | "no"; tableNumber?: number; diet?: string; city?: string }
-const GUESTS_BY_EVENT: Record<string, Guest[]> = {
-  "1": [
-    { id:"g1",  name:"Yasmine Benali",    rsvp:"yes",     tableNumber:1, city:"Casablanca" },
-    { id:"g2",  name:"Karim Mansouri",    rsvp:"yes",     tableNumber:1, city:"Casablanca" },
-    { id:"g3",  name:"Sara Idrissi",      rsvp:"yes",     tableNumber:2, city:"Marrakech"  },
-    { id:"g4",  name:"Amine Tazi",        rsvp:"yes",     tableNumber:2, city:"Marrakech"  },
-    { id:"g5",  name:"Leila Chaoui",      rsvp:"pending",               city:"Rabat"      },
-    { id:"g6",  name:"Youssef Berrada",   rsvp:"pending",               city:"Casablanca" },
-    { id:"g7",  name:"Nadia Alaoui",      rsvp:"yes",     tableNumber:3, city:"Rabat"      },
-    { id:"g8",  name:"Omar Fassi",        rsvp:"no",                     city:"Fès"        },
-    { id:"g9",  name:"Fatima Zouiten",    rsvp:"yes",     tableNumber:3, city:"Marrakech"  },
-    { id:"g10", name:"Hassan El Amrani",  rsvp:"pending",               city:"Agadir"     },
-  ],
-  "2": [
-    { id:"g1",  name:"Sara Belkadi",      rsvp:"yes",     tableNumber:1, city:"Casablanca" },
-    { id:"g2",  name:"Adam Rachidi",      rsvp:"yes",     tableNumber:1, city:"Casablanca" },
-    { id:"g3",  name:"Zineb Kabbaj",      rsvp:"pending",               city:"Rabat"      },
-    { id:"g4",  name:"Mehdi Ouali",       rsvp:"yes",     tableNumber:2, city:"Marrakech"  },
-    { id:"g5",  name:"Rim Bensouda",      rsvp:"no",                     city:"Tanger"     },
-    { id:"g6",  name:"Tarek Lamrani",     rsvp:"pending",               city:"Casablanca" },
-  ],
-  "3": [
-    { id:"g1",  name:"Leila Moumni",      rsvp:"yes",                    city:"Rabat"      },
-    { id:"g2",  name:"Hamid Tahiri",      rsvp:"yes",                    city:"Casablanca" },
-    { id:"g3",  name:"Dounia Filali",     rsvp:"pending",               city:"Marrakech"  },
-    { id:"g4",  name:"Bilal Chakir",      rsvp:"no",                     city:"Rabat"      },
-  ],
-}
 
 // ── Color palettes ────────────────────────────────────────────────────────────
 const PALETTES = [
@@ -1566,17 +1449,44 @@ export default function CloneDashboardPage() {
   // ── Render ────────────────────────────────────────────────────────────────
   if (!eventsLoaded) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)" }}>
-      <p style={{ color: "var(--dash-text-3,#9a9aaa)", fontSize: 14 }}>Chargement…</p>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <p style={{ color: "var(--dash-text-3,#9a9aaa)", fontSize: 13 }}>Chargement de votre espace…</p>
+      </div>
     </div>
   )
 
   if (events.length === 0 || !event) return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, background: "var(--dash-bg,#f7f7fb)" }}>
-      <p style={{ color: "var(--dash-text,#121317)", fontSize: 18, fontWeight: 700 }}>Bienvenue sur Momento !</p>
-      <p style={{ color: "var(--dash-text-3,#9a9aaa)", fontSize: 13 }}>Créez votre premier événement pour commencer.</p>
-      <Link href="/planner" style={{ padding: "10px 20px", borderRadius: 12, background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff", textDecoration: "none", fontSize: 13, fontWeight: 600 }}>
-        Créer un événement
-      </Link>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)", padding: 24 }}>
+      <div style={{ maxWidth: 480, width: "100%", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ width: 72, height: 72, borderRadius: "50%", marginBottom: 28, background: "linear-gradient(135deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 16px 48px rgba(225,29,72,0.25)" }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <h1 style={{ fontSize: 26, fontWeight: 800, color: "var(--dash-text,#121317)", margin: "0 0 10px", lineHeight: 1.2 }}>
+          Bienvenue sur Momento
+        </h1>
+        <p style={{ fontSize: 15, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 32px", lineHeight: 1.6, maxWidth: 340 }}>
+          Créez votre premier événement pour accéder à tous vos outils — budget, invités, prestataires et planning en un seul endroit.
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 36 }}>
+          {["Budget & dépenses", "Liste d'invités", "Trouver des prestataires", "Planning & tâches"].map(f => (
+            <span key={f} style={{ fontSize: 11, fontWeight: 600, padding: "5px 12px", borderRadius: 99, background: "rgba(225,29,72,0.07)", color: "#E11D48", border: "1px solid rgba(225,29,72,0.15)" }}>{f}</span>
+          ))}
+        </div>
+        <Link href="/planner" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 32px", borderRadius: 14, background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 700, boxShadow: "0 8px 24px rgba(225,29,72,0.3)" }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Créer mon premier événement
+        </Link>
+        <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 16 }}>Gratuit · Sans commission · Données sécurisées</p>
+      </div>
     </div>
   )
 
