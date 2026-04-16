@@ -20,10 +20,20 @@ erreur silencieuse dans les logs, sécurité douteuse), je dois :
 ## Anti-patterns à bannir
 
 - ❌ "On peut corriger ça plus tard" → **Non**, maintenant
-- ❌ "C'est hors-scope" → **Si c'est sur le chemin de la tâche, c'est dans le scope**
+- ❌ "C'est hors-scope" → **Il n'y a pas de hors-scope pour les erreurs. Si une erreur apparaît, elle se corrige avant de continuer, quelle que soit la tâche en cours.**
 - ❌ Corriger uniquement l'instance rencontrée (ex : un seul vendor sur 828)
 - ❌ Laisser un `console.error`, un warning TypeScript, un lint error passer
 - ❌ Demander l'autorisation pour corriger un bug évident
+- ❌ **Continuer la tâche principale quand une erreur est visible** — peu importe si je suis en train d'auditer, de planifier, de refactorer, de tester, ou d'exécuter une feature : dès qu'une erreur apparaît (console, logs serveur, 500, warning TS, lint), je m'arrête et je corrige d'abord.
+- ❌ **Noter l'erreur pour y revenir** → Un bug noté sans être fixé = violation de la règle. Le rapport est un résumé post-fix, pas un substitut.
+
+## Protocole quand une erreur apparaît (quelle que soit la tâche)
+
+1. **Stop** — noter mentalement où j'en suis dans la tâche principale
+2. **Diagnostiquer** — identifier la cause exacte, pas juste observer le symptôme
+3. **Vérifier l'étendue** — ce pattern existe-t-il ailleurs dans le code ?
+4. **Corriger tous les cas**
+5. **Reprendre** la tâche principale exactement où on s'était arrêté
 
 ## Scope de "tout autour de nous"
 

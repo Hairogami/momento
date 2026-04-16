@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import AntNav from "@/components/clone/AntNav"
 import { useTrack } from "@/lib/useTrack"
@@ -40,25 +40,31 @@ export default function VendorProfileClient({
   const [activePhoto, setActivePhoto] = useState(0)
   const [contactOpen, setContactOpen] = useState(false)
   const [prefillDate, setPrefillDate] = useState<string | null>(null)
-  const [shareDone, setShareDone] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
   const [favorited, setFavorited] = useState(false)
+  const [favLoading, setFavLoading] = useState(false)
   const { trackClick } = useTrack(slug)
 
   const allPhotos = photos.length > 0 ? photos : (heroImg ? [heroImg] : [])
   const displayHero = allPhotos[activePhoto] ?? heroImg
 
-  async function handleShare() {
-    const url = typeof window !== "undefined" ? window.location.href : ""
-    const shareData = { title: `${name} — Momento`, text: `${category} à ${city}`, url }
+  // Charger l'état favori depuis l'API
+  useEffect(() => {
+    fetch(`/api/vendor/${slug}/favorite`)
+      .then(r => r.json())
+      .then(d => { if (typeof d.favorited === "boolean") setFavorited(d.favorited) })
+      .catch(() => {})
+  }, [slug])
+
+  async function toggleFavorite() {
+    if (favLoading) return
+    setFavLoading(true)
     try {
-      if (typeof navigator !== "undefined" && (navigator as Navigator & { share?: (d: ShareData) => Promise<void> }).share) {
-        await (navigator as Navigator & { share: (d: ShareData) => Promise<void> }).share(shareData)
-      } else {
-        await navigator.clipboard.writeText(url)
-        setShareDone(true)
-        setTimeout(() => setShareDone(false), 1800)
-      }
+      const res = await fetch(`/api/vendor/${slug}/favorite`, { method: "POST" })
+      const data = await res.json()
+      if (typeof data.favorited === "boolean") setFavorited(data.favorited)
     } catch {}
+    setFavLoading(false)
   }
 
   return (
@@ -97,21 +103,28 @@ export default function VendorProfileClient({
         </div>
         {/* Floating actions (top right) */}
         <div style={{ position: "absolute", top: 72, right: 24, display: "flex", gap: 8 }}>
-          <button onClick={() => setFavorited(v => !v)} aria-label="Ajouter aux favoris" style={{
-            width: 38, height: 38, borderRadius: "50%",
-            background: "rgba(255,255,255,0.18)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-            border: "1px solid rgba(255,255,255,0.25)", color: "#fff",
-            fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
+          <button
+            onClick={toggleFavorite}
+            aria-label={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
+            style={{
+              width: 38, height: 38, borderRadius: "50%",
+              background: favorited ? "rgba(225,29,72,0.85)" : "rgba(255,255,255,0.18)",
+              backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+              border: favorited ? "1px solid rgba(225,29,72,0.5)" : "1px solid rgba(255,255,255,0.25)",
+              color: "#fff", fontSize: 16, cursor: favLoading ? "wait" : "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 0.2s",
+            }}
+          >
             {favorited ? "♥" : "♡"}
           </button>
-          <button onClick={handleShare} aria-label="Partager" style={{
+          <button onClick={() => setShareOpen(true)} aria-label="Partager" style={{
             width: 38, height: 38, borderRadius: "50%",
             background: "rgba(255,255,255,0.18)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
             border: "1px solid rgba(255,255,255,0.25)", color: "#fff",
             fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
           }}>
-            {shareDone ? "✓" : "↗"}
+            ↗
           </button>
         </div>
         {/* Hero info */}
@@ -383,6 +396,16 @@ export default function VendorProfileClient({
         </div>
       </div>
 
+      {/* ── Share modal ── */}
+      {shareOpen && (
+        <ShareModal
+          name={name}
+          category={category}
+          city={city}
+          onClose={() => setShareOpen(false)}
+        />
+      )}
+
       {/* ── Contact modal ── */}
       {contactOpen && (
         <ContactModal
@@ -566,4 +589,126 @@ const inputStyle: React.CSSProperties = {
   fontSize: 13,
   fontFamily: "inherit",
   outline: "none",
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Share modal — WhatsApp · Email · Facebook · X · Copier le lien
+// ─────────────────────────────────────────────────────────────────────────────
+function ShareModal({ name, category, city, onClose }: { name: string; category: string; city: string; onClose: () => void }) {
+  const [copied, setCopied] = useState(false)
+  const url = typeof window !== "undefined" ? window.location.href : ""
+  const text = `Découvrez ${name} (${category} à ${city}) sur Momento`
+
+  const options = [
+    {
+      label: "WhatsApp",
+      icon: "💬",
+      color: "#25D366",
+      href: `https://wa.me/?text=${encodeURIComponent(`${text} — ${url}`)}`,
+    },
+    {
+      label: "Email",
+      icon: "✉️",
+      color: "#6B7280",
+      href: `mailto:?subject=${encodeURIComponent(`${name} — Momento`)}&body=${encodeURIComponent(`${text}\n${url}`)}`,
+    },
+    {
+      label: "Facebook",
+      icon: "👥",
+      color: "#1877F2",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+    },
+    {
+      label: "X (Twitter)",
+      icon: "𝕏",
+      color: "#000",
+      href: `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+    },
+  ]
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {}
+  }
+
+  return (
+    <div
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Partager ce prestataire"
+      style={{
+        position: "fixed", inset: 0, zIndex: 200,
+        background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
+        display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "var(--dash-surface,#fff)", borderRadius: 20,
+          padding: 24, maxWidth: 360, width: "100%",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+            Partager ce prestataire
+          </h3>
+          <button onClick={onClose} aria-label="Fermer" style={{
+            background: "transparent", border: "none", fontSize: 20, cursor: "pointer",
+            color: "var(--dash-text-3,#6a6a71)", padding: 0, lineHeight: 1,
+          }}>×</button>
+        </div>
+
+        <p style={{ fontSize: 12, color: "var(--dash-text-3,#6a6a71)", margin: "0 0 16px" }}>
+          {name} · {category} · {city}
+        </p>
+
+        {/* Share buttons */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+          {options.map(opt => (
+            <a
+              key={opt.label}
+              href={opt.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex", alignItems: "center", gap: 8,
+                padding: "11px 14px", borderRadius: 12,
+                background: "var(--dash-faint,#f7f7fb)",
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+                color: "var(--dash-text,#121317)", textDecoration: "none",
+                fontSize: 13, fontWeight: 500, fontFamily: "inherit",
+                transition: "background 0.15s",
+              }}
+            >
+              <span style={{ fontSize: 16 }}>{opt.icon}</span>
+              {opt.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Copy link */}
+        <button
+          onClick={copyLink}
+          style={{
+            width: "100%", padding: "11px 14px", borderRadius: 12,
+            background: copied ? "rgba(22,163,74,0.1)" : "var(--dash-faint,#f7f7fb)",
+            border: `1px solid ${copied ? "rgba(22,163,74,0.3)" : "var(--dash-border,rgba(183,191,217,0.3))"}`,
+            color: copied ? "#16a34a" : "var(--dash-text,#121317)",
+            fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            transition: "all 0.2s",
+          }}
+        >
+          {copied ? "✓ Lien copié !" : "🔗 Copier le lien"}
+        </button>
+      </div>
+    </div>
+  )
 }

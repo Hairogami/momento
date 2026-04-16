@@ -56,10 +56,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
       }),
     ] : []),
-    Resend({
+    // Resend is an "email" provider — requires an adapter (PrismaAdapter).
+    // In dev mode, IS_DEV disables the adapter, so Resend would cause a
+    // MissingAdapter error on every /api/auth/session call (500 on all pages).
+    ...(IS_DEV ? [] : [Resend({
       apiKey: process.env.RESEND_API_KEY!,
       from: process.env.RESEND_FROM_EMAIL ?? "noreply@momentoevents.app",
-    }),
+    })]),
     Credentials({
       credentials: {
         email:      { label: "Email",          type: "email"    },
