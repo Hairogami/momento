@@ -29,6 +29,7 @@ export async function GET() {
       coverColor: true,
       location: true,
       budget: true,
+      categories: true,
       createdAt: true,
       _count: { select: { steps: true, events: true } },
     },
@@ -65,6 +66,16 @@ export async function POST(request: NextRequest) {
   const b = body as Record<string, unknown>
   const title = typeof b.title === "string" ? b.title.trim().slice(0, 200) : ""
   if (!title) return Response.json({ error: "title requis." }, { status: 400 })
+
+  // Catégories obligatoires : min 3
+  const rawCategories = Array.isArray(b.categories) ? b.categories : []
+  const categories = rawCategories
+    .filter((c): c is string => typeof c === "string" && c.trim().length > 0)
+    .map(c => c.trim().slice(0, 100))
+  if (categories.length < 3) {
+    return Response.json({ error: "Sélectionnez au moins 3 catégories de prestataires." }, { status: 400 })
+  }
+
   const planner = await prisma.planner.create({
     data: {
       title,
@@ -75,6 +86,7 @@ export async function POST(request: NextRequest) {
       coverColor:  typeof b.coverColor === "string" && HEX_COLOR.test(b.coverColor)
         ? b.coverColor
         : "#f9a8d4",
+      categories,
       userId: session.user.id,
     },
   })

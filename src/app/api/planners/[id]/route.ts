@@ -66,6 +66,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   try { body = await req.json() } catch {
     return Response.json({ error: "Requête invalide." }, { status: 400 })
   }
+
+  // Validate categories if provided
+  let categoriesUpdate: string[] | undefined
+  if (Array.isArray(body.categories)) {
+    const cats = (body.categories as unknown[])
+      .filter((c): c is string => typeof c === "string" && c.trim().length > 0)
+      .map(c => c.trim().slice(0, 100))
+    if (cats.length < 3) {
+      return Response.json({ error: "Sélectionnez au moins 3 catégories de prestataires." }, { status: 400 })
+    }
+    categoriesUpdate = cats
+  }
+
   const planner = await prisma.planner.update({
     where: { id },
     data: {
@@ -80,6 +93,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       coverColor:  typeof body.coverColor === "string" && HEX_COLOR.test(body.coverColor)
         ? body.coverColor
         : undefined,
+      categories:  categoriesUpdate,
     },
   })
   return Response.json(planner)

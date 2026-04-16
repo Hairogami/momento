@@ -233,9 +233,10 @@ model Vendor {
   media        VendorMedia[]
   stepVendors  StepVendor[]
   reviews      Review[]
-  plannerEvents PlannerEvent[]
-  favorites    Favorite[]
-  blockedDates VendorBlockedDate[]
+  plannerEvents  PlannerEvent[]
+  favorites      Favorite[]
+  blockedDates   VendorBlockedDate[]
+  plannerVendors PlannerVendor[]
 }
 
 model VendorVerification {
@@ -372,6 +373,8 @@ model Planner {
   conversations Conversation[]
   favorites     Favorite[]
   notifications Notification[]
+  categories    String[]       @default([])
+  plannerVendors PlannerVendor[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 }
@@ -576,4 +579,34 @@ model AdminAuditLog {
 
   @@index([adminId, createdAt])
   @@index([targetType, targetId, createdAt])
+}
+
+// ─── PLANNER VENDOR ───────────────────────────────────────────────────────────
+// Lien entre un événement (Planner) et un prestataire sélectionné par le client.
+// Statut : contacted (intéressé) → replied (a répondu) → confirmed (confirmé).
+model PlannerVendor {
+  id         String   @id @default(cuid())
+  plannerId  String
+  planner    Planner  @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+  vendorSlug String
+  vendor     Vendor   @relation(fields: [vendorSlug], references: [slug], onDelete: Cascade)
+  status     String   @default("contacted") // contacted | replied | confirmed
+  notes      String   @default("")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([plannerId, vendorSlug])
+  @@index([plannerId])
+  @@index([vendorSlug])
+}
+
+// ─── RANKING CONFIG ───────────────────────────────────────────────────────────
+// Poids admin-configurables pour le classement des prestataires.
+// Signaux : featured (boost partenaire), rating, reviewCount, mediaCount.
+model RankingConfig {
+  id        String   @id @default(cuid())
+  signal    String   @unique // "featured" | "rating" | "reviewCount" | "mediaCount"
+  weight    Float    @default(1.0)
+  label     String   @default("")
+  updatedAt DateTime @updatedAt
 }
