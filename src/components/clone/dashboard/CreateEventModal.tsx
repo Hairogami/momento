@@ -109,7 +109,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          background: "#fff", borderRadius: 24, width: "100%", maxWidth: 520,
+          background: "var(--dash-surface,#fff)", borderRadius: 24, width: "100%", maxWidth: 520,
           boxShadow: "0 24px 80px rgba(0,0,0,0.18)",
           overflow: "hidden",
         }}
@@ -117,18 +117,18 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
         {/* Header */}
         <div style={{ padding: "24px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <p style={{ fontSize: 11, fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 4px" }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 4px" }}>
               Étape {step}/2
             </p>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#121317", margin: 0 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
               {step === 1 ? "Votre événement" : "Catégories de prestataires"}
             </h2>
           </div>
-          <button onClick={handleClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: "#9a9aaa", padding: 4 }}>✕</button>
+          <button onClick={handleClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: "var(--dash-text-3,#9a9aaa)", padding: 4 }}>✕</button>
         </div>
 
         {/* Progress bar */}
-        <div style={{ height: 3, background: "#f0f0f5", margin: "16px 24px 0" }}>
+        <div style={{ height: 3, background: "var(--dash-border,rgba(183,191,217,0.25))", margin: "16px 24px 0" }}>
           <div style={{ height: "100%", width: step === 1 ? "50%" : "100%", background: G, borderRadius: 99, transition: "width 0.3s ease" }} />
         </div>
 
@@ -146,9 +146,9 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                       style={{
                         padding: "7px 14px", borderRadius: 99, fontSize: 12, fontWeight: 600,
                         border: "1.5px solid",
-                        borderColor: eventType === t.value ? "#E11D48" : "rgba(183,191,217,0.4)",
+                        borderColor: eventType === t.value ? "#E11D48" : "var(--dash-border,rgba(183,191,217,0.4))",
                         background: eventType === t.value ? "rgba(225,29,72,0.06)" : "transparent",
-                        color: eventType === t.value ? "#E11D48" : "#6a6a71",
+                        color: eventType === t.value ? "#E11D48" : "var(--dash-text-2,#6a6a71)",
                         cursor: "pointer", transition: "all 0.15s",
                       }}
                     >{t.emoji} {t.label}</button>
@@ -188,7 +188,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
             </div>
           ) : (
             <div>
-              <p style={{ fontSize: 13, color: "#6a6a71", margin: "0 0 16px" }}>
+              <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 16px" }}>
                 Sélectionnez les prestataires dont vous aurez besoin.{" "}
                 <strong style={{ color: selectedCats.length >= 3 ? "#22c55e" : "#E11D48" }}>
                   {selectedCats.length}/3 minimum
@@ -205,9 +205,9 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                       style={{
                         padding: "10px 12px", borderRadius: 12, fontSize: 12, fontWeight: 600,
                         border: "1.5px solid",
-                        borderColor: selected ? "#E11D48" : "rgba(183,191,217,0.3)",
-                        background: selected ? "rgba(225,29,72,0.06)" : "rgba(248,248,252,0.8)",
-                        color: selected ? "#E11D48" : "#6a6a71",
+                        borderColor: selected ? "#E11D48" : "var(--dash-border,rgba(183,191,217,0.3))",
+                        background: selected ? "rgba(225,29,72,0.06)" : "var(--dash-bg,rgba(248,248,252,0.8))",
+                        color: selected ? "#E11D48" : "var(--dash-text-2,#6a6a71)",
                         cursor: "pointer", textAlign: "left",
                         display: "flex", alignItems: "center", gap: 7,
                         transition: "all 0.12s",
@@ -241,13 +241,13 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 12, fontWeight: 600, color: "#6a6a71", display: "block", marginBottom: 6,
+  fontSize: 12, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)", display: "block", marginBottom: 6,
 }
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "10px 12px", borderRadius: 10, fontSize: 13,
-  border: "1.5px solid rgba(183,191,217,0.4)", outline: "none",
-  fontFamily: "inherit", color: "#121317", background: "#fafafa",
+  border: "1.5px solid var(--dash-border,rgba(183,191,217,0.4))", outline: "none",
+  fontFamily: "inherit", color: "var(--dash-text,#121317)", background: "var(--dash-bg,#fafafa)",
   boxSizing: "border-box",
 }
 
@@ -259,7 +259,7 @@ const btnPrimary: React.CSSProperties = {
 
 const btnSecondary: React.CSSProperties = {
   padding: "12px 20px", borderRadius: 99,
-  border: "1.5px solid rgba(183,191,217,0.4)",
-  background: "transparent", color: "#6a6a71", fontSize: 13, fontWeight: 600,
+  border: "1.5px solid var(--dash-border,rgba(183,191,217,0.4))",
+  background: "transparent", color: "var(--dash-text-2,#6a6a71)", fontSize: 13, fontWeight: 600,
   cursor: "pointer", fontFamily: "inherit",
 }
