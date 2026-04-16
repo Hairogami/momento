@@ -42,10 +42,11 @@ function GIcon({ name, size = 18, color = "var(--dash-text-2,#6a6a71)" }: { name
   )
 }
 
-export default function DashSidebar({ events, activeEventId, onEventChange, firstName = "Y", messageUnread = 0 }: DashSidebarProps) {
+export default function DashSidebar({ events, activeEventId, onEventChange, firstName: firstNameProp, messageUnread = 0 }: DashSidebarProps) {
   const pathname   = usePathname()
   const { data: session } = useSession()
   const canSwitch = session?.user?.email === DEV_SWITCH_EMAIL
+  const firstName = firstNameProp || session?.user?.name?.split(" ")[0] || "U"
   const [eventOpen, setEventOpen] = useState(false)
   const [darkMode,  setDarkMode]  = useState(true)
   const [menuOpen,  setMenuOpen]  = useState(false)
@@ -157,7 +158,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {events.length === 0
                 ? <span style={{ display: "inline-block", width: 90, height: 10, borderRadius: 4, background: "var(--dash-border,rgba(183,191,217,0.25))" }} />
-                : (activeEvent?.name ?? "Mon événement")
+                : (activeEvent?.name || "Mon événement")
               }
             </div>
             <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Événement actif</div>

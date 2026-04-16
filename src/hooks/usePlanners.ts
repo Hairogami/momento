@@ -32,7 +32,13 @@ export function usePlanners() {
           color: p.coverColor  ?? "#E11D48",
         }))
         setEvents(mapped)
-        if (mapped.length > 0) setActiveEventId(mapped[0].id)
+        if (mapped.length > 0) {
+          // Restaurer l'event sélectionné depuis localStorage si valide
+          let saved = ""
+          try { saved = localStorage.getItem("momento_active_event") ?? "" } catch {}
+          const restoredId = mapped.find(e => e.id === saved)?.id ?? mapped[0].id
+          setActiveEventId(restoredId)
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false))
