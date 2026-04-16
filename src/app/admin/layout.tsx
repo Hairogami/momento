@@ -35,6 +35,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
           <nav style={{ display: "flex", gap: 16 }}>
             <Link href="/admin/vendors" style={{ fontSize: 13, color: "#cfd3dc", textDecoration: "none" }}>Prestataires</Link>
+            <Link href="/admin/ranking" style={{ fontSize: 13, color: "#cfd3dc", textDecoration: "none" }}>Ranking</Link>
           </nav>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
