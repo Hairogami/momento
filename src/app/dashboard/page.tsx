@@ -1581,7 +1581,7 @@ export default function CloneDashboardPage() {
             {[
               { icon: "groups",                 val: `${edata.guestConfirmed}/${edata.guestCount}`, label: "invités",  href: "/guests"  },
               { icon: "check_circle",           val: `${completedTasks}/${tasks.length}`,           label: "tâches",   href: "/planner" },
-              { icon: "account_balance_wallet", val: `${Math.round((edata.budgetSpent / edata.budget) * 100)}%`, label: "budget", href: "/budget" },
+              { icon: "account_balance_wallet", val: `${edata.budget > 0 ? Math.round((edata.budgetSpent / edata.budget) * 100) : 0}%`, label: "budget", href: "/budget" },
             ].map(({ icon, val, label, href }) => (
               <Link key={label} href={href} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 13px", borderRadius: 999, textDecoration: "none", background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border)", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }} className="clone-card-white">
                 <GIcon name={icon} size={13} color="var(--g1,#E11D48)" />
