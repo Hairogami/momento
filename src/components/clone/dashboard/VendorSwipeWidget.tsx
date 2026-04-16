@@ -11,6 +11,7 @@ type VCard = {
   city: string
   rating: number
   priceMin?: number
+  coverPhoto?: string
 }
 
 const CATEGORY_THEMES: Record<string, { bg: string; emoji: string; accent: string }> = {
@@ -59,6 +60,9 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
             city: (v.city as string) || "",
             rating: typeof v.rating === "number" ? v.rating : 4.5,
             priceMin: v.priceMin as number | undefined,
+            coverPhoto: Array.isArray(v.media) && (v.media as { url: string }[]).length > 0
+              ? (v.media as { url: string }[])[0].url
+              : undefined,
           })))
           setIndex(0)
         }
@@ -221,7 +225,7 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
           style={{
             position: "absolute", inset: 0,
             borderRadius: 16,
-            background: theme.bg,
+            background: card.coverPhoto ? `url(${card.coverPhoto}) center/cover no-repeat` : theme.bg,
             cursor: dragActive.current ? "grabbing" : "grab",
             userSelect: "none",
             touchAction: "none",
@@ -259,25 +263,38 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
             }}>SKIP ✕</div>
           )}
 
-          {/* Glow */}
-          <div style={{
-            position: "absolute", top: -30, right: -30,
-            width: 100, height: 100, borderRadius: "50%",
-            background: theme.accent,
-            opacity: 0.08, filter: "blur(30px)",
-            pointerEvents: "none",
-          }} />
+          {/* Photo overlay — gradient bas pour lisibilité texte */}
+          {card.coverPhoto && (
+            <div style={{
+              position: "absolute", inset: 0, borderRadius: 16,
+              background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.82) 100%)",
+              pointerEvents: "none",
+            }} />
+          )}
+          {/* Glow (sans photo seulement) */}
+          {!card.coverPhoto && (
+            <div style={{
+              position: "absolute", top: -30, right: -30,
+              width: 100, height: 100, borderRadius: "50%",
+              background: theme.accent,
+              opacity: 0.08, filter: "blur(30px)",
+              pointerEvents: "none",
+            }} />
+          )}
 
-          {/* Emoji icon */}
-          <div style={{
-            width: 44, height: 44, borderRadius: 13,
-            background: `${theme.accent}20`,
-            border: `1px solid ${theme.accent}30`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 22, marginBottom: "auto",
-          }}>
-            {theme.emoji}
-          </div>
+          {/* Emoji icon — seulement sans photo */}
+          {!card.coverPhoto && (
+            <div style={{
+              width: 44, height: 44, borderRadius: 13,
+              background: `${theme.accent}20`,
+              border: `1px solid ${theme.accent}30`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 22, marginBottom: "auto",
+            }}>
+              {theme.emoji}
+            </div>
+          )}
+          {card.coverPhoto && <div style={{ flex: 1 }} />}
 
           {/* Info */}
           <div>

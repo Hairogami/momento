@@ -134,8 +134,8 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
       .then(r => r.ok ? r.json() : null)
       .then((d: unknown) => {
         if (!d) return;
-        if (!Array.isArray(d)) return;
-        const batch = d as VendorCard[];
+        // API returns { vendors: [...] } (ranked) or direct array (legacy)
+        const batch = (Array.isArray(d) ? d : Array.isArray((d as Record<string, unknown>).vendors) ? (d as Record<string, unknown>).vendors : []) as VendorCard[];
         if (batch.length < 20) setHasMore(false);
         setVendors(prev => append ? [...prev, ...batch] : batch);
       })
