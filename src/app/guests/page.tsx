@@ -102,7 +102,7 @@ export default function CloneGuestsPage() {
       </div>
       <div className="lg:hidden"><AntNav /></div>
 
-      <main style={{ flex: 1, padding: "32px 32px 64px", overflowY: "auto" }}>
+      <main className="pb-20 md:pb-0" style={{ flex: 1, padding: "clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px) 64px", overflowY: "auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 28, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div>
@@ -122,7 +122,7 @@ export default function CloneGuestsPage() {
         {showAdd && (
           <div style={{ marginBottom: 24, padding: "20px 24px", background: "var(--dash-surface,#fff)", borderRadius: 16, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
             <p style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 16px" }}>Nouvel invité</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 160px", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
               <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Nom complet…" onKeyDown={e => e.key === "Enter" && addGuest()} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
               <input value={newPhone} onChange={e => setNewPhone(e.target.value)} placeholder="Téléphone (opt.)" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
               <select value={newTable} onChange={e => setNewTable(e.target.value)} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }}>
@@ -174,7 +174,8 @@ export default function CloneGuestsPage() {
         </div>
 
         {/* Guest list */}
-        <div style={{ background: "var(--dash-surface,#fff)", borderRadius: 18, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)", overflow: "hidden" }}>
+        <div style={{ overflowX: "auto" }}>
+        <div style={{ background: "var(--dash-surface,#fff)", borderRadius: 18, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)", overflow: "hidden", minWidth: 480 }}>
           <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.10))", display: "flex", gap: 12 }}>
             <span style={{ flex: 1, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }}>Nom</span>
             <span style={{ width: 80, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }}>Table</span>
@@ -214,6 +215,7 @@ export default function CloneGuestsPage() {
               </div>
             </div>
           ))}
+        </div>
         </div>
       </main>
     </div>

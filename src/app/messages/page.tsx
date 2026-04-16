@@ -127,7 +127,7 @@ export default function CloneMessagesPage() {
       </div>
       <div className="lg:hidden"><AntNav /></div>
 
-      <main style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
+      <main className="pb-20 md:pb-0" style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
         {/* Liste conversations */}
         <div style={{
           width: 300, flexShrink: 0,
