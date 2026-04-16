@@ -1139,6 +1139,7 @@ export default function CloneDashboardPage() {
   const [showPicker,    setShowPicker]    = useState(false)
   const [showPalette,   setShowPalette]   = useState(false)
   const [swipeOpen,     setSwipeOpen]     = useState(false)
+  const [swipeLikeCount, setSwipeLikeCount] = useState(0)
   const [mobileOpen,    setMobileOpen]    = useState(false)
   const [firstName,     setFirstName]     = useState("")
   const [addingTask,    setAddingTask]    = useState(false)
@@ -1426,8 +1427,8 @@ export default function CloneDashboardPage() {
     switch (id as WidgetId) {
       case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
       case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} />
-      case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={() => setSwipeOpen(true)} />
-      case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} />
+      case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={() => setSwipeOpen(true)} onLike={() => setSwipeLikeCount(c => c + 1)} />
+      case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} refreshKey={swipeLikeCount} />
       case "tasks":     return renderTasks()
       case "bookings":  return renderBookings()
       case "messages":  return renderMessages()

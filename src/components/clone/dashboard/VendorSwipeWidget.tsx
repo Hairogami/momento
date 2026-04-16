@@ -54,9 +54,11 @@ const SWIPE_THRESHOLD = 75
 export default function VendorSwipeWidget({
   plannerId,
   onOpenModal,
+  onLike,
 }: {
   plannerId?: string
   onOpenModal?: () => void
+  onLike?: () => void
 }) {
   const [cards, setCards]     = useState<VCard[]>([])
   const [index, setIndex]     = useState(0)
@@ -117,6 +119,7 @@ export default function VendorSwipeWidget({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ vendorSlug: card.id }),
         }).catch(() => {})
+        onLike?.()
       }
     } else {
       if (plannerId) lsAdd(LS_SKIPPED(plannerId), card.id)
@@ -252,7 +255,7 @@ export default function VendorSwipeWidget({
             <div style={{ position: "absolute", top: 14, right: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #ef4444", color: "#ef4444", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (-drag.x - 25) / 55), transform: "rotate(14deg)", background: "rgba(239,68,68,0.1)" }}>SKIP ✕</div>
           )}
           {card.coverPhoto && (
-            <div style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.82) 100%)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.88) 100%)", pointerEvents: "none" }} />
           )}
           {!card.coverPhoto && (
             <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: theme.accent, opacity: 0.08, filter: "blur(30px)", pointerEvents: "none" }} />
@@ -262,7 +265,7 @@ export default function VendorSwipeWidget({
           )}
           {card.coverPhoto && <div style={{ flex: 1 }} />}
           <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 3 }}>{card.name}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 3, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{card.name}</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>{card.category} · {card.city}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: theme.accent, background: `${theme.accent}15`, padding: "2px 7px", borderRadius: 99 }}>★ {card.rating.toFixed(1)}</span>

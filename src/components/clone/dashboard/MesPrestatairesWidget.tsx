@@ -7,7 +7,7 @@ const G = "linear-gradient(135deg, #E11D48, #9333EA)"
 type PlannerVendor = { vendorSlug: string; status: string; vendor: { category: string } }
 type PlannerDetail = { categories: string[] }
 
-export default function MesPrestatairesWidget({ plannerId }: { plannerId: string }) {
+export default function MesPrestatairesWidget({ plannerId, refreshKey }: { plannerId: string; refreshKey?: number }) {
   const [planner, setPlanner] = useState<PlannerDetail | null>(null)
   const [vendors, setVendors] = useState<PlannerVendor[]>([])
   const [loading, setLoading] = useState(false)
@@ -24,7 +24,7 @@ export default function MesPrestatairesWidget({ plannerId }: { plannerId: string
         if (vRes.ok) setVendors(await vRes.json())
       })
       .finally(() => setLoading(false))
-  }, [plannerId])
+  }, [plannerId, refreshKey])
 
   const categories = planner?.categories ?? []
   const covered    = categories.filter(cat => vendors.some(v => v.vendor.category === cat))
