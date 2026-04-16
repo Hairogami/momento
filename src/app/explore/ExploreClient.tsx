@@ -235,12 +235,12 @@ export default function ExploreClient({ initialVendors, totalCount }: {
       style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", paddingTop: 56 }}
     >
       <AntNav hideLinks centerSlot={
-        <div className="flex items-center gap-2" style={{ width: "100%", maxWidth: 616 }}>
+        <div className="flex items-center gap-2" style={{ width: "100%", maxWidth: 680 }}>
           {/* Search input */}
           <div style={{ flex: 1, minWidth: 0, position: "relative" }}>
             <span style={{
-              position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)",
-              fontSize: 14, color: "var(--dash-text-3,#9a9aaa)", pointerEvents: "none",
+              position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)",
+              fontSize: 16, color: "var(--dash-text-3,#9a9aaa)", pointerEvents: "none",
               fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal",
             }}>search</span>
             <input
@@ -249,17 +249,17 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               value={search}
               onChange={e => setSearch(e.target.value)}
               style={{
-                width: "100%", height: 40,
-                paddingLeft: 34, paddingRight: 12,
+                width: "100%", height: 44,
+                paddingLeft: 38, paddingRight: 14,
                 borderRadius: 999,
-                border: "1px solid var(--dash-border,rgba(183,191,217,0.35))",
+                border: "1.5px solid var(--dash-border,rgba(183,191,217,0.4))",
                 background: "var(--dash-input-bg,#fafafa)",
-                fontSize: 13, color: "var(--dash-text,#121317)",
+                fontSize: 14, color: "var(--dash-text,#121317)",
                 outline: "none", boxSizing: "border-box", fontFamily: "inherit",
                 transition: "border-color 0.15s",
               }}
               onFocus={e => (e.target.style.borderColor = "rgba(225,29,72,0.5)")}
-              onBlur={e => (e.target.style.borderColor = "var(--dash-border,rgba(183,191,217,0.35))")}
+              onBlur={e => (e.target.style.borderColor = "var(--dash-border,rgba(183,191,217,0.4))")}
             />
           </div>
           <div className="hidden md:flex items-center gap-2">
