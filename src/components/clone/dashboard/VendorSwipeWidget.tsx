@@ -140,9 +140,9 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
 
   const theme = categoryTheme(card.category)
   const rot = drag.x * 0.07
-  const exitX = exiting === "right" ? 280 : exiting === "left" ? -280 : drag.x
-  const exitY = exiting ? 60 : drag.y * 0.25
-  const exitRot = exiting === "right" ? 18 : exiting === "left" ? -18 : rot
+  const exitX = exiting === "right" ? 55 : exiting === "left" ? -55 : drag.x
+  const exitY = exiting ? 20 : drag.y * 0.25
+  const exitRot = exiting === "right" ? 10 : exiting === "left" ? -10 : rot
   const cardOpacity = exiting ? 0 : Math.abs(drag.x) > 20 ? Math.max(0, 1 - (Math.abs(drag.x) - 20) / 150) : 1
 
   return (
@@ -345,13 +345,12 @@ export default function VendorSwipeWidget({ onOpenModal }: { onOpenModal?: () =>
             border: "none",
             background: G, color: "#fff",
             cursor: "pointer",
-            fontFamily: "'Google Symbols','Material Symbols Outlined'",
-            fontWeight: "normal", fontSize: 22,
+            fontSize: 22,
             display: "flex", alignItems: "center", justifyContent: "center",
             boxShadow: "0 4px 20px rgba(225,29,72,0.35)",
             transition: "all 0.15s",
           }}
-        >favorite</button>
+        >🎉</button>
 
         {/* Profile */}
         <button
