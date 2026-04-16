@@ -334,7 +334,35 @@ export default function ExploreClient({ initialVendors, totalCount }: {
         }}
       >
         {/* Category pills */}
-        <div style={{ padding: "10px 16px 10px", position: "relative", display: "flex", alignItems: "center", gap: 4 }}>
+        <div style={{ padding: "10px 16px 10px", position: "relative", display: "flex", flexDirection: "column", gap: 8 }}>
+          {/* Row 1 mobile: search bar full width */}
+          <div className="md:hidden" style={{ position: "relative" }}>
+            <span style={{
+              position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)",
+              fontSize: 16, color: "var(--dash-text-3,#9a9aaa)", pointerEvents: "none",
+              fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal",
+            }}>search</span>
+            <input
+              type="text"
+              placeholder="DJ, photographe, traiteur..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                width: "100%", height: 40,
+                paddingLeft: 38, paddingRight: 14,
+                borderRadius: 999,
+                border: "1.5px solid var(--dash-border,rgba(183,191,217,0.4))",
+                background: "var(--dash-input-bg,#fafafa)",
+                fontSize: 14, color: "var(--dash-text,#121317)",
+                outline: "none", boxSizing: "border-box", fontFamily: "inherit",
+                transition: "border-color 0.15s",
+              }}
+              onFocus={e => (e.target.style.borderColor = "rgba(225,29,72,0.5)")}
+              onBlur={e => (e.target.style.borderColor = "var(--dash-border,rgba(183,191,217,0.4))")}
+            />
+          </div>
+          {/* Row 2: Catégorie (mobile) / pills (desktop) + Filtres */}
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           {/* Mobile: bouton catégorie → bottom sheet */}
           <button
             className="md:hidden flex items-center gap-1.5"
@@ -412,7 +440,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           }}>›</button>
 
           {/* ── Filtres avancés ── */}
-          <div ref={filtersRef} style={{ position: "relative", flexShrink: 0, marginLeft: "auto" }}>
+          <div ref={filtersRef} style={{ position: "relative", flexShrink: 0, marginLeft: 8 }}>
             {/* Trigger */}
             {(() => {
               const advCount = socialFilter.size + (photoOnly ? 1 : 0)
@@ -528,6 +556,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               </div>
             )}
           </div>
+          </div>{/* end Row 2 */}
         </div>
 
       </div>

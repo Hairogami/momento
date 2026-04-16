@@ -247,9 +247,12 @@ export default function AntNav({
             </Link>
           </div>
 
-          {/* Center slot (ex: search bar) */}
+          {/* Center slot (ex: search bar) — masqué sur mobile en mode explore */}
           {centerSlot && (
-            <div style={{ flex: 1, display: "flex", justifyContent: "center", padding: "0 16px" }}>
+            <div
+              className={hideLinks ? "hidden md:flex" : "flex"}
+              style={{ flex: 1, justifyContent: "center", padding: "0 16px" }}
+            >
               {centerSlot}
             </div>
           )}
