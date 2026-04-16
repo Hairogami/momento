@@ -1,7 +1,9 @@
 "use client"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
+import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -27,6 +29,8 @@ export default function CloneAccueilPage() {
   const [planners, setPlanners] = useState<Planner[]>([])
   const [loaded, setLoaded] = useState(false)
   const [firstName, setFirstName] = useState("")
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     fetch("/api/planners")
@@ -76,12 +80,12 @@ export default function CloneAccueilPage() {
         {/* Events section */}
         <div style={{ marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Mes événements</h2>
-          <Link href="/planner" style={{
+          <button onClick={() => setShowCreateModal(true)} style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             padding: "8px 16px", borderRadius: 999,
-            background: G, color: "#fff",
-            fontSize: 12, fontWeight: 600, textDecoration: "none",
-          }}>+ Nouvel événement</Link>
+            background: G, color: "#fff", border: "none",
+            fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+          }}>+ Nouvel événement</button>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16, marginBottom: 48 }}>
@@ -91,7 +95,7 @@ export default function CloneAccueilPage() {
             const days = date ? daysUntil(date) : null
             const color = p.coverColor ?? "#E11D48"
             return (
-              <Link key={p.id} href="/dashboard" style={{ textDecoration: "none" }}>
+              <Link key={p.id} href="/mes-prestataires" style={{ textDecoration: "none" }}>
                 <div className="clone-card-white" style={{
                   background: "var(--dash-surface,#fff)", borderRadius: 20,
                   border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
@@ -137,7 +141,7 @@ export default function CloneAccueilPage() {
           })}
 
           {/* Add event card */}
-          <Link href="/planner" style={{ textDecoration: "none" }}>
+          <button onClick={() => setShowCreateModal(true)} style={{ textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0, width: "100%", textAlign: "left" }}>
             <div className="clone-card-white" style={{
               background: "var(--dash-surface,#fff)", borderRadius: 20,
               border: "1px dashed rgba(183,191,217,0.5)",
@@ -154,7 +158,7 @@ export default function CloneAccueilPage() {
               <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 4px" }}>Créer un événement</p>
               <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Mariage, anniversaire, corporate…</p>
             </div>
-          </Link>
+          </button>
         </div>
 
         {/* CTA explore */}
@@ -171,6 +175,12 @@ export default function CloneAccueilPage() {
               1 000+ prestataires vérifiés · 41 villes · 0% commission
             </p>
           </div>
+          <CreateEventModal
+            open={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            onCreated={() => { setShowCreateModal(false); router.push("/mes-prestataires"); router.refresh() }}
+          />
+
           <Link href="/explore" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "12px 24px", borderRadius: 999,

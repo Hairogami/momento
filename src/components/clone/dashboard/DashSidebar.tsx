@@ -1,10 +1,11 @@
 "use client"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { signOut, useSession } from "next-auth/react"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import MobileDashNav from "./MobileDashNav"
+import CreateEventModal from "./CreateEventModal"
 
 // Dev-mode : cet email a accès au switcher Client ↔ Prestataire
 const DEV_SWITCH_EMAIL = "moumene486@gmail.com"
@@ -12,13 +13,14 @@ const DEV_SWITCH_EMAIL = "moumene486@gmail.com"
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 const NAV_ITEMS = [
-  { icon: "home",                    label: "Accueil",  href: "/accueil"   },
-  { icon: "dashboard",               label: "Dashboard",href: "/dashboard" },
-  { icon: "account_balance_wallet",  label: "Budget",   href: "/budget"    },
-  { icon: "groups",                  label: "Invités",  href: "/guests"    },
-  { icon: "chat_bubble",             label: "Messages", href: "/messages"  },
-  { icon: "event_note",              label: "Planning", href: "/planner"   },
-  { icon: "favorite",                label: "Favoris",  href: "/favorites" },
+  { icon: "home",                    label: "Accueil",          href: "/accueil"          },
+  { icon: "dashboard",               label: "Dashboard",        href: "/dashboard"        },
+  { icon: "account_balance_wallet",  label: "Budget",           href: "/budget"           },
+  { icon: "groups",                  label: "Invités",          href: "/guests"           },
+  { icon: "chat_bubble",             label: "Messages",         href: "/messages"         },
+  { icon: "event_note",              label: "Planning",         href: "/planner"          },
+  { icon: "favorite",                label: "Favoris",          href: "/favorites"        },
+  { icon: "handshake",               label: "Mes Prestataires", href: "/mes-prestataires" },
 ]
 
 type Event = { id: string; name: string; date: string; color: string }
@@ -48,6 +50,8 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const canSwitch = session?.user?.email === DEV_SWITCH_EMAIL
   const firstName = firstNameProp || session?.user?.name?.split(" ")[0] || "U"
   const [eventOpen, setEventOpen] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const router = useRouter()
   const [darkMode,  setDarkMode]  = useState(true)
   const [menuOpen,  setMenuOpen]  = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -92,6 +96,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   }
 
   return (
+    <>
     <aside style={{
       width: 240, flexShrink: 0,
       height: "100vh", position: "sticky", top: 0,
@@ -191,10 +196,13 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
               </button>
             ))}
             <div style={{ borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.12))", padding: "8px 14px" }}>
-              <Link href="/planner" style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+              <button
+                onClick={() => { setEventOpen(false); setShowCreateModal(true) }}
+                style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: 0, fontFamily: "inherit" }}
+              >
                 <GIcon name="add" size={13} color="var(--dash-text-3,#9a9aaa)" />
                 Créer un événement
-              </Link>
+              </button>
             </div>
           </div>
         )}
@@ -364,5 +372,17 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
         </button>
       </div>
     </aside>
+
+    <CreateEventModal
+      open={showCreateModal}
+      onClose={() => setShowCreateModal(false)}
+      onCreated={(planner) => {
+        setShowCreateModal(false)
+        router.push("/mes-prestataires")
+        // Trigger a page refresh so the new planner appears in the event switcher
+        router.refresh()
+      }}
+    />
+  </>
   )
 }

@@ -5,7 +5,8 @@ import type { NextRequest } from "next/server"
 const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon"]
 const PROTECTED          = ["/dashboard", "/accueil", "/profile", "/planner", "/favorites",
                              "/budget", "/guests", "/messages", "/notifications", "/settings",
-                             "/vendors", "/vendor/dashboard", "/prestataire/dashboard", "/admin"]
+                             "/vendors", "/vendor/dashboard", "/prestataire/dashboard", "/admin",
+                             "/mes-prestataires"]
 const AUTH_ONLY          = ["/login", "/signup"]
 
 export async function proxy(request: NextRequest) {
