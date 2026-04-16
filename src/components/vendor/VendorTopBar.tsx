@@ -10,7 +10,7 @@ export default function VendorTopBar({ email }: { email: string | null }) {
     <header
       style={{
         position: "sticky", top: 0, zIndex: 50,
-        height: 56, padding: "0 20px",
+        height: 56, padding: "0 clamp(16px, 4vw, 28px)",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         background: "#0b0d12", color: "#fff",
         borderBottom: "1px solid #1f2430",

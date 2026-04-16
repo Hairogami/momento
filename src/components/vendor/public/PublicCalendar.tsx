@@ -141,13 +141,13 @@ function MonthGrid({
         {MONTHS_FULL[month]} {year}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, marginBottom: 3 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginBottom: 3 }}>
         {WEEKDAYS.map((w, i) => (
           <div key={i} style={{ fontSize: 10, fontWeight: 700, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center" }}>{w}</div>
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
         {Array.from({ length: offset }).map((_, i) => <div key={`p${i}`} />)}
 
         {Array.from({ length: total }).map((_, i) => {
@@ -186,6 +186,7 @@ function MonthGrid({
                 cursor: clickable ? "pointer" : "default",
                 fontFamily: "inherit",
                 transition: "transform 80ms ease",
+                minHeight: 36,
               }}
               onMouseEnter={e => { if (clickable) e.currentTarget.style.transform = "scale(1.08)" }}
               onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)" }}

@@ -238,6 +238,7 @@ export default function InboxClient() {
         background: "#fff", borderRadius: 14,
         border: "1px solid rgba(183,191,217,0.18)",
         overflow: "hidden",
+        overflowX: "auto",
       }}>
         {loading ? (
           <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: 13 }}>

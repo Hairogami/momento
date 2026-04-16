@@ -125,7 +125,7 @@ export default function PlannerClient({ initialDetail }: { initialDetail: Planne
       </div>
       <div className="lg:hidden"><AntNav /></div>
 
-      <main style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
+      <main className="pb-20 md:pb-0" style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
         <CalendarHeader
           view={view}
           cursor={cursor}

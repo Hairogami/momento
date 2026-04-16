@@ -9,6 +9,7 @@ import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import VendorSidebar from "@/components/vendor/VendorSidebar"
 import VendorTopBar from "@/components/vendor/VendorTopBar"
+import MobileVendorNav from "@/components/vendor/MobileVendorNav"
 
 export const metadata = {
   title: "Espace prestataire — Momento",
@@ -40,10 +41,15 @@ export default async function VendorDashboardLayout({
     <div style={{ minHeight: "100vh", background: "#f7f7fb" }}>
       <VendorTopBar email={user.email} />
       <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <VendorSidebar publicSlug={user.vendorSlug} />
-        <main style={{ flex: 1, minWidth: 0, padding: "24px 28px" }}>
+        <div className="hidden md:block">
+          <VendorSidebar publicSlug={user.vendorSlug} />
+        </div>
+        <main className="pb-20 md:pb-0" style={{ flex: 1, minWidth: 0, padding: "16px 16px 24px" }}>
           {children}
         </main>
+      </div>
+      <div className="md:hidden">
+        <MobileVendorNav />
       </div>
     </div>
   )

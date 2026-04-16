@@ -140,7 +140,7 @@ export default function CloneBudgetPage() {
       </div>
       <div className="lg:hidden"><AntNav /></div>
 
-      <main style={{ flex: 1, padding: "32px 32px 64px", overflowY: "auto" }}>
+      <main className="pb-20 md:pb-0" style={{ flex: 1, padding: "clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px) 64px", overflowY: "auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 28, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div>
@@ -160,7 +160,7 @@ export default function CloneBudgetPage() {
         {showAdd && (
           <div style={{ marginBottom: 24, padding: "20px 24px", background: "var(--dash-surface,#fff)", borderRadius: 16, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
             <p style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 16px" }}>Nouvelle dépense</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 140px", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
               <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé…" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
               <select value={newCat} onChange={e => setNewCat(e.target.value)} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }}>
                 {Object.keys(CAT_COLORS).map(c => <option key={c}>{c}</option>)}

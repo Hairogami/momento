@@ -1598,7 +1598,7 @@ export default function CloneDashboardPage() {
       {showPicker  && <WidgetPickerModal active={widgetOrder} onAdd={addWidget} onClose={() => setShowPicker(false)} />}
       {showPalette && <PalettePickerModal current={palette} onChange={setPalette} onClose={() => setShowPalette(false)} />}
 
-      <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", minHeight: "100vh" }} className="pb-20 md:pb-0">
         {/* Mobile header */}
         <div className="lg:hidden" style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "var(--dash-surface,#fff)", borderBottom: "1px solid var(--dash-border)", position: "sticky", top: 0, zIndex: 20 }}>
           <button onClick={() => setMobileOpen(true)} style={{ width: 34, height: 34, borderRadius: 9, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1669,7 +1669,8 @@ export default function CloneDashboardPage() {
 
         {/* Widget grid */}
         <div style={{ padding: "12px 24px 64px", flex: 1 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 14, gridAutoRows: "minmax(220px, auto)" }}>
+          <div className="dash-widget-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 14, gridAutoRows: "minmax(220px, auto)" }}>
+            <style>{`.dash-widget-grid > * { min-width: 0; } @media (max-width: 767px) { .dash-widget-grid { grid-template-columns: 1fr !important; } .dash-widget-grid > * { grid-column: span 1 !important; } }`}</style>
             {widgetOrder.map(id => {
               const meta = getWidgetMeta(id)
               if (!meta) return null
