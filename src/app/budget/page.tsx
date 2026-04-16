@@ -65,7 +65,7 @@ export default function CloneBudgetPage() {
   const expenses = data.expenses
   const spent    = expenses.reduce((s, e) => s + e.amount, 0)
   const paid     = expenses.filter(e => e.paid).reduce((s, e) => s + e.amount, 0)
-  const pct      = Math.min(100, Math.round((spent / data.total) * 100))
+  const pct      = data.total > 0 ? Math.min(100, Math.round((spent / data.total) * 100)) : 0
 
   // Category breakdown
   const catMap: Record<string, number> = {}
@@ -73,7 +73,7 @@ export default function CloneBudgetPage() {
   const categories = Object.entries(catMap).sort((a, b) => b[1] - a[1])
 
   const segments = categories.map(([cat, amt]) => ({
-    pct: (amt / data.total) * 100,
+    pct: data.total > 0 ? (amt / data.total) * 100 : 0,
     color: CAT_COLORS[cat] ?? "#9a9aaa",
   }))
 

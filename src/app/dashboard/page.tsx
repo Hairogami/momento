@@ -53,7 +53,7 @@ const DEFAULT_ORDER: WidgetId[] = ["countdown", "budget", "swipe", "prestataires
 const WIDGET_META: Record<WidgetId, { title: string; href: string; rowSpan?: number }> = {
   countdown:    { title: "Compte à rebours", href: "/planner"          },
   budget:       { title: "Budget",           href: "/budget"            },
-  swipe:        { title: "Découvrir",        href: "/explore", rowSpan: 2 },
+  swipe:        { title: "Découvrir",        href: "/mes-prestataires", rowSpan: 2 },
   prestataires: { title: "Mes Prestataires", href: "/mes-prestataires"  },
   tasks:        { title: "Tâches",           href: "/planner"           },
   bookings:     { title: "Réservations",     href: "/explore"           },
@@ -1126,7 +1126,13 @@ export default function CloneDashboardPage() {
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [extraWidgets,  setExtraWidgets]  = useState<string[]>([])
   const [tasksByEvent,  setTasksByEvent]  = useState<Record<string, Task[]>>({})
-  const [darkMode,      setDarkMode]      = useState(true)
+  const [darkMode,      setDarkMode]      = useState(() => {
+    if (typeof window === "undefined") return true
+    try {
+      const v = localStorage.getItem("momento_clone_dark_mode")
+      return v !== null ? (JSON.parse(v) as boolean) : true
+    } catch { return true }
+  })
   const [palette,       setPalette]       = useState({ g1: "#E11D48", g2: "#9333EA" })
   const [isDragging,    setIsDragging]    = useState(false)
   const [dropTarget,    setDropTarget]    = useState<string | null>(null)
@@ -1156,10 +1162,8 @@ export default function CloneDashboardPage() {
   // ── localStorage hydration ────────────────────────────────────────────────
   useEffect(() => {
     try {
-      const ev  = localStorage.getItem("momento_active_event")
-      const sdk = localStorage.getItem("momento_clone_dark_mode")
+      const ev = localStorage.getItem("momento_active_event")
       if (ev)  setActiveEventId(ev)
-      if (sdk) setDarkMode(JSON.parse(sdk))
     } catch {}
 
     // Fetch real planners
@@ -1423,7 +1427,7 @@ export default function CloneDashboardPage() {
       case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
       case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} />
       case "swipe":         return <VendorSwipeWidget onOpenModal={() => setSwipeOpen(true)} />
-      case "prestataires":  return <MesPrestatairesWidget />
+      case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} />
       case "tasks":     return renderTasks()
       case "bookings":  return renderBookings()
       case "messages":  return renderMessages()
