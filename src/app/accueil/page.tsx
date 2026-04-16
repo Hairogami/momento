@@ -95,7 +95,7 @@ export default function CloneAccueilPage() {
             const days = date ? daysUntil(date) : null
             const color = p.coverColor ?? "#E11D48"
             return (
-              <Link key={p.id} href="/mes-prestataires" style={{ textDecoration: "none" }}>
+              <Link key={p.id} href={`/mes-prestataires?plannerId=${p.id}`} style={{ textDecoration: "none" }}>
                 <div className="clone-card-white" style={{
                   background: "var(--dash-surface,#fff)", borderRadius: 20,
                   border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
@@ -175,16 +175,6 @@ export default function CloneAccueilPage() {
               1 000+ prestataires vérifiés · 41 villes · 0% commission
             </p>
           </div>
-          <CreateEventModal
-            open={showCreateModal}
-            onClose={() => setShowCreateModal(false)}
-            onCreated={(planner) => {
-              setShowCreateModal(false)
-              try { localStorage.setItem("momento_active_event", planner.id) } catch {}
-              router.push("/mes-prestataires")
-            }}
-          />
-
           <Link href="/explore" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "12px 24px", borderRadius: 999,
@@ -195,6 +185,16 @@ export default function CloneAccueilPage() {
           </Link>
         </div>
       </div>
+
+      <CreateEventModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreated={(planner) => {
+          setShowCreateModal(false)
+          try { localStorage.setItem("momento_active_event", planner.id) } catch {}
+          router.push("/mes-prestataires")
+        }}
+      />
     </div>
   )
 }
