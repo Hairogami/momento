@@ -1186,6 +1186,18 @@ export default function CloneDashboardPage() {
         if (d && typeof d === "object" && "name" in d && typeof (d as { name: unknown }).name === "string") {
           setFirstName(((d as { name: string }).name).split(" ")[0])
         }
+        // Guard cross-user localStorage: si un autre user était connecté, effacer sa préférence d'event
+        const uid = d && typeof d === "object" && "id" in d ? String((d as { id: unknown }).id) : null
+        if (uid) {
+          try {
+            const storedUid = localStorage.getItem("momento_active_user")
+            if (storedUid && storedUid !== uid) {
+              localStorage.removeItem("momento_active_event")
+              setActiveEventId("")
+            }
+            localStorage.setItem("momento_active_user", uid)
+          } catch {}
+        }
       })
       .catch(() => {})
   }, [])
