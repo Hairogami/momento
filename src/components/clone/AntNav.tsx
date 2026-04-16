@@ -115,9 +115,11 @@ type DropdownItem =
 export default function AntNav({
   hideLinks = false,
   centerSlot,
+  hideDarkToggle = false,
 }: {
   hideLinks?: boolean
   centerSlot?: React.ReactNode
+  hideDarkToggle?: boolean
 }) {
   const { data: session, status } = useSession()
   const isLoggedIn = status === "authenticated"
@@ -295,12 +297,12 @@ export default function AntNav({
           <div className={hideLinks ? "flex-shrink-0 flex items-center justify-end gap-2 ml-auto" : "flex-1 flex items-center justify-end gap-2"}>
 
             {/* Dark mode toggle */}
-            <button onClick={() => setDark(d => !d)}
+            {!hideDarkToggle && <button onClick={() => setDark(d => !d)}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
               style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}
               title={dark ? "Mode clair" : "Mode sombre"}>
               <GsIcon icon={dark ? "light_mode" : "dark_mode"} size={15} color={text} />
-            </button>
+            </button>}
 
             {/* Palette */}
             <div className="relative hidden md:block">

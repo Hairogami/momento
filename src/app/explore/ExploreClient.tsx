@@ -153,6 +153,20 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   initialVendors: VendorListItem[]
   totalCount: number
 }) {
+  const [dark, setDark] = useState(true)
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("momento_clone_dark_mode")
+      if (saved !== null) setDark(JSON.parse(saved))
+    } catch {}
+  }, [])
+  useEffect(() => {
+    document.documentElement.classList.toggle("clone-dark", dark)
+    document.documentElement.classList.toggle("dark", dark)
+    try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(dark)) } catch {}
+  }, [dark])
+
   const [search, setSearch]       = useState("")
   const [activeCity, setActiveCity] = useState("")
   const [activeMajor, setActiveMajor] = useState("Tous")
@@ -234,7 +248,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
       className="ant-root"
       style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", paddingTop: 56 }}
     >
-      <AntNav hideLinks centerSlot={
+      <AntNav hideLinks hideDarkToggle centerSlot={
         <div className="flex items-center gap-2" style={{ width: "100%", maxWidth: 680 }}>
           {/* Search input */}
           <div style={{ flex: 1, minWidth: 0, position: "relative" }}>
@@ -411,8 +425,25 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             cursor: "pointer", fontSize: 14, lineHeight: 1,
           }}>›</button>
 
-          {/* ── Filtres avancés ── */}
-          <div ref={filtersRef} style={{ position: "relative", flexShrink: 0, marginLeft: 8 }}>
+          {/* ── Dark toggle + Filtres (groupés à droite) ── */}
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+            <button
+              onClick={() => setDark(d => !d)}
+              style={{
+                width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                background: "var(--dash-surface,#fff)",
+                color: "var(--dash-text-2,#45474D)",
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 15,
+              }}
+              title={dark ? "Mode clair" : "Mode sombre"}
+            >
+              <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", lineHeight: 1 }}>
+                {dark ? "light_mode" : "dark_mode"}
+              </span>
+            </button>
+          <div ref={filtersRef} style={{ position: "relative", flexShrink: 0 }}>
             {/* Trigger */}
             {(() => {
               const advCount = socialFilter.size + (photoOnly ? 1 : 0)
@@ -528,6 +559,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               </div>
             )}
           </div>
+          </div>{/* end dark+filtres wrapper */}
         </div>
 
       </div>
