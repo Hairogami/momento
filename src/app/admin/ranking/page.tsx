@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
+import PageSkeleton from "@/components/clone/PageSkeleton"
 
 type Config = { id: string; signal: string; label: string; weight: number; updatedAt: string }
 
@@ -53,7 +54,7 @@ export default function AdminRankingPage() {
       </p>
 
       {loading ? (
-        <p style={{ color: "#9a9aaa", fontSize: 13 }}>Chargement…</p>
+        <PageSkeleton variant="list" />
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {configs.map(c => {

@@ -1473,14 +1473,16 @@ export default function CloneDashboardPage() {
   // ── Render ────────────────────────────────────────────────────────────────
   if (!eventsLoaded) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)" }}>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, maxWidth: 320, width: "100%" }}>
+        <div className="mo-skel" style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
         </div>
-        <p style={{ color: "var(--dash-text-3,#9a9aaa)", fontSize: 13 }}>Chargement de votre espace…</p>
+        <div className="mo-skel" style={{ height: 12, width: 180, borderRadius: 6, background: "var(--dash-faint-2,rgba(183,191,217,0.18))", animationDelay: "0.15s" }} />
+        <div className="mo-skel" style={{ height: 10, width: 120, borderRadius: 4, background: "var(--dash-faint-2,rgba(183,191,217,0.10))", animationDelay: "0.3s" }} />
       </div>
+      <style>{`@keyframes moPulse { 0%,100% { opacity: 1 } 50% { opacity: 0.4 } } .mo-skel { animation: moPulse 1.4s ease-in-out infinite; }`}</style>
     </div>
   )
 

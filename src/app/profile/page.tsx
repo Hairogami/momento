@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import AntNav from "@/components/clone/AntNav"
 import { usePlanners } from "@/hooks/usePlanners"
+import PageSkeleton from "@/components/clone/PageSkeleton"
 
 
 type Me = {
@@ -173,7 +174,7 @@ export default function ProfilePage() {
         </p>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "var(--dash-text-3,#9a9aaa)", fontSize: 14 }}>Chargement…</div>
+          <PageSkeleton variant="profile" />
         ) : (
           <>
             {/* ── Avatar ── */}

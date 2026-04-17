@@ -4,6 +4,7 @@ import AntNav from "@/components/clone/AntNav"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import VendorDiscoverCard, { type DiscoverVendor } from "@/components/prestataires/VendorDiscoverCard"
 import { usePlanners } from "@/hooks/usePlanners"
+import PageSkeleton from "@/components/clone/PageSkeleton"
 
 const G = "linear-gradient(135deg, #E11D48, #9333EA)"
 
@@ -215,7 +216,7 @@ export default function MesPrestatairesPage() {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: 60, color: "var(--dash-text-3,#9a9aaa)", fontSize: 13 }}>Chargement…</div>
+          <PageSkeleton variant="cards" />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
             {Object.entries(vendorsByCategory).map(([category, vendors]) => (
@@ -417,7 +418,7 @@ export default function MesPrestatairesPage() {
             </div>
             <div style={{ overflowY: "auto", padding: 16 }}>
               {loadingCatVendors ? (
-                <p style={{ textAlign: "center", color: "var(--dash-text-3,#9a9aaa)", padding: 40, fontSize: 13 }}>Chargement…</p>
+                <PageSkeleton variant="cards" />
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {categoryVendors.map(v => (

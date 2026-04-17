@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import AntNav from "@/components/clone/AntNav"
 import { usePlanners } from "@/hooks/usePlanners"
+import PageSkeleton from "@/components/clone/PageSkeleton"
 
 type Notification = { id: string; message: string; read: boolean; createdAt: string; type?: string }
 
@@ -33,9 +34,7 @@ export default function CloneNotificationsPage() {
         </p>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "var(--dash-text-3,#9a9aaa)", fontSize: 14 }}>
-            Chargement…
-          </div>
+          <PageSkeleton variant="list" />
         ) : notifs.length === 0 ? (
           <div style={{
             textAlign: "center", padding: "60px 24px",

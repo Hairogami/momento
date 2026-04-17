@@ -6,6 +6,7 @@ import Link from "next/link"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import AntNav from "@/components/clone/AntNav"
 import { usePlanners } from "@/hooks/usePlanners"
+import PageSkeleton from "@/components/clone/PageSkeleton"
 
 
 const PALETTES = [
@@ -284,7 +285,7 @@ export default function SettingsPage() {
         )}
 
         {loading || !s ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "var(--dash-text-3,#9a9aaa)", fontSize: 14 }}>Chargement…</div>
+          <PageSkeleton variant="list" />
         ) : (
           <>
             {/* ── 1. Apparence ── */}

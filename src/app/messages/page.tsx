@@ -4,6 +4,7 @@ import Link from "next/link"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import AntNav from "@/components/clone/AntNav"
 import { usePlanners } from "@/hooks/usePlanners"
+import PageSkeleton from "@/components/clone/PageSkeleton"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -228,7 +229,7 @@ export default function CloneMessagesPage() {
               {/* Messages */}
               <div style={{ flex: 1, padding: "24px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 12 }}>
                 {loadM ? (
-                  <div style={{ textAlign: "center", padding: "40px 0", color: "var(--dash-text-3,#9a9aaa)", fontSize: 13 }}>Chargement…</div>
+                  <PageSkeleton variant="list" />
                 ) : msgs.length === 0 ? (
                   <div style={{ textAlign: "center", padding: "40px 0" }}>
                     <p style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)" }}>Aucun message. Envoyez le premier !</p>
