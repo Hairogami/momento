@@ -585,7 +585,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           <>
             <div style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
               gap: 20,
             }}>
               {visible.map(v => (
