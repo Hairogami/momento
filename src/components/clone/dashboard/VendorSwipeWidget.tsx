@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { invalidatePlannerCache } from "@/hooks/usePlanners"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 const LS_LIKED   = (pid: string) => `momento_vsw_liked_${pid}`
@@ -64,6 +65,7 @@ export default function VendorSwipeWidget({
   const [cards, setCards]     = useState<VCard[]>([])
   const [index, setIndex]     = useState(0)
   const [liked, setLiked]     = useState<string[]>([])
+  const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set())
   const [drag, setDrag]       = useState({ x: 0, y: 0 })
   const [exiting, setExiting] = useState<"left" | "right" | null>(null)
   const [history, setHistory] = useState<{ id: string; dir: "left" | "right" }[]>([])
@@ -119,7 +121,7 @@ export default function VendorSwipeWidget({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ vendorSlug: card.id }),
-        }).catch(() => {})
+        }).then(() => invalidatePlannerCache()).catch(() => {})
         onLike?.()
       }
     } else {
@@ -290,9 +292,9 @@ export default function VendorSwipeWidget({
         {/* ✕ Skip */}
         <button onClick={() => swipe("left")} style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.35)", background: "rgba(239,68,68,0.06)", color: "#ef4444", cursor: "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>close</button>
         {/* ↩ Rewind */}
-        <button onClick={() => setIndex(i => Math.max(0, i - 1))} disabled={index === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: index === 0 ? "#c9cad0" : "#6a6a71", cursor: index === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
+        <button onClick={undo} disabled={index === 0 || history.length === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: index === 0 ? "#c9cad0" : "#6a6a71", cursor: index === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
         {/* ♥ Favori */}
-        <button onClick={() => fetch(`/api/vendor/${card.id}/favorite`, { method: "POST" }).catch(() => {})} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.25)", background: "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
+        <button onClick={() => { const isFav = favoritedIds.has(card.id); setFavoritedIds(prev => { const s = new Set(prev); isFav ? s.delete(card.id) : s.add(card.id); return s; }); fetch(`/api/vendor/${card.id}/favorite`, { method: "POST" }).catch(() => {}) }} style={{ width: 36, height: 36, borderRadius: "50%", border: favoritedIds.has(card.id) ? "1.5px solid rgba(239,68,68,0.6)" : "1.5px solid rgba(239,68,68,0.25)", background: favoritedIds.has(card.id) ? "rgba(239,68,68,0.2)" : "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
         {/* 🎉 Sélectionné */}
         <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(225,29,72,0.35)", transition: "all 0.15s" }}>🎉</button>
       </div>

@@ -95,6 +95,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
   const [index, setIndex]             = useState(0);
   const [loading, setLoading]         = useState(true);
   const [bookedIds, setBookedIds]     = useState<Set<string>>(new Set());
+  const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set());
   const [photoIdx, setPhotoIdx]       = useState(0);
   const [showDetail, setShowDetail]   = useState(false);
 
@@ -183,7 +184,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
   // Auto-skip vendor already in bookedIds (déjà ajouté à l'événement)
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    if (!current || !bookedIds.has(current.id)) return
+    if (!current || !bookedIds.has(current.slug)) return
     setIndex(i => i + 1)
   }, [current, bookedIds])
 
@@ -227,7 +228,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
 
     // 6. Booking + match animation
     if (dir === "right" && !bookedIds.has(current.id)) {
-      setBookedIds(prev => new Set(prev).add(current.id));
+      setBookedIds(prev => new Set(prev).add(current.slug));
       setMatchVendor(current);
       setTimeout(() => setMatchVendor(null), 1400);
       try {
@@ -249,7 +250,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     const last = history[history.length - 1];
     setHistory(h => h.slice(0, -1));
     setIndex(i => Math.max(0, i - 1));
-    if (last.dir === "right") setBookedIds(prev => { const s = new Set(prev); s.delete(last.vendor.id); return s; });
+    if (last.dir === "right") setBookedIds(prev => { const s = new Set(prev); s.delete(last.vendor.slug); return s; });
   }, [exitingVendor, history]);
 
   useEffect(() => {
@@ -342,7 +343,8 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
           </div>
           {/* Chips catégorie inline */}
           {categories.length > 1 && (
-            <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            <div className="relative">
+            <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none", maskImage: "linear-gradient(to right, black 80%, transparent 100%)" }}>
               <button onClick={() => setActiveCategory("")}
                 className="flex-shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold transition-all"
                 style={{ backgroundColor: activeCategory === "" ? C.terra : "rgba(255,255,255,0.1)", color: "#fff", border: activeCategory === "" ? "none" : "1px solid rgba(255,255,255,0.15)" }}>
@@ -355,6 +357,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
                   {cat}
                 </button>
               ))}
+            </div>
             </div>
           )}
         </div>
@@ -819,18 +822,23 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
             </button>
             {/* ↩ Rewind */}
             <button onClick={undo} disabled={history.length === 0}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 disabled:opacity-20"
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 disabled:opacity-35"
               style={{ backgroundColor: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}
               title="Annuler">
-              <ChevronLeft size={16} color="rgba(255,255,255,0.7)" />
+              <RotateCcw size={15} color="rgba(255,255,255,0.7)" />
             </button>
             {/* ♥ Favori */}
             <button
-              onClick={() => current && fetch(`/api/vendor/${current.slug ?? current.id}/favorite`, { method: "POST" }).catch(() => {})}
+              onClick={() => {
+                if (!current) return
+                const isFav = favoritedIds.has(current.slug)
+                setFavoritedIds(prev => { const s = new Set(prev); isFav ? s.delete(current.slug) : s.add(current.slug); return s; })
+                fetch(`/api/vendor/${current.slug}/favorite`, { method: "POST" }).catch(() => {})
+              }}
               className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
-              style={{ backgroundColor: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}
-              title="Ajouter aux favoris">
-              <span style={{ fontSize: 18 }}>♥</span>
+              style={{ backgroundColor: current && favoritedIds.has(current.slug) ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.07)", border: current && favoritedIds.has(current.slug) ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.15)" }}
+              title={current && favoritedIds.has(current.slug) ? "Retirer des favoris" : "Ajouter aux favoris"}>
+              <span style={{ fontSize: 18, color: current && favoritedIds.has(current.slug) ? "#ef4444" : "rgba(255,255,255,0.7)" }}>♥</span>
             </button>
             {/* 🎉 Sélectionner */}
             <button
