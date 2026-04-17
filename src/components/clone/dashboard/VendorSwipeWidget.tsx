@@ -291,12 +291,12 @@ export default function VendorSwipeWidget({
             <div style={{ width: 44, height: 44, borderRadius: 13, background: `${theme.accent}20`, border: `1px solid ${theme.accent}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: "auto" }}>{theme.emoji}</div>
           )}
           {card.photos.length > 0 && <div style={{ flex: 1 }} />}
-          <div>
+          <div style={{ position: "relative", zIndex: 4 }}>
             <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 3, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{card.name}</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>{card.category} · {card.city}</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", marginBottom: 10, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>{card.category} · {card.city}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: theme.accent, background: `${theme.accent}15`, padding: "2px 7px", borderRadius: 99 }}>★ {card.rating.toFixed(1)}</span>
-              {card.priceMin && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>dès {card.priceMin.toLocaleString("fr-MA")} MAD</span>}
+              <span style={{ fontSize: 11, fontWeight: 700, color: theme.accent, background: `${theme.accent}25`, padding: "2px 7px", borderRadius: 99, textShadow: "none" }}>★ {card.rating.toFixed(1)}</span>
+              {card.priceMin && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.85)", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>dès {card.priceMin.toLocaleString("fr-MA")} MAD</span>}
             </div>
           </div>
         </div>
