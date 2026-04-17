@@ -83,12 +83,7 @@ export default function VendorProfileClient({
   return (
     <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
       <AntNav hideLinks centerSlot={
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={() => window.history.back()} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", color: "var(--dash-text-2,#6b6b7b)", padding: 4 }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#18181b)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 260 }}>{name}</span>
-        </div>
+        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#18181b)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300 }}>{name}</span>
       } />
 
       {/* ── Hero ── */}
@@ -110,16 +105,16 @@ export default function VendorProfileClient({
         }} />
         {/* Back link */}
         <div style={{ position: "absolute", top: 72, left: 0, right: 0, padding: "0 24px" }}>
-          <Link href="/explore" style={{
+          <button onClick={() => window.history.back()} style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             padding: "7px 14px", borderRadius: 999,
             background: "rgba(255,255,255,0.18)",
             backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
             border: "1px solid rgba(255,255,255,0.25)",
-            color: "#fff", fontSize: 13, textDecoration: "none", fontFamily: "inherit",
+            color: "#fff", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
           }}>
             ← Retour aux prestataires
-          </Link>
+          </button>
         </div>
         {/* Floating actions (top right) */}
         <div style={{ position: "absolute", top: 72, right: 24, display: "flex", gap: 8 }}>
