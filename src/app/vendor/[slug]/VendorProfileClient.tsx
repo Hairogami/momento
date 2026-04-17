@@ -82,7 +82,14 @@ export default function VendorProfileClient({
 
   return (
     <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <AntNav />
+      <AntNav hideLinks centerSlot={
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button onClick={() => window.history.back()} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", color: "var(--dash-text-2,#6b6b7b)", padding: 4 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#18181b)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 260 }}>{name}</span>
+        </div>
+      } />
 
       {/* ── Hero ── */}
       <div style={{ position: "relative", height: "clamp(300px, 50vh, 520px)", overflow: "hidden", cursor: displayHero ? "zoom-in" : "default" }} onClick={() => { if (displayHero) setLightboxIdx(0) }}>

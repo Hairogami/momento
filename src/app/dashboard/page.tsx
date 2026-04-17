@@ -157,7 +157,7 @@ function WidgetCard({
       }
       if (edge === "left") {
         if (Math.abs(dx) > THRESHOLD) {
-          const next = Math.max(1, Math.min(4, Math.round(startSz - dx / colW))) as WidgetSize
+          const next = Math.max(1, Math.min(4, Math.round(startSz + dx / colW))) as WidgetSize
           onResize(id, next)
         }
       }
@@ -169,7 +169,7 @@ function WidgetCard({
       }
       if (edge === "top") {
         if (Math.abs(dy) > THRESHOLD && onResizeRow) {
-          const next = Math.max(1, Math.min(4, Math.round(startRow - dy / rowH)))
+          const next = Math.max(1, Math.min(4, Math.round(startRow + dy / rowH)))
           onResizeRow(id, next)
         }
       }
@@ -217,7 +217,7 @@ function WidgetCard({
           : "opacity 0.15s, box-shadow 0.15s, transform 0.18s, border-color 0.15s",
         cursor:   dragging ? "grabbing" : "grab",
         position: "relative", display: "flex", flexDirection: "column",
-        overflow: "hidden", minHeight: 0,
+        overflow: "visible", minHeight: 0,
       }}
       className="clone-surface"
     >
@@ -238,7 +238,7 @@ function WidgetCard({
         </div>
       )}
 
-      <div style={{ flex: 1, minHeight: 0 }}>{children}</div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "hidden", borderRadius: 20 }}>{children}</div>
 
       {dropTarget && (
         <div style={{ position: "absolute", top: 10, right: 10, zIndex: 10, pointerEvents: "none", fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: G, color: "#fff" }}>
@@ -246,27 +246,27 @@ function WidgetCard({
         </div>
       )}
 
-      {/* Resize edge handles — invisible strips that appear on hover */}
+      {/* Resize edge handles — wider strips with visible hover indicator */}
       {/* Right edge */}
       <div onPointerDown={e => handleResizeStart(e, "right")}
-        style={{ position: "absolute", top: 8, bottom: 8, right: 0, width: 6, cursor: "ew-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "0 8px 8px 0" }}
+        style={{ position: "absolute", top: 12, bottom: 12, right: -2, width: 14, cursor: "ew-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", zIndex: 8, display: "flex", alignItems: "center", justifyContent: "center" }}
         onMouseEnter={() => setHovered(true)}
-      />
+      ><div style={{ width: 3, height: 28, borderRadius: 99, background: "var(--dash-text-3,rgba(154,154,170,0.35))" }} /></div>
       {/* Left edge */}
       <div onPointerDown={e => handleResizeStart(e, "left")}
-        style={{ position: "absolute", top: 8, bottom: 8, left: 0, width: 6, cursor: "ew-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "8px 0 0 8px" }}
+        style={{ position: "absolute", top: 12, bottom: 12, left: -2, width: 14, cursor: "ew-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", zIndex: 8, display: "flex", alignItems: "center", justifyContent: "center" }}
         onMouseEnter={() => setHovered(true)}
-      />
+      ><div style={{ width: 3, height: 28, borderRadius: 99, background: "var(--dash-text-3,rgba(154,154,170,0.35))" }} /></div>
       {/* Bottom edge */}
       <div onPointerDown={e => handleResizeStart(e, "bottom")}
-        style={{ position: "absolute", bottom: 0, left: 8, right: 8, height: 6, cursor: "ns-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "0 0 8px 8px" }}
+        style={{ position: "absolute", bottom: -2, left: 12, right: 12, height: 14, cursor: "ns-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", zIndex: 8, display: "flex", alignItems: "center", justifyContent: "center" }}
         onMouseEnter={() => setHovered(true)}
-      />
+      ><div style={{ width: 28, height: 3, borderRadius: 99, background: "var(--dash-text-3,rgba(154,154,170,0.35))" }} /></div>
       {/* Top edge */}
       <div onPointerDown={e => handleResizeStart(e, "top")}
-        style={{ position: "absolute", top: 0, left: 8, right: 8, height: 6, cursor: "ns-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "8px 8px 0 0" }}
+        style={{ position: "absolute", top: -2, left: 12, right: 12, height: 14, cursor: "ns-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", zIndex: 8, display: "flex", alignItems: "center", justifyContent: "center" }}
         onMouseEnter={() => setHovered(true)}
-      />
+      ><div style={{ width: 28, height: 3, borderRadius: 99, background: "var(--dash-text-3,rgba(154,154,170,0.35))" }} /></div>
       {/* Corner handle (bottom-right) */}
       <div onPointerDown={e => handleResizeStart(e, "corner")}
         style={{ position: "absolute", bottom: 2, right: 2, width: 16, height: 16, opacity: hovered ? 0.45 : 0, cursor: "nwse-resize", transition: "opacity 0.15s", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-3,#9a9aaa)", touchAction: "none" }}
@@ -297,12 +297,17 @@ function WidgetPickerModal({ active, onAdd, onClose }: { active: string[]; onAdd
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 10 }}>
           {WIDGET_CATALOG.map(w => {
-            const isActive = active.includes(w.id)
+            const isNotes = w.id === "notes"
+            const notesCount = isNotes ? active.filter(a => a === "notes" || a.startsWith("notes_")).length : 0
+            const isActive = isNotes ? notesCount >= 10 : active.includes(w.id)
+            const label = isNotes
+              ? notesCount > 0 ? `${notesCount}/10 actifs` : w.category
+              : isActive ? "✓ Actif" : w.category
             return (
               <button key={w.id} onClick={() => { if (!isActive) { onAdd(w.id); onClose() } }} disabled={isActive}
-                style={{ padding: "14px 10px", borderRadius: 14, border: isActive ? "1.5px solid rgba(34,197,94,0.3)" : "1px solid var(--dash-border,rgba(183,191,217,0.2))", background: isActive ? "rgba(34,197,94,0.05)" : "var(--dash-faint,rgba(183,191,217,0.04))", cursor: isActive ? "not-allowed" : "pointer", fontFamily: "inherit", textAlign: "left", opacity: isActive ? 0.6 : 1 }}>
+                style={{ padding: "14px 10px", borderRadius: 14, border: isActive && !isNotes ? "1.5px solid rgba(34,197,94,0.3)" : notesCount > 0 && isNotes ? "1.5px solid rgba(225,29,72,0.3)" : "1px solid var(--dash-border,rgba(183,191,217,0.2))", background: isActive && !isNotes ? "rgba(34,197,94,0.05)" : "var(--dash-faint,rgba(183,191,217,0.04))", cursor: isActive ? "not-allowed" : "pointer", fontFamily: "inherit", textAlign: "left", opacity: isActive ? 0.6 : 1 }}>
                 <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)", lineHeight: 1.3, marginBottom: 4 }}>{w.title}</div>
-                <div style={{ fontSize: 9, color: isActive ? "#22c55e" : "var(--dash-text-3,#9a9aaa)", fontWeight: isActive ? 600 : 400 }}>{isActive ? "✓ Actif" : w.category}</div>
+                <div style={{ fontSize: 9, color: isActive ? "#22c55e" : notesCount > 0 ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)", fontWeight: isActive || notesCount > 0 ? 600 : 400 }}>{label}</div>
               </button>
             )
           })}
@@ -1324,7 +1329,16 @@ export default function CloneDashboardPage() {
   // ── Widget management ─────────────────────────────────────────────────────
   function onResize(id: string, size: WidgetSize) { setWidgetSizes(prev => ({ ...prev, [id]: size })) }
   function onResizeRow(id: string, rows: number) { setWidgetRows(prev => ({ ...prev, [id]: rows })) }
-  function addWidget(id: string) { setExtraWidgets(p => [...p, id]); setWidgetOrder(p => [...p, id]); setWidgetSizes(p => ({ ...p, [id]: 1 as WidgetSize })) }
+  const MAX_NOTES = 10
+  function addWidget(id: string) {
+    let finalId = id
+    if (id === "notes") {
+      const existing = widgetOrder.filter(w => w === "notes" || w.startsWith("notes_"))
+      if (existing.length >= MAX_NOTES) return
+      finalId = existing.length === 0 ? "notes" : `notes_${existing.length}`
+    }
+    setExtraWidgets(p => [...p, finalId]); setWidgetOrder(p => [...p, finalId]); setWidgetSizes(p => ({ ...p, [finalId]: 1 as WidgetSize }))
+  }
   function removeWidget(id: string) { setExtraWidgets(p => p.filter(w => w !== id)); setWidgetOrder(p => p.filter(w => w !== id)) }
   function toggleTask(taskId: string) {
     setTasksByEvent(prev => ({ ...prev, [activeEventId]: (prev[activeEventId] ?? []).map(t => t.id === taskId ? { ...t, done: !t.done } : t) }))
@@ -1494,8 +1508,9 @@ export default function CloneDashboardPage() {
       default: {
         const cat = WIDGET_CATALOG.find(w => w.id === id)
         if (!cat) return null
-        switch (cat.id) {
-          case "notes":       return <NotesWidget storageKey={`momento_notes_${activeEventId}`} />
+        const baseId = id.startsWith("notes_") ? "notes" : cat.id
+        switch (baseId) {
+          case "notes":       return <NotesWidget storageKey={`momento_notes_${id}_${activeEventId}`} />
           case "progression": return <ProgressionWidget taskPct={taskPct} budgetPct={edata.budget > 0 ? Math.min(1, edata.budgetSpent / edata.budget) : 0} guestPct={edata.guestCount > 0 ? edata.guestConfirmed / edata.guestCount : 0} bookingsPct={bookings.length > 0 ? bookings.filter(b => b.status === "CONFIRMED").length / bookings.length : 0} />
           case "checklist":    return <ChecklistJXWidget tasks={tasks} eventDate={event.date} />
           case "timeline":     return <TimelineWidget tasks={tasks} eventDate={event.date} />
@@ -1521,8 +1536,11 @@ export default function CloneDashboardPage() {
 
   function getWidgetMeta(id: string) {
     if (id in WIDGET_META) return WIDGET_META[id as WidgetId]
-    const cat = WIDGET_CATALOG.find(w => w.id === id)
-    return cat ? { title: cat.title, href: undefined, rowSpan: 1 } : null
+    const baseId = id.startsWith("notes_") ? "notes" : id
+    const cat = WIDGET_CATALOG.find(w => w.id === baseId)
+    if (!cat) return null
+    const title = baseId === "notes" && id !== "notes" ? `Notes ${id.split("_")[1]}` : cat.title
+    return { title, href: undefined, rowSpan: 1 }
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
