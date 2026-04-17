@@ -29,46 +29,53 @@ function PillSelect({ value, onChange, options, placeholder }: {
       <button
         onClick={() => setOpen(o => !o)}
         style={{
-          height: 40, padding: "0 14px",
-          border: `1px solid ${open ? "rgba(225,29,72,0.5)" : "var(--dash-border,rgba(183,191,217,0.35))"}`,
+          height: 36, padding: "0 16px",
+          border: "none",
           borderRadius: 999,
-          background: "var(--dash-input-bg,#fafafa)",
-          fontSize: 13, color: value ? "var(--dash-text,#121317)" : "var(--dash-text-3,#9a9aaa)",
+          background: value
+            ? "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
+            : open ? "var(--dash-faint-2,rgba(183,191,217,0.18))" : "transparent",
+          fontSize: 13, fontWeight: value ? 600 : 500,
+          color: value ? "#fff" : "var(--dash-text-3,#9a9aaa)",
           cursor: "pointer", fontFamily: "inherit",
           display: "flex", alignItems: "center", gap: 6,
-          whiteSpace: "nowrap", transition: "border-color 0.15s",
+          whiteSpace: "nowrap",
+          transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
+          boxShadow: value ? "0 4px 14px rgba(225,29,72,0.3)" : "none",
         }}
+        onMouseEnter={e => { if (!value) { e.currentTarget.style.background = "var(--dash-faint-2,rgba(183,191,217,0.18))"; e.currentTarget.style.color = "var(--dash-text,#121317)" } }}
+        onMouseLeave={e => { if (!value) { e.currentTarget.style.background = open ? "var(--dash-faint-2,rgba(183,191,217,0.18))" : "transparent"; e.currentTarget.style.color = "var(--dash-text-3,#9a9aaa)" } }}
       >
         {current?.label ?? placeholder}
-        <svg width="8" height="5" viewBox="0 0 8 5" style={{ opacity: 0.5, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.15s", flexShrink: 0 }}>
+        <svg width="8" height="5" viewBox="0 0 8 5" style={{ opacity: 0.5, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }}>
           <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
         </svg>
       </button>
       {open && (
         <div style={{
-          position: "absolute", top: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)",
-          minWidth: 220, maxHeight: 240, overflowY: "auto",
+          position: "absolute", top: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)",
+          minWidth: 200, maxHeight: 260, overflowY: "auto",
           background: "var(--dash-surface,#fff)",
-          border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
-          borderRadius: 14,
-          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-          zIndex: 100, padding: "6px 0",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+          borderRadius: 16,
+          boxShadow: "0 12px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
+          zIndex: 100, padding: "4px",
         }}>
           {options.map(opt => (
             <button
               key={opt.value}
               onClick={() => { onChange(opt.value); setOpen(false) }}
               style={{
-                width: "100%", padding: "8px 14px",
-                background: opt.value === value ? "rgba(225,29,72,0.06)" : "transparent",
+                width: "100%", padding: "9px 14px",
+                background: opt.value === value ? "rgba(225,29,72,0.08)" : "transparent",
                 border: "none", textAlign: "left",
                 fontSize: 13, color: opt.value === value ? "#E11D48" : "var(--dash-text,#121317)",
                 fontWeight: opt.value === value ? 600 : 400,
                 cursor: "pointer", fontFamily: "inherit",
-                whiteSpace: "nowrap",
-                transition: "background 0.1s",
+                whiteSpace: "nowrap", borderRadius: 12,
+                transition: "background 0.15s",
               }}
-              onMouseEnter={e => { if (opt.value !== value) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2,#f4f4f8)" }}
+              onMouseEnter={e => { if (opt.value !== value) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint,rgba(183,191,217,0.10))" }}
               onMouseLeave={e => { if (opt.value !== value) (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
             >
               {opt.label}
@@ -391,18 +398,21 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                   onClick={() => setActiveMajor(cat.label)}
                   style={{
                     display: "flex", alignItems: "center", gap: 6,
-                    padding: "5px 14px", borderRadius: 999,
-                    border: active ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                    padding: "7px 18px", borderRadius: 999,
+                    border: "none",
                     background: active
                       ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))"
-                      : "var(--dash-surface,#fff)",
-                    color: active ? "#fff" : "var(--dash-text-2,#45474D)",
-                    fontSize: 12, fontWeight: active ? 600 : 400,
-                    cursor: "pointer", transition: "all 0.15s",
+                      : "transparent",
+                    color: active ? "#fff" : "var(--dash-text-3,#9a9aaa)",
+                    fontSize: 13, fontWeight: active ? 700 : 500,
+                    cursor: "pointer", transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
                     fontFamily: "inherit",
                     whiteSpace: "nowrap",
-                    boxShadow: active ? "0 2px 12px rgba(225,29,72,0.25)" : "none",
+                    boxShadow: active ? "0 4px 14px rgba(225,29,72,0.3)" : "none",
+                    letterSpacing: active ? "0.01em" : "0",
                   }}
+                  onMouseEnter={e => { if (!active) { e.currentTarget.style.background = "var(--dash-faint-2,rgba(183,191,217,0.18))"; e.currentTarget.style.color = "var(--dash-text,#121317)" } }}
+                  onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--dash-text-3,#9a9aaa)" } }}
                 >
                   <span style={{ fontSize: 13 }}>{cat.emoji}</span>
                   {cat.label}
