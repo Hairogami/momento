@@ -135,7 +135,7 @@ function WidgetCard({
     }
   }, [size, rowSpan])
 
-  const THRESHOLD = 30
+  const THRESHOLD = 18
 
   const handleResizeStart = useCallback((e: React.PointerEvent, edge: "right" | "bottom" | "left" | "top" | "corner") => {
     e.preventDefault(); e.stopPropagation()
@@ -143,8 +143,8 @@ function WidgetCard({
     const startSz = size; const startRow = rowSpan
     const cardW  = cardRef.current?.offsetWidth ?? 300
     const cardH  = cardRef.current?.offsetHeight ?? 200
-    const colW   = Math.max(160, cardW / startSz)
-    const rowH   = Math.max(100, cardH / Math.max(1, startRow))
+    const colW   = 100  // 100px drag = ±1 colonne — sensible sans être twitchy
+    const rowH   = 80   // 80px drag = ±1 row — légèrement plus réactif en vertical
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
     function onMove(ev: PointerEvent) {
       const dx = ev.clientX - startX
