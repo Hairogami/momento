@@ -1,5 +1,16 @@
 # Règle — Corriger tout au fur et à mesure
 
+## ⚡ TRIGGER PERMANENT — Avant CHAQUE réponse, sans exception
+
+Scanner les résultats d'outils du tour actuel :
+- Présence de `Console: X errors`, HTTP 4xx/5xx, `error TS`, `warning`, lint error ?
+  → OUI : STOP. Ne pas continuer la tâche. Investiguer. Corriger. Étendre à tous les cas similaires. Puis reprendre.
+  → NON : continuer.
+- Je viens de lire un fichier avec du code suspect/cassé ?
+  → Corriger dans la foulée, pas noter.
+
+
+
 **Règle absolue imposée par l'utilisateur :**
 > "On corrige tous les problèmes du site tout le temps, on avance en corrigeant tout autour de nous."
 

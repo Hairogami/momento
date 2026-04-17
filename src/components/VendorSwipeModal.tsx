@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { X, XCircle, Star, MapPin, ChevronLeft, ChevronRight, ArrowUpRight, RotateCcw } from "lucide-react";
 import { C } from "@/lib/colors";
+import { LS_LIKED, LS_SKIPPED, lsGet, lsAdd, lsRemove } from "@/lib/swipeStorage";
 
 export interface VendorCard {
   id: string;
@@ -33,6 +34,7 @@ interface Props {
   plannerId?: string | null;
   categories: string[];
   initialCategory?: string;
+  initialVendorSlug?: string;
   onClose: () => void;
   onBooked: (vendorId: string, vendorName: string, category: string) => void;
 }
@@ -90,7 +92,7 @@ function Stars({ rating, size = 11 }: { rating: number; size?: number }) {
   );
 }
 
-export default function VendorSwipeModal({ workspaceId, plannerId, categories, initialCategory, onClose, onBooked }: Props) {
+export default function VendorSwipeModal({ workspaceId, plannerId, categories, initialCategory, initialVendorSlug, onClose, onBooked }: Props) {
   const [vendors, setVendors]         = useState<VendorCard[]>([]);
   const [index, setIndex]             = useState(0);
   const [loading, setLoading]         = useState(true);
@@ -162,14 +164,18 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
       .then((d: unknown) => {
         if (!d) return;
         // API returns { vendors: [...] } (ranked) or direct array (legacy)
-        const batch = (Array.isArray(d) ? d : Array.isArray((d as Record<string, unknown>).vendors) ? (d as Record<string, unknown>).vendors : []) as VendorCard[];
-        if (batch.length < 20) setHasMore(false);
+        const raw = (Array.isArray(d) ? d : Array.isArray((d as Record<string, unknown>).vendors) ? (d as Record<string, unknown>).vendors : []) as VendorCard[];
+        // Filter out vendors already skipped or liked (shared localStorage with widget)
+        const skipped = plannerId ? lsGet(LS_SKIPPED(plannerId)) : new Set<string>();
+        const liked = plannerId ? lsGet(LS_LIKED(plannerId)) : new Set<string>();
+        const batch = raw.filter(v => !skipped.has(v.slug) && !liked.has(v.slug));
+        if (raw.length < 20) setHasMore(false);
         setVendors(prev => append ? [...prev, ...batch] : batch);
       })
       .catch(() => {})
       .finally(() => { setLoading(false); setLoadingMore(false); });
     return () => ctrl.abort();
-  }, [activeCategory]);
+  }, [activeCategory, plannerId]);
 
   useEffect(() => {
     pageRef.current = 1;
@@ -178,6 +184,15 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     setIndex(0);
     return fetchPage(1, false);
   }, [fetchPage]);
+
+  // T2 — Sync mini→agrandi : quand la liste charge et qu'on a un vendor slug initial, positionner l'index dessus
+  const initialSlugUsed = useRef(false);
+  useEffect(() => {
+    if (!initialVendorSlug || initialSlugUsed.current || vendors.length === 0) return;
+    const idx = vendors.findIndex(v => v.slug === initialVendorSlug);
+    if (idx >= 0) { setIndex(idx); initialSlugUsed.current = true; }
+    else { initialSlugUsed.current = true; } // vendor pas trouvé dans cette page, on reste à 0
+  }, [vendors, initialVendorSlug]);
 
   useEffect(() => { setPhotoIdx(0); setShowDetail(false); setDrag({ x: 0, y: 0 }); setReviews([]); setReviewsSlug(null); }, [index]);
 
@@ -231,6 +246,11 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     // 3. Advance index immediately
     setIndex(i => i + 1);
 
+    // 3b. Persist skip to shared localStorage (sync with widget)
+    if (dir === "left" && plannerId) {
+      lsAdd(LS_SKIPPED(plannerId), current.slug);
+    }
+
     // 4. Double rAF: first frame commits ghost at start pos, second frame triggers transition
     requestAnimationFrame(() => requestAnimationFrame(() => setExitLaunched(true)));
 
@@ -264,6 +284,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     setHistory(h => h.slice(0, -1));
     setIndex(i => Math.max(0, i - 1));
     if (last.dir === "right") setBookedIds(prev => { const s = new Set(prev); s.delete(last.vendor.slug); return s; });
+    if (last.dir === "left" && plannerId) lsRemove(LS_SKIPPED(plannerId), last.vendor.slug);
   }, [exitingVendor, history]);
 
   useEffect(() => {

@@ -196,6 +196,20 @@ export default function AntFireworks({
       raf = requestAnimationFrame(draw)
     }
 
+    // Pause when tab hidden — prevents rocket accumulation
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf)
+        if (launchTimer) { clearTimeout(launchTimer); launchTimer = undefined }
+      } else {
+        lastTs = performance.now()
+        rockets.length = 0 // clear any stale rockets
+        raf = requestAnimationFrame(draw)
+        scheduleNext()
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+
     // Respect reduced-motion
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
     if (!mq.matches) {
@@ -207,6 +221,7 @@ export default function AntFireworks({
       cancelAnimationFrame(raf)
       if (launchTimer) clearTimeout(launchTimer)
       window.removeEventListener("resize", resize)
+      document.removeEventListener("visibilitychange", onVisibility)
     }
   }, [minInterval, maxInterval, sparkCount])
 

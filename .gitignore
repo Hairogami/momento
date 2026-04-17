@@ -50,3 +50,6 @@ dev.db
 
 .vercel
 .env*.local
+
+# mcp config (contient des clés API)
+.mcp.json

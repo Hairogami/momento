@@ -8,6 +8,7 @@ type Props = {
   category: string
   city: string
   rating: number
+  photo?: string | null
 }
 
 const CAT_IMAGES: Record<string, string> = {
@@ -72,10 +73,10 @@ function getGradient(category: string): [string, string] {
   return ["#E11D48", "#9333EA"]
 }
 
-export default function AntVendorCard({ id, name, category, city, rating }: Props) {
+export default function AntVendorCard({ id, name, category, city, rating, photo }: Props) {
   const [fav, setFav] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
-  const imgUrl = CAT_IMAGES[category]
+  const imgUrl = photo || CAT_IMAGES[category]
   const [g1, g2] = getGradient(category)
 
   return (

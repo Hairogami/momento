@@ -3,19 +3,19 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { invalidatePlannerCache } from "@/hooks/usePlanners"
+import { LS_LIKED, LS_SKIPPED, lsGet, lsAdd, lsRemove, lsClear } from "@/lib/swipeStorage"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
-const LS_LIKED   = (pid: string) => `momento_vsw_liked_${pid}`
-const LS_SKIPPED = (pid: string) => `momento_vsw_skipped_${pid}`
 
 type VCard = {
   id: string
+  slug: string
   name: string
   category: string
   city: string
   rating: number
   priceMin?: number
-  coverPhoto?: string
+  photos: string[]
 }
 
 const CATEGORY_THEMES: Record<string, { bg: string; emoji: string; accent: string }> = {
@@ -35,21 +35,6 @@ function categoryTheme(cat: string) {
   return CATEGORY_THEMES[key]
 }
 
-function lsGet(key: string): Set<string> {
-  try { return new Set(JSON.parse(localStorage.getItem(key) ?? "[]") as string[]) }
-  catch { return new Set() }
-}
-function lsAdd(key: string, slug: string) {
-  try { const s = lsGet(key); s.add(slug); localStorage.setItem(key, JSON.stringify([...s])) }
-  catch {}
-}
-function lsRemove(key: string, slug: string) {
-  try { const s = lsGet(key); s.delete(slug); localStorage.setItem(key, JSON.stringify([...s])) }
-  catch {}
-}
-function lsClear(key: string) {
-  try { localStorage.removeItem(key) } catch {}
-}
 
 const SWIPE_THRESHOLD = 75
 
@@ -59,16 +44,17 @@ export default function VendorSwipeWidget({
   onLike,
 }: {
   plannerId?: string
-  onOpenModal?: (category?: string) => void
+  onOpenModal?: (category?: string, vendorSlug?: string) => void
   onLike?: () => void
 }) {
   const [cards, setCards]     = useState<VCard[]>([])
   const [index, setIndex]     = useState(0)
   const [liked, setLiked]     = useState<string[]>([])
   const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set())
+  const [photoIdx, setPhotoIdx] = useState(0)
   const [drag, setDrag]       = useState({ x: 0, y: 0 })
   const [exiting, setExiting] = useState<"left" | "right" | null>(null)
-  const [history, setHistory] = useState<{ id: string; dir: "left" | "right" }[]>([])
+  const [history, setHistory] = useState<{ slug: string; dir: "left" | "right" }[]>([])
 
   const dragActive = useRef(false)
   const dragStart  = useRef({ x: 0, y: 0 })
@@ -87,15 +73,16 @@ export default function VendorSwipeWidget({
           .filter(v => !seenSet.has((v.slug as string) || (v.id as string)))
           .slice(0, 20)
           .map(v => ({
-            id: (v.slug as string) || (v.id as string),
+            id: v.id as string,
+            slug: (v.slug as string) || (v.id as string),
             name: v.name as string,
             category: v.category as string,
             city: (v.city as string) || "",
             rating: typeof v.rating === "number" ? v.rating : 4.5,
             priceMin: v.priceMin as number | undefined,
-            coverPhoto: Array.isArray(v.media) && (v.media as { url: string }[]).length > 0
-              ? (v.media as { url: string }[])[0].url
-              : undefined,
+            photos: Array.isArray(v.media)
+              ? (v.media as { url: string }[]).map(m => m.url).filter(Boolean)
+              : [],
           }))
         setCards(filtered)
         setIndex(0)
@@ -121,26 +108,27 @@ export default function VendorSwipeWidget({
     const card = cards[index]
     if (!card) return
     setExiting(dir)
-    setHistory(h => [...h, { id: card.id, dir }])
+    setHistory(h => [...h, { slug: card.slug, dir }])
 
     if (dir === "right") {
-      setLiked(l => [...l, card.id])
+      setLiked(l => [...l, card.slug])
       if (plannerId) {
-        lsAdd(LS_LIKED(plannerId), card.id)
+        lsAdd(LS_LIKED(plannerId), card.slug)
         fetch(`/api/planners/${plannerId}/vendors`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ vendorSlug: card.id }),
+          body: JSON.stringify({ vendorSlug: card.slug }),
         }).then(() => invalidatePlannerCache()).catch(() => {})
         onLike?.()
       }
     } else {
-      if (plannerId) lsAdd(LS_SKIPPED(plannerId), card.id)
+      if (plannerId) lsAdd(LS_SKIPPED(plannerId), card.slug)
     }
 
     setTimeout(() => {
       setExiting(null)
       setDrag({ x: 0, y: 0 })
+      setPhotoIdx(0)
       setIndex(i => i + 1)
     }, 280)
   }, [cards, index, plannerId])
@@ -150,11 +138,12 @@ export default function VendorSwipeWidget({
     const last = history[history.length - 1]
     setHistory(h => h.slice(0, -1))
     if (last.dir === "right") {
-      setLiked(l => l.filter(id => id !== last.id))
-      if (plannerId) lsRemove(LS_LIKED(plannerId), last.id)
+      setLiked(l => l.filter(s => s !== last.slug))
+      if (plannerId) lsRemove(LS_LIKED(plannerId), last.slug)
     } else {
-      if (plannerId) lsRemove(LS_SKIPPED(plannerId), last.id)
+      if (plannerId) lsRemove(LS_SKIPPED(plannerId), last.slug)
     }
+    setPhotoIdx(0)
     setIndex(i => Math.max(0, i - 1))
   }
 
@@ -219,7 +208,7 @@ export default function VendorSwipeWidget({
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ fontSize: 10, fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em" }}>Découvrir</span>
           {onOpenModal && (
-            <button onClick={() => onOpenModal(card?.category)} title="Ouvrir l'annuaire complet" style={{
+            <button onClick={() => onOpenModal(card?.category, card?.slug)} title="Ouvrir l'annuaire complet" style={{
               width: 20, height: 20, borderRadius: 6,
               background: "rgba(183,191,217,0.1)", border: "1px solid rgba(183,191,217,0.2)",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
@@ -252,7 +241,7 @@ export default function VendorSwipeWidget({
           onPointerUp={onPointerUp} onPointerCancel={onPointerUp}
           style={{
             position: "absolute", inset: 0, borderRadius: 16,
-            background: card.coverPhoto ? "transparent" : theme.bg,
+            background: card.photos.length > 0 ? "transparent" : theme.bg,
             cursor: dragActive.current ? "grabbing" : "grab",
             userSelect: "none", touchAction: "none",
             transform: `translateX(${exitX}px) translateY(${exitY}px) rotate(${exitRot}deg)`,
@@ -262,31 +251,46 @@ export default function VendorSwipeWidget({
           }}
         >
           {drag.x > 25 && (
-            <div style={{ position: "absolute", top: 14, left: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #22c55e", color: "#22c55e", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (drag.x - 25) / 55), transform: "rotate(-14deg)", background: "rgba(34,197,94,0.1)" }}>LIKE 🎉</div>
+            <div style={{ position: "absolute", top: 14, left: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #22c55e", color: "#22c55e", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (drag.x - 25) / 55), transform: "rotate(-14deg)", background: "rgba(34,197,94,0.1)", zIndex: 5 }}>LIKE 🎉</div>
           )}
           {drag.x < -25 && (
-            <div style={{ position: "absolute", top: 14, right: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #ef4444", color: "#ef4444", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (-drag.x - 25) / 55), transform: "rotate(14deg)", background: "rgba(239,68,68,0.1)" }}>SKIP ✕</div>
+            <div style={{ position: "absolute", top: 14, right: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #ef4444", color: "#ef4444", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (-drag.x - 25) / 55), transform: "rotate(14deg)", background: "rgba(239,68,68,0.1)", zIndex: 5 }}>SKIP ✕</div>
           )}
-          {card.coverPhoto && (
+          {card.photos.length > 0 && (
             <Image
               fill
-              src={card.coverPhoto}
+              src={card.photos[photoIdx] || card.photos[0]}
               alt={card.name}
               sizes="(max-width: 768px) 100vw, 400px"
               style={{ objectFit: "cover", borderRadius: 16 }}
               priority
             />
           )}
-          {card.coverPhoto && (
+          {card.photos.length > 0 && (
             <div style={{ position: "absolute", inset: 0, borderRadius: 16, background: "linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.70) 100%)", pointerEvents: "none" }} />
           )}
-          {!card.coverPhoto && (
+          {/* Photo navigation: tap zones + dots */}
+          {card.photos.length > 1 && (
+            <>
+              {/* Dots */}
+              <div style={{ position: "absolute", top: 8, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 4, zIndex: 4, pointerEvents: "none" }}>
+                {card.photos.map((_, i) => (
+                  <div key={i} style={{ width: i === photoIdx ? 14 : 5, height: 5, borderRadius: 99, background: i === photoIdx ? "#fff" : "rgba(255,255,255,0.45)", transition: "all 0.2s" }} />
+                ))}
+              </div>
+              {/* Tap left */}
+              <div onClick={(e) => { e.stopPropagation(); if (!dragActive.current) setPhotoIdx(i => Math.max(0, i - 1)) }} style={{ position: "absolute", top: 0, left: 0, width: "30%", height: "60%", zIndex: 3, cursor: photoIdx > 0 ? "pointer" : "default" }} />
+              {/* Tap right */}
+              <div onClick={(e) => { e.stopPropagation(); if (!dragActive.current) setPhotoIdx(i => Math.min(card.photos.length - 1, i + 1)) }} style={{ position: "absolute", top: 0, right: 0, width: "30%", height: "60%", zIndex: 3, cursor: photoIdx < card.photos.length - 1 ? "pointer" : "default" }} />
+            </>
+          )}
+          {card.photos.length === 0 && (
             <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: theme.accent, opacity: 0.08, filter: "blur(30px)", pointerEvents: "none" }} />
           )}
-          {!card.coverPhoto && (
+          {card.photos.length === 0 && (
             <div style={{ width: 44, height: 44, borderRadius: 13, background: `${theme.accent}20`, border: `1px solid ${theme.accent}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: "auto" }}>{theme.emoji}</div>
           )}
-          {card.coverPhoto && <div style={{ flex: 1 }} />}
+          {card.photos.length > 0 && <div style={{ flex: 1 }} />}
           <div>
             <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 3, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{card.name}</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>{card.category} · {card.city}</div>
@@ -304,7 +308,7 @@ export default function VendorSwipeWidget({
         {/* ↩ Rewind */}
         <button onClick={undo} disabled={index === 0 || history.length === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: index === 0 ? "#c9cad0" : "#6a6a71", cursor: index === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
         {/* ♥ Favori */}
-        <button onClick={() => { const isFav = favoritedIds.has(card.id); setFavoritedIds(prev => { const s = new Set(prev); isFav ? s.delete(card.id) : s.add(card.id); return s; }); fetch(`/api/vendor/${card.id}/favorite`, { method: "POST" }).catch(() => {}) }} style={{ width: 36, height: 36, borderRadius: "50%", border: favoritedIds.has(card.id) ? "1.5px solid rgba(239,68,68,0.6)" : "1.5px solid rgba(239,68,68,0.25)", background: favoritedIds.has(card.id) ? "rgba(239,68,68,0.2)" : "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
+        <button onClick={() => { const isFav = favoritedIds.has(card.slug); setFavoritedIds(prev => { const s = new Set(prev); isFav ? s.delete(card.slug) : s.add(card.slug); return s; }); fetch(`/api/vendor/${card.slug}/favorite`, { method: "POST" }).catch(() => {}) }} style={{ width: 36, height: 36, borderRadius: "50%", border: favoritedIds.has(card.slug) ? "1.5px solid rgba(239,68,68,0.6)" : "1.5px solid rgba(239,68,68,0.25)", background: favoritedIds.has(card.slug) ? "rgba(239,68,68,0.2)" : "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
         {/* 🎉 Sélectionné */}
         <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(225,29,72,0.35)", transition: "all 0.15s" }}>🎉</button>
       </div>

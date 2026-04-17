@@ -46,8 +46,8 @@ function PillSelect({ value, onChange, options, placeholder }: {
       </button>
       {open && (
         <div style={{
-          position: "absolute", top: "calc(100% + 6px)", left: 0,
-          minWidth: "100%", maxHeight: 240, overflowY: "auto",
+          position: "absolute", top: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)",
+          minWidth: 220, maxHeight: 240, overflowY: "auto",
           background: "var(--dash-surface,#fff)",
           border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
           borderRadius: 14,
@@ -586,6 +586,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                   category={v.category}
                   city={v.city}
                   rating={v.rating}
+                  photo={v.photo}
                 />
               ))}
             </div>

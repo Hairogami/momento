@@ -53,12 +53,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const [showCreateModal, setShowCreateModal] = useState(false)
   const router = useRouter()
   const [darkMode,  setDarkMode]  = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("momento_clone_dark_mode")
-        if (saved !== null) return JSON.parse(saved) as boolean
-      } catch {}
-    }
+    if (typeof window !== "undefined") return document.documentElement.classList.contains("dark")
     return true
   })
   const [menuOpen,  setMenuOpen]  = useState(false)
@@ -70,10 +65,12 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     return <MobileDashNav messageUnread={messageUnread} />
   }
 
-  // Sync dark class on mount (state already initialized from localStorage)
+  // Listen for theme changes from other components (AntNav)
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    const handler = ((e: CustomEvent) => { const d = e.detail?.dark; if (typeof d === "boolean") setDarkMode(d) }) as EventListener
+    window.addEventListener("momento-theme-change", handler)
+    return () => window.removeEventListener("momento-theme-change", handler)
+  }, [])
 
   // Fermer le menu sur clic extérieur
   useEffect(() => {
@@ -89,7 +86,9 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     const next = !darkMode
     setDarkMode(next)
     document.documentElement.classList.toggle("dark", next)
+    document.documentElement.classList.toggle("clone-dark", next)
     try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next)) } catch {}
+    window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: next } }))
   }
 
   return (

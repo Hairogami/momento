@@ -128,12 +128,7 @@ export default function AntNav({
 
   const [scrolled,    setScrolled]    = useState(false)
   const [dark,        setDark]        = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("momento_clone_dark_mode")
-        if (saved !== null) return JSON.parse(saved) as boolean
-      } catch {}
-    }
+    if (typeof window !== "undefined") return document.documentElement.classList.contains("dark")
     return true
   })
   const [menuOpen,    setMenuOpen]    = useState(false)
@@ -148,11 +143,12 @@ export default function AntNav({
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  // Dark mode
+  // Listen for theme changes from other components (DashSidebar)
   useEffect(() => {
-    document.documentElement.classList.toggle("clone-dark", dark)
-    document.documentElement.classList.toggle("dark", dark)
-  }, [dark])
+    const handler = ((e: CustomEvent) => { const d = e.detail?.dark; if (typeof d === "boolean") setDark(d) }) as EventListener
+    window.addEventListener("momento-theme-change", handler)
+    return () => window.removeEventListener("momento-theme-change", handler)
+  }, [])
 
   // Palette
   useEffect(() => {
@@ -298,7 +294,7 @@ export default function AntNav({
           <div className={hideLinks ? "flex-shrink-0 flex items-center justify-end gap-2 ml-auto" : "flex-1 flex items-center justify-end gap-2"}>
 
             {/* Dark mode toggle */}
-            {!hideDarkToggle && <button onClick={() => { const next = !dark; setDark(next); try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next)) } catch {} }}
+            {!hideDarkToggle && <button onClick={() => { const next = !dark; setDark(next); document.documentElement.classList.toggle("dark", next); document.documentElement.classList.toggle("clone-dark", next); try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next)) } catch {}; window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: next } })) }}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
               style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}
               title={dark ? "Mode clair" : "Mode sombre"}>

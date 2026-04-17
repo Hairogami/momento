@@ -59,6 +59,7 @@ export type VendorListItem = {
   instagram: string | null
   facebook: string | null
   hasPhoto: boolean
+  photo: string | null
 }
 
 // ─── Queries ─────────────────────────────────────────────────────────────────
@@ -160,6 +161,7 @@ export async function getAllVendorsForExplore(): Promise<VendorListItem[]> {
         featured: true,
         instagram: true,
         facebook: true,
+        media: { select: { url: true }, orderBy: { order: "asc" }, take: 1 },
         _count: { select: { media: true } },
       },
     }),
@@ -179,5 +181,6 @@ export async function getAllVendorsForExplore(): Promise<VendorListItem[]> {
     instagram: r.instagram,
     facebook: r.facebook,
     hasPhoto: r._count.media > 0,
+    photo: r.media[0]?.url ?? null,
   }))
 }

@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import AntNav from "@/components/clone/AntNav"
 import { useTrack } from "@/lib/useTrack"
@@ -43,10 +43,23 @@ export default function VendorProfileClient({
   const [shareOpen, setShareOpen] = useState(false)
   const [favorited, setFavorited] = useState(false)
   const [favLoading, setFavLoading] = useState(false)
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
   const { trackClick } = useTrack(slug)
 
+  // Lightbox keyboard navigation
+  const lbNav = useCallback((e: KeyboardEvent) => {
+    if (lightboxIdx === null) return
+    if (e.key === "Escape") setLightboxIdx(null)
+    if (e.key === "ArrowRight") setLightboxIdx(i => i !== null ? Math.min(allPhotosLen - 1, i + 1) : null)
+    if (e.key === "ArrowLeft") setLightboxIdx(i => i !== null ? Math.max(0, i - 1) : null)
+  }, [lightboxIdx])
+  const allPhotosLen = (photos.length > 0 ? photos : (heroImg ? [heroImg] : [])).length
+  useEffect(() => {
+    if (lightboxIdx !== null) { window.addEventListener("keydown", lbNav); return () => window.removeEventListener("keydown", lbNav) }
+  }, [lightboxIdx, lbNav])
+
   const allPhotos = photos.length > 0 ? photos : (heroImg ? [heroImg] : [])
-  const displayHero = allPhotos[activePhoto] ?? heroImg
+  const displayHero = heroImg ?? allPhotos[0] ?? null
 
   // Charger l'état favori depuis l'API
   useEffect(() => {
@@ -72,7 +85,7 @@ export default function VendorProfileClient({
       <AntNav />
 
       {/* ── Hero ── */}
-      <div style={{ position: "relative", height: "clamp(300px, 50vh, 520px)", overflow: "hidden" }}>
+      <div style={{ position: "relative", height: "clamp(300px, 50vh, 520px)", overflow: "hidden", cursor: displayHero ? "zoom-in" : "default" }} onClick={() => { if (displayHero) setLightboxIdx(0) }}>
         {displayHero ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={displayHero} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -191,10 +204,14 @@ export default function VendorProfileClient({
                 <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 12 }}>
                   Photos ({allPhotos.length})
                 </h2>
-                <div style={{
-                  aspectRatio: "16/9", borderRadius: 16, overflow: "hidden", marginBottom: 10,
-                  border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
-                }}>
+                <div
+                  onClick={() => setLightboxIdx(activePhoto)}
+                  style={{
+                    aspectRatio: "16/9", borderRadius: 16, overflow: "hidden", marginBottom: 10,
+                    border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
+                    cursor: "zoom-in",
+                  }}
+                >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={allPhotos[activePhoto]}
@@ -414,6 +431,51 @@ export default function VendorProfileClient({
           prefillDate={prefillDate}
           onClose={() => { setContactOpen(false); setPrefillDate(null) }}
         />
+      )}
+
+      {/* ── Lightbox ── */}
+      {lightboxIdx !== null && allPhotos[lightboxIdx] && (
+        <div
+          onClick={() => setLightboxIdx(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 100,
+            background: "rgba(0,0,0,0.92)", backdropFilter: "blur(8px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "zoom-out",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={allPhotos[lightboxIdx]}
+            alt={`${name} photo ${lightboxIdx + 1}`}
+            onClick={e => e.stopPropagation()}
+            style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain", borderRadius: 12, cursor: "default" }}
+          />
+          <button onClick={() => setLightboxIdx(null)} style={{
+            position: "absolute", top: 20, right: 20, width: 40, height: 40, borderRadius: "50%",
+            background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
+            fontSize: 20, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+          }}>✕</button>
+          {lightboxIdx > 0 && (
+            <button onClick={e => { e.stopPropagation(); setLightboxIdx(i => Math.max(0, (i ?? 1) - 1)) }} style={{
+              position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
+              width: 44, height: 44, borderRadius: "50%",
+              background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
+              fontSize: 22, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            }}>‹</button>
+          )}
+          {lightboxIdx < allPhotos.length - 1 && (
+            <button onClick={e => { e.stopPropagation(); setLightboxIdx(i => Math.min(allPhotos.length - 1, (i ?? 0) + 1)) }} style={{
+              position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)",
+              width: 44, height: 44, borderRadius: "50%",
+              background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
+              fontSize: 22, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            }}>›</button>
+          )}
+          <div style={{ position: "absolute", bottom: 20, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600 }}>
+            {lightboxIdx + 1} / {allPhotos.length}
+          </div>
+        </div>
       )}
     </div>
   )

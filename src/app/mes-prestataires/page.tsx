@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import AntNav from "@/components/clone/AntNav"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import VendorDiscoverCard, { type DiscoverVendor } from "@/components/prestataires/VendorDiscoverCard"
@@ -63,6 +63,8 @@ export default function MesPrestatairesPage() {
   const [loadingCatVendors, setLoadingCatVendors] = useState(false)
   const [showNewCategoryPicker, setShowNewCategoryPicker] = useState(false)
   const [savingCategory, setSavingCategory] = useState(false)
+  const [statusDropdown, setStatusDropdown] = useState<string | null>(null)
+  const statusRef = useRef<HTMLDivElement>(null)
 
   const loadPlanner = useCallback(async (id: string) => {
     setLoading(true)
@@ -81,6 +83,15 @@ export default function MesPrestatairesPage() {
   useEffect(() => {
     if (activeEventId) loadPlanner(activeEventId)
   }, [activeEventId, loadPlanner])
+
+  useEffect(() => {
+    if (!statusDropdown) return
+    const close = (e: MouseEvent) => {
+      if (statusRef.current && !statusRef.current.contains(e.target as Node)) setStatusDropdown(null)
+    }
+    document.addEventListener("mousedown", close)
+    return () => document.removeEventListener("mousedown", close)
+  }, [statusDropdown])
 
   async function updateStatus(vendorSlug: string, status: string) {
     if (!planner) return
@@ -199,19 +210,7 @@ export default function MesPrestatairesPage() {
                 }}
               >+ Catégorie</button>
             )}
-          {events.length > 1 && (
-            <select
-              value={activeEventId}
-              onChange={e => setActiveEventId(e.target.value)}
-              style={{
-                padding: "8px 14px", borderRadius: 12, fontSize: 12, fontWeight: 600,
-                border: "1.5px solid rgba(183,191,217,0.4)", background: "var(--dash-surface,#fff)", color: "var(--dash-text,#121317)",
-                cursor: "pointer", fontFamily: "inherit",
-              }}
-            >
-              {events.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
-            </select>
-          )}
+          {/* Event selector supprimé — événement actif géré par la sidebar */}
           </div>
         </div>
 
@@ -255,21 +254,46 @@ export default function MesPrestatairesPage() {
                         />
                         {/* Status + remove */}
                         <div style={{ display: "flex", gap: 8, marginTop: 8, alignItems: "center" }}>
-                          <select
-                            value={pv.status}
-                            onChange={e => updateStatus(pv.vendorSlug, e.target.value)}
-                            style={{
-                              flex: 1, padding: "6px 10px", borderRadius: 8, fontSize: 11, fontWeight: 600,
-                              border: "1.5px solid rgba(183,191,217,0.3)",
-                              background: `${STATUS_LABELS[pv.status]?.color ?? "#9a9aaa"}15`,
-                              color: STATUS_LABELS[pv.status]?.color ?? "#9a9aaa",
-                              cursor: "pointer", fontFamily: "inherit",
-                            }}
-                          >
-                            {Object.entries(STATUS_LABELS).map(([v, s]) => (
-                              <option key={v} value={v}>{s.label}</option>
-                            ))}
-                          </select>
+                          <div style={{ position: "relative", flex: 1 }} ref={statusDropdown === pv.vendorSlug ? statusRef : undefined}>
+                            <button
+                              onClick={() => setStatusDropdown(statusDropdown === pv.vendorSlug ? null : pv.vendorSlug)}
+                              style={{
+                                width: "100%", padding: "6px 10px", borderRadius: 8, fontSize: 11, fontWeight: 600,
+                                border: "1.5px solid rgba(183,191,217,0.3)",
+                                background: `${STATUS_LABELS[pv.status]?.color ?? "#9a9aaa"}15`,
+                                color: STATUS_LABELS[pv.status]?.color ?? "#9a9aaa",
+                                cursor: "pointer", fontFamily: "inherit", textAlign: "left",
+                                display: "flex", alignItems: "center", justifyContent: "space-between",
+                              }}
+                            >
+                              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: STATUS_LABELS[pv.status]?.color ?? "#9a9aaa" }} />
+                                {STATUS_LABELS[pv.status]?.label ?? pv.status}
+                              </span>
+                              <span style={{ fontSize: 9, opacity: 0.6 }}>▼</span>
+                            </button>
+                            {statusDropdown === pv.vendorSlug && (
+                              <div style={{
+                                position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0, zIndex: 20,
+                                background: "var(--dash-surface,#fff)", borderRadius: 10,
+                                boxShadow: "0 4px 16px rgba(0,0,0,0.12)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+                                padding: 4, overflow: "hidden",
+                              }}>
+                                {Object.entries(STATUS_LABELS).map(([v, s]) => (
+                                  <button key={v} onClick={() => { updateStatus(pv.vendorSlug, v); setStatusDropdown(null) }} style={{
+                                    display: "flex", alignItems: "center", gap: 8, width: "100%",
+                                    padding: "7px 10px", border: "none", borderRadius: 6, cursor: "pointer",
+                                    background: pv.status === v ? `${s.color}15` : "transparent",
+                                    fontSize: 11, fontWeight: 600, color: s.color, fontFamily: "inherit", textAlign: "left",
+                                  }}>
+                                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: s.color }} />
+                                    {s.label}
+                                    {pv.status === v && <span style={{ marginLeft: "auto", fontSize: 10 }}>✓</span>}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                           <button
                             onClick={() => removeVendor(pv.vendorSlug)}
                             style={{

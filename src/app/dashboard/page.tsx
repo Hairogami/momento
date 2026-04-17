@@ -61,6 +61,7 @@ const WIDGET_META: Record<WidgetId, { title: string; href: string; rowSpan?: num
 }
 
 const WIDGET_CATALOG = [
+  { id: "swipe",        title: "Découvrir prestataires", category: "Prestataires"  },
   { id: "progression",  title: "Score de progression",  category: "Avancé"        },
   { id: "notes",        title: "Notes",                  category: "Avancé"        },
   { id: "alertes",      title: "Rappels & alertes",      category: "Avancé"        },
@@ -1141,6 +1142,7 @@ export default function CloneDashboardPage() {
   const [swipeOpen,     setSwipeOpen]     = useState(false)
   const [swipeLikeCount, setSwipeLikeCount] = useState(0)
   const [swipeCategory, setSwipeCategory] = useState<string | undefined>(undefined)
+  const [swipeVendorSlug, setSwipeVendorSlug] = useState<string | undefined>(undefined)
   const [mobileOpen,    setMobileOpen]    = useState(false)
   const [firstName,     setFirstName]     = useState("")
   const [addingTask,    setAddingTask]    = useState(false)
@@ -1429,7 +1431,7 @@ export default function CloneDashboardPage() {
     switch (id as WidgetId) {
       case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
       case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} />
-      case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={(cat) => { setSwipeCategory(cat); setSwipeOpen(true) }} onLike={() => setSwipeLikeCount(c => c + 1)} />
+      case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={(cat, slug) => { setSwipeCategory(cat); setSwipeVendorSlug(slug); setSwipeOpen(true) }} onLike={() => setSwipeLikeCount(c => c + 1)} />
       case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} refreshKey={swipeLikeCount} />
       case "tasks":     return renderTasks()
       case "bookings":  return renderBookings()
@@ -1540,7 +1542,8 @@ export default function CloneDashboardPage() {
               workspaceId="clone-workspace-1" plannerId={activeEventId ?? null}
               categories={event?.categories?.length ? event.categories : ["Photographe","DJ","Traiteur","Décorateur","Fleuriste","Lieu de réception","Videaste","Makeup Artist"]}
               initialCategory={swipeCategory ?? event?.categories?.[0] ?? "Photographe"}
-              onClose={() => setSwipeOpen(false)} onBooked={() => { /* ne pas fermer la modal sur swipe */ }}
+              initialVendorSlug={swipeVendorSlug}
+              onClose={() => { setSwipeOpen(false); setSwipeVendorSlug(undefined) }} onBooked={() => { /* ne pas fermer la modal sur swipe */ }}
             />
           </div>
         </div>

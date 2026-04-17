@@ -80,7 +80,7 @@ export default function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(JSON.parse(localStorage.getItem('momento_clone_dark_mode')||'true'))document.documentElement.classList.add('dark')}catch(e){}`,
+            __html: `try{if(JSON.parse(localStorage.getItem('momento_clone_dark_mode')||'true')){document.documentElement.classList.add('dark','clone-dark')}else{document.documentElement.classList.remove('dark','clone-dark')}}catch(e){}`,
           }}
         />
         <script
