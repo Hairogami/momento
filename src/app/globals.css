@@ -552,6 +552,15 @@ html.dark .clone-progress-fill {
   opacity: 0.9;
 }
 
+/* ── Scrollbar — Minimal : 5px, gris neutre arrondi, discret ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(120,120,130,0.25); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(120,120,130,0.45); }
+.dark ::-webkit-scrollbar-thumb { background: rgba(200,200,210,0.2); }
+.dark ::-webkit-scrollbar-thumb:hover { background: rgba(200,200,210,0.4); }
+html { scrollbar-width: thin; scrollbar-color: rgba(120,120,130,0.25) transparent; }
+
 /* dash-widget-grid — moved from dashboard/page.tsx inline style */
 .dash-widget-grid > * { min-width: 0; }
 @media (max-width: 767px) {
