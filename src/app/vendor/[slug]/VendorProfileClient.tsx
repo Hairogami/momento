@@ -83,7 +83,7 @@ export default function VendorProfileClient({
   return (
     <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
       <AntNav hideLinks centerSlot={
-        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#18181b)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300 }}>{name}</span>
+        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#18181b)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300, display: "block", textAlign: "center" }}>{name}</span>
       } />
 
       {/* ── Hero ── */}
