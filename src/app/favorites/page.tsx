@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import AntNav from "@/components/clone/AntNav"
@@ -21,9 +21,19 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function CloneFavoritesPage() {
   const { events, activeEventId } = usePlanners()
   const [favs, setFavs] = useState<Fav[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/favorites")
+      .then(r => r.ok ? r.json() : [])
+      .then((data: Fav[]) => { if (Array.isArray(data)) setFavs(data) })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
 
   function remove(id: string) {
     setFavs(fs => fs.filter(f => f.id !== id))
+    fetch(`/api/vendor/${id}/favorite`, { method: "POST" }).catch(() => {})
   }
 
   return (

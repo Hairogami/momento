@@ -16,7 +16,7 @@ const VendorSwipeModal = dynamic(
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 // ── Static data ───────────────────────────────────────────────────────────────
-type EventMeta = { id: string; name: string; date: string; color: string }
+type EventMeta = { id: string; name: string; date: string; color: string; categories: string[] }
 
 type TaskPriority = "haute" | "moyenne" | "basse"
 type Task = { id: string; label: string; done: boolean; priority: TaskPriority; dueDate: string; category: string }
@@ -1140,6 +1140,7 @@ export default function CloneDashboardPage() {
   const [showPalette,   setShowPalette]   = useState(false)
   const [swipeOpen,     setSwipeOpen]     = useState(false)
   const [swipeLikeCount, setSwipeLikeCount] = useState(0)
+  const [swipeCategory, setSwipeCategory] = useState<string | undefined>(undefined)
   const [mobileOpen,    setMobileOpen]    = useState(false)
   const [firstName,     setFirstName]     = useState("")
   const [addingTask,    setAddingTask]    = useState(false)
@@ -1174,10 +1175,11 @@ export default function CloneDashboardPage() {
         if (Array.isArray(data) && data.length > 0) {
           const mapped: EventMeta[] = (data as Array<Record<string, unknown>>).map(p => ({
             id:    String(p.id ?? ""),
-            name:  String(p.coupleNames ?? p.title ?? "Mon événement"),
+            name:  String(p.coupleNames || p.title || "Mon événement"),
             date:  String(p.weddingDate ?? ""),
             color: String(p.coverColor ?? "#E11D48"),
-          })).filter(e => e.id && e.date)
+            categories: Array.isArray(p.categories) ? (p.categories as string[]) : [],
+          })).filter(e => e.id)
           if (mapped.length > 0) {
             setEvents(mapped)
             setActiveEventId(prev => mapped.some(e => e.id === prev) ? prev : mapped[0].id)
@@ -1427,7 +1429,7 @@ export default function CloneDashboardPage() {
     switch (id as WidgetId) {
       case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
       case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} />
-      case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={() => setSwipeOpen(true)} onLike={() => setSwipeLikeCount(c => c + 1)} />
+      case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={(cat) => { setSwipeCategory(cat); setSwipeOpen(true) }} onLike={() => setSwipeLikeCount(c => c + 1)} />
       case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} refreshKey={swipeLikeCount} />
       case "tasks":     return renderTasks()
       case "bookings":  return renderBookings()
@@ -1536,8 +1538,8 @@ export default function CloneDashboardPage() {
           <div onClick={e => e.stopPropagation()}>
             <VendorSwipeModal
               workspaceId="clone-workspace-1" plannerId={activeEventId ?? null}
-              categories={["Photographe","DJ","Traiteur","Décorateur","Fleuriste","Lieu de réception","Videaste","Makeup Artist"]}
-              initialCategory="Photographe"
+              categories={event?.categories?.length ? event.categories : ["Photographe","DJ","Traiteur","Décorateur","Fleuriste","Lieu de réception","Videaste","Makeup Artist"]}
+              initialCategory={swipeCategory ?? event?.categories?.[0] ?? "Photographe"}
               onClose={() => setSwipeOpen(false)} onBooked={() => { /* ne pas fermer la modal sur swipe */ }}
             />
           </div>

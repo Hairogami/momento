@@ -59,7 +59,7 @@ export default function VendorSwipeWidget({
   onLike,
 }: {
   plannerId?: string
-  onOpenModal?: () => void
+  onOpenModal?: (category?: string) => void
   onLike?: () => void
 }) {
   const [cards, setCards]     = useState<VCard[]>([])
@@ -106,6 +106,16 @@ export default function VendorSwipeWidget({
   }, [plannerId])
 
   useEffect(() => { loadCards() }, [loadCards])
+
+  // Pré-charger favoris existants
+  useEffect(() => {
+    fetch("/api/favorites")
+      .then(r => r.ok ? r.json() : [])
+      .then((data: { id: string }[]) => {
+        if (Array.isArray(data) && data.length > 0) setFavoritedIds(new Set(data.map(f => f.id)))
+      })
+      .catch(() => {})
+  }, [])
 
   const swipe = useCallback((dir: "left" | "right") => {
     const card = cards[index]
@@ -209,7 +219,7 @@ export default function VendorSwipeWidget({
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ fontSize: 10, fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em" }}>Découvrir</span>
           {onOpenModal && (
-            <button onClick={onOpenModal} title="Ouvrir l'annuaire complet" style={{
+            <button onClick={() => onOpenModal(card?.category)} title="Ouvrir l'annuaire complet" style={{
               width: 20, height: 20, borderRadius: 6,
               background: "rgba(183,191,217,0.1)", border: "1px solid rgba(183,191,217,0.2)",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",

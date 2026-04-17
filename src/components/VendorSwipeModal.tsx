@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { X, XCircle, Star, MapPin, ChevronLeft, ArrowUpRight, RotateCcw } from "lucide-react";
+import { X, XCircle, Star, MapPin, ChevronLeft, ChevronRight, ArrowUpRight, RotateCcw } from "lucide-react";
 import { C } from "@/lib/colors";
 
 export interface VendorCard {
@@ -96,6 +96,18 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
   const [loading, setLoading]         = useState(true);
   const [bookedIds, setBookedIds]     = useState<Set<string>>(new Set());
   const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set());
+
+  // Pré-charger les favoris existants pour l'état visuel du bouton ♥
+  useEffect(() => {
+    fetch("/api/favorites")
+      .then(r => r.ok ? r.json() : [])
+      .then((data: { id: string }[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setFavoritedIds(new Set(data.map(f => f.id)));
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [photoIdx, setPhotoIdx]       = useState(0);
   const [showDetail, setShowDetail]   = useState(false);
 
@@ -119,6 +131,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
   const [hasMore, setHasMore]         = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const pageRef                       = useRef(1);
+  const chipsRef                      = useRef<HTMLDivElement>(null);
 
   // P2 — Filtre catégorie inline
   const [activeCategory, setActiveCategory] = useState(initialCategory || categories[0] || "")
@@ -227,7 +240,7 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
     if (nextPhoto) { const img = new window.Image(); img.src = nextPhoto; }
 
     // 6. Booking + match animation
-    if (dir === "right" && !bookedIds.has(current.id)) {
+    if (dir === "right" && !bookedIds.has(current.slug)) {
       setBookedIds(prev => new Set(prev).add(current.slug));
       setMatchVendor(current);
       setTimeout(() => setMatchVendor(null), 1400);
@@ -343,21 +356,31 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
           </div>
           {/* Chips catégorie inline */}
           {categories.length > 1 && (
-            <div className="relative">
-            <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none", maskImage: "linear-gradient(to right, black 80%, transparent 100%)" }}>
-              <button onClick={() => setActiveCategory("")}
-                className="flex-shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold transition-all"
-                style={{ backgroundColor: activeCategory === "" ? C.terra : "rgba(255,255,255,0.1)", color: "#fff", border: activeCategory === "" ? "none" : "1px solid rgba(255,255,255,0.15)" }}>
-                Tous
+            <div className="relative flex items-center">
+              <button onClick={() => chipsRef.current?.scrollBy({ left: -200, behavior: "smooth" })}
+                className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                <ChevronLeft size={13} color="rgba(255,255,255,0.7)" />
               </button>
-              {categories.map(cat => (
-                <button key={cat} onClick={() => setActiveCategory(cat)}
-                  className="flex-shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold transition-all capitalize"
-                  style={{ backgroundColor: activeCategory === cat ? C.terra : "rgba(255,255,255,0.1)", color: "#fff", border: activeCategory === cat ? "none" : "1px solid rgba(255,255,255,0.15)" }}>
-                  {cat}
+              <div ref={chipsRef} className="flex gap-1.5 overflow-x-auto pb-1 mx-1.5" style={{ scrollbarWidth: "none" }}>
+                <button onClick={() => setActiveCategory("")}
+                  className="flex-shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold transition-all"
+                  style={{ backgroundColor: activeCategory === "" ? C.terra : "rgba(255,255,255,0.1)", color: "#fff", border: activeCategory === "" ? "none" : "1px solid rgba(255,255,255,0.15)" }}>
+                  Tous
                 </button>
-              ))}
-            </div>
+                {categories.map(cat => (
+                  <button key={cat} onClick={() => setActiveCategory(cat)}
+                    className="flex-shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold transition-all capitalize"
+                    style={{ backgroundColor: activeCategory === cat ? C.terra : "rgba(255,255,255,0.1)", color: "#fff", border: activeCategory === cat ? "none" : "1px solid rgba(255,255,255,0.15)" }}>
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => chipsRef.current?.scrollBy({ left: 200, behavior: "smooth" })}
+                className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                <ChevronRight size={13} color="rgba(255,255,255,0.7)" />
+              </button>
             </div>
           )}
         </div>
@@ -822,10 +845,10 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
             </button>
             {/* ↩ Rewind */}
             <button onClick={undo} disabled={history.length === 0}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 disabled:opacity-35"
-              style={{ backgroundColor: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: history.length > 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.07)", border: history.length > 0 ? "1.5px solid rgba(255,255,255,0.35)" : "1px solid rgba(255,255,255,0.15)" }}
               title="Annuler">
-              <RotateCcw size={15} color="rgba(255,255,255,0.7)" />
+              <RotateCcw size={15} color={history.length > 0 ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)"} />
             </button>
             {/* ♥ Favori */}
             <button

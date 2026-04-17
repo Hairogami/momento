@@ -9,7 +9,7 @@ export async function GET() {
     const session = await requireSession()
     const planners = await prisma.planner.findMany({
       where: { userId: session.user.id },
-      select: { id: true, title: true, coupleNames: true, weddingDate: true, coverColor: true, location: true, budget: true, guestCount: true },
+      select: { id: true, title: true, coupleNames: true, weddingDate: true, coverColor: true, location: true, budget: true, guestCount: true, categories: true },
       orderBy: { createdAt: "asc" },
     })
     return Response.json(planners)
