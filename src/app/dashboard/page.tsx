@@ -107,7 +107,7 @@ function GIcon({ name, size = 16, color = "var(--dash-text-3,#9a9aaa)" }: { name
 // ── WidgetCard — titre seul, resize pointer, snap ─────────────────────────────
 function WidgetCard({
   id, title, href, size, rowSpan = 1,
-  onResize, onRemove, removable,
+  onResize, onResizeRow, onRemove, removable,
   dragging, dropTarget,
   onDragStart, onDragOver, onDrop, onDragEnd, onDragLeave,
   children,
@@ -115,6 +115,7 @@ function WidgetCard({
   id: string; title: string; href?: string
   size: WidgetSize; rowSpan?: number
   onResize: (id: string, s: WidgetSize) => void
+  onResizeRow?: (id: string, rows: number) => void
   onRemove?: (id: string) => void; removable?: boolean
   dragging: boolean; dropTarget: boolean
   onDragStart: () => void; onDragOver: (e: React.DragEvent) => void
@@ -125,24 +126,53 @@ function WidgetCard({
   const [snapped, setSnapped] = useState(false)
   const cardRef  = useRef<HTMLDivElement>(null)
   const prevSize = useRef(size)
+  const prevRow  = useRef(rowSpan)
 
   useEffect(() => {
-    if (size !== prevSize.current) {
-      prevSize.current = size; setSnapped(true)
+    if (size !== prevSize.current || rowSpan !== prevRow.current) {
+      prevSize.current = size; prevRow.current = rowSpan; setSnapped(true)
       const t = setTimeout(() => setSnapped(false), 180); return () => clearTimeout(t)
     }
-  }, [size])
+  }, [size, rowSpan])
 
-  const handleResizeStart = useCallback((e: React.PointerEvent) => {
+  const THRESHOLD = 30
+
+  const handleResizeStart = useCallback((e: React.PointerEvent, edge: "right" | "bottom" | "left" | "top" | "corner") => {
     e.preventDefault(); e.stopPropagation()
-    const startX = e.clientX; const startSz = size
+    const startX = e.clientX; const startY = e.clientY
+    const startSz = size; const startRow = rowSpan
     const cardW  = cardRef.current?.offsetWidth ?? 300
+    const cardH  = cardRef.current?.offsetHeight ?? 200
+    const colW   = Math.max(160, cardW / startSz)
+    const rowH   = Math.max(100, cardH / Math.max(1, startRow))
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
     function onMove(ev: PointerEvent) {
-      const delta = ev.clientX - startX
-      const colW  = Math.max(160, cardW / startSz)
-      const next  = Math.max(1, Math.min(4, Math.round(startSz + delta / colW))) as WidgetSize
-      onResize(id, next)
+      const dx = ev.clientX - startX
+      const dy = ev.clientY - startY
+      if (edge === "right" || edge === "corner") {
+        if (Math.abs(dx) > THRESHOLD) {
+          const next = Math.max(1, Math.min(4, Math.round(startSz + dx / colW))) as WidgetSize
+          onResize(id, next)
+        }
+      }
+      if (edge === "left") {
+        if (Math.abs(dx) > THRESHOLD) {
+          const next = Math.max(1, Math.min(4, Math.round(startSz - dx / colW))) as WidgetSize
+          onResize(id, next)
+        }
+      }
+      if (edge === "bottom" || edge === "corner") {
+        if (Math.abs(dy) > THRESHOLD && onResizeRow) {
+          const next = Math.max(1, Math.min(4, Math.round(startRow + dy / rowH)))
+          onResizeRow(id, next)
+        }
+      }
+      if (edge === "top") {
+        if (Math.abs(dy) > THRESHOLD && onResizeRow) {
+          const next = Math.max(1, Math.min(4, Math.round(startRow - dy / rowH)))
+          onResizeRow(id, next)
+        }
+      }
     }
     function onUp() {
       window.removeEventListener("pointermove", onMove)
@@ -150,7 +180,7 @@ function WidgetCard({
     }
     window.addEventListener("pointermove", onMove)
     window.addEventListener("pointerup",   onUp)
-  }, [id, size, onResize])
+  }, [id, size, rowSpan, onResize, onResizeRow])
 
   return (
     <div
@@ -216,13 +246,33 @@ function WidgetCard({
         </div>
       )}
 
-      {/* Resize handle */}
-      <div
-        onPointerDown={handleResizeStart}
-        style={{ position: "absolute", bottom: 5, right: 5, width: 18, height: 18, opacity: hovered ? 0.5 : 0, cursor: "ew-resize", transition: "opacity 0.15s", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-3,#9a9aaa)", touchAction: "none" }}
+      {/* Resize edge handles — invisible strips that appear on hover */}
+      {/* Right edge */}
+      <div onPointerDown={e => handleResizeStart(e, "right")}
+        style={{ position: "absolute", top: 8, bottom: 8, right: 0, width: 6, cursor: "ew-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "0 8px 8px 0" }}
+        onMouseEnter={() => setHovered(true)}
+      />
+      {/* Left edge */}
+      <div onPointerDown={e => handleResizeStart(e, "left")}
+        style={{ position: "absolute", top: 8, bottom: 8, left: 0, width: 6, cursor: "ew-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "8px 0 0 8px" }}
+        onMouseEnter={() => setHovered(true)}
+      />
+      {/* Bottom edge */}
+      <div onPointerDown={e => handleResizeStart(e, "bottom")}
+        style={{ position: "absolute", bottom: 0, left: 8, right: 8, height: 6, cursor: "ns-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "0 0 8px 8px" }}
+        onMouseEnter={() => setHovered(true)}
+      />
+      {/* Top edge */}
+      <div onPointerDown={e => handleResizeStart(e, "top")}
+        style={{ position: "absolute", top: 0, left: 8, right: 8, height: 6, cursor: "ns-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", borderRadius: "8px 8px 0 0" }}
+        onMouseEnter={() => setHovered(true)}
+      />
+      {/* Corner handle (bottom-right) */}
+      <div onPointerDown={e => handleResizeStart(e, "corner")}
+        style={{ position: "absolute", bottom: 2, right: 2, width: 16, height: 16, opacity: hovered ? 0.45 : 0, cursor: "nwse-resize", transition: "opacity 0.15s", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-3,#9a9aaa)", touchAction: "none" }}
         title={`Taille ${size}/4`}
       >
-        <svg width="14" height="14" viewBox="0 0 18 18" fill="currentColor">
+        <svg width="12" height="12" viewBox="0 0 18 18" fill="currentColor">
           <rect x="11" y="1"  width="2.5" height="16" rx="1.25"/>
           <rect x="4"  y="5"  width="2.5" height="12" rx="1.25"/>
         </svg>
@@ -1125,6 +1175,7 @@ export default function CloneDashboardPage() {
   const [eventsLoaded,  setEventsLoaded]  = useState(false)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
+  const [widgetRows,    setWidgetRows]    = useState<Record<string, number>>({})
   const [extraWidgets,  setExtraWidgets]  = useState<string[]>([])
   const [tasksByEvent,  setTasksByEvent]  = useState<Record<string, Task[]>>({})
   const [darkMode,      setDarkMode]      = useState(() => {
@@ -1224,6 +1275,8 @@ export default function CloneDashboardPage() {
       setWidgetSizes(ss ? JSON.parse(ss) : {})
       setExtraWidgets(se ? JSON.parse(se) : [])
       setPalette(sp ? JSON.parse(sp) : { g1: "#E11D48", g2: "#9333EA" })
+      const sr = localStorage.getItem(`momento_widget_rows_${activeEventId}`)
+      setWidgetRows(sr ? JSON.parse(sr) : {})
     } catch {}
   }, [activeEventId])
 
@@ -1231,6 +1284,7 @@ export default function CloneDashboardPage() {
   useEffect(() => { try { localStorage.setItem("momento_active_event",                          activeEventId)               } catch {} }, [activeEventId])
   useEffect(() => { try { localStorage.setItem(`momento_widget_order_${activeEventId}`,  JSON.stringify(widgetOrder))  } catch {} }, [widgetOrder,   activeEventId])
   useEffect(() => { try { localStorage.setItem(`momento_widget_sizes_${activeEventId}`,  JSON.stringify(widgetSizes))  } catch {} }, [widgetSizes,   activeEventId])
+  useEffect(() => { try { localStorage.setItem(`momento_widget_rows_${activeEventId}`,   JSON.stringify(widgetRows))   } catch {} }, [widgetRows,    activeEventId])
   useEffect(() => { try { localStorage.setItem(`momento_extra_widgets_${activeEventId}`, JSON.stringify(extraWidgets)) } catch {} }, [extraWidgets,  activeEventId])
   useEffect(() => { try { localStorage.setItem("momento_clone_dark_mode",                JSON.stringify(darkMode))     } catch {} }, [darkMode])
   useEffect(() => { try { localStorage.setItem(`momento_palette_${activeEventId}`,       JSON.stringify(palette))      } catch {} }, [palette,       activeEventId])
@@ -1269,6 +1323,7 @@ export default function CloneDashboardPage() {
 
   // ── Widget management ─────────────────────────────────────────────────────
   function onResize(id: string, size: WidgetSize) { setWidgetSizes(prev => ({ ...prev, [id]: size })) }
+  function onResizeRow(id: string, rows: number) { setWidgetRows(prev => ({ ...prev, [id]: rows })) }
   function addWidget(id: string) { setExtraWidgets(p => [...p, id]); setWidgetOrder(p => [...p, id]); setWidgetSizes(p => ({ ...p, [id]: 1 as WidgetSize })) }
   function removeWidget(id: string) { setExtraWidgets(p => p.filter(w => w !== id)); setWidgetOrder(p => p.filter(w => w !== id)) }
   function toggleTask(taskId: string) {
@@ -1282,8 +1337,8 @@ export default function CloneDashboardPage() {
     setNewTaskLabel(""); setAddingTask(false)
   }
   function resetLayout() {
-    setWidgetOrder([...DEFAULT_ORDER]); setWidgetSizes({ ...DEFAULT_SIZES }); setExtraWidgets([])
-    try { ["momento_clone_widget_order","momento_clone_widget_sizes","momento_clone_extra_widgets"].forEach(k => localStorage.removeItem(k)) } catch {}
+    setWidgetOrder([...DEFAULT_ORDER]); setWidgetSizes({ ...DEFAULT_SIZES }); setExtraWidgets([]); setWidgetRows({})
+    try { ["momento_clone_widget_order","momento_clone_widget_sizes","momento_clone_extra_widgets","momento_widget_rows_" + activeEventId].forEach(k => localStorage.removeItem(k)) } catch {}
   }
 
   // ── Inline widget content ─────────────────────────────────────────────────
@@ -1632,8 +1687,8 @@ export default function CloneDashboardPage() {
               const size   = (widgetSizes[id] ?? 1) as WidgetSize
               const isCore = id in DEFAULT_SIZES
               return (
-                <WidgetCard key={id} id={id} title={meta.title} href={meta.href} size={size} rowSpan={meta.rowSpan}
-                  onResize={onResize} onRemove={removeWidget} removable
+                <WidgetCard key={id} id={id} title={meta.title} href={meta.href} size={size} rowSpan={widgetRows[id] || meta.rowSpan}
+                  onResize={onResize} onResizeRow={onResizeRow} onRemove={removeWidget} removable
                   dragging={isDragging && draggingId.current === id}
                   dropTarget={dropTarget === id && draggingId.current !== id}
                   onDragStart={() => onDragStart(id)} onDragOver={e => onDragOver(e, id)}
