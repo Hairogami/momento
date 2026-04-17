@@ -19,7 +19,7 @@ const WORDS: WordDef[] = [
 ]
 
 const PREFIX      = "Votre "
-const SUFFIX      = " mérite l'exception."
+const SUFFIX      = " mérite l'exception. Seulement en 3 clics."
 const TYPE_SPEED  = 42   // ms/char — frappe normale
 const ERASE_SPEED = 25   // ms/char — gomme plus rapide (feeling "effacement")
 const HOLD_MS     = 1800 // ms — temps d'affichage avant d'effacer
