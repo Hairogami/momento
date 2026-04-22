@@ -27,6 +27,10 @@ model User {
   vendorSlug      String?
   username        String?
   completedEvents Int       @default(0)
+  plan            String    @default("free") // free | pro
+  planExpiresAt   DateTime?
+  marketingOptIn  Boolean   @default(true)
+  agreedTosAt     DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -373,8 +377,11 @@ model Planner {
   conversations Conversation[]
   favorites     Favorite[]
   notifications Notification[]
-  categories    String[]       @default([])
-  plannerVendors PlannerVendor[]
+  categories       String[]       @default([])
+  eventType        String?                       // famille : mariage | fete | naissance | milestones | corporate | conference | religieux | caritatif | loisirs | autre
+  eventSubType     String?                       // sous-type : traditionnel | micro | destination | fiancailles | henne | evjg-evjf | …
+  budgetBreakdown  Json?                         // répartition budget par catégorie { [category]: amountMAD }
+  plannerVendors   PlannerVendor[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 }

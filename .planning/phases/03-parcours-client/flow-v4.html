@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momento — Flow Client v4</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f13; color: #e4e4e7; line-height: 1.5; padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; color: #fff; }
+  .subtitle { text-align: center; font-size: 14px; color: #71717a; margin-bottom: 40px; }
+  .step { margin-bottom: 48px; }
+  .step-label { display: inline-block; padding: 4px 14px; background: #e11d48; color: #fff; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .step-label.new { background: #f59e0b; }
+  .step-label.purple { background: #7c3aed; }
+  .step h2 { font-size: 20px; font-weight: 700; color: #fafafa; margin-bottom: 6px; }
+  .step p.desc { font-size: 13px; color: #a1a1aa; margin-bottom: 16px; }
+  .mockup { background: #18181b; border: 1px solid #27272a; border-radius: 16px; overflow: hidden; }
+  .mockup-bar { padding: 10px 16px; background: #1f1f23; border-bottom: 1px solid #27272a; font-size: 11px; color: #71717a; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .dots { display: flex; gap: 5px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot.r { background: #ef4444; } .dot.y { background: #eab308; } .dot.g { background: #22c55e; }
+  .mockup-body { padding: 24px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .card { background: #27272a; border-radius: 12px; padding: 14px; text-align: center; font-size: 12px; color: #a1a1aa; border: 1px solid #3f3f46; }
+  .card.active { background: #1c1017; border: 2px solid #e11d48; color: #fecdd3; }
+  .card strong { color: #e4e4e7; display: block; }
+  .card small { font-size: 10px; color: #e11d48; }
+  .card .emoji { font-size: 22px; margin-bottom: 6px; }
+  .pill { display: inline-block; padding: 6px 14px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+  .pill.active { background: #e11d48; color: #fff; }
+  .pill.inactive { background: #27272a; color: #a1a1aa; border: 1px solid #3f3f46; }
+  .btn { padding: 13px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; text-align: center; cursor: pointer; border: none; width: 100%; }
+  .btn.primary { background: #e11d48; color: #fff; }
+  .btn.google { background: #4285f4; color: #fff; }
+  .btn.facebook { background: #1877f2; color: #fff; }
+  .btn.ghost { background: transparent; border: 1px solid #3f3f46; color: #a1a1aa; }
+  .btn.skip { background: transparent; border: 1px solid #3f3f46; color: #71717a; font-size: 12px; padding: 10px; }
+  .input-field { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid #3f3f46; background: #27272a; color: #e4e4e7; font-size: 13px; }
+  .widget { background: #1f1f23; border: 1px solid #27272a; border-radius: 14px; padding: 18px; }
+  .widget-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #e4e4e7; }
+  .info-box { padding: 14px 16px; border-radius: 10px; font-size: 12px; }
+  .info-box.green { background: #052e16; border: 1px solid #166534; color: #86efac; }
+  .info-box.yellow { background: #1a1500; border: 1px solid #854d0e; color: #fde68a; }
+  .info-box.pink { background: #1c1017; border: 1px solid rgba(225,29,72,0.3); color: #fecdd3; }
+  .info-box.purple { background: #1a0a2e; border: 1px solid #7c3aed; color: #c4b5fd; }
+  .info-box.orange { background: #1a0f00; border: 1px solid #d97706; color: #fde68a; }
+  .gate-box { text-align: center; padding: 16px; background: #1c1017; border: 2px dashed #e11d48; border-radius: 12px; margin-top: 16px; }
+  .gate-box strong { color: #fb7185; font-size: 14px; }
+  .divider { text-align: center; font-size: 11px; color: #52525b; margin: 8px 0; }
+  .progress-bar { height: 8px; background: #27272a; border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; }
+  .task-line { font-size: 12px; padding: 6px 0; border-bottom: 1px solid #27272a; display: flex; justify-content: space-between; }
+  .deadline.urgent { color: #ef4444; font-size: 10px; font-weight: 600; }
+  .deadline.warn { color: #f59e0b; font-size: 10px; font-weight: 600; }
+  .deadline.ok { color: #22c55e; font-size: 10px; font-weight: 600; }
+
+  /* Budget slider rows */
+  .budget-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #27272a; }
+  .budget-row:last-child { border-bottom: none; }
+  .budget-cat { width: 110px; font-size: 12px; font-weight: 600; color: #e4e4e7; }
+  .budget-slider { flex: 1; position: relative; height: 6px; background: #3f3f46; border-radius: 99px; }
+  .budget-slider-fill { height: 100%; border-radius: 99px; position: absolute; left: 0; top: 0; }
+  .budget-slider .thumb { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px; background: #fff; border-radius: 50%; border: 2px solid #e11d48; cursor: grab; }
+  .budget-amount { width: 100px; text-align: right; font-size: 13px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+  .budget-badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 600; }
+  .badge-ok { background: #052e16; color: #86efac; border: 1px solid #166534; }
+  .badge-tight { background: #1a1500; color: #fde68a; border: 1px solid #854d0e; }
+  .badge-low { background: #1c0a0a; color: #fca5a5; border: 1px solid #991b1b; }
+  .badge-high { background: #0a1a2e; color: #93c5fd; border: 1px solid #1d4ed8; }
+
+  .vendor-card { background: #27272a; border-radius: 16px; overflow: hidden; border: 1px solid #3f3f46; max-width: 320px; margin: 0 auto; }
+  .vendor-photo { height: 160px; background: linear-gradient(135deg, #27272a 0%, #3f3f46 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; }
+  .vendor-photo .badge { position: absolute; top: 10px; right: 10px; padding: 4px 10px; background: rgba(124,58,237,0.9); color: #fff; border-radius: 99px; font-size: 10px; font-weight: 600; }
+  .vendor-info { padding: 14px; }
+  .vendor-info h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .vendor-info .meta { font-size: 11px; color: #71717a; }
+  .swipe-actions { display: flex; justify-content: center; gap: 20px; margin-top: 14px; }
+  .swipe-btn { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; border: 2px solid; }
+  .swipe-btn.skip-btn { border-color: #3f3f46; background: #27272a; }
+  .swipe-btn.like-btn { border-color: #e11d48; background: #1c1017; }
+  .cat-dots { display: flex; gap: 4px; }
+  .cat-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .cat-dot.filled { background: #e11d48; }
+  .cat-dot.empty { background: #3f3f46; }
+
+  @media (max-width: 700px) { .split { grid-template-columns: 1fr; } .grid4 { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<h1>Parcours Client Momento</h1>
+<p class="subtitle">Explore → Signup → Onboarding → <strong style="color:#f59e0b;">Budget</strong> → <strong style="color:#7c3aed;">Swipe prestas</strong> → Dashboard</p>
+
+<!-- ===== STEP 0 ===== -->
+<div class="step">
+  <span class="step-label">Étape 0</span>
+  <h2>Explore — anonyme</h2>
+  <p class="desc">Vrais vendors, scroll libre, SEO préservé. Gate au clic profil.</p>
+  <div class="mockup">
+    <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> momentoevents.app/explore</div>
+    <div class="mockup-body">
+      <div class="grid4">
+        <div class="card"><div class="emoji">📸</div><strong>Studio Karim</strong>Casablanca · ⭐ 4.8</div>
+        <div class="card"><div class="emoji">🎵</div><strong>DJ Omar</strong>Marrakech · ⭐ 4.6</div>
+        <div class="card"><div class="emoji">🍽️</div><strong>Traiteur Nabil</strong>Rabat · ⭐ 4.9</div>
+        <div class="card"><div class="emoji">💐</div><strong>Fleurs & Co</strong>Tanger · ⭐ 4.7</div>
+      </div>
+      <div class="gate-box"><strong>👆 Clic profil → Modal Signup</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 1 ===== -->
+<div class="step">
+  <span class="step-label">Étape 1</span>
+  <h2>Signup — vend le dashboard</h2>
+  <p class="desc">4 value props + OAuth / email.</p>
+  <div class="mockup">
+    <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> Modal</div>
+    <div class="mockup-body" style="max-width:440px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:32px;margin-bottom:8px;">✨</div>
+        <h3 style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px;">Créez votre compte gratuit</h3>
+        <p style="font-size:13px;color:#71717a;">Pour voir ce profil et organiser votre événement</p>
+      </div>
+      <div class="info-box green" style="margin-bottom:20px;display:flex;flex-direction:column;gap:8px;">
+        <div>✅ <strong>Budget intelligent</strong> — répartition auto par catégorie</div>
+        <div>✅ <strong>Checklist personnalisée</strong> — tâches avec deadlines</div>
+        <div>✅ <strong>Contactez directement</strong> — messagerie intégrée</div>
+        <div>✅ <strong>100% gratuit</strong> — zéro commission</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="btn google">Continuer avec Google</div>
+        <div class="btn facebook">Continuer avec Facebook</div>
+        <div class="divider">— ou —</div>
+        <input class="input-field" placeholder="Email" disabled>
+        <input class="input-field" placeholder="Mot de passe" disabled>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <label style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#a1a1aa;cursor:pointer;">
+            <input type="checkbox" checked disabled style="margin-top:2px;accent-color:#10b981;">
+            <span>J'accepte les <a href="#" style="color:#10b981;text-decoration:underline;">Conditions Générales</a> et la <a href="#" style="color:#10b981;text-decoration:underline;">Politique de confidentialité</a></span>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#a1a1aa;cursor:pointer;">
+            <input type="checkbox" checked disabled style="margin-top:2px;accent-color:#10b981;">
+            <span>Je souhaite recevoir des conseils personnalisés, bons plans prestataires et offres exclusives par email</span>
+          </label>
+        </div>
+        <p style="font-size:10px;color:#52525b;margin-top:2px;text-align:center;">📌 Opt-out par défaut (Maroc). Passera en opt-in si expansion UE (RGPD).</p>
+        <div class="btn primary">Créer mon compte</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 2 ===== -->
+<div class="step">
+  <span class="step-label">Étape 2</span>
+  <h2>Onboarding — événement + catégories</h2>
+  <p class="desc">Type, sous-type, date, ville + catégories prestas (pré-cochées intelligemment).</p>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> 1/2 — Événement</div>
+      <div class="mockup-body">
+        <h3 style="font-size:17px;font-weight:800;color:#fff;margin-bottom:14px;">Quel événement organisez-vous ?</h3>
+        <div class="grid3" style="margin-bottom:14px;">
+          <div class="card active"><div class="emoji">💍</div><strong>Mariage</strong></div>
+          <div class="card"><div class="emoji">🎉</div><strong>Fête</strong></div>
+          <div class="card"><div class="emoji">👶</div><strong>Naissance</strong></div>
+          <div class="card"><div class="emoji">💼</div><strong>Corporate</strong></div>
+          <div class="card"><div class="emoji">🌙</div><strong>Religieux</strong></div>
+          <div class="card"><div class="emoji">✨</div><strong>Autre</strong></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+          <span class="pill active">Mariage traditionnel</span>
+          <span class="pill inactive">Micro-mariage</span>
+          <span class="pill inactive">Fiançailles</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+          <input class="input-field" placeholder='Nom' disabled style="flex:1;">
+          <input class="input-field" placeholder="📅 Date" disabled style="flex:1;">
+        </div>
+        <input class="input-field" placeholder="📍 Ville" disabled>
+        <div class="btn primary" style="margin-top:14px;">Suivant →</div>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> 2/2 — Prestataires</div>
+      <div class="mockup-body">
+        <h3 style="font-size:17px;font-weight:800;color:#fff;margin-bottom:4px;">De quoi avez-vous besoin ?</h3>
+        <p style="font-size:12px;color:#71717a;margin-bottom:14px;">Min. 3 — pré-sélection pour un mariage</p>
+        <div class="grid3" style="margin-bottom:14px;">
+          <div class="card active"><div class="emoji">📸</div><strong>Photo</strong><small>✓</small></div>
+          <div class="card active"><div class="emoji">🎵</div><strong>DJ</strong><small>✓</small></div>
+          <div class="card active"><div class="emoji">🍽️</div><strong>Traiteur</strong><small>✓</small></div>
+          <div class="card"><div class="emoji">💐</div><strong>Fleuriste</strong></div>
+          <div class="card"><div class="emoji">🎂</div><strong>Pâtissier</strong></div>
+          <div class="card"><div class="emoji">🏠</div><strong>Salle</strong></div>
+          <div class="card"><div class="emoji">🎬</div><strong>Vidéaste</strong></div>
+          <div class="card"><div class="emoji">✨</div><strong>Déco</strong></div>
+          <div class="card"><div class="emoji">💄</div><strong>Maquillage</strong></div>
+        </div>
+        <div class="btn primary">Définir mon budget →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 2.5 — BUDGET ===== -->
+<div class="step">
+  <span class="step-label new">🆕 Étape 2.5 — BUDGET</span>
+  <h2>Répartition budget — verdict IA en temps réel</h2>
+  <p class="desc">Budget obligatoire. L'IA analyse en temps réel (type + ville + marché) et donne un verdict automatique. Pas de skip.</p>
+
+  <div class="mockup">
+    <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> Budget — Mariage traditionnel à Casablanca</div>
+    <div class="mockup-body">
+
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;">
+        <div>
+          <h3 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:4px;">Quel est votre budget total ?</h3>
+          <p style="font-size:12px;color:#71717a;">On répartit automatiquement selon les prix du marché</p>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:28px;font-weight:900;color:#fff;">150 000 <span style="font-size:14px;color:#71717a;">MAD</span></div>
+          <div style="margin-top:4px;">
+            <span class="budget-badge badge-ok">✅ Budget réaliste</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total slider -->
+      <div style="margin-bottom:24px;">
+        <div class="budget-slider" style="height:10px;background:#3f3f46;">
+          <div class="budget-slider-fill" style="width:45%;height:100%;background:linear-gradient(90deg,#e11d48,#f43f5e);border-radius:99px;"></div>
+          <div class="thumb" style="left:45%;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:#52525b;">
+          <span>50 000 MAD</span>
+          <span>500 000 MAD</span>
+        </div>
+      </div>
+
+      <!-- Category breakdown -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:13px;font-weight:700;color:#e4e4e7;">Répartition par catégorie</span>
+          <span style="font-size:11px;color:#71717a;">Glissez pour ajuster</span>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-cat">🍽️ Traiteur</div>
+          <div class="budget-slider">
+            <div class="budget-slider-fill" style="width:30%;background:#e11d48;border-radius:99px;"></div>
+          </div>
+          <div class="budget-amount">45 000</div>
+          <span class="budget-badge badge-ok" style="width:60px;text-align:center;">30%</span>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-cat">📸 Photographe</div>
+          <div class="budget-slider">
+            <div class="budget-slider-fill" style="width:15%;background:#f59e0b;border-radius:99px;"></div>
+          </div>
+          <div class="budget-amount">22 500</div>
+          <span class="budget-badge badge-ok" style="width:60px;text-align:center;">15%</span>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-cat">✨ Décoration</div>
+          <div class="budget-slider">
+            <div class="budget-slider-fill" style="width:12%;background:#8b5cf6;border-radius:99px;"></div>
+          </div>
+          <div class="budget-amount">18 000</div>
+          <span class="budget-badge badge-ok" style="width:60px;text-align:center;">12%</span>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-cat">🎵 DJ / Musique</div>
+          <div class="budget-slider">
+            <div class="budget-slider-fill" style="width:10%;background:#3b82f6;border-radius:99px;"></div>
+          </div>
+          <div class="budget-amount">15 000</div>
+          <span class="budget-badge badge-ok" style="width:60px;text-align:center;">10%</span>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-cat">💐 Fleuriste</div>
+          <div class="budget-slider">
+            <div class="budget-slider-fill" style="width:8%;background:#ec4899;border-radius:99px;"></div>
+          </div>
+          <div class="budget-amount">12 000</div>
+          <span class="budget-badge badge-ok" style="width:60px;text-align:center;">8%</span>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-cat">🎬 Vidéaste</div>
+          <div class="budget-slider">
+            <div class="budget-slider-fill" style="width:8%;background:#14b8a6;border-radius:99px;"></div>
+          </div>
+          <div class="budget-amount">12 000</div>
+          <span class="budget-badge badge-ok" style="width:60px;text-align:center;">8%</span>
+        </div>
+
+        <div class="budget-row">
+          <div class="budget-cat">💄 Maquillage</div>
+          <div class="budget-slider">
+            <div class="budget-slider-fill" style="width:5%;background:#f97316;border-radius:99px;"></div>
+          </div>
+          <div class="budget-amount">7 500</div>
+          <span class="budget-badge badge-ok" style="width:60px;text-align:center;">5%</span>
+        </div>
+
+        <!-- Remaining -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;margin-top:8px;border-top:1px solid #3f3f46;">
+          <span style="font-size:12px;color:#71717a;">💰 Reste (imprévus)</span>
+          <span style="font-size:14px;font-weight:700;color:#22c55e;">18 000 MAD (12%)</span>
+        </div>
+      </div>
+
+      <!-- Verdict IA dynamique (1 seul, change en temps réel) -->
+      <div class="info-box green" style="margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+        <div style="font-size:32px;">✅</div>
+        <div>
+          <strong style="font-size:15px;">Budget réaliste</strong>
+          <p style="font-size:12px;margin-top:4px;opacity:0.8;">Votre budget de 150 000 MAD est dans la moyenne du marché pour un mariage traditionnel à Casablanca avec 7 catégories.</p>
+          <p style="font-size:10px;margin-top:6px;color:#71717a;">🤖 Verdict IA — se met à jour en temps réel quand vous ajustez les curseurs</p>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#52525b;margin-bottom:12px;text-align:center;">
+        Seuils : ⚠️ Serré si &lt; 80k · ✅ Réaliste 80k-300k · 🔥 Ambitieux &gt; 300k (ajustés par ville + type)
+      </div>
+
+      <!-- Insights -->
+      <div class="info-box orange" style="margin-bottom:16px;">
+        <strong>💡 Insight marché :</strong> Le traiteur représente en moyenne 30-35% du budget d'un mariage au Maroc. Vous êtes dans la fourchette. Le photographe peut descendre à 10% si vous choisissez un indépendant.
+      </div>
+
+      <div class="btn primary">Valider mon budget →</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 3 — SWIPE ===== -->
+<div class="step">
+  <span class="step-label purple">Étape 3 — SWIPE</span>
+  <h2>Pré-sélection prestataires par catégorie</h2>
+  <p class="desc">2-3 prestas par catégorie. Filtrés par budget maintenant ! Un presta à 50k ne sera pas montré si le budget photo est 22k.</p>
+
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> Pré-sélection — 📸 Photographe (1/3)</div>
+      <div class="mockup-body">
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+          <span class="pill active">📸 Photographe</span>
+          <span class="pill inactive">🎵 DJ</span>
+          <span class="pill inactive">🍽️ Traiteur</span>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#27272a;border-radius:10px;margin-bottom:14px;">
+          <span style="font-size:11px;color:#a1a1aa;">Sélectionnés :</span>
+          <div class="cat-dots"><div class="cat-dot filled"></div><div class="cat-dot empty"></div><div class="cat-dot empty"></div></div>
+          <span style="font-size:11px;color:#71717a;">1/3</span>
+          <span style="margin-left:auto;font-size:10px;color:#f59e0b;">Budget : 22 500 MAD</span>
+        </div>
+
+        <div class="vendor-card">
+          <div class="vendor-photo">📸<div class="badge">⭐ Partenaire</div></div>
+          <div class="vendor-info">
+            <h4>Studio Karim</h4>
+            <div class="meta">📍 Casablanca · ⭐ 4.8 (23 avis)</div>
+            <div style="margin-top:6px;font-size:12px;color:#22c55e;font-weight:600;">💰 À partir de 15 000 MAD <span style="color:#71717a;font-weight:400;">· dans votre budget</span></div>
+          </div>
+        </div>
+        <div class="swipe-actions">
+          <div class="swipe-btn skip-btn">✕</div>
+          <div class="swipe-btn like-btn">🎉</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px;">
+          <div style="padding:5px 10px;background:#052e16;border:1px solid #166534;border-radius:99px;font-size:10px;color:#86efac;">✅ Lens Marrakech</div>
+        </div>
+        <div class="btn skip" style="margin-top:14px;">Passer cette catégorie →</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mockup">
+        <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> Résultat après swipe</div>
+        <div class="mockup-body">
+          <h3 style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;">Prestas shortlistés</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#27272a;border-radius:10px;">
+              <span style="font-size:12px;">📸 Photographe</span>
+              <div style="display:flex;gap:4px;">
+                <span style="padding:3px 8px;background:#052e16;border:1px solid #166534;border-radius:6px;font-size:10px;color:#86efac;">Studio Karim</span>
+                <span style="padding:3px 8px;background:#052e16;border:1px solid #166534;border-radius:6px;font-size:10px;color:#86efac;">Lens MRK</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#27272a;border-radius:10px;">
+              <span style="font-size:12px;">🎵 DJ</span>
+              <div style="display:flex;gap:4px;">
+                <span style="padding:3px 8px;background:#052e16;border:1px solid #166534;border-radius:6px;font-size:10px;color:#86efac;">DJ Omar</span>
+                <span style="padding:3px 8px;background:#052e16;border:1px solid #166534;border-radius:6px;font-size:10px;color:#86efac;">DJ Yassine</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#27272a;border-radius:10px;">
+              <span style="font-size:12px;">🍽️ Traiteur</span>
+              <div style="display:flex;gap:4px;">
+                <span style="padding:3px 8px;background:#052e16;border:1px solid #166534;border-radius:6px;font-size:10px;color:#86efac;">Nabil Casa</span>
+              </div>
+            </div>
+          </div>
+          <div class="info-box purple" style="margin-top:14px;font-size:11px;">
+            🎯 <strong>5 prestas shortlistés, tous dans le budget.</strong> Le dashboard est prêt.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;padding:16px;background:#1f1f23;border:1px solid #27272a;border-radius:14px;">
+        <h4 style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;">🧠 Logique budget → swipe</h4>
+        <div style="font-size:11px;color:#a1a1aa;line-height:1.8;">
+          • Budget photo = 22 500 MAD<br>
+          • On ne montre QUE les prestas ≤ 22 500<br>
+          • Les prestas à 50 000+ sont masqués<br>
+          • Si le client augmente son budget → plus de choix<br>
+          • Affichage du prix sur chaque card + "dans votre budget" ✅
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STEP 4 — DASHBOARD ===== -->
+<div class="step">
+  <span class="step-label">Étape 4</span>
+  <h2>Dashboard — Free vs Pro (même template)</h2>
+  <p class="desc">Un seul dashboard. Les widgets Free sont actifs. Les widgets Pro montrent des données de démo avec bandeau "Aperçu". Sidebar : liens Pro grisés avec badge. Le "Contacter" après swipe = paywall Pro.</p>
+  <div class="mockup">
+    <div class="mockup-bar"><div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div> momentoevents.app/dashboard</div>
+    <div class="mockup-body">
+      <div class="info-box pink" style="margin-bottom:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:15px;font-weight:800;color:#fff;">💍 Notre mariage — prêt à 35%</span>
+          <span style="padding:4px 12px;background:rgba(225,29,72,0.2);border-radius:99px;font-size:12px;font-weight:700;color:#fb7185;">⏰ J-187</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:10px;">
+          <div class="progress-fill" style="width:35%;background:linear-gradient(90deg,#e11d48,#f43f5e);"></div>
+        </div>
+        <p style="font-size:12px;color:#fecdd3;">🎯 <strong>Prochaine étape :</strong> Contacter Studio Karim pour un devis (budget photo : 22 500 MAD)</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;">
+        <div class="widget">
+          <div style="display:flex;justify-content:space-between;margin-bottom:14px;">
+            <span class="widget-title" style="margin:0;">👥 Mes prestataires</span>
+            <span style="font-size:11px;color:#71717a;">5 shortlistés · 0 confirmés</span>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span style="font-size:12px;font-weight:600;">📸 Photo</span>
+              <span style="font-size:10px;color:#f59e0b;">Budget : 22 500 MAD</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;padding:10px;background:#27272a;border-radius:10px;border:1px solid #3f3f46;">
+                <div style="font-size:12px;font-weight:600;color:#e4e4e7;">Studio Karim</div>
+                <div style="font-size:10px;color:#71717a;">⭐ 4.8 · 15 000 MAD</div>
+                <span style="display:inline-block;margin-top:4px;padding:3px 8px;background:#1c1017;border:1px solid rgba(225,29,72,0.3);border-radius:6px;font-size:9px;color:#fb7185;">💬 Contacter</span>
+              </div>
+              <div style="flex:1;padding:10px;background:#27272a;border-radius:10px;border:1px solid #3f3f46;">
+                <div style="font-size:12px;font-weight:600;color:#e4e4e7;">Lens MRK</div>
+                <div style="font-size:10px;color:#71717a;">⭐ 4.7 · 18 000 MAD</div>
+                <span style="display:inline-block;margin-top:4px;padding:3px 8px;background:#1c1017;border:1px solid rgba(225,29,72,0.3);border-radius:6px;font-size:9px;color:#fb7185;">💬 Contacter</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span style="font-size:12px;font-weight:600;">🎵 DJ</span>
+              <span style="font-size:10px;color:#f59e0b;">Budget : 15 000 MAD</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;padding:10px;background:#27272a;border-radius:10px;border:1px solid #3f3f46;">
+                <div style="font-size:12px;font-weight:600;color:#e4e4e7;">DJ Omar</div>
+                <div style="font-size:10px;color:#71717a;">⭐ 4.6 · 12 000 MAD</div>
+                <span style="display:inline-block;margin-top:4px;padding:3px 8px;background:#1c1017;border:1px solid rgba(225,29,72,0.3);border-radius:6px;font-size:9px;color:#fb7185;">💬 Contacter</span>
+              </div>
+              <div style="flex:1;padding:10px;background:#27272a;border-radius:10px;border:1px solid #3f3f46;">
+                <div style="font-size:12px;font-weight:600;color:#e4e4e7;">DJ Yassine</div>
+                <div style="font-size:10px;color:#71717a;">⭐ 4.5 · 10 000 MAD</div>
+                <span style="display:inline-block;margin-top:4px;padding:3px 8px;background:#1c1017;border:1px solid rgba(225,29,72,0.3);border-radius:6px;font-size:9px;color:#fb7185;">💬 Contacter</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="widget" style="text-align:center;">
+            <div class="widget-title" style="text-align:left;">⏰ Countdown</div>
+            <div style="font-size:42px;font-weight:900;color:#e11d48;">187</div>
+            <div style="font-size:11px;color:#71717a;">jours · 📅 15 Oct. 2026</div>
+          </div>
+          <div class="widget">
+            <div class="widget-title">💰 Budget</div>
+            <div style="font-size:20px;font-weight:800;color:#fff;">150 000 MAD</div>
+            <div style="margin-top:8px;font-size:11px;color:#a1a1aa;line-height:2;">
+              🍽️ Traiteur <span style="float:right;color:#e4e4e7;">45 000</span><br>
+              📸 Photo <span style="float:right;color:#e4e4e7;">22 500</span><br>
+              🎵 DJ <span style="float:right;color:#e4e4e7;">15 000</span><br>
+              <span style="color:#22c55e;">Reste : 18 000 (12%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WIDGETS PRO — Aperçu avec données de démo -->
+      <div class="grid2" style="margin-top:16px;">
+        <div class="widget" style="position:relative;opacity:0.7;">
+          <div style="position:absolute;top:8px;right:8px;padding:3px 10px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:99px;font-size:9px;font-weight:700;color:#fff;z-index:2;">APERÇU — PRO</div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+            <span class="widget-title" style="margin:0;">📋 Checklist intelligente</span>
+            <span style="font-size:11px;color:#52525b;">0/7</span>
+          </div>
+          <div class="task-line" style="opacity:0.6;">☐ Contacter Studio Karim <span class="deadline warn">avant juin</span></div>
+          <div class="task-line" style="opacity:0.6;">☐ Demander devis DJ Omar <span class="deadline ok">avant juil.</span></div>
+          <div class="task-line" style="opacity:0.6;">☐ Réserver le traiteur <span class="deadline urgent">⚠️ avant mai</span></div>
+          <p style="font-size:11px;color:#52525b;margin-top:6px;">+ 4 autres…</p>
+          <div style="margin-top:10px;text-align:center;">
+            <div style="padding:8px 16px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:10px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;display:inline-block;">Débloquer la checklist — Passer Pro</div>
+          </div>
+        </div>
+        <div class="widget" style="position:relative;opacity:0.7;">
+          <div style="position:absolute;top:8px;right:8px;padding:3px 10px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:99px;font-size:9px;font-weight:700;color:#fff;z-index:2;">APERÇU — PRO</div>
+          <div class="widget-title">💬 Messages</div>
+          <div style="text-align:center;padding:12px 0;">
+            <div style="font-size:28px;margin-bottom:6px;">💌</div>
+            <p style="font-size:12px;color:#71717a;margin-bottom:4px;">5 prestas dans votre budget.</p>
+            <p style="font-size:11px;color:#a855f7;margin-bottom:10px;">Passez Pro pour contacter vos prestataires favoris</p>
+            <div style="padding:8px 16px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:10px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;display:inline-block;">Débloquer la messagerie — Passer Pro</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar FOMO indicator -->
+      <div style="margin-top:16px;padding:14px 18px;background:#1c1025;border:1px solid rgba(124,58,237,0.3);border-radius:12px;">
+        <div style="font-size:12px;font-weight:700;color:#a855f7;margin-bottom:8px;">Sidebar — liens grisés (Free)</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;">
+          <span style="color:#52525b;">🔒 Messages</span>
+          <span style="color:#52525b;">🔒 Invités</span>
+          <span style="color:#52525b;">🔒 Checklist</span>
+          <span style="color:#52525b;">🔒 Favoris</span>
+          <span style="color:#52525b;">🔒 Contrats</span>
+          <span style="color:#52525b;">🔒 Faire-part</span>
+          <span style="color:#52525b;">🔒 Mon site</span>
+          <span style="color:#e4e4e7;">✅ Budget</span>
+          <span style="color:#e4e4e7;">✅ Notes</span>
+          <span style="color:#e4e4e7;">✅ Découvrir</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div style="margin-top:40px;padding:24px;background:#1f1f23;border-radius:14px;border:1px solid #27272a;">
+  <h3 style="font-size:16px;font-weight:800;color:#fff;margin-bottom:14px;">📋 Flow final — 5 étapes</h3>
+  <ol style="font-size:13px;line-height:2.6;padding-left:20px;color:#a1a1aa;">
+    <li><strong style="color:#e4e4e7;">Explore</strong> — libre, anonyme, gate au clic profil</li>
+    <li><strong style="color:#e4e4e7;">Signup</strong> — modal avec 4 value props du dashboard</li>
+    <li><strong style="color:#e4e4e7;">Onboarding</strong> — type événement + catégories prestas</li>
+    <li><strong style="color:#f59e0b;">Budget</strong> — répartition par catégorie, feedback réaliste/serré/ambitieux, insight marché</li>
+    <li><strong style="color:#7c3aed;">Swipe prestas</strong> — 2-3 par catégorie, filtrés par budget, avec prix affiché</li>
+    <li><strong style="color:#e4e4e7;">Dashboard</strong> — 35% prêt, prestas + budget + tâches personnalisées</li>
+  </ol>
+  <div class="info-box green" style="margin-top:14px;">
+    <strong>Le cercle vertueux :</strong> Budget éduque le client → swipe filtré par budget → prestas shortlistés → dashboard Free avec FOMO (widgets Pro en aperçu) → client veut contacter → paywall Pro → conversion.
+  </div>
+  <div style="margin-top:14px;padding:14px 18px;background:#1c1025;border:1px solid rgba(124,58,237,0.3);border-radius:12px;">
+    <strong style="color:#a855f7;font-size:13px;">Modèle Free / Pro</strong>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;font-size:12px;color:#a1a1aa;">
+      <div>
+        <strong style="color:#e4e4e7;">Free</strong><br>
+        ✅ 1 événement<br>
+        ✅ Swipe illimité<br>
+        ✅ Budget (total)<br>
+        ✅ Notes<br>
+        ✅ Countdown<br>
+        ✅ Découvrir prestas
+      </div>
+      <div>
+        <strong style="color:#a855f7;">Pro</strong><br>
+        ✨ Événements illimités<br>
+        ✨ Messagerie prestas<br>
+        ✨ Checklist temporelle<br>
+        ✨ Gestion invités<br>
+        ✨ Budget répartition + IA<br>
+        ✨ Favoris + comparaison<br>
+        ✨ Thème visuel custom<br>
+        ✨ Contrats type par presta<br>
+        ✨ Templates faire-part<br>
+        ✨ Site mariage personnalisé
+      </div>
+    </div>
+    <p style="font-size:10px;color:#71717a;margin-top:8px;">Le swipe reste gratuit = moteur marketplace. Le paywall est sur l'ACTION (contacter), pas la DÉCOUVERTE.</p>
+  </div>
+</div>
+
+</body>
+</html>
