@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, useRef } from "react"
 import AntNav from "@/components/clone/AntNav"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import VendorDiscoverCard, { type DiscoverVendor } from "@/components/prestataires/VendorDiscoverCard"
+import RecommandedCarousel from "@/components/prestataires/RecommandedCarousel"
 import { usePlanners } from "@/hooks/usePlanners"
 import PageSkeleton from "@/components/clone/PageSkeleton"
 
@@ -214,6 +215,9 @@ export default function MesPrestatairesPage() {
           {/* Event selector supprimé — événement actif géré par la sidebar */}
           </div>
         </div>
+
+        {/* Carrousel recommandés — en haut de page, avant la sélection par catégorie */}
+        {activeEventId && <RecommandedCarousel plannerId={activeEventId} />}
 
         {loading ? (
           <PageSkeleton variant="cards" />

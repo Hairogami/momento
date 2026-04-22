@@ -7,6 +7,9 @@ import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import BudgetWidget, { type BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
 import VendorSwipeWidget from "@/components/clone/dashboard/VendorSwipeWidget"
 import MesPrestatairesWidget from "@/components/clone/dashboard/MesPrestatairesWidget"
+import DashboardProgressBanner from "@/components/clone/dashboard/DashboardProgressBanner"
+import { getEventLabel } from "@/lib/eventLabel"
+import { computeCompletion } from "@/lib/completionScore"
 
 const VendorSwipeModal = dynamic(
   () => import("@/components/VendorSwipeModal"),
@@ -1178,6 +1181,8 @@ export default function CloneDashboardPage() {
   const [events,        setEvents]        = useState<EventMeta[]>([])
   const [activeEventId, setActiveEventId] = useState("")
   const [eventsLoaded,  setEventsLoaded]  = useState(false)
+  const [activePlannerDetails, setActivePlannerDetails] = useState<{ eventType?: string | null; eventSubType?: string | null; categories?: string[]; budget?: number | null; budgetBreakdown?: unknown; guestCount?: number | null } | null>(null)
+  const [plannerVendors, setPlannerVendors] = useState<Array<{ vendor?: { category?: string | null } | null; status?: string | null }>>([])
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [widgetRows,    setWidgetRows]    = useState<Record<string, number>>({})
@@ -1218,6 +1223,28 @@ export default function CloneDashboardPage() {
   const completedTasks = tasks.filter(t => t.done).length
   const taskPct        = tasks.length > 0 ? completedTasks / tasks.length : 0
   const totalUnread    = messages.reduce((s, m) => s + m.unread, 0)
+
+  // ── Active planner details + vendors for progress banner ───────────────────
+  useEffect(() => {
+    if (!activeEventId) { setActivePlannerDetails(null); setPlannerVendors([]); return }
+    Promise.all([
+      fetch(`/api/planners/${activeEventId}`),
+      fetch(`/api/planners/${activeEventId}/vendors`),
+    ])
+      .then(async ([pr, vr]) => {
+        if (pr.ok) setActivePlannerDetails(await pr.json())
+        if (vr.ok) setPlannerVendors(await vr.json())
+      })
+      .catch(() => {})
+  }, [activeEventId])
+
+  const completionPct = activePlannerDetails
+    ? computeCompletion({
+        planner: activePlannerDetails,
+        vendors: plannerVendors,
+        tasks: tasks.map(t => ({ done: t.done })),
+      })
+    : 0
 
   // ── localStorage hydration ────────────────────────────────────────────────
   useEffect(() => {
@@ -1640,6 +1667,16 @@ export default function CloneDashboardPage() {
             </Link>
           )}
         </div>
+
+        {/* Progress banner — phrase dynamique + barre fluide animée */}
+        {event && (
+          <div style={{ padding: "24px 24px 0" }}>
+            <DashboardProgressBanner
+              eventLabel={getEventLabel(activePlannerDetails?.eventType, activePlannerDetails?.eventSubType)}
+              completionPct={completionPct}
+            />
+          </div>
+        )}
 
         {/* Event header */}
         <div style={{ padding: "24px 24px 0", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>

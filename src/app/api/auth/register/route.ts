@@ -21,11 +21,13 @@ const strongPassword = z.string().min(8).max(128)
   .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.")
 
 const ClientSchema = z.object({
-  role:      z.literal("client"),
-  email:     z.string().email(),
-  password:  strongPassword,
-  firstName: z.string().min(1).max(50).optional(),
-  lastName:  z.string().min(1).max(50).optional(),
+  role:           z.literal("client"),
+  email:          z.string().email(),
+  password:       strongPassword,
+  firstName:      z.string().min(1).max(50).optional(),
+  lastName:       z.string().min(1).max(50).optional(),
+  marketingOptIn: z.boolean().optional(),
+  agreedTos:      z.boolean().optional(),
 })
 
 const VendorSchema = z.object({
@@ -101,6 +103,8 @@ export async function POST(req: NextRequest) {
         companyName:    data.role === "vendor" ? (data.companyName ?? null) : null,
         vendorCategory: data.role === "vendor" ? (data.vendorCategory ?? null) : null,
         phone:          data.role === "vendor" ? (data.phone ?? null) : null,
+        marketingOptIn: data.role === "client" ? (data.marketingOptIn ?? true) : true,
+        agreedTosAt:    data.role === "client" && data.agreedTos ? new Date() : null,
       },
       select: { id: true, email: true, name: true },
     })

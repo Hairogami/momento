@@ -9,6 +9,8 @@ type Props = {
   city: string
   rating: number
   photo?: string | null
+  /** If provided, called with slug instead of navigating — used to gate anonymous users */
+  onGatedClick?: (slug: string) => void
 }
 
 const CAT_IMAGES: Record<string, string> = {
@@ -73,14 +75,20 @@ function getGradient(category: string): [string, string] {
   return ["#E11D48", "#9333EA"]
 }
 
-export default function AntVendorCard({ id, name, category, city, rating, photo }: Props) {
+export default function AntVendorCard({ id, name, category, city, rating, photo, onGatedClick }: Props) {
   const [fav, setFav] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
   const imgUrl = photo || CAT_IMAGES[category]
   const [g1, g2] = getGradient(category)
 
-  return (
-    <Link href={`/vendor/${id}`} style={{ textDecoration: "none", display: "block" }}>
+  const onWrapperClick = (e: React.MouseEvent) => {
+    if (!onGatedClick) return
+    e.preventDefault()
+    e.stopPropagation()
+    onGatedClick(id)
+  }
+
+  const inner = (
       <div
         className="clone-card"
         style={{
@@ -209,6 +217,18 @@ export default function AntVendorCard({ id, name, category, city, rating, photo 
           </p>
         </div>
       </div>
+  )
+
+  if (onGatedClick) {
+    return (
+      <div role="link" tabIndex={0} onClick={onWrapperClick} style={{ textDecoration: "none", display: "block", cursor: "pointer" }}>
+        {inner}
+      </div>
+    )
+  }
+  return (
+    <Link href={`/vendor/${id}`} style={{ textDecoration: "none", display: "block" }}>
+      {inner}
     </Link>
   )
 }

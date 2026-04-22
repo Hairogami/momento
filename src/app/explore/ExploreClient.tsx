@@ -1,7 +1,9 @@
 "use client"
 import { useState, useEffect, useMemo, useRef } from "react"
+import { useSession } from "next-auth/react"
 import AntNav from "@/components/clone/AntNav"
 import AntVendorCard from "@/components/clone/AntVendorCard"
+import SignupGateModal from "@/components/SignupGateModal"
 import type { VendorListItem } from "@/lib/vendorQueries"
 
 // ── PillSelect — custom dropdown styled avec les tokens de la page ───────────
@@ -184,6 +186,16 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   const [photoOnly, setPhotoOnly] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [catModalOpen, setCatModalOpen] = useState(false)
+
+  // Gate explore — anonymous users get SignupGateModal on vendor click
+  const { status } = useSession()
+  const isAuthenticated = status === "authenticated"
+  const [gateOpen, setGateOpen] = useState(false)
+  const [gateSlug, setGateSlug] = useState<string | null>(null)
+  function handleGatedVendorClick(slug: string) {
+    setGateSlug(slug)
+    setGateOpen(true)
+  }
   const [filtersModalOpen, setFiltersModalOpen] = useState(false)
   const filtersRef = useRef<HTMLDivElement>(null)
   const [page, setPage]           = useState(1)
@@ -597,6 +609,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                   city={v.city}
                   rating={v.rating}
                   photo={v.photo}
+                  onGatedClick={isAuthenticated ? undefined : handleGatedVendorClick}
                 />
               ))}
             </div>
@@ -781,6 +794,14 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           </div>
         </div>
       )}
+
+      <SignupGateModal
+        open={gateOpen}
+        onClose={() => setGateOpen(false)}
+        vendorSlug={gateSlug}
+        title={<>Connectez-vous pour voir ce prestataire</>}
+        subtitle="Créer un compte Momento vous débloque le profil complet et les outils d'organisation."
+      />
     </div>
   )
 }

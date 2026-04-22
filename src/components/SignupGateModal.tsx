@@ -1,0 +1,178 @@
+"use client"
+import { useState } from "react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
+
+const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
+
+const VALUE_PROPS = [
+  { emoji: "💰", title: "Budget intelligent", desc: "Répartition automatique par catégorie" },
+  { emoji: "✅", title: "Checklist personnalisée", desc: "Tâches calculées selon votre date" },
+  { emoji: "💬", title: "Messagerie directe", desc: "Contactez les prestas sans quitter Momento" },
+  { emoji: "🎁", title: "100% gratuit", desc: "Aucune carte bancaire requise" },
+]
+
+type Props = {
+  open: boolean
+  onClose: () => void
+  vendorSlug?: string | null   // si présent → redirect après signup
+  title?: React.ReactNode
+  subtitle?: React.ReactNode
+}
+
+export default function SignupGateModal({ open, onClose, vendorSlug, title, subtitle }: Props) {
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [tos, setTos] = useState(false)
+  const [marketing, setMarketing] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [err, setErr] = useState("")
+
+  if (!open) return null
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setErr("")
+    if (!tos) { setErr("Veuillez accepter les conditions générales."); return }
+    if (!email || !password) { setErr("Email et mot de passe requis."); return }
+    setLoading(true)
+    try {
+      const r = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: "client",
+          email, password,
+          firstName: firstName || undefined,
+          lastName:  lastName  || undefined,
+          marketingOptIn: marketing,
+          agreedTos: true,
+        }),
+      })
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}))
+        setErr(d.error || "Erreur lors de l'inscription")
+        setLoading(false)
+        return
+      }
+      const sr = await signIn("credentials", { email, password, redirect: false })
+      setLoading(false)
+      if (sr?.error) { router.push("/login"); return }
+      router.push(vendorSlug ? `/vendor/${vendorSlug}` : "/accueil")
+    } catch (e) {
+      setErr("Erreur réseau. Réessayez.")
+      setLoading(false)
+    }
+  }
+
+  async function handleGoogle() {
+    await signIn("google", { callbackUrl: vendorSlug ? `/vendor/${vendorSlug}` : "/accueil" })
+  }
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 100,
+        background: "rgba(5,5,10,0.72)", backdropFilter: "blur(10px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "24px",
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "var(--dash-surface, #16171e)",
+          border: "1px solid var(--dash-border, rgba(255,255,255,0.07))",
+          borderRadius: 24, width: "100%", maxWidth: 480,
+          maxHeight: "92vh", overflow: "auto",
+          padding: "28px 32px", color: "var(--dash-text, #eeeef5)",
+          fontFamily: "'Geist', sans-serif",
+          boxShadow: "0 40px 90px rgba(0,0,0,0.6)",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+          <div>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+              {title ?? <>Créez votre compte <em style={{ fontStyle: "italic", backgroundImage: G, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>gratuit</em></>}
+            </h2>
+            <p style={{ fontSize: 13, color: "var(--dash-text-2, #b0b0cc)", marginTop: 6 }}>{subtitle ?? "30 secondes. Pas de carte bancaire."}</p>
+          </div>
+          <button onClick={onClose} style={{ background: "transparent", border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: 22, cursor: "pointer", marginLeft: 10 }}>✕</button>
+        </div>
+
+        {/* Value props */}
+        <div style={{ marginTop: 18, display: "grid", gap: 10 }}>
+          {VALUE_PROPS.map(v => (
+            <div key={v.title} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", background: "var(--dash-faint, rgba(255,255,255,0.04))", borderRadius: 12 }}>
+              <span style={{ fontSize: 22 }}>{v.emoji}</span>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700 }}>{v.title}</div>
+                <div style={{ fontSize: 11, color: "var(--dash-text-3, #8888aa)" }}>{v.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Google OAuth */}
+        <button
+          type="button"
+          onClick={handleGoogle}
+          style={{ marginTop: 18, width: "100%", padding: "13px", background: "#fff", color: "#121317", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "inherit" }}
+        >
+          <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Continuer avec Google
+        </button>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0" }}>
+          <div style={{ flex: 1, height: 1, background: "var(--dash-border, rgba(255,255,255,0.07))" }} />
+          <span style={{ fontSize: 10, color: "var(--dash-text-3, #8888aa)", letterSpacing: 1.2, fontWeight: 600 }}>OU EMAIL</span>
+          <div style={{ flex: 1, height: 1, background: "var(--dash-border, rgba(255,255,255,0.07))" }} />
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+            <input placeholder="Prénom" value={firstName} onChange={e => setFirstName(e.target.value)} style={inputStyle} />
+            <input placeholder="Nom" value={lastName} onChange={e => setLastName(e.target.value)} style={inputStyle} />
+          </div>
+          <input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} style={{ ...inputStyle, marginBottom: 8 }} />
+          <input type="password" required placeholder="Mot de passe" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle} />
+
+          <label style={{ display: "flex", gap: 10, marginTop: 14, fontSize: 12, color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", lineHeight: 1.5 }}>
+            <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2 }} />
+            <span>J'accepte les <a href="/cgu" style={{ color: "var(--g1, #E11D48)", textDecoration: "underline" }}>conditions générales</a> et la <a href="/confidentialite" style={{ color: "var(--g1, #E11D48)", textDecoration: "underline" }}>politique de confidentialité</a>.</span>
+          </label>
+          <label style={{ display: "flex", gap: 10, marginTop: 8, fontSize: 12, color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", lineHeight: 1.5 }}>
+            <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 2 }} />
+            <span>Je souhaite recevoir les conseils & offres Momento (facultatif).</span>
+          </label>
+
+          {err && <div style={{ marginTop: 12, padding: "10px 12px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", fontSize: 12, borderRadius: 10 }}>{err}</div>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            style={{ width: "100%", marginTop: 16, padding: "14px", background: G, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 800, cursor: loading ? "default" : "pointer", opacity: loading ? 0.6 : 1, boxShadow: "0 8px 24px rgba(225,29,72,0.3)", fontFamily: "inherit" }}
+          >
+            {loading ? "Création…" : "Créer mon compte"}
+          </button>
+
+          <p style={{ marginTop: 14, textAlign: "center", fontSize: 12, color: "var(--dash-text-3, #8888aa)" }}>
+            Déjà inscrit ? <a href="/login" style={{ color: "var(--g1, #E11D48)", fontWeight: 600 }}>Se connecter</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+const inputStyle: React.CSSProperties = {
+  width: "100%", padding: "12px 14px",
+  background: "var(--dash-input-bg, #1c1d25)",
+  border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))",
+  borderRadius: 12, fontSize: 14, color: "var(--dash-text, #eeeef5)",
+  outline: "none", fontFamily: "inherit", boxSizing: "border-box",
+}

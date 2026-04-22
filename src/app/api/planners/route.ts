@@ -76,6 +76,22 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Sélectionnez au moins 3 catégories de prestataires." }, { status: 400 })
   }
 
+  const guestCountRaw = typeof b.guestCount === "number" ? b.guestCount : parseInt(String(b.guestCount ?? ""), 10)
+  const guestCount = Number.isFinite(guestCountRaw) && guestCountRaw >= 0 ? guestCountRaw : null
+
+  const eventType    = typeof b.eventType === "string" && b.eventType.trim().length > 0 ? b.eventType.trim().slice(0, 40) : null
+  const eventSubType = typeof b.eventSubType === "string" && b.eventSubType.trim().length > 0 ? b.eventSubType.trim().slice(0, 60) : null
+
+  let budgetBreakdown: Record<string, number> | null = null
+  if (b.budgetBreakdown && typeof b.budgetBreakdown === "object" && !Array.isArray(b.budgetBreakdown)) {
+    const bb: Record<string, number> = {}
+    for (const [k, v] of Object.entries(b.budgetBreakdown as Record<string, unknown>)) {
+      const n = typeof v === "number" ? v : parseFloat(String(v))
+      if (Number.isFinite(n) && n >= 0) bb[k.slice(0, 100)] = n
+    }
+    if (Object.keys(bb).length > 0) budgetBreakdown = bb
+  }
+
   const planner = await prisma.planner.create({
     data: {
       title,
@@ -83,10 +99,14 @@ export async function POST(request: NextRequest) {
       weddingDate: parseDate(b.weddingDate),
       budget:      parseBudget(b.budget),
       location:    typeof b.location === "string"    ? b.location.slice(0, 200)    : null,
+      guestCount,
       coverColor:  typeof b.coverColor === "string" && HEX_COLOR.test(b.coverColor)
         ? b.coverColor
         : "#f9a8d4",
       categories,
+      eventType,
+      eventSubType,
+      budgetBreakdown: budgetBreakdown ?? undefined,
       userId: session.user.id,
     },
   })
