@@ -94,10 +94,11 @@ export default function AntHero() {
       style={{
         display: "inline-block",
         width: "0.06em",
-        height: "0.82em",
+        height: "0.78em",
         backgroundColor: currentWord.color,
         marginLeft: "0.04em",
-        verticalAlign: "text-bottom",
+        verticalAlign: "middle",
+        transform: "translateY(-6%)",
         opacity: cursor ? 1 : 0,
         transition: "opacity 0.08s, background-color 0.25s ease",
       }}
