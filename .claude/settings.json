@@ -1,9 +1,39 @@
 {
   "permissions": {
+    "defaultMode": "bypassPermissions",
     "allow": [
-      "Bash(node -e ':*)",
-      "Bash(node scripts/antigravity-recon.mjs)",
-      "Bash(ls docs/design-references/antigravity/scroll-*.png)"
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(node:*)",
+      "Bash(sed:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(cd:*)",
+      "Bash(echo:*)",
+      "Bash(pwd)",
+      "Bash(dir)",
+      "Bash(vercel:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(powershell:*)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Agent",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools:*",
+      "mcp__plugin_playwright_playwright:*",
+      "mcp__plugin_prisma_Prisma-Local:*",
+      "mcp__plugin_vercel_vercel:*",
+      "mcp__plugin_claude-mem_mcp-search:*"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)"
     ]
   },
   "enabledPlugins": {

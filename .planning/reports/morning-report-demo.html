@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momento — Rapport du matin</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e4e4e7; min-height: 100vh; padding: 2rem; }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  h1 { font-size: 1.8rem; margin-bottom: 0.3rem; background: linear-gradient(135deg, #a78bfa, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { color: #71717a; font-size: 0.9rem; margin-bottom: 2rem; }
+
+  /* Score cards */
+  .scores { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .score-card { background: #18181b; border-radius: 12px; padding: 1.2rem; text-align: center; border: 1px solid #27272a; }
+  .score-card .label { font-size: 0.75rem; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .score-card .value { font-size: 2.2rem; font-weight: 700; }
+  .score-card .bar { height: 6px; border-radius: 3px; background: #27272a; margin-top: 0.8rem; overflow: hidden; }
+  .score-card .bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .green { color: #4ade80; }
+  .yellow { color: #facc15; }
+  .red { color: #f87171; }
+  .bar-green { background: #4ade80; }
+  .bar-yellow { background: #facc15; }
+  .bar-red { background: #f87171; }
+  .bar-blue { background: #818cf8; }
+
+  /* Sections */
+  .section { background: #18181b; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid #27272a; }
+  .section h2 { font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .section h2 span { font-size: 1.3rem; }
+
+  /* Items */
+  .item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.7rem 0; border-bottom: 1px solid #27272a; }
+  .item:last-child { border-bottom: none; }
+  .item .badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; white-space: nowrap; margin-top: 0.1rem; }
+  .badge-critical { background: #991b1b; color: #fca5a5; }
+  .badge-fixed { background: #166534; color: #86efac; }
+  .badge-warning { background: #854d0e; color: #fde047; }
+  .badge-info { background: #1e3a5f; color: #93c5fd; }
+  .item .text { font-size: 0.9rem; line-height: 1.4; }
+  .item .file { color: #818cf8; font-size: 0.8rem; font-family: monospace; }
+
+  /* Commits */
+  .commits { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+  .commit { font-size: 0.75rem; background: #27272a; padding: 0.3rem 0.6rem; border-radius: 6px; font-family: monospace; color: #a1a1aa; }
+
+  /* Recommendation */
+  .reco { background: linear-gradient(135deg, #1e1b4b, #172554); border: 1px solid #3730a3; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+  .reco h2 { color: #a78bfa; font-size: 1rem; margin-bottom: 0.5rem; }
+  .reco p { font-size: 1rem; line-height: 1.5; }
+
+  /* Stats row */
+  .stats { display: flex; gap: 2rem; margin-top: 1rem; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 1.5rem; font-weight: 700; color: #818cf8; }
+  .stat .lbl { font-size: 0.75rem; color: #71717a; }
+
+  /* Prompt box */
+  .prompt-box { background: #1c1c24; border: 1px solid #3730a3; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; position: relative; }
+  .prompt-box h2 { color: #818cf8; font-size: 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+  .prompt-box pre { background: #0a0a0f; border-radius: 8px; padding: 1rem; font-size: 0.8rem; line-height: 1.5; color: #d4d4d8; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+  .copy-btn { position: absolute; top: 1rem; right: 1rem; background: #818cf8; color: #0a0a0f; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .copy-btn:hover { background: #a78bfa; }
+  .copy-btn.copied { background: #4ade80; }
+
+  /* Email banner */
+  .email-banner { background: #172554; border: 1px solid #1e40af; border-radius: 12px; padding: 1rem 1.5rem; margin-top: 1.2rem; display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; }
+  .email-banner .icon { font-size: 1.3rem; }
+  .email-banner .text { color: #93c5fd; }
+  .email-banner .addr { color: #60a5fa; font-weight: 600; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .scores { grid-template-columns: repeat(2, 1fr); }
+    body { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Rapport du matin</h1>
+  <p class="subtitle">Vendredi 18 avril 2026 — Routines de nuit : 4/4 terminées</p>
+
+  <!-- Scores -->
+  <div class="scores">
+    <div class="score-card">
+      <div class="label">Securite</div>
+      <div class="value yellow">7<span style="font-size:1rem;color:#71717a">/10</span></div>
+      <div class="bar"><div class="bar-fill bar-yellow" style="width:70%"></div></div>
+    </div>
+    <div class="score-card">
+      <div class="label">Code Quality</div>
+      <div class="value green">8<span style="font-size:1rem;color:#71717a">/10</span></div>
+      <div class="bar"><div class="bar-fill bar-green" style="width:80%"></div></div>
+    </div>
+    <div class="score-card">
+      <div class="label">Tests</div>
+      <div class="value red">23<span style="font-size:1rem;color:#71717a">%</span></div>
+      <div class="bar"><div class="bar-fill bar-red" style="width:23%"></div></div>
+    </div>
+    <div class="score-card">
+      <div class="label">SEO</div>
+      <div class="value yellow">61<span style="font-size:1rem;color:#71717a">/100</span></div>
+      <div class="bar"><div class="bar-fill bar-yellow" style="width:61%"></div></div>
+    </div>
+  </div>
+
+  <!-- Urgent -->
+  <div class="section">
+    <h2><span>🔴</span> Urgent — a traiter aujourd'hui</h2>
+    <div class="item">
+      <span class="badge badge-critical">CRITIQUE</span>
+      <div>
+        <div class="text">Route <code>/api/messages</code> — pas de filtre userId. N'importe quel utilisateur peut lire les messages d'un autre.</div>
+        <div class="file">src/app/api/messages/route.ts:42</div>
+      </div>
+    </div>
+    <div class="item">
+      <span class="badge badge-critical">CRITIQUE</span>
+      <div>
+        <div class="text">Endpoint <code>/api/planners/[id]</code> — le PATCH accepte n'importe quel ID sans verifier la session.</div>
+        <div class="file">src/app/api/planners/[id]/route.ts:18</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Important -->
+  <div class="section">
+    <h2><span>⚠️</span> Important — cette semaine</h2>
+    <div class="item">
+      <span class="badge badge-warning">SEO</span>
+      <div>
+        <div class="text">842 pages prestas sans meta description. Google affichera un extrait generique.</div>
+        <div class="file">src/app/vendor/[slug]/page.tsx</div>
+      </div>
+    </div>
+    <div class="item">
+      <span class="badge badge-warning">QUALITE</span>
+      <div>
+        <div class="text"><code>VendorSwipeModal.tsx</code> fait 822 lignes — a decouper en 3-4 composants.</div>
+        <div class="file">src/components/VendorSwipeModal.tsx</div>
+      </div>
+    </div>
+    <div class="item">
+      <span class="badge badge-warning">TESTS</span>
+      <div>
+        <div class="text">0 tests sur les routes auth (<code>/api/auth/login</code>, <code>/api/auth/register</code>). Risque de regression silencieuse.</div>
+        <div class="file">src/app/api/auth/</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fait cette nuit -->
+  <div class="section">
+    <h2><span>✅</span> Fait cette nuit</h2>
+    <div class="stats">
+      <div class="stat"><div class="num">3</div><div class="lbl">Fixes securite</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">Fixes qualite</div></div>
+      <div class="stat"><div class="num">12</div><div class="lbl">Tests ajoutes</div></div>
+      <div class="stat"><div class="num">5</div><div class="lbl">Fixes SEO</div></div>
+    </div>
+    <div class="commits" style="margin-top:1rem;">
+      <span class="commit">fix(security): add userId filter on /api/favorites</span>
+      <span class="commit">fix(security): validate JWT expiration on /api/user</span>
+      <span class="commit">fix(security): sanitize vendor description output</span>
+      <span class="commit">fix(quality): remove 14 console.log statements</span>
+      <span class="commit">fix(quality): replace 8 'any' types with proper interfaces</span>
+      <span class="commit">fix(quality): remove 3 unused imports in dashboard</span>
+      <span class="commit">fix(seo): add meta descriptions to landing + explore</span>
+      <span class="commit">fix(seo): add JSON-LD LocalBusiness to vendor pages</span>
+      <span class="commit">test(auth): add login/register route tests</span>
+      <span class="commit">test(api): add IDOR tests for /api/planners</span>
+    </div>
+  </div>
+
+  <!-- Recommendation -->
+  <div class="reco">
+    <h2>💡 Recommandation #1</h2>
+    <p>Corriger les 2 failles IDOR critiques sur <code>/api/messages</code> et <code>/api/planners/[id]</code>. Ce sont des vulnerabilites exploitables qui exposent les donnees d'autres utilisateurs. Temps estime : 15 minutes.</p>
+  </div>
+
+  <!-- Prompt a copier -->
+  <div class="prompt-box">
+    <h2><span>⚡</span> Prompt — corriger les problemes urgents</h2>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copier</button>
+    <pre id="fix-prompt">Corrige les problemes urgents identifies par le rapport de nuit du 2026-04-18 :
+
+1. IDOR /api/messages (src/app/api/messages/route.ts:42) — ajouter filtre userId en session sur le GET. Verifier que seul l'utilisateur connecte peut lire ses propres messages.
+
+2. IDOR /api/planners/[id] (src/app/api/planners/[id]/route.ts:18) — le PATCH doit verifier que le planner appartient au userId en session avant de modifier.
+
+Regles :
+- Import Prisma : @/generated/prisma/client
+- Auth : utiliser auth() de src/lib/auth.ts
+- Commiter chaque fix separement : fix(security): desc
+- Verifier npx next build apres les fixes</pre>
+  </div>
+
+  <!-- Email -->
+  <div class="email-banner">
+    <span class="icon">📧</span>
+    <span class="text">Ce rapport a ete envoye a <span class="addr">moumene486@gmail.com</span> a 9h00</span>
+  </div>
+
+</div>
+
+<script>
+function copyPrompt(btn) {
+  const text = document.getElementById('fix-prompt').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copie !';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

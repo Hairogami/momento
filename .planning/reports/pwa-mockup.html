@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momento — PWA Mockup (Landing · Explore · Dashboard)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e4e4e7; min-height: 100vh; padding: 2rem; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 0.3rem; background: linear-gradient(135deg, #a78bfa, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { color: #71717a; font-size: 0.9rem; margin-bottom: 2rem; }
+
+  /* Phone frames */
+  .phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem; }
+  .phone-wrap { text-align: center; }
+  .phone-label { font-size: 0.9rem; color: #e4e4e7; margin-bottom: 0.3rem; font-weight: 700; }
+  .phone-sub { font-size: 0.7rem; color: #71717a; margin-bottom: 1rem; }
+  .phone { width: 100%; max-width: 280px; margin: 0 auto; background: #1a1a1f; border: 3px solid #3f3f46; border-radius: 32px; padding: 12px 8px; aspect-ratio: 9/19.5; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+  .notch { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; background: #000; border-radius: 12px; z-index: 10; }
+  .screen { width: 100%; height: 100%; border-radius: 22px; overflow: hidden; position: relative; background: #0a0a0f; display: flex; flex-direction: column; }
+  .status-bar { display: flex; justify-content: space-between; padding: 2rem 1rem 0.4rem; font-size: 0.6rem; color: #e4e4e7; flex-shrink: 0; }
+
+  /* ====== SCREEN 1: LANDING ====== */
+  .landing { flex: 1; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, #0a0a0f 0%, #1e1b4b 60%, #0a0a0f 100%); }
+  .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.8rem; }
+  .logo-gradient { font-size: 0.85rem; font-weight: 800; background: linear-gradient(135deg, #a78bfa, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .landing-menu { font-size: 1rem; color: #a1a1aa; }
+  .hero { padding: 1.5rem 1rem; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .hero h2 { font-size: 1.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.5rem; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 0.65rem; color: #a1a1aa; line-height: 1.4; margin-bottom: 1rem; }
+  .hero-cta { background: linear-gradient(135deg, #a78bfa, #818cf8); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; margin-bottom: 0.5rem; width: 90%; margin-left: auto; margin-right: auto; display: block; }
+  .hero-cta.ghost { background: transparent; border: 1px solid #3f3f46; color: #e4e4e7; }
+  .hero-trust { display: flex; justify-content: center; gap: 0.4rem; margin-top: 0.8rem; font-size: 0.5rem; color: #71717a; }
+  .hero-badges { display: flex; gap: 0.3rem; justify-content: center; margin-top: 0.4rem; }
+  .hero-badge { background: #18181b; border: 1px solid #27272a; padding: 0.2rem 0.5rem; border-radius: 8px; font-size: 0.5rem; color: #a1a1aa; }
+  .hero-preview { margin: 0.5rem 1rem; background: #18181b; border-radius: 10px; padding: 0.5rem; display: flex; gap: 0.4rem; align-items: center; border: 1px solid #27272a; }
+  .hero-preview-dot { width: 28px; height: 28px; border-radius: 6px; background: linear-gradient(135deg, #ec4899, #a78bfa); flex-shrink: 0; }
+  .hero-preview-txt { flex: 1; text-align: left; }
+  .hero-preview-txt .t1 { font-size: 0.6rem; color: #e4e4e7; font-weight: 600; }
+  .hero-preview-txt .t2 { font-size: 0.5rem; color: #71717a; }
+
+  /* ====== SCREEN 2: EXPLORE ====== */
+  .explore { flex: 1; display: flex; flex-direction: column; background: #0a0a0f; }
+  .explore-header { padding: 0.4rem 0.8rem 0.6rem; }
+  .explore-search { background: #18181b; border: 1px solid #27272a; border-radius: 20px; padding: 0.4rem 0.7rem; font-size: 0.6rem; color: #71717a; display: flex; align-items: center; gap: 0.4rem; }
+  .explore-chips { display: flex; gap: 0.3rem; overflow-x: auto; padding: 0 0.8rem 0.5rem; }
+  .chip { background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 0.25rem 0.6rem; font-size: 0.55rem; color: #a1a1aa; white-space: nowrap; }
+  .chip.active { background: linear-gradient(135deg, #a78bfa, #818cf8); color: white; border-color: transparent; }
+  .explore-grid { flex: 1; padding: 0.3rem 0.8rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; overflow: hidden; align-content: start; }
+  .vendor-mini { background: #18181b; border-radius: 10px; overflow: hidden; border: 1px solid #27272a; }
+  .vendor-photo { aspect-ratio: 1; background: linear-gradient(135deg, #ec4899, #a78bfa); position: relative; }
+  .vendor-photo.g { background: linear-gradient(135deg, #10b981, #34d399); }
+  .vendor-photo.y { background: linear-gradient(135deg, #eab308, #f59e0b); }
+  .vendor-photo.b { background: linear-gradient(135deg, #3b82f6, #6366f1); }
+  .vendor-photo.r { background: linear-gradient(135deg, #ef4444, #f97316); }
+  .vendor-photo.p { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+  .star-badge { position: absolute; top: 0.3rem; right: 0.3rem; background: rgba(0,0,0,0.6); color: #facc15; padding: 0.1rem 0.3rem; border-radius: 8px; font-size: 0.5rem; }
+  .partner-badge { position: absolute; top: 0.3rem; left: 0.3rem; background: #a78bfa; color: white; padding: 0.1rem 0.3rem; border-radius: 8px; font-size: 0.5rem; font-weight: 600; }
+  .vendor-mini-body { padding: 0.4rem; }
+  .vendor-mini-body .n { font-size: 0.6rem; color: #e4e4e7; font-weight: 600; margin-bottom: 0.1rem; }
+  .vendor-mini-body .m { font-size: 0.5rem; color: #71717a; }
+
+  /* ====== SCREEN 3: DASHBOARD ====== */
+  .dashboard { flex: 1; display: flex; flex-direction: column; background: #0a0a0f; overflow: hidden; }
+  .dash-header { padding: 0.5rem 0.8rem; border-bottom: 1px solid #18181b; }
+  .dash-greeting { font-size: 0.7rem; color: #e4e4e7; font-weight: 600; }
+  .dash-sub { font-size: 0.5rem; color: #71717a; }
+  .dash-body { flex: 1; padding: 0.5rem; overflow: hidden; }
+  .widget { background: #18181b; border: 1px solid #27272a; border-radius: 10px; padding: 0.5rem; margin-bottom: 0.4rem; }
+  .widget-title { font-size: 0.55rem; color: #71717a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+  .widget.countdown { background: linear-gradient(135deg, #1e1b4b, #172554); border-color: #3730a3; }
+  .countdown-big { font-size: 1.2rem; font-weight: 800; color: #a78bfa; }
+  .countdown-label { font-size: 0.55rem; color: #a1a1aa; }
+  .widget.progress .bar { height: 4px; background: #27272a; border-radius: 2px; overflow: hidden; margin-top: 0.3rem; }
+  .widget.progress .bar-fill { height: 100%; background: linear-gradient(90deg, #a78bfa, #818cf8); border-radius: 2px; }
+  .widget-row { display: flex; justify-content: space-between; align-items: center; }
+  .widget-row .v { font-size: 0.8rem; font-weight: 700; color: #e4e4e7; }
+  .widget-row .vv { font-size: 0.55rem; color: #4ade80; }
+  .widget.budget .bar { margin-top: 0.4rem; }
+  .widget.budget .values { display: flex; justify-content: space-between; font-size: 0.55rem; color: #a1a1aa; margin-top: 0.2rem; }
+  .task { display: flex; align-items: center; gap: 0.4rem; font-size: 0.55rem; color: #a1a1aa; padding: 0.15rem 0; }
+  .task-check { width: 10px; height: 10px; border: 1px solid #3f3f46; border-radius: 2px; flex-shrink: 0; }
+  .task-check.done { background: #4ade80; border-color: #4ade80; }
+  .task.done { color: #71717a; text-decoration: line-through; }
+
+  /* Tabbar commune */
+  .tabbar { border-top: 1px solid #27272a; display: flex; padding: 0.4rem 0 1rem; background: #0f0f15; flex-shrink: 0; }
+  .tab { flex: 1; text-align: center; font-size: 0.5rem; color: #71717a; }
+  .tab.active { color: #a78bfa; font-weight: 600; }
+  .tab-icon { font-size: 0.9rem; display: block; margin-bottom: 0.1rem; }
+
+  /* Install bar */
+  .install-pill { background: #1e1b4b; border: 1px solid #a78bfa; color: #e4e4e7; font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: 20px; display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; }
+
+  /* Info sections */
+  .section { background: #18181b; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid #27272a; }
+  .section h2 { font-size: 1.05rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .steps { counter-reset: step; }
+  .step { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid #27272a; }
+  .step:last-child { border-bottom: none; }
+  .step-num { background: linear-gradient(135deg, #a78bfa, #818cf8); color: white; min-width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .step-body p { font-size: 0.8rem; color: #a1a1aa; line-height: 1.5; }
+  .step-body code { background: #0a0a0f; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.75rem; color: #a78bfa; }
+
+  .tag { display: inline-block; background: #27272a; color: #a1a1aa; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.3rem; }
+  .tag.green { background: #166534; color: #86efac; }
+  .tag.yellow { background: #854d0e; color: #fde047; }
+  .tag.red { background: #991b1b; color: #fca5a5; }
+
+  .platforms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+  .platform { background: #0f0f15; border: 1px solid #27272a; border-radius: 10px; padding: 1rem; }
+  .platform h3 { font-size: 0.85rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+  .platform p { font-size: 0.75rem; color: #a1a1aa; line-height: 1.4; }
+
+  .note { background: linear-gradient(135deg, #1e1b4b, #172554); border: 1px solid #3730a3; border-radius: 12px; padding: 1rem 1.2rem; font-size: 0.85rem; color: #d4d4d8; margin-bottom: 1.2rem; }
+  .note strong { color: #a78bfa; }
+
+  @media (max-width: 900px) { .phones, .platforms { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Momento — PWA Mockup</h1>
+  <p class="subtitle">À quoi ressemble Momento une fois installé en PWA — 3 écrans clés</p>
+
+  <div class="note">
+    <strong>⚠️ Important :</strong> c'est exactement le même site <code style="background:#0a0a0f;padding:0.1rem 0.3rem;border-radius:3px;">momentoevents.app</code> — juste sans la barre du navigateur, avec une icône sur le téléphone et accessible en 1 tap. Zéro nouveau code à écrire pour le contenu.
+  </div>
+
+  <!-- 3 phone mockups : Landing, Explore, Dashboard -->
+  <div class="phones">
+
+    <!-- Phone 1: LANDING -->
+    <div class="phone-wrap">
+      <div class="phone-label">🌟 Landing</div>
+      <div class="phone-sub">Première ouverture de l'app</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+          </div>
+          <div class="landing">
+            <div class="landing-nav">
+              <div class="logo-gradient">Momento</div>
+              <div class="landing-menu">☰</div>
+            </div>
+            <div class="hero">
+              <h2>L'événementiel sans le chaos</h2>
+              <p>Trouve les meilleurs prestataires au Maroc. Seulement en 3 clics.</p>
+              <button class="hero-cta">Commencer gratuitement</button>
+              <button class="hero-cta ghost">Je suis prestataire</button>
+              <div class="hero-badges">
+                <span class="hero-badge">💍 Mariage</span>
+                <span class="hero-badge">🎉 Fête</span>
+                <span class="hero-badge">💼 Corporate</span>
+              </div>
+              <div class="hero-trust">
+                <span>⭐ 4.8/5</span>
+                <span>· 1000+ prestas</span>
+                <span>· 41 villes</span>
+              </div>
+            </div>
+            <div class="hero-preview">
+              <div class="hero-preview-dot"></div>
+              <div class="hero-preview-txt">
+                <div class="t1">Studio Anass · Photo</div>
+                <div class="t2">Casablanca · ⭐ 4.9 · 128 avis</div>
+              </div>
+            </div>
+            <div style="height:4px;"></div>
+          </div>
+          <div class="tabbar">
+            <div class="tab active"><span class="tab-icon">🏠</span>Accueil</div>
+            <div class="tab"><span class="tab-icon">🔍</span>Explorer</div>
+            <div class="tab"><span class="tab-icon">📊</span>Tableau</div>
+            <div class="tab"><span class="tab-icon">👤</span>Compte</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 2: EXPLORE -->
+    <div class="phone-wrap">
+      <div class="phone-label">🔍 Explore</div>
+      <div class="phone-sub">Découverte prestataires</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+          </div>
+          <div class="explore">
+            <div class="explore-header">
+              <div class="explore-search">🔍 Rechercher un prestataire...</div>
+            </div>
+            <div class="explore-chips">
+              <div class="chip active">Tous</div>
+              <div class="chip">Photo</div>
+              <div class="chip">Traiteur</div>
+              <div class="chip">DJ</div>
+              <div class="chip">Déco</div>
+              <div class="chip">Salle</div>
+            </div>
+            <div class="explore-grid">
+              <div class="vendor-mini">
+                <div class="vendor-photo">
+                  <div class="partner-badge">⭐ Partner</div>
+                  <div class="star-badge">★ 4.9</div>
+                </div>
+                <div class="vendor-mini-body">
+                  <div class="n">Studio Anass</div>
+                  <div class="m">Photo · Casa</div>
+                </div>
+              </div>
+              <div class="vendor-mini">
+                <div class="vendor-photo g">
+                  <div class="star-badge">★ 4.7</div>
+                </div>
+                <div class="vendor-mini-body">
+                  <div class="n">Yasmine Traiteur</div>
+                  <div class="m">Traiteur · Rabat</div>
+                </div>
+              </div>
+              <div class="vendor-mini">
+                <div class="vendor-photo y">
+                  <div class="partner-badge">⭐ Partner</div>
+                  <div class="star-badge">★ 4.8</div>
+                </div>
+                <div class="vendor-mini-body">
+                  <div class="n">DJ Karim</div>
+                  <div class="m">DJ · Marrakech</div>
+                </div>
+              </div>
+              <div class="vendor-mini">
+                <div class="vendor-photo b">
+                  <div class="star-badge">★ 4.6</div>
+                </div>
+                <div class="vendor-mini-body">
+                  <div class="n">Fleurs de Fès</div>
+                  <div class="m">Fleurs · Fès</div>
+                </div>
+              </div>
+              <div class="vendor-mini">
+                <div class="vendor-photo r">
+                  <div class="star-badge">★ 4.9</div>
+                </div>
+                <div class="vendor-mini-body">
+                  <div class="n">Villa Atlas</div>
+                  <div class="m">Salle · Casa</div>
+                </div>
+              </div>
+              <div class="vendor-mini">
+                <div class="vendor-photo p">
+                  <div class="star-badge">★ 4.7</div>
+                </div>
+                <div class="vendor-mini-body">
+                  <div class="n">Maquillage Lila</div>
+                  <div class="m">MUA · Rabat</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <div class="tab"><span class="tab-icon">🏠</span>Accueil</div>
+            <div class="tab active"><span class="tab-icon">🔍</span>Explorer</div>
+            <div class="tab"><span class="tab-icon">📊</span>Tableau</div>
+            <div class="tab"><span class="tab-icon">👤</span>Compte</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 3: DASHBOARD -->
+    <div class="phone-wrap">
+      <div class="phone-label">📊 Dashboard</div>
+      <div class="phone-sub">Ton événement en 1 coup d'œil</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+          </div>
+          <div class="dashboard">
+            <div class="dash-header">
+              <div class="dash-greeting">Bonjour Yasmine 👋</div>
+              <div class="dash-sub">Mariage · 15 juin 2026</div>
+            </div>
+            <div class="dash-body">
+              <div class="widget countdown">
+                <div class="widget-title">COUNTDOWN</div>
+                <div class="countdown-big">58 <span style="font-size:0.7rem;color:#a1a1aa;">jours</span></div>
+                <div class="countdown-label">avant le grand jour</div>
+              </div>
+              <div class="widget progress">
+                <div class="widget-title">PROGRESSION</div>
+                <div class="widget-row">
+                  <span class="v">42%</span>
+                  <span class="vv">+8% cette semaine</span>
+                </div>
+                <div class="bar"><div class="bar-fill" style="width:42%"></div></div>
+              </div>
+              <div class="widget budget">
+                <div class="widget-title">BUDGET</div>
+                <div class="widget-row">
+                  <span class="v">68 500 MAD</span>
+                  <span class="vv">/ 150 000</span>
+                </div>
+                <div class="bar"><div class="bar-fill" style="width:45%"></div></div>
+                <div class="values">
+                  <span>Dépensé 45%</span>
+                  <span>Reste 81 500</span>
+                </div>
+              </div>
+              <div class="widget">
+                <div class="widget-title">TÂCHES · 3/8</div>
+                <div class="task done"><div class="task-check done"></div> Choisir le lieu</div>
+                <div class="task done"><div class="task-check done"></div> Réserver photographe</div>
+                <div class="task"><div class="task-check"></div> Envoyer save-the-date</div>
+                <div class="task"><div class="task-check"></div> Valider menu traiteur</div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <div class="tab"><span class="tab-icon">🏠</span>Accueil</div>
+            <div class="tab"><span class="tab-icon">🔍</span>Explorer</div>
+            <div class="tab active"><span class="tab-icon">📊</span>Tableau</div>
+            <div class="tab"><span class="tab-icon">👤</span>Compte</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Comment ça s'affiche -->
+  <div class="section">
+    <h2>📱 Comment l'utilisateur l'installe</h2>
+
+    <div class="platforms">
+      <div class="platform">
+        <h3>🤖 Android (Chrome) — 85% MA</h3>
+        <p><strong>Automatique.</strong> Après 2-3 visites, Chrome affiche "Installer Momento" en bas de l'écran. 1 tap → icône sur home screen. Push notifs supportées nativement.</p>
+      </div>
+      <div class="platform">
+        <h3>🍎 iOS (Safari) — 15% MA</h3>
+        <p><strong>Manuel.</strong> Bouton "Partager" → "Sur l'écran d'accueil". Pas de prompt auto (restriction Apple). Push notifs OK depuis iOS 16.4 (2023).</p>
+      </div>
+      <div class="platform">
+        <h3>💻 Desktop (Chrome/Edge)</h3>
+        <p><strong>Automatique.</strong> Icône "Installer" dans la barre d'URL. Ouvre Momento en fenêtre dédiée, sans onglets — utile pour les prestataires qui gèrent leurs leads.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setup technique -->
+  <div class="section">
+    <h2>⚙️ Mise en place technique (Next.js 16)</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Créer <code>public/manifest.json</code></strong>
+          <p>Déclare le nom, les icônes, la couleur de thème (#a78bfa), le mode <code>standalone</code>. C'est le fichier qui dit au navigateur "cette app est installable".</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Générer les icônes Momento</strong>
+          <p>3 formats : <code>icon-192.png</code> + <code>icon-512.png</code> + <code>apple-touch-icon.png</code> (180×180). Outil recommandé : <code>realfavicongenerator.net</code> (1 upload → tous les formats).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Installer <code>@ducanh2912/next-pwa</code></strong>
+          <p>Plugin Next.js qui génère automatiquement le service worker (cache offline, stratégies de revalidation). Compatible Next.js 16.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Ajouter metadata dans <code>app/layout.tsx</code></strong>
+          <p>Une ligne dans les metadata Next.js pour déclarer le manifest + couleur de thème + apple-touch-icon.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>Tester avec Lighthouse</strong>
+          <p>Chrome DevTools → Lighthouse → cocher "PWA" → Run. Score 90+ requis pour que le prompt "Installer" s'affiche. Checklist : HTTPS ✓ (Vercel), manifest ✓, service worker ✓, icônes ✓.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <strong>Déployer sur Vercel</strong>
+          <p>HTTPS auto = condition PWA remplie. Le service worker s'enregistre au 1er chargement. Les visiteurs existants deviennent éligibles à l'installation dès leur prochaine visite.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ce que ça débloque -->
+  <div class="section">
+    <h2>🎁 Ce que le PWA débloque pour Momento</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:0.5rem;">
+      <div class="platform">
+        <h3>📴 Offline mode</h3>
+        <p>Les pages visitées restent accessibles sans réseau. Utile dans les salles de fêtes au Maroc où la 4G galère.</p>
+      </div>
+      <div class="platform">
+        <h3>⚡ Lancement instantané</h3>
+        <p>Pas de barre d'URL, pas de tabs, ouverture directe = ressenti "vraie app". Splash screen aux couleurs Momento.</p>
+      </div>
+      <div class="platform">
+        <h3>🔔 Push notifications</h3>
+        <p>Android full support, iOS 16.4+. "Studio Anass a répondu" → l'utilisateur revient. Retention x3.</p>
+      </div>
+      <div class="platform">
+        <h3>🏠 Icône brand quotidienne</h3>
+        <p>Yasmine voit Momento chaque fois qu'elle déverrouille son tel. Top of mind pendant 6 mois de préparation mariage.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Limites -->
+  <div class="section">
+    <h2>⚠️ Limites PWA (vs Capacitor)</h2>
+    <p style="font-size:0.85rem;line-height:1.6;color:#a1a1aa;">
+      <span class="tag red">Pas de stores</span> Pas de présence App Store / Play Store. Utilisateurs doivent tomber sur <code style="background:#0a0a0f;padding:0.1rem 0.3rem;border-radius:3px;">momentoevents.app</code> d'abord.<br><br>
+      <span class="tag red">iOS restrictif</span> Pas de prompt auto, installation moins intuitive (Partager → Écran accueil), certaines API limitées.<br><br>
+      <span class="tag yellow">Pas de paiements in-app</span> Si tu veux vendre Pro (200 MAD/mois) via App Store (30% fee Apple), il faut Capacitor.
+    </p>
+    <p style="margin-top:1rem;font-size:0.9rem;color:#e4e4e7;">
+      <strong>Stratégie recommandée :</strong> PWA maintenant (1 semaine) → valide l'usage mobile → Capacitor dans 2-3 mois pour publier sur les stores une fois la traction prouvée.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
