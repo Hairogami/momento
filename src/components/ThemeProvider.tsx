@@ -123,8 +123,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setPalette = useCallback((p: Palette) => {
     setPaletteState(p)
     localStorage.setItem("momento_palette", p)
-    applyTheme(theme, p)
-  }, [theme])
+    applyTheme(resolved, p)
+  }, [resolved])
 
   if (!mounted) return <>{children}</>
 
