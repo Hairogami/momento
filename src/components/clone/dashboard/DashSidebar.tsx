@@ -23,13 +23,15 @@ const NAV_ITEMS: { icon: string; label: string; href: string; pro?: boolean }[] 
   { icon: "event_note",              label: "Planning",         href: "/planner",    pro: true },
   { icon: "favorite",                label: "Favoris",          href: "/favorites"           },
   { icon: "handshake",               label: "Mes Prestataires", href: "/mes-prestataires" },
+  { icon: "share",                   label: "Site événement",   href: "/dashboard/event-site", pro: true },
 ]
 
-function itemToReason(href: string): "messages" | "guests" | "checklist" | "favorites" | "events-multiple" {
+function itemToReason(href: string): "messages" | "guests" | "checklist" | "favorites" | "events-multiple" | "event-site" {
   if (href === "/messages") return "messages"
   if (href === "/guests")   return "guests"
   if (href === "/planner")  return "checklist"
   if (href === "/favorites")return "favorites"
+  if (href === "/dashboard/event-site") return "event-site"
   return "events-multiple"
 }
 
@@ -59,7 +61,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const { data: session } = useSession()
   const { plan } = usePlan()
   const [upsellOpen, setUpsellOpen] = useState(false)
-  const [upsellReason, setUpsellReason] = useState<"messages" | "guests" | "checklist" | "favorites" | "events-multiple" | "vendor-contact" | "theme">("messages")
+  const [upsellReason, setUpsellReason] = useState<"messages" | "guests" | "checklist" | "favorites" | "events-multiple" | "vendor-contact" | "theme" | "event-site">("messages")
   const canSwitch = session?.user?.email === DEV_SWITCH_EMAIL
   const firstName = firstNameProp || session?.user?.name?.split(" ")[0] || "U"
   const [eventOpen, setEventOpen] = useState(false)

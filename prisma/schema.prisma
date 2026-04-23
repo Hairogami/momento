@@ -382,12 +382,85 @@ model Planner {
   eventSubType     String?                       // sous-type : traditionnel | micro | destination | fiancailles | henne | evjg-evjf | …
   budgetBreakdown  Json?                         // répartition budget par catégorie { [category]: amountMAD }
   plannerVendors   PlannerVendor[]
+  eventSite   EventSite?
   // Corbeille : quand non-null, l'événement est en corbeille (auto-purge après 15 jours)
   trashedAt   DateTime?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
   @@index([userId, trashedAt])
+}
+
+// ─── SITE ÉVÉNEMENT (feature Pro/Max) ────────────────────────────────────────
+// Mini-site public partageable aux invités. Paywall Pro+Max. URL publique
+// momentoevents.app/evt/[slug] avec noindex. 5 templates catégorisés.
+
+model EventSite {
+  id            String    @id @default(cuid())
+  plannerId     String    @unique
+  planner       Planner   @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+
+  slug          String    @unique // "yousra-ali-2026", URL-safe, unique global
+  published     Boolean   @default(false)
+  template      String    // mariage | fete-famille | corporate | conference | generique
+
+  // Customisation visuelle — chaque site unique
+  palette       String    @default("terracotta")
+  fontHeading   String    @default("cormorant")
+  fontBody      String    @default("pjs")
+  heroImageUrl  String?
+  layoutVariant String    @default("classic") // classic | modern | minimal
+
+  // Contenu structuré libre (chips narratifs → JSON)
+  content       Json
+
+  // Stats / modération
+  viewCount     Int       @default(0)
+  reportedCount Int       @default(0)
+  modStatus     String    @default("ok") // ok | flagged | banned
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  photos        EventSitePhoto[]
+  rsvps         EventRsvp[]
+
+  @@index([published, modStatus])
+}
+
+model EventSitePhoto {
+  id          String    @id @default(cuid())
+  eventSiteId String
+  eventSite   EventSite @relation(fields: [eventSiteId], references: [id], onDelete: Cascade)
+  url         String
+  caption     String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  @@index([eventSiteId, order])
+}
+
+model EventRsvp {
+  id                String    @id @default(cuid())
+  eventSiteId       String
+  eventSite         EventSite @relation(fields: [eventSiteId], references: [id], onDelete: Cascade)
+
+  guestName         String
+  guestEmail        String?
+  guestPhone        String?
+  attendingMain     Boolean
+  attendingDayAfter Boolean?
+  plusOneName       String?
+  dietaryNeeds      String?
+  message           String?
+
+  // Anti-spam / RGPD
+  ipHash            String
+  userAgent         String?
+
+  createdAt         DateTime  @default(now())
+
+  @@index([eventSiteId, createdAt])
 }
 
 model Step {

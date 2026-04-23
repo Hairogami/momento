@@ -8,7 +8,7 @@ type Props = {
   open: boolean
   onClose: () => void
   /** Trigger that opened the paywall — used in copy + analytics + reason param on /upgrade */
-  reason?: "vendor-contact" | "messages" | "guests" | "checklist" | "favorites" | "theme" | "events-multiple"
+  reason?: "vendor-contact" | "messages" | "guests" | "checklist" | "favorites" | "theme" | "events-multiple" | "event-site"
   /** Path de retour après paiement (par défaut : page courante) */
   from?: string
   onUpgraded?: () => void
@@ -22,6 +22,7 @@ const REASON_COPY: Record<NonNullable<Props["reason"]>, { title: string; subtitl
   "favorites":        { title: "Favoris + comparaison",                   subtitle: "Mettez de côté vos prestataires préférés et comparez-les." },
   "theme":            { title: "Thème visuel personnalisé",               subtitle: "Palette + ambiance selon votre événement." },
   "events-multiple":  { title: "Plusieurs événements en même temps",      subtitle: "Mariage + soirée du henné + EVJG — gérez-les tous." },
+  "event-site":       { title: "Votre site événement public",             subtitle: "Un mini-site unique pour vos invités — programme, RSVP, itinéraire. Partageable WhatsApp & QR code." },
 }
 
 export default function ProUpgradeModal({ open, onClose, reason = "vendor-contact", from, onUpgraded }: Props) {

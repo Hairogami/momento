@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/dashboard", "/profile", "/planner", "/budget", "/guests", "/messages", "/notifications", "/favorites", "/prestataire/dashboard"],
+        disallow: ["/api/", "/dashboard", "/profile", "/planner", "/budget", "/guests", "/messages", "/notifications", "/favorites", "/prestataire/dashboard", "/evt/", "/upgrade"],
       },
     ],
     sitemap: "https://momentoevents.app/sitemap.xml",
