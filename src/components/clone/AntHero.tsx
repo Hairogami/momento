@@ -20,6 +20,9 @@ const WORDS: WordDef[] = [
 
 const PREFIX      = "Votre "
 const SUFFIX      = " mérite l'exception. Seulement en 3 clics."
+// Position du "S" de "Seulement" dans SUFFIX → force le retour à la ligne
+// pour que "Seulement en 3 clics." soit toujours sur sa propre ligne (ligne 4).
+const SUFFIX_SPLIT = 21
 const TYPE_SPEED  = 42   // ms/char — frappe normale
 const ERASE_SPEED = 25   // ms/char — gomme plus rapide (feeling "effacement")
 const HOLD_MS     = 1800 // ms — temps d'affichage avant d'effacer
@@ -130,7 +133,7 @@ export default function AntHero() {
             lineHeight: 1.08,
             letterSpacing: "-0.03em",
             color: "var(--dash-text,#121317)",
-            minHeight: "3.5em",
+            minHeight: "4.6em",
             textAlign: "center",
           }}
         >
@@ -149,9 +152,15 @@ export default function AntHero() {
             </span>
             {cursorAt === "word" && renderCursor()}
           </span>
+          {/* Ligne 3 : "mérite l'exception." (se tape pendant suffixLen < SPLIT) */}
           <span style={{ display: "block" }}>
-            {SUFFIX.slice(1, suffixLen)}
-            {cursorAt === "suffix" && renderCursor()}
+            {SUFFIX.slice(1, Math.min(suffixLen, SUFFIX_SPLIT))}
+            {cursorAt === "suffix" && suffixLen <= SUFFIX_SPLIT && renderCursor()}
+          </span>
+          {/* Ligne 4 : "Seulement en 3 clics." (se tape pendant suffixLen > SPLIT) */}
+          <span style={{ display: "block", minHeight: "1.1em" }}>
+            {suffixLen > SUFFIX_SPLIT ? SUFFIX.slice(SUFFIX_SPLIT, suffixLen) : ""}
+            {cursorAt === "suffix" && suffixLen > SUFFIX_SPLIT && renderCursor()}
           </span>
         </h1>
 
