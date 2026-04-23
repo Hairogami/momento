@@ -382,8 +382,12 @@ model Planner {
   eventSubType     String?                       // sous-type : traditionnel | micro | destination | fiancailles | henne | evjg-evjf | …
   budgetBreakdown  Json?                         // répartition budget par catégorie { [category]: amountMAD }
   plannerVendors   PlannerVendor[]
+  // Corbeille : quand non-null, l'événement est en corbeille (auto-purge après 15 jours)
+  trashedAt   DateTime?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+
+  @@index([userId, trashedAt])
 }
 
 model Step {

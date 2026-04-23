@@ -59,11 +59,22 @@ export default function VendorSwipeWidget({
   const dragActive = useRef(false)
   const dragStart  = useRef({ x: 0, y: 0 })
 
-  const loadCards = useCallback((clearSkipped = false) => {
+  const loadCards = useCallback(async (clearSkipped = false) => {
     if (clearSkipped && plannerId) lsClear(LS_SKIPPED(plannerId))
     const likedSet   = plannerId ? lsGet(LS_LIKED(plannerId))   : new Set<string>()
     const skippedSet = (plannerId && !clearSkipped) ? lsGet(LS_SKIPPED(plannerId)) : new Set<string>()
     const seenSet    = new Set([...likedSet, ...skippedSet])
+
+    // Exclure aussi les PlannerVendor DB déjà sélectionnés pour cet event
+    if (plannerId) {
+      try {
+        const pvRes = await fetch(`/api/planners/${plannerId}/vendors`, { cache: "no-store" })
+        if (pvRes.ok) {
+          const pvs: { vendorSlug: string }[] = await pvRes.json()
+          for (const pv of pvs) seenSet.add(pv.vendorSlug)
+        }
+      } catch {}
+    }
 
     fetch("/api/vendors?limit=30")
       .then(r => r.json())

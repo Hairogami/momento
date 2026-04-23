@@ -4,11 +4,26 @@ import { NextRequest } from "next/server"
 import { IS_DEV } from "@/lib/devMock"
 import { requireSession } from "@/lib/devAuth"
 
-export async function GET() {
+// Purge auto-lazy : événements en corbeille depuis > 15 jours → hard delete.
+// Exécuté au GET /api/planners (piggyback, pas besoin de cron).
+const TRASH_TTL_MS = 15 * 24 * 60 * 60 * 1000
+
+async function purgeExpiredTrash(userId: string) {
+  const cutoff = new Date(Date.now() - TRASH_TTL_MS)
+  try {
+    await prisma.planner.deleteMany({
+      where: { userId, trashedAt: { lt: cutoff } },
+    })
+  } catch (e) {
+    console.error("[GET /api/planners] purge expired trash failed:", e)
+  }
+}
+
+export async function GET(request: NextRequest) {
   if (IS_DEV) {
     const session = await requireSession()
     const planners = await prisma.planner.findMany({
-      where: { userId: session.user.id },
+      where: { userId: session.user.id, trashedAt: null },
       select: { id: true, title: true, coupleNames: true, weddingDate: true, coverColor: true, location: true, budget: true, guestCount: true, categories: true },
       orderBy: { createdAt: "asc" },
     })
@@ -18,9 +33,17 @@ export async function GET() {
   const session = await auth()
   if (!session?.user?.id) return Response.json({ error: "Non authentifié." }, { status: 401 })
 
-  // W05: replaced full include with select + _count to avoid loading all steps/events for a list view
+  // Purge les événements > 15j dans la corbeille (lazy, par user)
+  await purgeExpiredTrash(session.user.id)
+
+  const url = new URL(request.url)
+  const wantTrash = url.searchParams.get("trashed") === "true"
+
   const planners = await prisma.planner.findMany({
-    where: { userId: session.user.id },
+    where: {
+      userId: session.user.id,
+      trashedAt: wantTrash ? { not: null } : null,
+    },
     select: {
       id: true,
       title: true,
@@ -31,9 +54,10 @@ export async function GET() {
       budget: true,
       categories: true,
       createdAt: true,
+      trashedAt: true,
       _count: { select: { steps: true, events: true } },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: wantTrash ? { trashedAt: "desc" } : { createdAt: "desc" },
   })
   return Response.json(planners)
 }
@@ -90,6 +114,19 @@ export async function POST(request: NextRequest) {
       if (Number.isFinite(n) && n >= 0) bb[k.slice(0, 100)] = n
     }
     if (Object.keys(bb).length > 0) budgetBreakdown = bb
+  }
+
+  // Règle : 1 seul événement LIVE (trashedAt = null) par user. Les events
+  // en corbeille ne comptent pas. Pour en créer un nouveau, il faut d'abord
+  // mettre l'actuel en corbeille.
+  const liveCount = await prisma.planner.count({
+    where: { userId: session.user.id, trashedAt: null },
+  })
+  if (liveCount >= 1) {
+    return Response.json(
+      { error: "Vous avez déjà un événement en cours. Mettez-le en corbeille avant d'en créer un nouveau." },
+      { status: 409 },
+    )
   }
 
   try {

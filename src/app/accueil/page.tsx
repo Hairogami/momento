@@ -23,10 +23,11 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("fr-MA", { day: "numeric", month: "long", year: "numeric" })
 }
 
-type Planner = { id: string; coupleNames?: string | null; title?: string | null; weddingDate?: string | null; coverColor?: string | null; budget?: number | null; guestCount?: number | null }
+type Planner = { id: string; coupleNames?: string | null; title?: string | null; weddingDate?: string | null; coverColor?: string | null; budget?: number | null; guestCount?: number | null; trashedAt?: string | null }
 
 export default function CloneAccueilPage() {
   const [planners, setPlanners] = useState<Planner[]>([])
+  const [trashed,  setTrashed]  = useState<Planner[]>([])
   const [loaded, setLoaded] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -42,6 +43,12 @@ export default function CloneAccueilPage() {
       .then((data: unknown) => { if (Array.isArray(data) && (data as Planner[]).length > 0) setPlanners(data as Planner[]) })
       .catch(() => {})
       .finally(() => setLoaded(true))
+
+    // Corbeille : événements trashed (affichés dans section séparée avec restore/purge)
+    fetch("/api/planners?trashed=true")
+      .then(r => r.ok ? r.json() : null)
+      .then((data: unknown) => { if (Array.isArray(data)) setTrashed(data as Planner[]) })
+      .catch(() => {})
 
     fetch("/api/me")
       .then(r => r.ok ? r.json() : null)
@@ -62,9 +69,12 @@ export default function CloneAccueilPage() {
     if (!deleteTarget) return
     setDeleting(true)
     try {
+      // Soft delete → corbeille (récupérable 15 jours)
       const res = await fetch(`/api/planners/${deleteTarget.id}`, { method: "DELETE" })
       if (res.ok) {
+        const trashedPlanner = { ...deleteTarget, trashedAt: new Date().toISOString() }
         setPlanners(prev => prev.filter(p => p.id !== deleteTarget.id))
+        setTrashed(prev => [trashedPlanner, ...prev])
         try {
           const active = localStorage.getItem("momento_active_event")
           if (active === deleteTarget.id) localStorage.removeItem("momento_active_event")
@@ -73,6 +83,35 @@ export default function CloneAccueilPage() {
     } catch {} finally {
       setDeleting(false)
       setDeleteTarget(null)
+    }
+  }
+
+  async function handleRestore(id: string) {
+    try {
+      const r = await fetch(`/api/planners/${id}/restore`, { method: "POST" })
+      if (r.ok) {
+        const restored = await r.json() as { id: string }
+        const entry = trashed.find(p => p.id === id)
+        if (entry) {
+          setTrashed(prev => prev.filter(p => p.id !== id))
+          setPlanners(prev => [{ ...entry, trashedAt: null }, ...prev])
+        }
+        void restored
+      } else {
+        const { error } = await r.json().catch(() => ({ error: "Erreur inconnue" }))
+        alert(error ?? "Impossible de restaurer.")
+      }
+    } catch {}
+  }
+
+  async function handlePurge(id: string) {
+    if (!confirm("Supprimer définitivement cet événement ? Cette action est irréversible.")) return
+    try {
+      const r = await fetch(`/api/planners/${id}?hard=true`, { method: "DELETE" })
+      if (r.ok) setTrashed(prev => prev.filter(p => p.id !== id))
+    } catch {
+      // ignore — la purge peut être retentée
+      return
     }
   }
 
@@ -218,6 +257,51 @@ export default function CloneAccueilPage() {
           </button>
         </div>
 
+        {/* Corbeille */}
+        {trashed.length > 0 && (
+          <div style={{ marginBottom: 36 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+              <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>🗑️ Corbeille</h2>
+              <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
+                Suppression définitive automatique après 15 jours
+              </span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
+              {trashed.map(p => {
+                const name = p.coupleNames || p.title || "Mon événement"
+                const trashedAt = p.trashedAt ? new Date(p.trashedAt) : null
+                const daysLeft = trashedAt ? Math.max(0, 15 - Math.floor((Date.now() - trashedAt.getTime()) / 86_400_000)) : 15
+                return (
+                  <div key={p.id} style={{
+                    background: "var(--dash-surface,#fff)", borderRadius: 16,
+                    border: "1px dashed var(--dash-border,rgba(183,191,217,0.35))",
+                    padding: "14px 16px", opacity: 0.85,
+                  }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 4px", textDecoration: "line-through", opacity: 0.7 }}>{name}</p>
+                        <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>
+                          Supprimé {trashedAt ? trashedAt.toLocaleDateString("fr-MA") : "—"} · Reste <strong>{daysLeft} j</strong>
+                        </p>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+                      <button onClick={() => handleRestore(p.id)} style={{
+                        flex: 1, padding: "7px 10px", borderRadius: 99, border: "1px solid var(--dash-border,rgba(183,191,217,0.35))",
+                        background: "transparent", color: "var(--dash-text,#121317)", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                      }}>↺ Restaurer</button>
+                      <button onClick={() => handlePurge(p.id)} style={{
+                        padding: "7px 12px", borderRadius: 99, border: "none",
+                        background: "rgba(225,29,72,0.1)", color: "#E11D48", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                      }}>Supprimer définitivement</button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
         {/* CTA explore */}
         <div style={{
           background: "var(--dash-surface-dark,#121317)", borderRadius: 24, padding: "32px 32px",
@@ -254,10 +338,10 @@ export default function CloneAccueilPage() {
             maxWidth: 380, width: "90%", boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
           }}>
             <p style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>
-              Supprimer cet événement ?
+              Mettre cet événement à la corbeille ?
             </p>
             <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 20px", lineHeight: 1.5 }}>
-              L&apos;événement <strong>{deleteTarget.coupleNames || deleteTarget.title || "Mon événement"}</strong> sera supprimé définitivement. Cette action est irréversible.
+              L&apos;événement <strong>{deleteTarget.coupleNames || deleteTarget.title || "Mon événement"}</strong> sera déplacé dans la corbeille. Vous pourrez le restaurer pendant <strong>15 jours</strong> avant suppression définitive.
             </p>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <button onClick={() => setDeleteTarget(null)} disabled={deleting} style={{
@@ -269,7 +353,7 @@ export default function CloneAccueilPage() {
                 padding: "8px 18px", borderRadius: 999, border: "none",
                 background: "#E11D48", color: "#fff", fontSize: 13, fontWeight: 600,
                 cursor: deleting ? "wait" : "pointer", opacity: deleting ? 0.6 : 1, fontFamily: "inherit",
-              }}>{deleting ? "Suppression…" : "Supprimer"}</button>
+              }}>{deleting ? "Suppression…" : "Mettre à la corbeille"}</button>
             </div>
           </div>
         </div>

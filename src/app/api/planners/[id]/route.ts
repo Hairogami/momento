@@ -99,7 +99,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   return Response.json(planner)
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+/**
+ * DELETE /api/planners/[id]
+ * - Par défaut : soft delete (corbeille). L'événement reste 15 jours avant purge.
+ * - Avec ?hard=true : suppression définitive immédiate (depuis la corbeille).
+ */
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = IS_DEV ? await requireSession() : await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -108,6 +113,16 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   if (!ownership || ownership.userId !== session.user.id)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
-  await prisma.planner.delete({ where: { id } })
+  const url = new URL(req.url)
+  const hard = url.searchParams.get("hard") === "true"
+
+  if (hard) {
+    await prisma.planner.delete({ where: { id } })
+  } else {
+    await prisma.planner.update({
+      where: { id },
+      data: { trashedAt: new Date() },
+    })
+  }
   return new Response(null, { status: 204 })
 }

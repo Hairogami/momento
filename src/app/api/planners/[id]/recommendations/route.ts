@@ -22,12 +22,17 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     select: {
       id: true, categories: true, location: true,
       budget: true, budgetBreakdown: true,
+      plannerVendors: { select: { vendorSlug: true } },
     },
   })
   if (!planner) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
   const cats = planner.categories ?? []
   if (cats.length === 0) return NextResponse.json([])
+
+  // Vendors déjà sélectionnés pour ce planner → exclus des reco (user a choisi,
+  // pas besoin de les re-proposer ; on laisse un autre candidat remonter)
+  const alreadySelected = new Set(planner.plannerVendors.map(pv => pv.vendorSlug))
 
   const breakdown = (planner.budgetBreakdown && typeof planner.budgetBreakdown === "object" && !Array.isArray(planner.budgetBreakdown))
     ? (planner.budgetBreakdown as Record<string, number>)
@@ -46,13 +51,19 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   // les prestas dans l'enveloppe sans écraser le ranking éditorial global.
   const budgetBonus = weights.featured * 0.1
 
+  const excludedSlugs = [...alreadySelected]
+
   const recommendations = await Promise.all(cats.map(async (category) => {
     const where: Record<string, unknown> = { category }
     if (city) where.city = { contains: city, mode: "insensitive" }
+    if (excludedSlugs.length > 0) where.slug = { notIn: excludedSlugs }
 
     let vendors = await prisma.vendor.findMany({ where, select: SELECT, take: 30 })
     if (vendors.length === 0) {
-      vendors = await prisma.vendor.findMany({ where: { category }, select: SELECT, take: 30 })
+      // Fallback : élargir sans contrainte ville mais toujours hors sélections existantes
+      const fallback: Record<string, unknown> = { category }
+      if (excludedSlugs.length > 0) fallback.slug = { notIn: excludedSlugs }
+      vendors = await prisma.vendor.findMany({ where: fallback, select: SELECT, take: 30 })
     }
     if (vendors.length === 0) return { category, vendor: null }
 
