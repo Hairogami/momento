@@ -205,20 +205,54 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             zIndex: 50, overflow: "hidden",
           }}>
             {events.map(e => (
-              <button
+              <div
                 key={e.id}
-                onClick={() => { onEventChange(e.id); setEventOpen(false) }}
                 style={{
-                  width: "100%", padding: "9px 14px",
-                  display: "flex", alignItems: "center", gap: 9,
+                  display: "flex", alignItems: "stretch",
                   background: e.id === activeEventId ? "var(--dash-faint, rgba(183,191,217,0.09))" : "transparent",
-                  border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left",
                 }}
               >
-                <div style={{ width: 7, height: 7, borderRadius: "50%", background: e.color, flexShrink: 0 }} />
-                <span style={{ fontSize: 12, fontWeight: 500, color: "var(--dash-text,#121317)", flex: 1 }}>{e.name}</span>
-                {e.id === activeEventId && <GIcon name="check" size={14} color="var(--g1,#E11D48)" />}
-              </button>
+                <button
+                  onClick={() => { onEventChange(e.id); setEventOpen(false) }}
+                  style={{
+                    flex: 1, padding: "9px 14px",
+                    display: "flex", alignItems: "center", gap: 9,
+                    background: "transparent",
+                    border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left",
+                  }}
+                >
+                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: e.color, flexShrink: 0 }} />
+                  <span style={{ fontSize: 12, fontWeight: 500, color: "var(--dash-text,#121317)", flex: 1 }}>{e.name}</span>
+                  {e.id === activeEventId && <GIcon name="check" size={14} color="var(--g1,#E11D48)" />}
+                </button>
+                {/* Bouton supprimer inline — soft delete (corbeille 15j) */}
+                <button
+                  onClick={async (ev) => {
+                    ev.stopPropagation()
+                    if (!confirm(`Mettre "${e.name}" à la corbeille ? Vous pourrez le restaurer pendant 15 jours.`)) return
+                    try {
+                      const r = await fetch(`/api/planners/${e.id}`, { method: "DELETE" })
+                      if (r.ok) {
+                        try { if (localStorage.getItem("momento_active_event") === e.id) localStorage.removeItem("momento_active_event") } catch {}
+                        setEventOpen(false)
+                        // Reload pour rafraîchir la liste d'events dans tout le dashboard
+                        window.location.href = "/accueil"
+                      }
+                    } catch {}
+                  }}
+                  title="Mettre à la corbeille"
+                  style={{
+                    width: 32, display: "flex", alignItems: "center", justifyContent: "center",
+                    background: "transparent", border: "none", cursor: "pointer",
+                    color: "var(--dash-text-3,#9a9aaa)",
+                    transition: "color 0.15s, background 0.15s",
+                  }}
+                  onMouseEnter={ev => { (ev.currentTarget as HTMLElement).style.color = "#ef4444"; (ev.currentTarget as HTMLElement).style.background = "rgba(239,68,68,0.06)" }}
+                  onMouseLeave={ev => { (ev.currentTarget as HTMLElement).style.color = "var(--dash-text-3,#9a9aaa)"; (ev.currentTarget as HTMLElement).style.background = "transparent" }}
+                >
+                  <GIcon name="delete" size={14} color="currentColor" />
+                </button>
+              </div>
             ))}
             <div style={{ borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.12))", padding: "8px 14px" }}>
               <button

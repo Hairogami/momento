@@ -38,7 +38,6 @@ const DROPDOWN_CLIENT = [
   { separator: true },
   { icon: "person",         label: "Profil",        href: "/profile"       },
   { icon: "settings",       label: "Paramètres",    href: "/settings"      },
-  { icon: "delete",         label: "Corbeille",     href: "/accueil#corbeille" },
   { separator: true },
   { icon: "logout",         label: "Déconnexion",   signout: true          },
 ]
@@ -410,28 +409,27 @@ export default function AntNav({
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <Avatar name={session.user?.name} image={session.user?.image} size={36} />
                         <div>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                            <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name ?? "Mon compte"}</p>
-                            {!isVendor && (
-                              <span
-                                title={`Plan ${planLabel}`}
-                                style={{
-                                  fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-                                  color: planColor, background: planBg,
-                                  padding: "2px 7px", borderRadius: 99,
-                                  border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
-                                }}
-                              >
-                                {planLabel}
-                              </span>
-                            )}
-                          </div>
-                          <p style={{ fontSize: 11, color: dark ? "rgba(255,255,255,0.4)" : "#9a9aaa", margin: "2px 0 0" }}>{session.user?.email}</p>
-                          {isVendor && (
-                            <span style={{ display: "inline-block", marginTop: 4, fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", padding: "2px 7px", borderRadius: 99 }}>
+                          {/* Badge au-dessus du nom */}
+                          {isVendor ? (
+                            <span style={{ display: "inline-block", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", padding: "2px 7px", borderRadius: 99, marginBottom: 3 }}>
                               Prestataire
                             </span>
+                          ) : (
+                            <span
+                              title={`Plan ${planLabel}`}
+                              style={{
+                                display: "inline-block",
+                                fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                                color: planColor, background: planBg,
+                                padding: "2px 7px", borderRadius: 99,
+                                border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
+                                marginBottom: 3,
+                              }}
+                            >
+                              {planLabel}
+                            </span>
                           )}
+                          <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name ?? "Mon compte"}</p>
                         </div>
                       </div>
                     </div>
@@ -463,22 +461,21 @@ export default function AntNav({
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px 14px", borderBottom: `1px solid ${dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.15)"}`, marginBottom: 8 }}>
                   <Avatar name={session.user?.name} image={session.user?.image} size={32} />
                   <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name}</p>
-                      {!isVendor && (
-                        <span
-                          style={{
-                            fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-                            color: planColor, background: planBg,
-                            padding: "2px 7px", borderRadius: 99,
-                            border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
-                          }}
-                        >
-                          {planLabel}
-                        </span>
-                      )}
-                    </div>
-                    <p style={{ fontSize: 11, color: dark ? "rgba(255,255,255,0.4)" : "#9a9aaa", margin: 0 }}>{session.user?.email}</p>
+                    {!isVendor && (
+                      <span
+                        style={{
+                          display: "inline-block",
+                          fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                          color: planColor, background: planBg,
+                          padding: "2px 7px", borderRadius: 99,
+                          border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
+                          marginBottom: 3,
+                        }}
+                      >
+                        {planLabel}
+                      </span>
+                    )}
+                    <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name}</p>
                   </div>
                 </div>
               )}
