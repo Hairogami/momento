@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { getRankingWeights, scoreVendor } from "@/lib/rankingScore"
 
 /**
  * GET /api/planners/[id]/recommendations
- * Returns top-1 recommended vendor per category of the planner,
- * filtered by city + budget range (±20% of budgetBreakdown[category]).
- * Ranking: featured × 3 + rating × 2 + reviewCount × 0.5
+ * Retourne le top-1 vendor recommandé par catégorie du planner,
+ * filtré par ville + fenêtre budget (breakdown[cat] × 0.6 → × 1.4).
+ *
+ * Ranking : utilise le scoring partagé `scoreVendor` (mêmes poids que
+ * /explore et VendorSwipe — admin-configurable via /admin/ranking) +
+ * un bonus `withinBudget` pour privilégier les prestas dans l'enveloppe.
  */
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
@@ -34,9 +38,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const SELECT = {
     id: true, slug: true, name: true, category: true, city: true,
     rating: true, reviewCount: true, featured: true, priceMin: true, priceMax: true,
+    _count: { select: { media: true } },
   } as const
 
-  // For each category → top 1 matching vendor
+  const weights = await getRankingWeights()
+  // Bonus budget proportionnel au poids featured (~10%) pour privilégier
+  // les prestas dans l'enveloppe sans écraser le ranking éditorial global.
+  const budgetBonus = weights.featured * 0.1
+
   const recommendations = await Promise.all(cats.map(async (category) => {
     const where: Record<string, unknown> = { category }
     if (city) where.city = { contains: city, mode: "insensitive" }
@@ -58,16 +67,27 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       return (max ?? Infinity) >= lo && (min ?? 0) <= hi
     }
 
-    const ranked = vendors.map(v => {
-      const score =
-        (v.featured ? 3 : 0)
-        + (v.rating ?? 0) * 2
-        + Math.log10((v.reviewCount ?? 0) + 1) * 0.5
-        + (withinBudget(v) ? 1 : 0)
-      return { ...v, _score: score }
-    }).sort((a, b) => b._score - a._score)
+    const ranked = vendors
+      .map(v => {
+        const base = scoreVendor(
+          { featured: v.featured, rating: v.rating, reviewCount: v.reviewCount, mediaCount: v._count.media },
+          weights,
+        )
+        const score = base + (withinBudget(v) ? budgetBonus : 0)
+        return { v, score }
+      })
+      .sort((a, b) => b.score - a.score)
 
-    return { category, vendor: ranked[0] ?? null }
+    const top = ranked[0]?.v
+    if (!top) return { category, vendor: null }
+
+    // Strip _count pour garder la forme existante côté client
+    const vendorOut = {
+      id: top.id, slug: top.slug, name: top.name, category: top.category, city: top.city,
+      rating: top.rating, reviewCount: top.reviewCount, featured: top.featured,
+      priceMin: top.priceMin, priceMax: top.priceMax,
+    }
+    return { category, vendor: vendorOut }
   }))
 
   return NextResponse.json(recommendations)
