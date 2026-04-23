@@ -2,137 +2,39 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
-import AntFooter from "@/components/clone/AntFooter"
 
-const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
+/**
+ * Page /upgrade — tableau comparatif 3 tiers : Free / Pro / Max.
+ * Design straight to the point, respecte dark/light via les variables --dash-*.
+ * Max = "sur devis" (pricing à arbitrer, CTA mailto contact).
+ */
 
-const REASON_COPY: Record<string, { title: string; subtitle: string }> = {
-  messages: {
-    title: "Échangez avec vos prestataires en direct",
-    subtitle: "Une seule inbox, toutes vos conversations. Pas de numéros perdus dans WhatsApp.",
-  },
-  "vendors.contact": {
-    title: "Contactez les prestataires qui vous plaisent",
-    subtitle: "Passez Pro pour envoyer un message, demander un devis, et réserver.",
-  },
-  "vendor-contact": {
-    title: "Contactez les prestataires qui vous plaisent",
-    subtitle: "Passez Pro pour envoyer un message, demander un devis, et réserver.",
-  },
-  favorites: {
-    title: "Mettez vos prestas préférés de côté",
-    subtitle: "Favoris, comparaison, décision sans stress.",
-  },
-  guests: {
-    title: "Votre liste d'invités, sans galère",
-    subtitle: "RSVP, tables, menus — tout en un endroit.",
-  },
-  checklist: {
-    title: "La bonne tâche au bon moment",
-    subtitle: "Checklist temporelle personnalisée selon votre date d'événement.",
-  },
-  planner: {
-    title: "Votre planner, c'est Momento",
-    subtitle: "Toutes les étapes orchestrées pour vous. Finies les nuits à faire des listes.",
-  },
-  theme: {
-    title: "Votre thème, votre identité",
-    subtitle: "Palette, ambiance, moodboard — l'app s'adapte à votre événement.",
-  },
-  "events-multiple": {
-    title: "Plusieurs événements à gérer ?",
-    subtitle: "Mariage + henné + EVJG — tout gérer depuis un seul espace.",
-  },
-  "events.multiple": {
-    title: "Plusieurs événements à gérer ?",
-    subtitle: "Mariage + henné + EVJG — tout gérer depuis un seul espace.",
-  },
-  "budget-detailed": {
-    title: "Budget détaillé + verdict IA",
-    subtitle: "Répartition par poste, alertes dépassement, avis Momento sur votre enveloppe.",
-  },
-  "tasks.timeline": {
-    title: "La bonne tâche au bon moment",
-    subtitle: "Checklist temporelle personnalisée selon votre date d'événement.",
-  },
-  "guests.manage": {
-    title: "Votre liste d'invités, sans galère",
-    subtitle: "RSVP, tables, menus — tout en un endroit.",
-  },
-  "messages.direct": {
-    title: "Échangez avec vos prestataires en direct",
-    subtitle: "Une seule inbox, toutes vos conversations.",
-  },
-  "vendors.favorites": {
-    title: "Mettez vos prestas préférés de côté",
-    subtitle: "Favoris, comparaison, décision sans stress.",
-  },
-  "theme.custom": {
-    title: "Votre thème, votre identité",
-    subtitle: "Palette, ambiance, moodboard — l'app s'adapte à votre événement.",
-  },
-  "budget.breakdown": {
-    title: "Budget détaillé + verdict IA",
-    subtitle: "Répartition par poste, alertes dépassement, avis Momento sur votre enveloppe.",
-  },
+type Plan = "free" | "pro" | "max"
+
+type Feature = {
+  label: string
+  free: boolean | string
+  pro:  boolean | string
+  max:  boolean | string
 }
 
-type Plan = "pro" | "pro_planner"
-
-type PricingCard = {
-  id: Plan
-  badge?: string
-  name: string
-  priceMad: number
-  priceSuffix: string
-  tagline: string
-  features: string[]
-  cta: string
-  featured?: boolean
-}
-
-const PRICING: PricingCard[] = [
-  {
-    id: "pro",
-    name: "Pro",
-    priceMad: 200,
-    priceSuffix: "/ mois",
-    tagline: "Tous les outils pour organiser votre événement, sans aide humaine.",
-    features: [
-      "Messagerie directe avec les prestataires",
-      "Événements illimités (mariage, henné, EVJG…)",
-      "Checklist temporelle personnalisée",
-      "Gestion invités + RSVP illimités",
-      "Favoris + comparaison prestataires",
-      "Budget détaillé + verdict IA",
-      "Thème visuel personnalisé",
-      "Export PDF des listes et contrats",
-    ],
-    cta: "Passer Pro",
-    featured: true,
-    badge: "Le plus choisi",
-  },
-  {
-    id: "pro_planner",
-    name: "Pro + Planner",
-    priceMad: 500,
-    priceSuffix: "/ mois",
-    tagline: "Pro + un wedding planner humain et un agent IA à votre service.",
-    features: [
-      "Tout Momento Pro",
-      "Wedding planner dédié (humain)",
-      "Agent IA Momento — réponses 24/7",
-      "Recherche et shortlist prestataires faite pour vous",
-      "Coordination jour J incluse",
-      "Accompagnement contrat & négociation",
-    ],
-    cta: "Choisir Pro + Planner",
-  },
+const FEATURES: Feature[] = [
+  { label: "Exploration illimitée de l'annuaire",          free: true,  pro: true,               max: true },
+  { label: "Favoris",                                       free: true,  pro: true,               max: true },
+  { label: "Mes prestataires sélectionnés",                 free: true,  pro: true,               max: true },
+  { label: "Création d'événement",                          free: "1",   pro: "Illimité",         max: "Illimité" },
+  { label: "Budget total",                                  free: true,  pro: true,               max: true },
+  { label: "Notes & compte à rebours",                      free: true,  pro: true,               max: true },
+  { label: "Messagerie directe avec prestataires",          free: false, pro: true,               max: true },
+  { label: "Checklist temporelle (calculée par date)",      free: false, pro: true,               max: true },
+  { label: "Gestion des invités & RSVP",                    free: false, pro: true,               max: true },
+  { label: "Budget détaillé + verdict IA par catégorie",    free: false, pro: true,               max: true },
+  { label: "Thème & palette personnalisables",              free: false, pro: true,               max: true },
+  { label: "Wedding planner humain dédié",                  free: false, pro: false,              max: true },
+  { label: "Agent IA d'organisation",                       free: false, pro: false,              max: true },
+  { label: "Accompagnement sur-mesure",                     free: false, pro: false,              max: true },
 ]
-
-type PaymentMethod = "cmi" | "paypal"
 
 export default function UpgradeClient({
   currentPlan,
@@ -140,405 +42,375 @@ export default function UpgradeClient({
   from,
   reason,
 }: {
-  currentPlan: "free" | "pro"
+  currentPlan: Plan | string
   planExpiresAt: string | null
   from: string | null
   reason: string | null
 }) {
-  const router = useRouter()
-  const [selectedPlan, setSelectedPlan] = useState<Plan>("pro")
-  const [method, setMethod] = useState<PaymentMethod>("cmi")
-  const [loading, setLoading] = useState(false)
-  const [err, setErr] = useState<string | null>(null)
+  const [selected, setSelected] = useState<Plan>(currentPlan === "pro" ? "max" : "pro")
 
-  const copy = reason && REASON_COPY[reason]
-
-  async function handleUpgrade() {
-    setLoading(true); setErr(null)
-    try {
-      // Étape 1 : initier l'ordre de paiement côté serveur.
-      // Tant que l'intégration CMI/PayPal n'est pas en place, la route répond 402.
-      const r = await fetch("/api/checkout/upgrade", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: selectedPlan, method }),
-      })
-
-      if (r.status === 402 || r.status === 501) {
-        setErr("Paiement bientôt disponible. Contactez-nous pour activer votre Pro manuellement.")
-        return
-      }
-
-      if (!r.ok) {
-        const data = await r.json().catch(() => ({}))
-        setErr(data.error ?? "Impossible de démarrer le paiement. Réessayez.")
-        return
-      }
-
-      const data = await r.json() as { redirectUrl?: string }
-      if (data.redirectUrl) {
-        window.location.href = data.redirectUrl
-        return
-      }
-      // Fallback : rafraîchir l'état local
-      if (from) router.push(from)
-      else router.push("/dashboard")
-    } catch {
-      setErr("Erreur réseau. Réessayez dans un instant.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const isCurrentlyPro = currentPlan === "pro"
+  const expiry = planExpiresAt ? new Date(planExpiresAt) : null
 
   return (
-    <div className="ant-root" style={{ background: "var(--dash-bg,#fff)", minHeight: "100vh" }}>
+    <div style={{
+      minHeight: "100vh",
+      background: "var(--dash-bg,#f7f7fb)",
+      color: "var(--dash-text,#121317)",
+      fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+    }}>
       <AntNav />
 
-      {/* ── HERO ── */}
-      <section
-        style={{
-          minHeight: "60vh",
-          paddingTop: 120,
-          paddingBottom: 60,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          padding: "120px 20px 60px",
-        }}
-      >
-        <span
-          style={{
-            display: "inline-block",
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            padding: "6px 14px",
-            borderRadius: 999,
-            color: "#fff",
-            background: G,
-            marginBottom: 20,
-          }}
-        >
-          Momento Pro
-        </span>
-
-        <h1
-          style={{
-            fontSize: "clamp(2rem, 5vw, 3.8rem)",
-            fontWeight: 700,
-            lineHeight: 1.1,
-            letterSpacing: "-0.03em",
-            maxWidth: 820,
-            color: "var(--dash-text,#121317)",
-          }}
-        >
-          {copy ? copy.title : "Votre événement mérite les bons outils."}
-        </h1>
-
-        <p
-          style={{
-            fontSize: "clamp(1rem, 1.5vw, 1.15rem)",
-            maxWidth: 620,
-            marginTop: 18,
-            lineHeight: 1.55,
-            color: "var(--dash-text-2,#45474D)",
-          }}
-        >
-          {copy
-            ? copy.subtitle
-            : "Momento Pro débloque la messagerie, la gestion invités, la checklist temporelle et le budget détaillé. À partir de 200 MAD par mois, sans engagement."}
-        </p>
-
-        {isCurrentlyPro && (
-          <div
-            style={{
-              marginTop: 28,
-              padding: "12px 20px",
-              borderRadius: 12,
-              background: "rgba(34,197,94,0.1)",
-              border: "1px solid rgba(34,197,94,0.3)",
-              color: "#15803d",
-              fontSize: 14,
-              fontWeight: 600,
-            }}
-          >
-            Vous êtes déjà Pro
-            {planExpiresAt &&
-              ` — valide jusqu'au ${new Date(planExpiresAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}`}
-          </div>
-        )}
-      </section>
-
-      {/* ── PRICING ── */}
-      <section style={{ padding: "20px 20px 80px" }}>
-        <div
-          style={{
-            maxWidth: 980,
-            margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 24,
-          }}
-        >
-          {PRICING.map((p) => {
-            const isSelected = selectedPlan === p.id
-            return (
-              <div
-                key={p.id}
-                onClick={() => setSelectedPlan(p.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setSelectedPlan(p.id) }}
-                style={{
-                  position: "relative",
-                  padding: "32px 28px",
-                  borderRadius: 20,
-                  background: p.featured
-                    ? "linear-gradient(180deg, rgba(225,29,72,0.03), rgba(147,51,234,0.02))"
-                    : "#fff",
-                  border: isSelected
-                    ? "2px solid transparent"
-                    : "1px solid rgba(183,191,217,0.25)",
-                  backgroundImage: isSelected
-                    ? `linear-gradient(#fff, #fff), ${G}`
-                    : undefined,
-                  backgroundOrigin: isSelected ? "border-box" : undefined,
-                  backgroundClip: isSelected ? "padding-box, border-box" : undefined,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  transform: isSelected ? "translateY(-2px)" : "none",
-                  boxShadow: isSelected
-                    ? "0 18px 40px rgba(225,29,72,0.15)"
-                    : "0 4px 12px rgba(0,0,0,0.02)",
-                }}
-              >
-                {p.badge && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: -12,
-                      left: 24,
-                      padding: "4px 12px",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      letterSpacing: "1px",
-                      textTransform: "uppercase",
-                      borderRadius: 99,
-                      background: G,
-                      color: "#fff",
-                    }}
-                  >
-                    {p.badge}
-                  </span>
-                )}
-
-                <h3 style={{ fontSize: 22, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
-                  {p.name}
-                </h3>
-
-                <div style={{ marginTop: 14, display: "flex", alignItems: "baseline", gap: 6 }}>
-                  <span
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 48,
-                      fontWeight: 600,
-                      letterSpacing: "-0.02em",
-                      backgroundImage: G,
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    {p.priceMad}
-                  </span>
-                  <span style={{ fontSize: 14, color: "var(--dash-text-3,#8888aa)", fontWeight: 600 }}>MAD</span>
-                  <span style={{ fontSize: 14, color: "var(--dash-text-3,#8888aa)" }}>{p.priceSuffix}</span>
-                </div>
-
-                <p style={{ fontSize: 14, color: "var(--dash-text-2,#45474D)", marginTop: 10, lineHeight: 1.5 }}>
-                  {p.tagline}
-                </p>
-
-                <ul style={{ listStyle: "none", padding: 0, margin: "20px 0 0" }}>
-                  {p.features.map((f) => (
-                    <li
-                      key={f}
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 10,
-                        fontSize: 13,
-                        padding: "6px 0",
-                        color: "var(--dash-text,#121317)",
-                      }}
-                    >
-                      <span style={{ color: "#22c55e", flexShrink: 0, marginTop: 2 }}>✓</span>
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* ── PAYMENT ── */}
-      <section style={{ padding: "0 20px 100px" }}>
-        <div
-          style={{
-            maxWidth: 560,
-            margin: "0 auto",
-            padding: "28px 28px 24px",
-            borderRadius: 20,
-            background: "#fff",
-            border: "1px solid rgba(183,191,217,0.25)",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.04)",
-          }}
-        >
-          <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "var(--dash-text,#121317)" }}>
-            Mode de paiement
-          </h3>
-          <p style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", marginTop: 6 }}>
-            Paiement sécurisé. Annulation en 1 clic depuis votre compte. Sans engagement.
+      <main style={{ maxWidth: 1080, margin: "0 auto", padding: "96px 24px 80px" }}>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <p style={kickerStyle}>✨ Votre abonnement</p>
+          <h1 style={h1Style}>
+            Choisissez le plan qui vous va.
+          </h1>
+          <p style={{ fontSize: 15, color: "var(--dash-text-2,#6a6a71)", margin: "0 auto", maxWidth: 560, lineHeight: 1.6 }}>
+            Résiliable à tout moment. Droit de rétractation 7 jours (loi 31-08).
+            {currentPlan === "pro" && " Vous êtes actuellement en Pro."}
+            {currentPlan === "max" && " Vous êtes actuellement en Max."}
+            {expiry && currentPlan !== "free" && ` Expiration : ${expiry.toLocaleDateString("fr-MA")}.`}
           </p>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 18 }}>
-            {([
-              { id: "cmi" as const,    label: "Carte bancaire (CMI)", hint: "CIH • BMCE • Attijari • AWB" },
-              { id: "paypal" as const, label: "PayPal",                hint: "Paiement international" },
-            ]).map((m) => {
-              const selected = method === m.id
-              return (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => setMethod(m.id)}
-                  style={{
-                    padding: "14px 14px",
-                    borderRadius: 12,
-                    textAlign: "left",
-                    cursor: "pointer",
-                    background: selected ? "rgba(225,29,72,0.05)" : "#fff",
-                    border: selected ? "1.5px solid #E11D48" : "1px solid rgba(183,191,217,0.35)",
-                    transition: "all 0.15s ease",
-                    fontFamily: "inherit",
-                  }}
-                >
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)" }}>
-                    {m.label}
-                  </div>
-                  <div style={{ fontSize: 11, color: "var(--dash-text-3,#8888aa)", marginTop: 3 }}>
-                    {m.hint}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-
-          {err && (
-            <div
-              role="alert"
-              style={{
-                marginTop: 16,
-                padding: "10px 12px",
-                borderRadius: 10,
-                background: "rgba(239,68,68,0.08)",
-                border: "1px solid rgba(239,68,68,0.25)",
-                color: "#b91c1c",
-                fontSize: 13,
-              }}
-            >
-              {err}
+          {reason === "pro-required" && (
+            <div style={noticeStyle}>
+              Cette fonctionnalité est réservée aux abonnés Pro. Choisissez Pro pour la débloquer immédiatement.
+              {from && <span style={{ opacity: 0.7 }}> (depuis <code style={{ fontSize: 12 }}>{from}</code>)</span>}
             </div>
           )}
-
-          <button
-            type="button"
-            onClick={handleUpgrade}
-            disabled={loading || isCurrentlyPro}
-            style={{
-              marginTop: 20,
-              width: "100%",
-              padding: "15px",
-              background: isCurrentlyPro ? "#c4c4d4" : G,
-              color: "#fff",
-              border: "none",
-              borderRadius: 14,
-              fontSize: 15,
-              fontWeight: 800,
-              cursor: (loading || isCurrentlyPro) ? "default" : "pointer",
-              opacity: loading ? 0.7 : 1,
-              fontFamily: "inherit",
-              boxShadow: isCurrentlyPro ? "none" : "0 8px 24px rgba(225,29,72,0.25)",
-            }}
-          >
-            {isCurrentlyPro
-              ? "Déjà Pro"
-              : loading
-                ? "Redirection…"
-                : `Passer ${selectedPlan === "pro" ? "Pro" : "Pro + Planner"} — ${selectedPlan === "pro" ? 200 : 500} MAD / mois`}
-          </button>
-
-          <p style={{ fontSize: 11, color: "var(--dash-text-3,#8888aa)", marginTop: 14, textAlign: "center", lineHeight: 1.5 }}>
-            Vous serez redirigé vers la page sécurisée de votre mode de paiement.<br />
-            En continuant vous acceptez les <Link href="/cgu" style={{ color: "#E11D48" }}>CGU</Link> et la <Link href="/confidentialite" style={{ color: "#E11D48" }}>politique de confidentialité</Link>.
-          </p>
         </div>
-      </section>
 
-      {/* ── FAQ ── */}
-      <section style={{ padding: "60px 20px", borderTop: "1px solid rgba(183,191,217,0.15)" }}>
-        <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 24, fontWeight: 700, color: "var(--dash-text,#121317)", textAlign: "center", marginBottom: 30 }}>
-            Questions fréquentes
-          </h2>
+        {/* Tableau comparatif 3 tiers */}
+        <div style={{
+          background: "var(--dash-surface,#fff)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.22))",
+          borderRadius: 20,
+          overflow: "hidden",
+          boxShadow: "0 4px 24px rgba(12,14,30,0.04)",
+        }}>
+          {/* En-tête 4 colonnes */}
+          <div style={gridHeaderStyle}>
+            <div />
+            <PlanHeaderCell
+              name="Free"
+              price="0 MAD"
+              tagline="Pour commencer"
+              highlighted={false}
+              current={currentPlan === "free"}
+              onSelect={() => setSelected("free")}
+              selected={selected === "free"}
+            />
+            <PlanHeaderCell
+              name="Pro"
+              price="200 MAD"
+              priceSuffix="/ mois"
+              tagline="Le couteau suisse"
+              highlighted
+              current={currentPlan === "pro"}
+              onSelect={() => setSelected("pro")}
+              selected={selected === "pro"}
+            />
+            <PlanHeaderCell
+              name="Max"
+              price="Sur devis"
+              tagline="Tout inclus + planner"
+              highlighted={false}
+              current={currentPlan === "max"}
+              onSelect={() => setSelected("max")}
+              selected={selected === "max"}
+            />
+          </div>
 
+          {/* Lignes features */}
+          <div>
+            {FEATURES.map((f, i) => (
+              <div
+                key={f.label}
+                style={{
+                  ...gridRowStyle,
+                  background: i % 2 === 0 ? "transparent" : "var(--dash-faint,rgba(183,191,217,0.05))",
+                }}
+              >
+                <div style={{
+                  padding: "14px 20px",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: "var(--dash-text,#121317)",
+                }}>
+                  {f.label}
+                </div>
+                <Cell value={f.free} />
+                <Cell value={f.pro} highlighted />
+                <Cell value={f.max} />
+              </div>
+            ))}
+          </div>
+
+          {/* Footer CTA */}
+          <div style={gridFooterStyle}>
+            <div />
+            <FooterCell
+              label="Rester Free"
+              href="/accueil"
+              variant="ghost"
+              disabled={currentPlan === "free"}
+              disabledLabel="Plan actuel"
+            />
+            <FooterCell
+              label="Passer Pro"
+              href="/api/checkout/upgrade?plan=pro&method=cmi"
+              variant="primary"
+              disabled={currentPlan === "pro"}
+              disabledLabel="Plan actuel"
+            />
+            <FooterCell
+              label="Passer Max"
+              href="mailto:contact@momentoevents.app?subject=Demande%20de%20devis%20Momento%20Max"
+              variant="outline"
+              disabled={currentPlan === "max"}
+              disabledLabel="Plan actuel"
+            />
+          </div>
+        </div>
+
+        {/* Infos paiement */}
+        <div style={{
+          marginTop: 28,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+          gap: 14,
+        }}>
           {[
-            {
-              q: "Je peux annuler quand ?",
-              a: "À tout moment depuis votre compte. Vous gardez Momento Pro jusqu'à la fin de la période payée, puis vous repassez automatiquement en plan Free.",
-            },
-            {
-              q: "Momento prend une commission sur mes prestataires ?",
-              a: "Non. Momento Pro est un abonnement fixe. Les contrats et paiements se font en direct entre vous et vos prestataires, sans passage par Momento.",
-            },
-            {
-              q: "La carte bancaire CMI, c'est sûr ?",
-              a: "Oui. CMI est le Centre Monétique Interbancaire du Maroc, utilisé par toutes les banques marocaines. Aucune donnée carte ne transite par Momento.",
-            },
-            {
-              q: "Et si mon événement est dans 18 mois ?",
-              a: "Vous pouvez ne prendre Pro que pour les mois d'organisation active. Certains membres activent Pro 3-4 mois avant le jour J, ça suffit amplement.",
-            },
-          ].map((item) => (
-            <details
-              key={item.q}
-              style={{
-                padding: "16px 18px",
-                borderRadius: 12,
-                background: "#fff",
-                border: "1px solid rgba(183,191,217,0.25)",
-                marginBottom: 10,
-              }}
-            >
-              <summary style={{ cursor: "pointer", fontWeight: 600, fontSize: 14, color: "var(--dash-text,#121317)" }}>
-                {item.q}
-              </summary>
-              <p style={{ marginTop: 10, fontSize: 13, color: "var(--dash-text-2,#45474D)", lineHeight: 1.6 }}>
-                {item.a}
-              </p>
-            </details>
+            { icon: "credit_card", title: "Paiement CMI",    desc: "Carte bancaire marocaine, agréé BAM. Visa, Mastercard, CMI." },
+            { icon: "shield",      title: "Sécurisé",        desc: "3D Secure obligatoire, aucun numéro de carte ne transite par Momento." },
+            { icon: "refresh",     title: "Résiliable",      desc: "Annulez en 1 clic depuis vos paramètres. Aucun engagement de durée." },
+            { icon: "support",     title: "Rétractation 7 j", desc: "Conformément à l'article 36 de la loi 31-08." },
+          ].map(b => (
+            <div key={b.title} style={infoCardStyle}>
+              <span style={{
+                fontFamily: "'Google Symbols','Material Symbols Outlined'",
+                fontSize: 22, color: "#E11D48", lineHeight: 1, display: "inline-block", marginBottom: 8,
+              }}>{b.icon}</span>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 4 }}>{b.title}</div>
+              <div style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.55 }}>{b.desc}</div>
+            </div>
           ))}
         </div>
-      </section>
 
-      <AntFooter />
+        <p style={{ textAlign: "center", fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", marginTop: 28 }}>
+          Questions ? <a href="mailto:contact@momentoevents.app" style={{ color: "#E11D48" }}>contact@momentoevents.app</a>
+          {" · "}
+          <Link href="/cgu" style={{ color: "var(--dash-text-2,#6a6a71)" }}>CGU</Link>
+          {" · "}
+          <Link href="/confidentialite" style={{ color: "var(--dash-text-2,#6a6a71)" }}>Confidentialité</Link>
+        </p>
+      </main>
     </div>
   )
+}
+
+// ─── Sub-components ─────────────────────────────────────────────────────────
+
+function PlanHeaderCell({
+  name, price, priceSuffix, tagline, highlighted, current, onSelect, selected,
+}: {
+  name: string
+  price: string
+  priceSuffix?: string
+  tagline: string
+  highlighted: boolean
+  current: boolean
+  onSelect: () => void
+  selected: boolean
+}) {
+  return (
+    <button
+      onClick={onSelect}
+      style={{
+        padding: "24px 18px 20px",
+        display: "flex", flexDirection: "column", alignItems: "center",
+        textAlign: "center", cursor: "pointer",
+        background: highlighted ? "linear-gradient(180deg, rgba(225,29,72,0.06) 0%, transparent 80%)" : "transparent",
+        border: "none",
+        borderLeft: selected ? "2px solid #E11D48" : "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+        fontFamily: "inherit",
+        transition: "background 0.15s",
+        position: "relative",
+      }}
+    >
+      {highlighted && (
+        <span style={{
+          position: "absolute", top: 10, right: 10,
+          fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+          padding: "3px 7px", borderRadius: 99,
+          background: "linear-gradient(135deg, #E11D48, #9333EA)", color: "#fff",
+        }}>Populaire</span>
+      )}
+      {current && (
+        <span style={{
+          position: "absolute", top: 10, left: 10,
+          fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+          padding: "3px 7px", borderRadius: 99,
+          background: "rgba(22,101,52,0.1)", color: "#15803d",
+          border: "1px solid rgba(22,101,52,0.2)",
+        }}>Actuel</span>
+      )}
+      <div style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)", marginTop: highlighted || current ? 14 : 0, marginBottom: 6 }}>{name}</div>
+      <div style={{ fontSize: 22, fontWeight: 800, color: "var(--dash-text,#121317)", lineHeight: 1 }}>
+        {price}
+        {priceSuffix && <span style={{ fontSize: 12, fontWeight: 500, color: "var(--dash-text-2,#6a6a71)", marginLeft: 4 }}>{priceSuffix}</span>}
+      </div>
+      <div style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", marginTop: 6 }}>{tagline}</div>
+    </button>
+  )
+}
+
+function Cell({ value, highlighted = false }: { value: boolean | string; highlighted?: boolean }) {
+  const isBool = typeof value === "boolean"
+  const yes = isBool && value === true
+  const no  = isBool && value === false
+  return (
+    <div style={{
+      padding: "14px 20px",
+      textAlign: "center",
+      fontSize: 14,
+      background: highlighted ? "rgba(225,29,72,0.03)" : "transparent",
+      borderLeft: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
+    }}>
+      {yes && (
+        <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "50%", background: "rgba(22,101,52,0.1)", color: "#15803d" }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+      )}
+      {no && (
+        <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "50%", background: "var(--dash-faint-2,rgba(183,191,217,0.15))", color: "var(--dash-text-3,#9a9aaa)" }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </span>
+      )}
+      {!isBool && (
+        <span style={{ fontWeight: 600, color: "var(--dash-text,#121317)" }}>{value as string}</span>
+      )}
+    </div>
+  )
+}
+
+function FooterCell({
+  label, href, variant, disabled, disabledLabel,
+}: {
+  label: string
+  href: string
+  variant: "ghost" | "primary" | "outline"
+  disabled: boolean
+  disabledLabel: string
+}) {
+  if (disabled) {
+    return (
+      <div style={{
+        padding: "18px 20px", textAlign: "center",
+        background: "var(--dash-faint,rgba(183,191,217,0.06))",
+        borderLeft: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
+      }}>
+        <span style={{
+          display: "inline-block",
+          padding: "10px 20px",
+          borderRadius: 10,
+          fontSize: 13, fontWeight: 600,
+          color: "var(--dash-text-2,#6a6a71)",
+          background: "transparent",
+          border: "1px dashed var(--dash-border,rgba(183,191,217,0.3))",
+        }}>
+          ✓ {disabledLabel}
+        </span>
+      </div>
+    )
+  }
+  const styles: Record<typeof variant, React.CSSProperties> = {
+    ghost: {
+      display: "inline-block", padding: "10px 20px", borderRadius: 10,
+      fontSize: 13, fontWeight: 600,
+      color: "var(--dash-text,#121317)",
+      background: "transparent",
+      border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
+      textDecoration: "none",
+    },
+    primary: {
+      display: "inline-block", padding: "10px 22px", borderRadius: 10,
+      fontSize: 13, fontWeight: 700,
+      color: "#fff",
+      background: "linear-gradient(135deg, #E11D48, #9333EA)",
+      boxShadow: "0 6px 20px rgba(225,29,72,0.3)",
+      textDecoration: "none",
+    },
+    outline: {
+      display: "inline-block", padding: "10px 20px", borderRadius: 10,
+      fontSize: 13, fontWeight: 600,
+      color: "var(--dash-text,#121317)",
+      background: "transparent",
+      border: "1.5px solid var(--dash-text,#121317)",
+      textDecoration: "none",
+    },
+  }
+  return (
+    <div style={{
+      padding: "18px 20px", textAlign: "center",
+      borderLeft: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
+    }}>
+      <a href={href} style={styles[variant]}>{label}</a>
+    </div>
+  )
+}
+
+// ─── Styles ─────────────────────────────────────────────────────────────────
+
+const kickerStyle: React.CSSProperties = {
+  fontSize: 11, fontWeight: 700, letterSpacing: "0.14em",
+  textTransform: "uppercase", color: "#E11D48", margin: "0 0 10px",
+}
+
+const h1Style: React.CSSProperties = {
+  fontSize: "clamp(1.8rem, 4vw, 2.6rem)",
+  fontWeight: 700,
+  color: "var(--dash-text,#121317)",
+  letterSpacing: "-0.025em",
+  lineHeight: 1.15,
+  margin: "0 0 14px",
+}
+
+const noticeStyle: React.CSSProperties = {
+  marginTop: 20,
+  padding: "12px 18px",
+  background: "rgba(234,179,8,0.08)",
+  border: "1px solid rgba(234,179,8,0.2)",
+  borderRadius: 12,
+  fontSize: 13,
+  color: "var(--dash-text,#121317)",
+  display: "inline-block",
+}
+
+const gridHeaderStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1.6fr 1fr 1fr 1fr",
+  borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.22))",
+}
+
+const gridRowStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1.6fr 1fr 1fr 1fr",
+  alignItems: "center",
+  borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.1))",
+}
+
+const gridFooterStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1.6fr 1fr 1fr 1fr",
+  borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.22))",
+  background: "var(--dash-faint,rgba(183,191,217,0.04))",
+}
+
+const infoCardStyle: React.CSSProperties = {
+  padding: "18px 18px",
+  background: "var(--dash-surface,#fff)",
+  border: "1px solid var(--dash-border,rgba(183,191,217,0.22))",
+  borderRadius: 14,
 }

@@ -2,7 +2,7 @@
  * Plan gating — features accessibles selon plan user.
  */
 
-export type UserPlan = "free" | "pro"
+export type UserPlan = "free" | "pro" | "max"
 
 export type Feature =
   | "events.multiple"           // créer plus d'un événement
@@ -18,24 +18,29 @@ export type Feature =
   | "site.wedding"              // site mariage builder (phase Pro 2)
   | "contrats.templates"        // contrats type (phase Pro 1)
 
+const PRO_FEATURES: Feature[] = [
+  "events.multiple",
+  "vendors.contact",
+  "vendors.favorites",
+  "budget.breakdown",
+  "tasks.timeline",
+  "guests.manage",
+  "messages.direct",
+  "theme.custom",
+  "dashboard.widgets.advanced",
+  "fairepart.templates",
+  "site.wedding",
+  "contrats.templates",
+]
+
 const PLAN_FEATURES: Record<UserPlan, Set<Feature>> = {
   free: new Set<Feature>([
-    // swipe/découverte, budget total, notes, countdown — autorisés Free
+    // swipe/découverte, budget total, notes, countdown, favoris, mes-prestataires
   ]),
-  pro: new Set<Feature>([
-    "events.multiple",
-    "vendors.contact",
-    "vendors.favorites",
-    "budget.breakdown",
-    "tasks.timeline",
-    "guests.manage",
-    "messages.direct",
-    "theme.custom",
-    "dashboard.widgets.advanced",
-    "fairepart.templates",
-    "site.wedding",
-    "contrats.templates",
-  ]),
+  pro: new Set<Feature>(PRO_FEATURES),
+  // Max = Pro + accompagnement premium (planner humain, agent IA). Toutes les
+  // features Pro sont incluses ; la différence sur les bonus se gère en UI.
+  max: new Set<Feature>(PRO_FEATURES),
 }
 
 export function canAccess(plan: UserPlan, feature: Feature): boolean {
@@ -43,5 +48,5 @@ export function canAccess(plan: UserPlan, feature: Feature): boolean {
 }
 
 export function isPro(plan: UserPlan): boolean {
-  return plan === "pro"
+  return plan === "pro" || plan === "max"
 }

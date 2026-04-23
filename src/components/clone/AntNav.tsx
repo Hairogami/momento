@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
+import { usePlan } from "@/hooks/usePlan"
 
 // ─── Navigation items ─────────────────────────────────────────────────────
 // Public nav — "Dashboard" route conditionnellement vers /login si non-connecté.
@@ -128,6 +129,12 @@ export default function AntNav({
   const isLoggedIn = status === "authenticated"
   const role       = (session?.user as { role?: string } | undefined)?.role ?? "client"
   const isVendor   = role === "vendor"
+  const { plan }   = usePlan()
+  const planLabel = plan === "pro" ? "Pro" : plan === "max" ? "Max" : "Free"
+  const planBg    = plan === "pro" ? "linear-gradient(135deg,#E11D48,#9333EA)"
+                  : plan === "max" ? "linear-gradient(135deg,#9333EA,#3B82F6)"
+                  : "rgba(183,191,217,0.15)"
+  const planColor = plan === "free" ? "var(--dash-text-2,#6a6a71)" : "#fff"
 
   const [scrolled,    setScrolled]    = useState(false)
   const [dark,        setDark]        = useState<boolean>(() => {
@@ -402,12 +409,43 @@ export default function AntNav({
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <Avatar name={session.user?.name} image={session.user?.image} size={36} />
                         <div>
-                          <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name ?? "Mon compte"}</p>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                            <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name ?? "Mon compte"}</p>
+                            {!isVendor && (
+                              <span
+                                title={`Plan ${planLabel}`}
+                                style={{
+                                  fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                                  color: planColor, background: planBg,
+                                  padding: "2px 7px", borderRadius: 99,
+                                  border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
+                                }}
+                              >
+                                {planLabel}
+                              </span>
+                            )}
+                          </div>
                           <p style={{ fontSize: 11, color: dark ? "rgba(255,255,255,0.4)" : "#9a9aaa", margin: "2px 0 0" }}>{session.user?.email}</p>
                           {isVendor && (
                             <span style={{ display: "inline-block", marginTop: 4, fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", padding: "2px 7px", borderRadius: 99 }}>
                               Prestataire
                             </span>
+                          )}
+                          {!isVendor && plan === "free" && (
+                            <Link
+                              href="/upgrade"
+                              onClick={() => setProfileOpen(false)}
+                              style={{
+                                display: "inline-block", marginTop: 6,
+                                fontSize: 10, fontWeight: 600,
+                                color: "#fff",
+                                background: "linear-gradient(135deg,#E11D48,#9333EA)",
+                                padding: "4px 10px", borderRadius: 99,
+                                textDecoration: "none",
+                              }}
+                            >
+                              ✨ Passer Pro — 200 MAD/mois
+                            </Link>
                           )}
                         </div>
                       </div>
@@ -440,7 +478,21 @@ export default function AntNav({
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px 14px", borderBottom: `1px solid ${dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.15)"}`, marginBottom: 8 }}>
                   <Avatar name={session.user?.name} image={session.user?.image} size={32} />
                   <div>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name}</p>
+                      {!isVendor && (
+                        <span
+                          style={{
+                            fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                            color: planColor, background: planBg,
+                            padding: "2px 7px", borderRadius: 99,
+                            border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
+                          }}
+                        >
+                          {planLabel}
+                        </span>
+                      )}
+                    </div>
                     <p style={{ fontSize: 11, color: dark ? "rgba(255,255,255,0.4)" : "#9a9aaa", margin: 0 }}>{session.user?.email}</p>
                   </div>
                 </div>

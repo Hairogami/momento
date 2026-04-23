@@ -161,12 +161,28 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
   const budgetSum = Object.values(budgetPerCat).reduce((a, b) => a + b, 0)
   const over = budgetSum > budgetTotal
 
-  function rebalance() {
-    if (budgetTotal <= 0 || budgetSum <= 0) return
-    const ratio = budgetTotal / budgetSum
+  // Réinitialise la répartition selon les % recommandés du sous-type (stable, prévisible).
+  // Remplace l'ancien rebalance() qui écrasait les ajustements manuels de façon illogique.
+  function resetBreakdown() {
+    if (!subtype || budgetTotal <= 0) return
+    const pct = subtype.budgetBreakdown
+    const cats = selectedCats ?? subtype.defaultCategories
     const next: Record<string, number> = {}
-    for (const [k, v] of Object.entries(budgetPerCat)) next[k] = Math.round(v * ratio)
+    for (const c of cats) {
+      const p = pct[c] ?? 0
+      next[c] = Math.round((p / 100) * budgetTotal)
+    }
     setBudgetPerCat(next)
+  }
+
+  // Aligne le total sur la somme actuelle (si user veut garder ses montants et augmenter le budget).
+  function alignTotalToSum() {
+    if (budgetSum <= 0) return
+    setBudgetTotal(budgetSum)
+  }
+
+  function bumpTotal(delta: number) {
+    setBudgetTotal(prev => Math.max(0, prev + delta))
   }
 
   return (
@@ -364,7 +380,23 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                       }}>
                       <span style={{ fontSize: 16 }}>{cat.emoji}</span>
                       <span style={{ lineHeight: 1.25, flex: 1 }}>{cat.value}</span>
-                      {isDefault && <span style={{ fontSize: 9, padding: "2px 5px", background: "rgba(245,158,11,0.15)", color: "#f59e0b", borderRadius: 6, fontWeight: 700 }}>RECO</span>}
+                      {isDefault && (
+                        <span
+                          title="Recommandé pour ce type d'événement"
+                          aria-label="Recommandé"
+                          style={{
+                            display: "inline-flex", alignItems: "center", justifyContent: "center",
+                            width: 18, height: 18, borderRadius: "50%",
+                            background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))",
+                            color: "#fff", flexShrink: 0,
+                            boxShadow: "0 2px 6px rgba(225,29,72,0.3)",
+                          }}
+                        >
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l2.39 7.36H22l-6.18 4.49 2.36 7.36L12 16.72l-6.18 4.49 2.36-7.36L2 9.36h7.61z" />
+                          </svg>
+                        </span>
+                      )}
                     </button>
                   )
                 })}
@@ -435,11 +467,45 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                 })}
               </div>
 
-              {over && (
-                <button onClick={rebalance} type="button"
-                  style={{ marginTop: 10, width: "100%", padding: "9px", background: G, color: "#fff", border: "none", borderRadius: 99, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
-                  ⚖️ Rééquilibrer ({(budgetSum - budgetTotal).toLocaleString("fr-FR")} MAD au-dessus)
+              {/* Actions budget — explicites et prévisibles */}
+              <div style={{ display: "grid", gridTemplateColumns: over ? "1fr 1fr" : "1fr 1fr", gap: 8, marginTop: 10 }}>
+                <button onClick={resetBreakdown} type="button"
+                  title="Répartit le budget selon les % recommandés pour ce type d'événement"
+                  style={{ padding: "9px", background: "transparent", color: "var(--dash-text,#121317)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                  ↻ Réinitialiser la répartition
                 </button>
+                {over ? (
+                  <button onClick={alignTotalToSum} type="button"
+                    title="Augmente le budget final pour couvrir la somme actuelle"
+                    style={{ padding: "9px", background: G, color: "#fff", border: "none", borderRadius: 99, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                    ↑ Passer le total à {budgetSum.toLocaleString("fr-FR")} MAD
+                  </button>
+                ) : (
+                  <button onClick={alignTotalToSum} type="button"
+                    title="Aligne le total sur la somme actuelle"
+                    style={{ padding: "9px", background: "rgba(225,29,72,0.08)", color: "#E11D48", border: "1px solid rgba(225,29,72,0.25)", borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                    = Total = somme ({budgetSum.toLocaleString("fr-FR")} MAD)
+                  </button>
+                )}
+              </div>
+
+              {/* Raccourcis incréments du total */}
+              <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 10, color: "var(--dash-text-3,#8888aa)", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
+                  Augmenter budget
+                </span>
+                {[1000, 5000, 10000, 25000].map(delta => (
+                  <button key={delta} onClick={() => bumpTotal(delta)} type="button"
+                    style={{ padding: "5px 10px", background: "var(--dash-faint,rgba(183,191,217,0.08))", color: "var(--dash-text,#121317)", border: "1px solid var(--dash-border,rgba(183,191,217,0.22))", borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                    +{delta.toLocaleString("fr-FR")}
+                  </button>
+                ))}
+              </div>
+
+              {over && (
+                <p style={{ fontSize: 11, color: "#f59e0b", marginTop: 8, textAlign: "center" }}>
+                  La somme des catégories dépasse le total de <strong>{(budgetSum - budgetTotal).toLocaleString("fr-FR")} MAD</strong>.
+                </p>
               )}
 
               {error && <p style={{ fontSize: 12, color: "#ef4444", marginTop: 10, marginBottom: 0 }}>{error}</p>}
