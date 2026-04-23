@@ -4,14 +4,20 @@ import HeroSection from "@/components/event-site/ui/HeroSection"
 import ProgramTimeline, { type ProgramStep } from "@/components/event-site/ui/ProgramTimeline"
 import RsvpForm from "@/components/event-site/ui/RsvpForm"
 import MapLinks from "@/components/event-site/ui/MapLinks"
-import { generateShaderParams, generateDecoratifParams, generateEditorialParams } from "@/lib/eventSiteSeed"
+import SiteNav, { type NavItem } from "@/components/event-site/ui/SiteNav"
+import LocationMap from "@/components/event-site/ui/LocationMap"
+import { generateShaderParams, generateDecoratifParams, generateEditorialParams, overrideDecoratifParams } from "@/lib/eventSiteSeed"
 import type { MoodId, Palette } from "@/lib/eventSiteTokens"
 
 type Content = {
   hero?: { title?: string; subtitle?: string; date?: string; venue?: string }
   about?: string
   program?: ProgramStep[]
-  mainEvent?: { venueName?: string; mapsUrl?: string; wazeUrl?: string; description?: string }
+  mainEvent?: {
+    venueName?: string; mapsUrl?: string; wazeUrl?: string; description?: string
+    location?: string
+    locationResolved?: { lat: number; lng: number; displayName?: string }
+  }
   welcomeNote?: string
   rsvp?: { deadline?: string; allowPlusOne?: boolean }
 }
@@ -23,8 +29,18 @@ type Props = {
 
 export default function GeneriqueTemplate({ slug, mood, palette, content, heroImageUrl }: Props) {
   const h = content.hero ?? {}
+  const title = h.title || "Notre événement"
+  const navItems: NavItem[] = [
+    { id: "top", label: "Accueil" },
+    ...(content.about ? [{ id: "about", label: "À propos" } as NavItem] : []),
+    ...(content.program?.length ? [{ id: "programme", label: "Programme" } as NavItem] : []),
+    ...(content.mainEvent?.venueName ? [{ id: "lieu", label: "Lieu" } as NavItem] : []),
+    { id: "rsvp", label: "RSVP" },
+  ]
   return (
     <main style={{ color: "var(--evt-text)", background: "var(--evt-bg)", fontFamily: "var(--evt-font-body)" }}>
+      <SiteNav title={title} items={navItems} />
+      <div id="top" />
       <HeroSection
         title={h.title || "Notre événement"}
         subtitle={h.subtitle}
@@ -34,7 +50,7 @@ export default function GeneriqueTemplate({ slug, mood, palette, content, heroIm
         palette={palette}
         heroImageUrl={heroImageUrl}
         shaderParams={generateShaderParams(slug)}
-        decoratifParams={generateDecoratifParams(slug)}
+        decoratifParams={overrideDecoratifParams(generateDecoratifParams(slug), (content as unknown as { style?: { pattern?: string; rotation?: number; dense?: boolean } }).style as never)}
         editorialParams={generateEditorialParams(slug)}
       />
 
@@ -45,28 +61,44 @@ export default function GeneriqueTemplate({ slug, mood, palette, content, heroIm
       )}
 
       {content.about && (
-        <section style={sectionCentered}>
+        <section id="about" style={sectionCentered}>
           <p style={bodyStyle}>{content.about}</p>
         </section>
       )}
 
       {content.program && content.program.length > 0 && (
-        <ProgramTimeline steps={content.program} />
+        <section id="programme">
+          <ProgramTimeline steps={content.program} />
+        </section>
       )}
 
       {content.mainEvent && content.mainEvent.venueName && (
-        <section style={sectionCentered}>
+        <section id="lieu" style={sectionCentered}>
           <h2 style={h2Style}>{content.mainEvent.venueName}</h2>
           {content.mainEvent.description && <p style={bodyStyle}>{content.mainEvent.description}</p>}
+
+          {content.mainEvent.locationResolved && (
+            <div style={{ maxWidth: 720, margin: "20px auto" }}>
+              <LocationMap
+                lat={content.mainEvent.locationResolved.lat}
+                lng={content.mainEvent.locationResolved.lng}
+                venueName={content.mainEvent.venueName}
+                height={340}
+              />
+            </div>
+          )}
+
           <div style={{ marginTop: 20 }}>
             <MapLinks venueName={content.mainEvent.venueName} mapsUrl={content.mainEvent.mapsUrl} wazeUrl={content.mainEvent.wazeUrl} />
           </div>
         </section>
       )}
 
-      <section style={{ ...sectionCentered, paddingTop: 80, paddingBottom: 100, background: "var(--evt-secondary)", margin: "40px -24px 0", borderTop: "1px solid var(--evt-main)" }}>
-        <h2 style={h2Style}>Confirmez votre présence</h2>
-        <RsvpForm slug={slug} allowPlusOne={content.rsvp?.allowPlusOne ?? false} deadline={content.rsvp?.deadline ?? null} accentColor={palette.main} />
+      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-secondary)", borderTop: "1px solid var(--evt-main)", padding: "80px 24px 100px" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={h2Style}>Confirmez votre présence</h2>
+          <RsvpForm slug={slug} allowPlusOne={content.rsvp?.allowPlusOne ?? false} deadline={content.rsvp?.deadline ?? null} accentColor={palette.main} />
+        </div>
       </section>
 
       <footer style={footerStyle}>· créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Momento</a> ·</footer>

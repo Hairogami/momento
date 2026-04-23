@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { PALETTES, FONTS, MOODS, type FontId } from "@/lib/eventSiteTokens"
+import PatternPicker, { type PatternId } from "./PatternPicker"
 
 type Planner = {
   id: string
@@ -177,7 +178,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
             <ContentTab content={content} hero={hero} template={site.template} onUpdate={updateContent} />
           )}
           {tab === "style" && (
-            <StyleTab site={site} onPatch={patch} />
+            <StyleTab site={site} onPatch={patch} onUpdateContent={updateContent} content={content} />
           )}
           {tab === "photos" && (
             <PhotosTab site={site} onPatch={patch} onReload={() => router.refresh()} />
@@ -229,16 +230,25 @@ function ContentTab({
 
       <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.15))", margin: "4px 0" }} />
 
-      <FieldGroup label="🗺️ Lien Google Maps (pour itinéraire)">
-        <Input value={main.mapsUrl ?? ""} onChange={v => onUpdate("mainEvent.mapsUrl", v)} placeholder="https://maps.app.goo.gl/..." />
-      </FieldGroup>
-
-      <FieldGroup label="🚗 Lien Waze (facultatif)">
-        <Input value={main.wazeUrl ?? ""} onChange={v => onUpdate("mainEvent.wazeUrl", v)} placeholder="https://waze.com/ul?..." />
-      </FieldGroup>
+      <LocationField
+        current={(main.location as string) ?? ""}
+        resolved={(main as Record<string, unknown>).locationResolved as { lat: number; lng: number; displayName?: string } | undefined}
+        onResolved={r => {
+          onUpdate("mainEvent.location", r.input)
+          onUpdate("mainEvent.locationResolved", r.resolved)
+          onUpdate("mainEvent.mapsUrl", r.mapsUrl)
+          onUpdate("mainEvent.wazeUrl", r.wazeUrl)
+        }}
+        onClear={() => {
+          onUpdate("mainEvent.location", "")
+          onUpdate("mainEvent.locationResolved", null)
+          onUpdate("mainEvent.mapsUrl", "")
+          onUpdate("mainEvent.wazeUrl", "")
+        }}
+      />
 
       <div style={{ padding: "10px 12px", background: "rgba(225,29,72,0.06)", border: "1px solid rgba(225,29,72,0.2)", borderRadius: 9, fontSize: 11, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5 }}>
-        🔒 L&apos;adresse exacte ne sera jamais affichée publiquement. Les invités cliquent sur "Itinéraire" → ouvre Maps/Waze.
+        🔒 L&apos;adresse exacte n&apos;est jamais affichée en toutes lettres aux invités. Ils voient une carte + boutons Google Maps / Waze.
       </div>
 
       <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.15))", margin: "4px 0" }} />
@@ -271,7 +281,14 @@ function ContentTab({
   )
 }
 
-function StyleTab({ site, onPatch }: { site: EventSite; onPatch: (p: Partial<EventSite>) => void }) {
+function StyleTab({ site, onPatch, onUpdateContent, content }: {
+  site: EventSite
+  onPatch: (p: Partial<EventSite>) => void
+  onUpdateContent: (path: string, value: unknown) => void
+  content: Record<string, unknown>
+}) {
+  const style = (content.style as { pattern?: string } | undefined) ?? {}
+  const currentPalette = PALETTES.find(p => p.id === site.palette)
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
       <FieldGroup label="Template">
@@ -315,6 +332,14 @@ function StyleTab({ site, onPatch }: { site: EventSite; onPatch: (p: Partial<Eve
           current={site.fontBody}
           onChange={v => onPatch({ fontBody: v })}
           preview="Nous sommes ravis de vous convier"
+        />
+      </FieldGroup>
+
+      <FieldGroup label="Motif décoratif">
+        <PatternPicker
+          current={style.pattern as PatternId | undefined}
+          onPick={id => onUpdateContent("style.pattern", id)}
+          accent={currentPalette?.main}
         />
       </FieldGroup>
     </div>
@@ -480,6 +505,116 @@ function Textarea({ value, onChange, placeholder, rows = 3 }: { value: string; o
         fontSize: 13, fontFamily: "inherit", outline: "none", resize: "vertical",
       }}
     />
+  )
+}
+
+function LocationField({
+  current, resolved, onResolved, onClear,
+}: {
+  current: string
+  resolved: { lat: number; lng: number; displayName?: string } | undefined
+  onResolved: (r: {
+    input: string
+    resolved: { lat: number; lng: number; displayName?: string }
+    mapsUrl: string
+    wazeUrl: string
+  }) => void
+  onClear: () => void
+}) {
+  const [input, setInput] = useState(current)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => { setInput(current) }, [current])
+
+  async function resolve() {
+    const q = input.trim()
+    if (!q) { setError("Entrez une adresse, un lien ou des coordonnées."); return }
+    setLoading(true); setError(null)
+    try {
+      const r = await fetch("/api/geocode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: q }),
+      })
+      if (!r.ok) {
+        const { error } = await r.json().catch(() => ({ error: "Impossible de localiser." }))
+        setError(error ?? "Impossible de localiser.")
+        return
+      }
+      const data = await r.json() as {
+        lat: number; lng: number; displayName: string; mapsUrl: string; wazeUrl: string
+      }
+      onResolved({
+        input: q,
+        resolved: { lat: data.lat, lng: data.lng, displayName: data.displayName },
+        mapsUrl: data.mapsUrl,
+        wazeUrl: data.wazeUrl,
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <FieldGroup label="📍 Localisation (n'importe quel format)">
+      <div style={{ display: "flex", gap: 6 }}>
+        <Input
+          value={input}
+          onChange={v => { setInput(v); if (error) setError(null) }}
+          placeholder="Adresse, lien Maps/Waze, coordonnées 33.57,-7.58…"
+        />
+        <button
+          onClick={resolve}
+          disabled={loading || !input.trim()}
+          style={{
+            flexShrink: 0,
+            padding: "0 14px", borderRadius: 9, border: "none",
+            background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff",
+            fontSize: 12, fontWeight: 600, cursor: loading ? "wait" : "pointer",
+            whiteSpace: "nowrap", fontFamily: "inherit",
+            opacity: (loading || !input.trim()) ? 0.6 : 1,
+          }}
+        >
+          {loading ? "…" : "Trouver"}
+        </button>
+      </div>
+
+      {error && (
+        <div style={{ marginTop: 6, fontSize: 11, color: "#dc2626" }}>{error}</div>
+      )}
+
+      {resolved && (
+        <div style={{
+          marginTop: 10, padding: "10px 12px", borderRadius: 10,
+          background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)",
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+        }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ fontSize: 11, color: "#15803d", fontWeight: 600, marginBottom: 2 }}>
+              ✓ Localisé · {resolved.lat.toFixed(4)}, {resolved.lng.toFixed(4)}
+            </div>
+            <div style={{
+              fontSize: 11, color: "var(--dash-text-2,#6a6a71)",
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
+              {resolved.displayName ?? ""}
+            </div>
+          </div>
+          <button
+            onClick={onClear}
+            style={{
+              background: "transparent", border: "none", cursor: "pointer",
+              fontSize: 16, color: "var(--dash-text-3,#9a9aaa)", padding: 2,
+            }}
+            aria-label="Retirer la localisation"
+            title="Retirer"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+    </FieldGroup>
   )
 }
 

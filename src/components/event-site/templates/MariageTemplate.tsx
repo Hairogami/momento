@@ -6,15 +6,29 @@ import PhotoGallery, { type PhotoItem } from "@/components/event-site/ui/PhotoGa
 import RsvpForm from "@/components/event-site/ui/RsvpForm"
 import MapLinks from "@/components/event-site/ui/MapLinks"
 import SiteNav, { type NavItem } from "@/components/event-site/ui/SiteNav"
+import LocationMap from "@/components/event-site/ui/LocationMap"
+import Reveal from "@/components/event-site/ui/Reveal"
+import SectionDivider from "@/components/event-site/ui/SectionDivider"
 import {
   generateShaderParams, generateDecoratifParams, generateEditorialParams,
+  overrideDecoratifParams,
 } from "@/lib/eventSiteSeed"
 import type { MoodId, Palette } from "@/lib/eventSiteTokens"
 
 type MariageContent = {
   hero?: { title?: string; subtitle?: string; date?: string; venue?: string }
   couple?: { story?: string; photoUrl?: string }
-  mainEvent?: { venueName?: string; mapsUrl?: string; wazeUrl?: string; time?: string; description?: string }
+  mainEvent?: {
+    venueName?: string
+    mapsUrl?: string
+    wazeUrl?: string
+    time?: string
+    description?: string
+    /** Entrée brute de l'user (URL, coords, adresse) */
+    location?: string
+    /** Coords résolues server-side → utilisées pour LocationMap + buttons */
+    locationResolved?: { lat: number; lng: number; displayName?: string }
+  }
   program?: ProgramStep[]
   dayAfter?: { enabled?: boolean; date?: string; time?: string; venueName?: string; mapsUrl?: string; wazeUrl?: string; description?: string }
   travel?: { airports?: string[]; hotels?: { name: string; mapsUrl?: string; promoCode?: string; priceRange?: string }[]; notes?: string }
@@ -22,6 +36,8 @@ type MariageContent = {
   dressCode?: string
   welcomeNote?: string
   rsvp?: { deadline?: string; allowPlusOne?: boolean }
+  /** Overrides visuels utilisateurs (pattern choisi manuellement dans l'éditeur). */
+  style?: { pattern?: string; rotation?: number; dense?: boolean }
 }
 
 type Props = {
@@ -35,7 +51,12 @@ type Props = {
 
 export default function MariageTemplate({ slug, mood, palette, content, heroImageUrl, photos = [] }: Props) {
   const shaderParams = generateShaderParams(slug)
-  const decoratifParams = generateDecoratifParams(slug)
+  const decoratifParams = overrideDecoratifParams(
+    generateDecoratifParams(slug),
+    content.style && typeof content.style === "object"
+      ? { pattern: content.style.pattern as never, rotation: content.style.rotation, dense: content.style.dense }
+      : null,
+  )
   const editorialParams = generateEditorialParams(slug)
 
   const hero = content.hero ?? {}
@@ -72,40 +93,61 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Mot d'accueil */}
       {content.welcomeNote && (
-        <section style={sectionCentered}>
-          <p style={welcomeStyle}>{content.welcomeNote}</p>
-        </section>
+        <Reveal as="section" style={sectionCentered}>
+          <p style={welcomeStyle}>{dropcap(content.welcomeNote)}</p>
+        </Reveal>
       )}
 
       {/* Notre histoire */}
       {content.couple?.story && (
-        <section id="histoire" style={sectionCentered}>
-          <h2 style={h2Style}>Notre histoire</h2>
-          <p style={bodyStyle}>{content.couple.story}</p>
-        </section>
+        <>
+          <SectionDivider variant="ornament" />
+          <Reveal as="section" id="histoire" style={sectionCentered}>
+            <h2 style={h2Style}>Notre histoire</h2>
+            <p style={bodyStyle}>{dropcap(content.couple.story)}</p>
+          </Reveal>
+        </>
       )}
 
       {/* Événement principal */}
       {content.mainEvent && (
-        <section id="ceremonie" style={sectionCentered}>
+        <>
+          <SectionDivider variant="leaf" />
+          <Reveal as="section" id="ceremonie" style={sectionCentered}>
           <div style={{ fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--evt-main)", fontWeight: 600, marginBottom: 12 }}>
             {content.mainEvent.time ? `· ${content.mainEvent.time} ·` : "· Cérémonie ·"}
           </div>
           <h2 style={h2Style}>{content.mainEvent.venueName || "Notre lieu"}</h2>
           {content.mainEvent.description && <p style={bodyStyle}>{content.mainEvent.description}</p>}
+
+          {content.mainEvent.locationResolved && (
+            <div style={{ maxWidth: 720, margin: "28px auto 0" }}>
+              <LocationMap
+                lat={content.mainEvent.locationResolved.lat}
+                lng={content.mainEvent.locationResolved.lng}
+                venueName={content.mainEvent.venueName}
+                height={360}
+              />
+            </div>
+          )}
+
           {(content.mainEvent.mapsUrl || content.mainEvent.wazeUrl) && content.mainEvent.venueName && (
             <div style={{ marginTop: 20 }}>
               <MapLinks venueName={content.mainEvent.venueName} mapsUrl={content.mainEvent.mapsUrl} wazeUrl={content.mainEvent.wazeUrl} />
             </div>
           )}
-        </section>
+          </Reveal>
+        </>
       )}
 
       {/* Programme timeline */}
       {content.program && content.program.length > 0 && (
-        <section id="programme">
-          <ProgramTimeline steps={content.program} title="Programme" />
-        </section>
+        <>
+          <SectionDivider variant="dot-line" />
+          <Reveal as="section" id="programme">
+            <ProgramTimeline steps={content.program} title="Programme" />
+          </Reveal>
+        </>
       )}
 
       {/* Day-after */}
@@ -126,17 +168,19 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Dress code */}
       {content.dressCode && (
-        <section style={sectionCentered}>
+        <Reveal as="section" style={sectionCentered}>
           <h2 style={h2Style}>Dress code</h2>
           <p style={bodyStyle}>{content.dressCode}</p>
-        </section>
+        </Reveal>
       )}
 
       {/* Voyage & hôtels */}
       {content.travel?.hotels && content.travel.hotels.length > 0 && (
-        <section id="voyage" style={sectionCentered}>
-          <h2 style={h2Style}>Hébergement</h2>
-          {content.travel.notes && <p style={{ ...bodyStyle, marginBottom: 28 }}>{content.travel.notes}</p>}
+        <>
+          <SectionDivider variant="leaf" />
+          <Reveal as="section" id="voyage" style={sectionCentered}>
+            <h2 style={h2Style}>Hébergement</h2>
+            {content.travel.notes && <p style={{ ...bodyStyle, marginBottom: 28 }}>{content.travel.notes}</p>}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, textAlign: "left" }}>
             {content.travel.hotels.map((h, i) => (
               <div key={i} style={{
@@ -155,12 +199,13 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
               </div>
             ))}
           </div>
-        </section>
+          </Reveal>
+        </>
       )}
 
       {/* Registre cadeaux */}
       {content.registry && content.registry.length > 0 && (
-        <section style={sectionCentered}>
+        <Reveal as="section" style={sectionCentered}>
           <h2 style={h2Style}>Liste de cadeaux</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginTop: 18 }}>
             {content.registry.map((r, i) => (
@@ -184,25 +229,21 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
               </a>
             ))}
           </div>
-        </section>
+        </Reveal>
       )}
 
       {/* Galerie photos */}
       {photos.length > 0 && (
-        <section>
+        <Reveal as="section">
           <h2 style={{ ...h2Style, textAlign: "center", marginBottom: 20 }}>Galerie</h2>
           <PhotoGallery photos={photos} layout="grid" />
-        </section>
+        </Reveal>
       )}
 
-      {/* RSVP */}
-      <section id="rsvp" style={{ ...sectionCentered, paddingTop: 80, paddingBottom: 100, background: "var(--evt-secondary)", margin: "40px -24px 0", borderTop: "1px solid var(--evt-main)" }}>
+      {/* RSVP — full-bleed background, contenu centré */}
+      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-secondary)", borderTop: "1px solid var(--evt-main)", padding: "80px 24px 100px" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
         <h2 style={h2Style}>Confirmez votre présence</h2>
-        {content.rsvp?.deadline && (
-          <p style={{ ...bodyStyle, marginBottom: 28 }}>
-            Merci de répondre avant le <strong>{content.rsvp.deadline}</strong>
-          </p>
-        )}
         <RsvpForm
           slug={slug}
           hasDayAfter={hasDayAfter}
@@ -210,6 +251,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
           deadline={content.rsvp?.deadline ?? null}
           accentColor={palette.main}
         />
+        </div>
       </section>
 
       {/* Footer minimal */}
@@ -245,6 +287,28 @@ const bodyStyle: React.CSSProperties = {
   maxWidth: 560,
   marginLeft: "auto",
   marginRight: "auto",
+}
+
+/** Transforme la 1re lettre en dropcap avec un <span> — effet initiale de magazine. */
+function dropcap(text: string): React.ReactNode {
+  if (!text) return text
+  const first = text.charAt(0)
+  const rest = text.slice(1)
+  return (
+    <>
+      <span style={{
+        float: "left",
+        fontFamily: "var(--evt-font-heading)",
+        fontSize: "3.4em",
+        lineHeight: 0.85,
+        paddingRight: "10px",
+        paddingTop: "4px",
+        color: "var(--evt-main)",
+        fontWeight: 500,
+      }}>{first}</span>
+      {rest}
+    </>
+  )
 }
 
 const welcomeStyle: React.CSSProperties = {

@@ -19,8 +19,6 @@ type Props = {
  */
 export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = true, deadline, accentColor }: Props) {
   const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
   const [attendingMain, setAttendingMain] = useState<boolean | null>(null)
   const [attendingDayAfter, setAttendingDayAfter] = useState<boolean | null>(null)
   const [plusOneName, setPlusOneName] = useState("")
@@ -46,8 +44,6 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           guestName: name,
-          guestEmail: email || undefined,
-          guestPhone: phone || undefined,
           attendingMain,
           attendingDayAfter: hasDayAfter ? attendingDayAfter : undefined,
           plusOneName: plusOneName || undefined,
@@ -82,6 +78,15 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
   const accent = accentColor ?? "var(--evt-main, #C1713A)"
 
   return (
+    <>
+    {deadline && (
+      <p style={{
+        fontFamily: "var(--evt-font-body, inherit)",
+        fontSize: 13, color: "var(--evt-text-muted)", margin: "0 auto 22px", maxWidth: 460, textAlign: "center",
+      }}>
+        Merci de répondre avant le <strong>{deadline}</strong>
+      </p>
+    )}
     <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 460, margin: "0 auto" }}>
       {/* Honey-pot (caché aux humains, visible aux bots) */}
       <div aria-hidden style={{ position: "absolute", left: -9999, top: -9999, width: 1, height: 1, overflow: "hidden" }}>
@@ -118,17 +123,19 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
         </div>
       )}
 
-      {allowPlusOne && attendingMain === true && (
+      {allowPlusOne && (
         <label style={labelStyle}>
-          <span>+1 (facultatif)</span>
-          <input type="text" value={plusOneName} onChange={e => setPlusOneName(e.target.value)} placeholder="Prénom Nom de votre +1" style={inputStyle} />
+          <span>Nom de votre +1 <span style={{ opacity: 0.5, fontStyle: "italic" }}>(facultatif)</span></span>
+          <input
+            type="text"
+            value={plusOneName}
+            onChange={e => setPlusOneName(e.target.value)}
+            placeholder="Prénom Nom de votre accompagnant·e"
+            style={inputStyle}
+            disabled={attendingMain === false}
+          />
         </label>
       )}
-
-      <label style={labelStyle}>
-        <span>Email <span style={{ opacity: 0.5, fontStyle: "italic" }}>(pour recevoir un rappel)</span></span>
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="vous@exemple.com" style={inputStyle} />
-      </label>
 
       {attendingMain === true && (
         <>
@@ -167,13 +174,8 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
       >
         {state === "sending" ? "Envoi…" : "Confirmer ma réponse"}
       </button>
-
-      {deadline && (
-        <p style={{ fontSize: 11, color: "var(--evt-text-muted)", textAlign: "center", margin: "4px 0 0", opacity: 0.8 }}>
-          Réponse souhaitée avant le <strong>{deadline}</strong>
-        </p>
-      )}
     </form>
+    </>
   )
 }
 

@@ -82,9 +82,9 @@ export function generateShaderParams(slug: string): ShaderBgParams {
 }
 
 export type DecoratifBgParams = {
-  pattern: "arabesque" | "losanges" | "cercles" | "hexagone" | "florale"
+  pattern: "arabesque" | "losanges" | "cercles" | "hexagone" | "florale" | "zellige" | "fleurs-line" | "constellations" | "vagues"
   scale: number // 0.6 → 1.4
-  rotation: number // 0 → 45 deg
+  rotation: number // 0 → 8 deg (faible — évite l'effet "penché")
   opacity: number // 0.25 → 0.55
   dense: boolean
 }
@@ -92,11 +92,26 @@ export type DecoratifBgParams = {
 export function generateDecoratifParams(slug: string): DecoratifBgParams {
   const rng = seededRng(`decoratif:${slug}`)
   return {
-    pattern: pick(rng, ["arabesque", "losanges", "cercles", "hexagone", "florale"] as const),
-    scale: rand(rng, 0.7, 1.3),
-    rotation: Math.round(rand(rng, 0, 30)),
-    opacity: rand(rng, 0.3, 0.5),
+    pattern: pick(rng, ["arabesque", "losanges", "cercles", "hexagone", "florale", "zellige", "fleurs-line", "constellations", "vagues"] as const),
+    scale: rand(rng, 0.85, 1.15),
+    rotation: 0, // pattern toujours droit — user peut activer rotation dans l'éditeur
+    opacity: rand(rng, 0.35, 0.55),
     dense: rng() > 0.5,
+  }
+}
+
+/** Override des params decoratif quand l'user a fait un choix explicite dans l'éditeur */
+export function overrideDecoratifParams(
+  base: DecoratifBgParams,
+  override?: { pattern?: DecoratifBgParams["pattern"]; scale?: number; rotation?: number; opacity?: number; dense?: boolean } | null,
+): DecoratifBgParams {
+  if (!override) return base
+  return {
+    pattern: override.pattern ?? base.pattern,
+    scale: override.scale ?? base.scale,
+    rotation: override.rotation ?? base.rotation,
+    opacity: override.opacity ?? base.opacity,
+    dense: override.dense ?? base.dense,
   }
 }
 

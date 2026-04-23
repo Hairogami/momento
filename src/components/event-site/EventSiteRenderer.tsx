@@ -6,6 +6,8 @@ import CorporateTemplate from "./templates/CorporateTemplate"
 import ConferenceTemplate from "./templates/ConferenceTemplate"
 import GeneriqueTemplate from "./templates/GeneriqueTemplate"
 import { getPalette, FONTS, type MoodId } from "@/lib/eventSiteTokens"
+import { generateDecoratifParams, overrideDecoratifParams } from "@/lib/eventSiteSeed"
+import DecoratifBackground from "./backgrounds/DecoratifBackground"
 
 type EventSite = {
   slug: string
@@ -63,7 +65,23 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
       <link rel="stylesheet" href={fontH.googleUrl} />
       <link rel="stylesheet" href={fontB.googleUrl} />
       <div style={style}>
-        {renderTemplate(site.template, { slug: site.slug, mood, palette, content, heroImageUrl: site.heroImageUrl, photos })}
+        {/* Pattern décoratif continu sur toute la page (mood decoratif seulement) */}
+        {mood === "decoratif" && (
+          <DecoratifBackground
+            params={overrideDecoratifParams(
+              generateDecoratifParams(site.slug),
+              (content as unknown as { style?: { pattern?: string; rotation?: number; dense?: boolean } })?.style as never,
+            )}
+            colorMain={palette.main}
+            colorAccent={palette.accent}
+            colorBg={palette.bg}
+            intensity={1}
+            fullPage
+          />
+        )}
+        <div style={{ position: "relative", zIndex: 1 }}>
+          {renderTemplate(site.template, { slug: site.slug, mood, palette, content, heroImageUrl: site.heroImageUrl, photos })}
+        </div>
       </div>
     </>
   )

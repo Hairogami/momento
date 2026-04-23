@@ -5,13 +5,19 @@ import ProgramTimeline, { type ProgramStep } from "@/components/event-site/ui/Pr
 import PhotoGallery, { type PhotoItem } from "@/components/event-site/ui/PhotoGallery"
 import RsvpForm from "@/components/event-site/ui/RsvpForm"
 import MapLinks from "@/components/event-site/ui/MapLinks"
-import { generateShaderParams, generateDecoratifParams, generateEditorialParams } from "@/lib/eventSiteSeed"
+import SiteNav, { type NavItem } from "@/components/event-site/ui/SiteNav"
+import LocationMap from "@/components/event-site/ui/LocationMap"
+import { generateShaderParams, generateDecoratifParams, generateEditorialParams, overrideDecoratifParams } from "@/lib/eventSiteSeed"
 import type { MoodId, Palette } from "@/lib/eventSiteTokens"
 
 type Content = {
   hero?: { title?: string; subtitle?: string; date?: string; venue?: string }
   honored?: { name?: string; age?: number; bio?: string; photoUrl?: string }
-  mainEvent?: { venueName?: string; mapsUrl?: string; wazeUrl?: string; time?: string; description?: string }
+  mainEvent?: {
+    venueName?: string; mapsUrl?: string; wazeUrl?: string; time?: string; description?: string
+    location?: string
+    locationResolved?: { lat: number; lng: number; displayName?: string }
+  }
   program?: ProgramStep[]
   dressCode?: string
   registry?: { label: string; url: string }[]
@@ -26,8 +32,18 @@ type Props = {
 
 export default function FeteFamilleTemplate({ slug, mood, palette, content, heroImageUrl, photos = [] }: Props) {
   const h = content.hero ?? {}
+  const title = h.title || content.honored?.name || "Notre événement"
+  const navItems: NavItem[] = [
+    { id: "top", label: "Accueil" },
+    ...(content.honored?.bio ? [{ id: "honored", label: content.honored.name ?? "Portrait" } as NavItem] : []),
+    ...(content.mainEvent ? [{ id: "ou-quand", label: "Où & quand" } as NavItem] : []),
+    ...(content.program?.length ? [{ id: "programme", label: "Programme" } as NavItem] : []),
+    { id: "rsvp", label: "RSVP" },
+  ]
   return (
     <main style={{ color: "var(--evt-text)", background: "var(--evt-bg)", fontFamily: "var(--evt-font-body)" }}>
+      <SiteNav title={title} items={navItems} />
+      <div id="top" />
       <HeroSection
         title={h.title || content.honored?.name || "Notre événement"}
         subtitle={h.subtitle}
@@ -37,7 +53,7 @@ export default function FeteFamilleTemplate({ slug, mood, palette, content, hero
         palette={palette}
         heroImageUrl={heroImageUrl}
         shaderParams={generateShaderParams(slug)}
-        decoratifParams={generateDecoratifParams(slug)}
+        decoratifParams={overrideDecoratifParams(generateDecoratifParams(slug), (content as unknown as { style?: { pattern?: string; rotation?: number; dense?: boolean } }).style as never)}
         editorialParams={generateEditorialParams(slug)}
       />
 
@@ -48,16 +64,28 @@ export default function FeteFamilleTemplate({ slug, mood, palette, content, hero
       )}
 
       {content.honored?.bio && (
-        <section style={sectionCentered}>
+        <section id="honored" style={sectionCentered}>
           <h2 style={h2Style}>{content.honored.name}</h2>
           <p style={bodyStyle}>{content.honored.bio}</p>
         </section>
       )}
 
       {content.mainEvent && (
-        <section style={sectionCentered}>
+        <section id="ou-quand" style={sectionCentered}>
           <h2 style={h2Style}>{content.mainEvent.venueName || "Où & quand"}</h2>
           {content.mainEvent.description && <p style={bodyStyle}>{content.mainEvent.description}</p>}
+
+          {content.mainEvent.locationResolved && (
+            <div style={{ maxWidth: 720, margin: "28px auto 0" }}>
+              <LocationMap
+                lat={content.mainEvent.locationResolved.lat}
+                lng={content.mainEvent.locationResolved.lng}
+                venueName={content.mainEvent.venueName}
+                height={360}
+              />
+            </div>
+          )}
+
           {(content.mainEvent.mapsUrl || content.mainEvent.wazeUrl) && content.mainEvent.venueName && (
             <div style={{ marginTop: 20 }}>
               <MapLinks venueName={content.mainEvent.venueName} mapsUrl={content.mainEvent.mapsUrl} wazeUrl={content.mainEvent.wazeUrl} />
@@ -67,7 +95,9 @@ export default function FeteFamilleTemplate({ slug, mood, palette, content, hero
       )}
 
       {content.program && content.program.length > 0 && (
-        <ProgramTimeline steps={content.program} title="Programme" />
+        <section id="programme">
+          <ProgramTimeline steps={content.program} title="Programme" />
+        </section>
       )}
 
       {content.dressCode && (
@@ -95,9 +125,11 @@ export default function FeteFamilleTemplate({ slug, mood, palette, content, hero
         </section>
       )}
 
-      <section style={{ ...sectionCentered, paddingTop: 80, paddingBottom: 100, background: "var(--evt-secondary)", margin: "40px -24px 0", borderTop: "1px solid var(--evt-main)" }}>
-        <h2 style={h2Style}>Confirmez votre présence</h2>
-        <RsvpForm slug={slug} allowPlusOne={content.rsvp?.allowPlusOne ?? true} deadline={content.rsvp?.deadline ?? null} accentColor={palette.main} />
+      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-secondary)", borderTop: "1px solid var(--evt-main)", padding: "80px 24px 100px" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={h2Style}>Confirmez votre présence</h2>
+          <RsvpForm slug={slug} allowPlusOne={content.rsvp?.allowPlusOne ?? true} deadline={content.rsvp?.deadline ?? null} accentColor={palette.main} />
+        </div>
       </section>
 
       <footer style={footerStyle}>· créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Momento</a> ·</footer>

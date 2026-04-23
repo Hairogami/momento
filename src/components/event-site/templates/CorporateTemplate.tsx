@@ -4,7 +4,9 @@ import HeroSection from "@/components/event-site/ui/HeroSection"
 import ProgramTimeline, { type ProgramStep } from "@/components/event-site/ui/ProgramTimeline"
 import RsvpForm from "@/components/event-site/ui/RsvpForm"
 import MapLinks from "@/components/event-site/ui/MapLinks"
-import { generateShaderParams, generateDecoratifParams, generateEditorialParams } from "@/lib/eventSiteSeed"
+import SiteNav, { type NavItem } from "@/components/event-site/ui/SiteNav"
+import LocationMap from "@/components/event-site/ui/LocationMap"
+import { generateShaderParams, generateDecoratifParams, generateEditorialParams, overrideDecoratifParams } from "@/lib/eventSiteSeed"
 import type { MoodId, Palette } from "@/lib/eventSiteTokens"
 
 type Speaker = { name: string; role?: string; bio?: string; photoUrl?: string }
@@ -16,7 +18,11 @@ type Content = {
   program?: ProgramStep[]
   speakers?: Speaker[]
   partners?: Partner[]
-  mainEvent?: { venueName?: string; mapsUrl?: string; wazeUrl?: string }
+  mainEvent?: {
+    venueName?: string; mapsUrl?: string; wazeUrl?: string
+    location?: string
+    locationResolved?: { lat: number; lng: number; displayName?: string }
+  }
   dressCode?: string
   welcomeNote?: string
   rsvp?: { deadline?: string }
@@ -29,8 +35,19 @@ type Props = {
 
 export default function CorporateTemplate({ slug, mood, palette, content, heroImageUrl }: Props) {
   const h = content.hero ?? {}
+  const title = h.title || "Notre événement"
+  const navItems: NavItem[] = [
+    { id: "top", label: "Accueil" },
+    ...(content.about ? [{ id: "about", label: "À propos" } as NavItem] : []),
+    ...(content.program?.length ? [{ id: "programme", label: "Programme" } as NavItem] : []),
+    ...(content.speakers?.length ? [{ id: "speakers", label: "Orateurs" } as NavItem] : []),
+    ...(content.mainEvent?.venueName ? [{ id: "lieu", label: "Lieu" } as NavItem] : []),
+    { id: "rsvp", label: "Inscription" },
+  ]
   return (
     <main style={{ color: "var(--evt-text)", background: "var(--evt-bg)", fontFamily: "var(--evt-font-body)" }}>
+      <SiteNav title={title} items={navItems} />
+      <div id="top" />
       <HeroSection
         title={h.title || "Notre événement"}
         subtitle={h.subtitle}
@@ -40,7 +57,7 @@ export default function CorporateTemplate({ slug, mood, palette, content, heroIm
         palette={palette}
         heroImageUrl={heroImageUrl}
         shaderParams={generateShaderParams(slug)}
-        decoratifParams={generateDecoratifParams(slug)}
+        decoratifParams={overrideDecoratifParams(generateDecoratifParams(slug), (content as unknown as { style?: { pattern?: string; rotation?: number; dense?: boolean } }).style as never)}
         editorialParams={generateEditorialParams(slug)}
       />
 
@@ -51,18 +68,20 @@ export default function CorporateTemplate({ slug, mood, palette, content, heroIm
       )}
 
       {content.about && (
-        <section style={sectionCentered}>
+        <section id="about" style={sectionCentered}>
           <h2 style={h2Style}>À propos</h2>
           <p style={bodyStyle}>{content.about}</p>
         </section>
       )}
 
       {content.program && content.program.length > 0 && (
-        <ProgramTimeline steps={content.program} title="Programme" />
+        <section id="programme">
+          <ProgramTimeline steps={content.program} title="Programme" />
+        </section>
       )}
 
       {content.speakers && content.speakers.length > 0 && (
-        <section style={{ ...sectionCentered, maxWidth: 1000 }}>
+        <section id="speakers" style={{ ...sectionCentered, maxWidth: 1000 }}>
           <h2 style={h2Style}>Orateurs</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, marginTop: 28, textAlign: "left" }}>
             {content.speakers.map((s, i) => (
@@ -81,9 +100,21 @@ export default function CorporateTemplate({ slug, mood, palette, content, heroIm
       )}
 
       {content.mainEvent && content.mainEvent.venueName && (
-        <section style={sectionCentered}>
+        <section id="lieu" style={sectionCentered}>
           <h2 style={h2Style}>Lieu</h2>
           <p style={{ ...bodyStyle, marginBottom: 20 }}>{content.mainEvent.venueName}</p>
+
+          {content.mainEvent.locationResolved && (
+            <div style={{ maxWidth: 720, margin: "0 auto 20px" }}>
+              <LocationMap
+                lat={content.mainEvent.locationResolved.lat}
+                lng={content.mainEvent.locationResolved.lng}
+                venueName={content.mainEvent.venueName}
+                height={340}
+              />
+            </div>
+          )}
+
           <MapLinks venueName={content.mainEvent.venueName} mapsUrl={content.mainEvent.mapsUrl} wazeUrl={content.mainEvent.wazeUrl} />
         </section>
       )}
@@ -113,9 +144,11 @@ export default function CorporateTemplate({ slug, mood, palette, content, heroIm
         </section>
       )}
 
-      <section style={{ ...sectionCentered, paddingTop: 80, paddingBottom: 100, background: "var(--evt-secondary)", margin: "40px -24px 0", borderTop: "1px solid var(--evt-main)" }}>
-        <h2 style={h2Style}>Inscription</h2>
-        <RsvpForm slug={slug} allowPlusOne={false} deadline={content.rsvp?.deadline ?? null} accentColor={palette.main} />
+      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-secondary)", borderTop: "1px solid var(--evt-main)", padding: "80px 24px 100px" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={h2Style}>Inscription</h2>
+          <RsvpForm slug={slug} allowPlusOne={false} deadline={content.rsvp?.deadline ?? null} accentColor={palette.main} />
+        </div>
       </section>
 
       <footer style={footerStyle}>· créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Momento</a> ·</footer>
