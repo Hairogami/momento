@@ -43,6 +43,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const SELECT = {
     id: true, slug: true, name: true, category: true, city: true,
     rating: true, reviewCount: true, featured: true, priceMin: true, priceMax: true,
+    phone: true, instagram: true, facebook: true, website: true,
+    media: { select: { url: true }, orderBy: { order: "asc" as const }, take: 6 },
     _count: { select: { media: true } },
   } as const
 
@@ -92,11 +94,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     const top = ranked[0]?.v
     if (!top) return { category, vendor: null }
 
-    // Strip _count pour garder la forme existante côté client
+    // Shape identique à VendorDiscoverCard pour que le carousel reco
+    // utilise le MÊME composant que les prestataires sélectionnés.
     const vendorOut = {
       id: top.id, slug: top.slug, name: top.name, category: top.category, city: top.city,
       rating: top.rating, reviewCount: top.reviewCount, featured: top.featured,
       priceMin: top.priceMin, priceMax: top.priceMax,
+      phone: top.phone, instagram: top.instagram, facebook: top.facebook, website: top.website,
+      media: top.media,
     }
     return { category, vendor: vendorOut }
   }))

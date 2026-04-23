@@ -259,7 +259,7 @@ export default function CloneAccueilPage() {
 
         {/* Corbeille */}
         {trashed.length > 0 && (
-          <div style={{ marginBottom: 36 }}>
+          <div id="corbeille" style={{ marginBottom: 36, scrollMarginTop: 80 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
               <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>🗑️ Corbeille</h2>
               <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
@@ -365,7 +365,18 @@ export default function CloneAccueilPage() {
         onCreated={(planner) => {
           setShowCreateModal(false)
           try { localStorage.setItem("momento_active_event", planner.id) } catch {}
-          router.push("/mes-prestataires")
+          // MAJ locale immédiate (pas besoin de refresh) + redirect dashboard
+          setPlanners(prev => [{
+            id: planner.id,
+            title: planner.title,
+            coupleNames: null,
+            weddingDate: null,
+            coverColor: null,
+            budget: null,
+            guestCount: null,
+            trashedAt: null,
+          }, ...prev])
+          router.push("/dashboard")
         }}
       />
     </div>

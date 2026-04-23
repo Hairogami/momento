@@ -217,7 +217,18 @@ export default function MesPrestatairesPage() {
         </div>
 
         {/* Carrousel recommandés — en haut de page, avant la sélection par catégorie */}
-        {activeEventId && <RecommandedCarousel plannerId={activeEventId} />}
+        {activeEventId && (
+          <RecommandedCarousel
+            plannerId={activeEventId}
+            onVendorSelected={() => {
+              // Refetch immédiat → la carte apparaît dans "sélectionnés" sans refresh
+              fetch(`/api/planners/${activeEventId}/vendors`, { cache: "no-store" })
+                .then(r => r.ok ? r.json() : [])
+                .then((pvs: unknown) => { if (Array.isArray(pvs)) setPlannerVendors(pvs as typeof plannerVendors) })
+                .catch(() => {})
+            }}
+          />
+        )}
 
         {loading ? (
           <PageSkeleton variant="cards" />

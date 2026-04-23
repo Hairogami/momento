@@ -38,6 +38,7 @@ const DROPDOWN_CLIENT = [
   { separator: true },
   { icon: "person",         label: "Profil",        href: "/profile"       },
   { icon: "settings",       label: "Paramètres",    href: "/settings"      },
+  { icon: "delete",         label: "Corbeille",     href: "/accueil#corbeille" },
   { separator: true },
   { icon: "logout",         label: "Déconnexion",   signout: true          },
 ]

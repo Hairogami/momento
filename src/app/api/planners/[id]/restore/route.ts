@@ -26,14 +26,22 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     return Response.json({ error: "Cet événement n'est pas dans la corbeille." }, { status: 400 })
   }
 
-  const liveCount = await prisma.planner.count({
-    where: { userId: session.user.id, trashedAt: null },
+  // Free = 1 live max. Pro/Max = illimité.
+  const userRow = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { plan: true },
   })
-  if (liveCount >= 1) {
-    return Response.json(
-      { error: "Vous avez déjà un événement en cours. Mettez-le en corbeille avant de restaurer celui-ci." },
-      { status: 409 },
-    )
+  const plan = (userRow?.plan ?? "free") as string
+  if (plan === "free") {
+    const liveCount = await prisma.planner.count({
+      where: { userId: session.user.id, trashedAt: null },
+    })
+    if (liveCount >= 1) {
+      return Response.json(
+        { error: "Le plan Free est limité à 1 événement en cours. Passez Pro pour restaurer sans restriction, ou mettez l'actuel en corbeille." },
+        { status: 409 },
+      )
+    }
   }
 
   const restored = await prisma.planner.update({

@@ -21,7 +21,7 @@ const NAV_ITEMS: { icon: string; label: string; href: string; pro?: boolean }[] 
   { icon: "groups",                  label: "Invités",          href: "/guests",     pro: true },
   { icon: "chat_bubble",             label: "Messages",         href: "/messages",   pro: true },
   { icon: "event_note",              label: "Planning",         href: "/planner",    pro: true },
-  { icon: "favorite",                label: "Favoris",          href: "/favorites",  pro: true },
+  { icon: "favorite",                label: "Favoris",          href: "/favorites"           },
   { icon: "handshake",               label: "Mes Prestataires", href: "/mes-prestataires" },
 ]
 
@@ -423,7 +423,8 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
       onCreated={(planner) => {
         setShowCreateModal(false)
         try { localStorage.setItem("momento_active_event", planner.id) } catch {}
-        router.push("/mes-prestataires")
+        router.push("/dashboard")
+        router.refresh()
       }}
     />
 

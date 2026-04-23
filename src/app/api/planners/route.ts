@@ -116,17 +116,23 @@ export async function POST(request: NextRequest) {
     if (Object.keys(bb).length > 0) budgetBreakdown = bb
   }
 
-  // Règle : 1 seul événement LIVE (trashedAt = null) par user. Les events
-  // en corbeille ne comptent pas. Pour en créer un nouveau, il faut d'abord
-  // mettre l'actuel en corbeille.
-  const liveCount = await prisma.planner.count({
-    where: { userId: session.user.id, trashedAt: null },
+  // Règle : 1 seul événement LIVE (trashedAt = null) pour les users FREE.
+  // Les plans Pro et Max ont des événements illimités.
+  const userRow = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { plan: true },
   })
-  if (liveCount >= 1) {
-    return Response.json(
-      { error: "Vous avez déjà un événement en cours. Mettez-le en corbeille avant d'en créer un nouveau." },
-      { status: 409 },
-    )
+  const plan = (userRow?.plan ?? "free") as string
+  if (plan === "free") {
+    const liveCount = await prisma.planner.count({
+      where: { userId: session.user.id, trashedAt: null },
+    })
+    if (liveCount >= 1) {
+      return Response.json(
+        { error: "Le plan Free est limité à 1 événement en cours. Passez Pro pour en créer plusieurs, ou mettez l'actuel en corbeille." },
+        { status: 409 },
+      )
+    }
   }
 
   try {
