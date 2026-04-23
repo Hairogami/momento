@@ -36,6 +36,10 @@ export default function CloneSignupPage() {
   const [vEmail, setVEmail]         = useState("")
   const [vPassword, setVPassword]   = useState("")
 
+  // CGU + marketing
+  const [tos, setTos]               = useState(false)
+  const [marketing, setMarketing]   = useState(true)
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault(); setError(""); setLoading(true)
 
@@ -43,9 +47,13 @@ export default function CloneSignupPage() {
       setError("Les mots de passe ne correspondent pas."); setLoading(false); return
     }
 
+    if (role === "client" && !tos) {
+      setError("Acceptez les conditions pour continuer."); setLoading(false); return
+    }
+
     const body = role === "client"
-      ? { name: `${prenom} ${nom}`, email, password, role: "CLIENT" }
-      : { name: entreprise, email: vEmail, password: vPassword, phone: telephone, category: categorie, role: "VENDOR" }
+      ? { role: "client", email, password, firstName: prenom || undefined, lastName: nom || undefined, marketingOptIn: marketing, agreedTos: true }
+      : { role: "vendor", email: vEmail, password: vPassword, companyName: entreprise || undefined, phone: telephone || undefined, vendorCategory: categorie || undefined }
 
     const r = await fetch("/api/auth/register", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -226,13 +234,29 @@ export default function CloneSignupPage() {
                   }}>{error}</p>
                 )}
 
-                <button type="submit" disabled={loading} style={{
-                  height: 46, borderRadius: 12, border: "none",
-                  background: GRADIENT, color: "#fff",
-                  fontSize: 14, fontWeight: 600, cursor: loading ? "wait" : "pointer",
-                  fontFamily: "inherit", opacity: loading ? 0.7 : 1, marginTop: 4,
-                }}>
-                  {loading ? "Création…" : "Créer mon compte"}
+                {/* CGU + marketing */}
+                <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "#45474D", cursor: "pointer", lineHeight: 1.5, marginTop: 4 }}>
+                  <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2 }} />
+                  <span>J&apos;accepte les <a href="/cgu" target="_blank" style={{ color: "#E11D48", textDecoration: "underline" }}>conditions générales</a> et la <a href="/confidentialite" target="_blank" style={{ color: "#E11D48", textDecoration: "underline" }}>politique de confidentialité</a>.</span>
+                </label>
+                <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "#6a6a71", cursor: "pointer", lineHeight: 1.5 }}>
+                  <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 2 }} />
+                  <span>Je souhaite recevoir les conseils &amp; offres Momento (facultatif).</span>
+                </label>
+
+                <button type="submit" disabled={loading || !tos} aria-disabled={!tos}
+                  title={!tos ? "Acceptez les conditions pour continuer" : ""}
+                  style={{
+                    height: 46, borderRadius: 12, border: "none",
+                    background: tos ? GRADIENT : "rgba(183,191,217,0.25)",
+                    color: tos ? "#fff" : "#9a9aaa",
+                    fontSize: 14, fontWeight: 600,
+                    cursor: (loading || !tos) ? "not-allowed" : "pointer",
+                    fontFamily: "inherit",
+                    opacity: loading ? 0.7 : 1, marginTop: 4,
+                    transition: "background 0.15s, color 0.15s",
+                  }}>
+                  {loading ? "Création…" : tos ? "Créer mon compte" : "Acceptez les conditions pour continuer"}
                 </button>
               </form>
             </div>

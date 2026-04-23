@@ -44,6 +44,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
   const [familyId, setFamilyId] = useState<EventFamilyId>("mariage")
   const [subtypeId, setSubtypeId] = useState<string>("traditionnel")
+  const [subtypeOpen, setSubtypeOpen] = useState<boolean>(false)
   const [title, setTitle] = useState("")
   const [weddingDate, setWeddingDate] = useState("")
   const [city, setCity] = useState("")
@@ -65,6 +66,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
     const fam = EVENT_FAMILIES.find(f => f.id === id)
     const first = fam?.subtypes[0]?.id ?? ""
     setSubtypeId(first)
+    setSubtypeOpen(false)
     setSelectedCats(null)
   }
 
@@ -120,6 +122,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
       const res = await fetch("/api/planners", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           title: title || `Mon ${subtype?.label ?? family.label}`,
           coupleNames: "",
@@ -133,13 +136,22 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
           categories: cats,
         }),
       })
-      const data = await res.json()
-      if (!res.ok) { setError(data.error ?? "Erreur lors de la création."); return }
+      if (res.status === 401) {
+        setError("Session expirée. Reconnectez-vous pour créer votre événement.")
+        return
+      }
+      const data = await res.json().catch(() => ({} as { error?: string }))
+      if (!res.ok) {
+        setError(data.error ?? `Erreur ${res.status} lors de la création.`)
+        console.error("[CreateEventModal] POST /api/planners failed:", res.status, data)
+        return
+      }
       invalidatePlannerCache()
       reset()
       onCreated(data)
-    } catch {
-      setError("Erreur réseau. Réessayez.")
+    } catch (err) {
+      console.error("[CreateEventModal] network error:", err)
+      setError("Erreur réseau. Vérifiez votre connexion et réessayez.")
     } finally {
       setLoading(false)
     }
@@ -224,13 +236,77 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
               <div>
                 <label style={labelStyle}>Sous-type</label>
-                <select value={subtypeId} onChange={e => setSubtypeId(e.target.value)} style={inputStyle}>
-                  {family.subtypes.map(s => (
-                    <option key={s.id} value={s.id}>{s.emoji ?? ""} {s.label}</option>
-                  ))}
-                </select>
+                <div style={{ position: "relative" }}>
+                  <button
+                    type="button"
+                    onClick={() => setSubtypeOpen(o => !o)}
+                    style={{
+                      ...inputStyle,
+                      display: "flex", justifyContent: "space-between", alignItems: "center",
+                      cursor: "pointer", textAlign: "left",
+                      borderColor: subtypeOpen ? "rgba(225,29,72,0.5)" : "var(--dash-border, rgba(255,255,255,0.07))",
+                    }}
+                    aria-expanded={subtypeOpen}
+                    aria-haspopup="listbox"
+                  >
+                    <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 16 }}>{subtype?.emoji ?? family.emoji}</span>
+                      <span>{subtype?.label ?? "Choisir un sous-type"}</span>
+                    </span>
+                    <span style={{ fontSize: 11, color: "var(--g1, #E11D48)", transform: subtypeOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>▼</span>
+                  </button>
+                  {subtypeOpen && (
+                    <>
+                      <div
+                        onClick={() => setSubtypeOpen(false)}
+                        style={{ position: "fixed", inset: 0, zIndex: 10 }}
+                        aria-hidden
+                      />
+                      <div
+                        role="listbox"
+                        style={{
+                          position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0,
+                          background: "var(--dash-surface-2, #1c1d25)",
+                          border: "1.5px solid rgba(225,29,72,0.4)",
+                          borderRadius: 12, padding: 5,
+                          maxHeight: 260, overflowY: "auto",
+                          zIndex: 20,
+                          boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
+                        }}
+                      >
+                        {family.subtypes.map(s => {
+                          const active = s.id === subtypeId
+                          return (
+                            <button
+                              key={s.id}
+                              type="button"
+                              role="option"
+                              aria-selected={active}
+                              onClick={() => { setSubtypeId(s.id); setSubtypeOpen(false) }}
+                              style={{
+                                width: "100%", display: "flex", alignItems: "center", gap: 10,
+                                padding: "10px 12px", borderRadius: 10, border: "none",
+                                background: active ? "rgba(225,29,72,0.14)" : "transparent",
+                                color: "var(--dash-text, #eeeef5)",
+                                fontSize: 13, fontWeight: active ? 700 : 500,
+                                cursor: "pointer", textAlign: "left", fontFamily: "inherit",
+                                transition: "background 0.12s",
+                              }}
+                              onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2, rgba(255,255,255,0.08))" }}
+                              onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
+                            >
+                              <span style={{ fontSize: 16 }}>{s.emoji ?? ""}</span>
+                              <span style={{ flex: 1 }}>{s.label}</span>
+                              {active && <span style={{ color: "var(--g1, #E11D48)", fontSize: 12, fontWeight: 800 }}>✓</span>}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </>
+                  )}
+                </div>
                 {subtype?.description && (
-                  <p style={{ fontSize: 11, color: "var(--dash-text-3, #8888aa)", marginTop: 4 }}>{subtype.description}</p>
+                  <p style={{ fontSize: 11, color: "var(--dash-text-3, #8888aa)", marginTop: 6 }}>{subtype.description}</p>
                 )}
               </div>
 

@@ -6,11 +6,22 @@ import { useRouter } from "next/navigation"
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 const VALUE_PROPS = [
-  { emoji: "💰", title: "Budget intelligent", desc: "Répartition automatique par catégorie" },
-  { emoji: "✅", title: "Checklist personnalisée", desc: "Tâches calculées selon votre date" },
-  { emoji: "💬", title: "Messagerie directe", desc: "Contactez les prestas sans quitter Momento" },
-  { emoji: "🎁", title: "100% gratuit", desc: "Aucune carte bancaire requise" },
+  { icon: "account_balance_wallet", title: "Budget intelligent", desc: "Répartition automatique par catégorie" },
+  { icon: "event_note",             title: "Checklist personnalisée", desc: "Tâches calculées selon votre date" },
+  { icon: "chat_bubble",            title: "Messagerie directe", desc: "Contactez les prestas sans quitter Momento" },
+  { icon: "celebration",            title: "100% gratuit", desc: "Aucune carte bancaire requise" },
 ]
+
+function GIcon({ name, size = 18, color = "var(--dash-text, #eeeef5)" }: { name: string; size?: number; color?: string }) {
+  return (
+    <span style={{
+      fontFamily: "'Google Symbols','Material Symbols Outlined'",
+      fontSize: size, color, fontWeight: "normal", fontStyle: "normal",
+      lineHeight: 1, userSelect: "none", display: "inline-block", verticalAlign: "middle",
+      flexShrink: 0,
+    }}>{name}</span>
+  )
+}
 
 type Props = {
   open: boolean
@@ -108,7 +119,9 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
         <div style={{ marginTop: 18, display: "grid", gap: 10 }}>
           {VALUE_PROPS.map(v => (
             <div key={v.title} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", background: "var(--dash-faint, rgba(255,255,255,0.04))", borderRadius: 12 }}>
-              <span style={{ fontSize: 22 }}>{v.emoji}</span>
+              <div style={{ width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, rgba(225,29,72,0.18), rgba(147,51,234,0.18))", flexShrink: 0 }}>
+                <GIcon name={v.icon} size={18} color="var(--g1, #E11D48)" />
+              </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700 }}>{v.title}</div>
                 <div style={{ fontSize: 11, color: "var(--dash-text-3, #8888aa)" }}>{v.desc}</div>
@@ -154,10 +167,22 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
 
           <button
             type="submit"
-            disabled={loading}
-            style={{ width: "100%", marginTop: 16, padding: "14px", background: G, color: "#fff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 800, cursor: loading ? "default" : "pointer", opacity: loading ? 0.6 : 1, boxShadow: "0 8px 24px rgba(225,29,72,0.3)", fontFamily: "inherit" }}
+            disabled={loading || !tos}
+            aria-disabled={!tos}
+            title={!tos ? "Acceptez les conditions pour continuer" : ""}
+            style={{
+              width: "100%", marginTop: 16, padding: "14px",
+              background: tos ? G : "var(--dash-faint-2, rgba(255,255,255,0.08))",
+              color: tos ? "#fff" : "var(--dash-text-3, #8888aa)",
+              border: "none", borderRadius: 12, fontSize: 14, fontWeight: 800,
+              cursor: (loading || !tos) ? "not-allowed" : "pointer",
+              opacity: loading ? 0.6 : 1,
+              boxShadow: tos ? "0 8px 24px rgba(225,29,72,0.3)" : "none",
+              fontFamily: "inherit",
+              transition: "background 0.15s, box-shadow 0.15s, color 0.15s",
+            }}
           >
-            {loading ? "Création…" : "Créer mon compte"}
+            {loading ? "Création…" : tos ? "Créer mon compte" : "Acceptez les conditions pour continuer"}
           </button>
 
           <p style={{ marginTop: 14, textAlign: "center", fontSize: 12, color: "var(--dash-text-3, #8888aa)" }}>

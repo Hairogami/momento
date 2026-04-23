@@ -34,9 +34,7 @@ export async function proxy(request: NextRequest) {
   const isProtected = PROTECTED.some(p => path.startsWith(p))
   const isAuthPage  = AUTH_ONLY.some(p => path.startsWith(p))
 
-  const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
-
-  if (isProtected && !isDev && !sessionCookie) {
+  if (isProtected && !sessionCookie) {
     const url = new URL("/login", request.url)
     const safePath = path.startsWith("/") && !path.startsWith("//") ? path : "/dashboard"
     url.searchParams.set("next", safePath)
