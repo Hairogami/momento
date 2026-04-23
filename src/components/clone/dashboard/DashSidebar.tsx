@@ -326,38 +326,8 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
         })}
       </nav>
 
-      {/* Dev switcher Client ↔ Prestataire (moumene486@gmail.com uniquement) */}
-      {canSwitch && (
-        <div style={{ padding: "10px 14px 0" }}>
-          <Link
-            href="/vendor/dashboard"
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
-              padding: "9px 12px", borderRadius: 10,
-              background: "var(--dash-faint, rgba(183,191,217,0.08))",
-              border: "1px dashed var(--g1,#E11D48)",
-              color: "var(--dash-text,#121317)",
-              fontSize: 11, fontWeight: 600, textDecoration: "none",
-              transition: "background 0.15s",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = "rgba(225,29,72,0.08)")}
-            onMouseLeave={e => (e.currentTarget.style.background = "var(--dash-faint, rgba(183,191,217,0.08))")}
-            title="Mode dev — basculer vers le dashboard prestataire"
-          >
-            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <GIcon name="swap_horiz" size={15} color="var(--g1,#E11D48)" />
-              <span>Vue prestataire</span>
-            </span>
-            <span style={{
-              fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-              color: "var(--g1,#E11D48)", background: "rgba(225,29,72,0.1)",
-              padding: "2px 5px", borderRadius: 4,
-            }}>
-              DEV
-            </span>
-          </Link>
-        </div>
-      )}
+      {/* Dev tools — moumene486@gmail.com uniquement */}
+      {canSwitch && <DevTools currentPlan={plan} />}
 
       {/* CTA */}
       <div style={{ padding: "10px 14px", borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.1))" }}>
@@ -472,5 +442,107 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
       onUpgraded={() => window.location.reload()}
     />
   </>
+  )
+}
+
+// ─── Dev tools — moumene486@gmail.com uniquement ─────────────────────────────
+function DevTools({ currentPlan }: { currentPlan: string }) {
+  const [switching, setSwitching] = useState(false)
+  const [changingPlan, setChangingPlan] = useState<string | null>(null)
+
+  async function switchRole() {
+    setSwitching(true)
+    try {
+      const r = await fetch("/api/dev/switch-role", { method: "POST" })
+      if (r.ok) {
+        const data = await r.json() as { role: string; redirect: string }
+        window.location.href = data.redirect
+      }
+    } finally {
+      setSwitching(false)
+    }
+  }
+
+  async function switchPlan(plan: string) {
+    setChangingPlan(plan)
+    try {
+      const r = await fetch("/api/dev/switch-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      })
+      if (r.ok) window.location.reload()
+    } finally {
+      setChangingPlan(null)
+    }
+  }
+
+  return (
+    <div style={{ padding: "10px 14px 0", display: "flex", flexDirection: "column", gap: 8 }}>
+      {/* Switch role */}
+      <button
+        onClick={switchRole}
+        disabled={switching}
+        style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+          padding: "9px 12px", borderRadius: 10,
+          background: "var(--dash-faint, rgba(183,191,217,0.08))",
+          border: "1px dashed var(--g1,#E11D48)",
+          color: "var(--dash-text,#121317)",
+          fontSize: 11, fontWeight: 600, cursor: switching ? "wait" : "pointer",
+          fontFamily: "inherit", width: "100%", textAlign: "left",
+        }}
+        title="Bascule entre dashboard client et prestataire"
+      >
+        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <GIcon name="swap_horiz" size={15} color="var(--g1,#E11D48)" />
+          <span>{switching ? "Bascule…" : "Basculer client ↔ prestataire"}</span>
+        </span>
+        <span style={{
+          fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+          color: "var(--g1,#E11D48)", background: "rgba(225,29,72,0.1)",
+          padding: "2px 5px", borderRadius: 4,
+        }}>DEV</span>
+      </button>
+
+      {/* Plan selector */}
+      <div style={{
+        padding: "8px 12px", borderRadius: 10,
+        background: "var(--dash-faint, rgba(183,191,217,0.08))",
+        border: "1px dashed var(--g1,#E11D48)",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            Plan : {currentPlan}
+          </span>
+          <span style={{
+            fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+            color: "var(--g1,#E11D48)", background: "rgba(225,29,72,0.1)",
+            padding: "2px 5px", borderRadius: 4,
+          }}>DEV</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 4 }}>
+          {(["free", "pro", "max"] as const).map(p => (
+            <button
+              key={p}
+              onClick={() => switchPlan(p)}
+              disabled={changingPlan !== null || currentPlan === p}
+              style={{
+                padding: "6px 4px", borderRadius: 7,
+                border: currentPlan === p ? "1.5px solid var(--g1,#E11D48)" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                background: currentPlan === p ? "rgba(225,29,72,0.08)" : "var(--dash-surface,#fff)",
+                color: currentPlan === p ? "var(--g1,#E11D48)" : "var(--dash-text,#121317)",
+                fontSize: 10, fontWeight: 700, textTransform: "uppercase",
+                cursor: (changingPlan !== null || currentPlan === p) ? "not-allowed" : "pointer",
+                fontFamily: "inherit",
+                opacity: changingPlan === p ? 0.5 : 1,
+              }}
+            >
+              {changingPlan === p ? "…" : p}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
