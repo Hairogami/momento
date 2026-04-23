@@ -43,9 +43,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         allowDangerousEmailAccountLinking: true,
         authorization: {
           params: {
-            scope: "openid email profile https://www.googleapis.com/auth/calendar.readonly",
-            access_type: "offline",
-            prompt: "consent",
+            // Scopes non-sensitives uniquement — pas de warning "app non vérifiée".
+            // calendar.readonly est un scope restricted qui nécessite la vérification
+            // Google officielle (process 2-6 semaines). Aucune feature Momento ne l'utilise.
+            scope: "openid email profile",
           },
         },
       }),
