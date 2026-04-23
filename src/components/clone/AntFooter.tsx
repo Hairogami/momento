@@ -41,7 +41,7 @@ export default function AntFooter() {
             <div
               className="clone-heading"
               style={{
-                fontSize: "clamp(1.8rem, 3vw, 2.8rem)",
+                fontSize: "clamp(1.6rem, 0.5rem + 2vw, 2.8rem)",
                 fontWeight: 600,
                 letterSpacing: "-0.03em",
                 color: "var(--dash-text,#121317)",

@@ -72,7 +72,7 @@ export default function AntAgentFirst() {
           {/* Left — typewriter */}
           <div>
             <h2 className="clone-heading" style={{
-              fontSize: "clamp(2rem, 4vw, 3.6rem)",
+              fontSize: "clamp(1.8rem, 0.5rem + 2.8vw, 3.6rem)",
               fontWeight: 600,
               lineHeight: 1.1,
               letterSpacing: "-0.03em",

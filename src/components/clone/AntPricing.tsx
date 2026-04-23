@@ -40,7 +40,7 @@ export default function AntPricing() {
           <p className="clone-label" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
             Pour les organisateurs uniquement
           </p>
-          <h2 className="clone-heading" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 600, lineHeight: 1.1, letterSpacing: "-0.03em", color: "var(--dash-text,#121317)" }}>
+          <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem, 0.5rem + 2.8vw, 3.5rem)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.03em", color: "var(--dash-text,#121317)" }}>
             Simple, transparent,<br />
             <span style={{ color: "var(--dash-text-2,#6a6a71)", fontWeight: 400, fontStyle: "italic" }}>sans surprise</span>
           </h2>

@@ -125,7 +125,7 @@ export default function AntHero() {
 
         <h1
           style={{
-            fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+            fontSize: "clamp(2rem, 0.5rem + 4.5vw, 5.5rem)",
             fontWeight: 600,
             lineHeight: 1.08,
             letterSpacing: "-0.03em",

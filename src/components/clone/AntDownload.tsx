@@ -12,7 +12,7 @@ export default function AntDownload() {
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 w-full">
         <h2
           style={{
-            fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+            fontSize: "clamp(2rem, 0.5rem + 4.5vw, 5.5rem)",
             fontWeight: 600,
             lineHeight: 1.08,
             letterSpacing: "-0.03em",

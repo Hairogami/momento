@@ -34,7 +34,7 @@ export default function AntTestimonials() {
           <h2
             className="clone-heading"
             style={{
-              fontSize: "clamp(2rem, 4.5vw, 4rem)",
+              fontSize: "clamp(1.8rem, 0.5rem + 3vw, 4rem)",
               fontWeight: 600,
               lineHeight: 1.08,
               letterSpacing: "-0.03em",

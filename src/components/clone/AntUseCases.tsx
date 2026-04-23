@@ -42,7 +42,7 @@ export default function AntUseCases() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
           <h2
             style={{
-              fontSize: "clamp(2rem, 4.5vw, 4rem)",
+              fontSize: "clamp(1.8rem, 0.5rem + 3vw, 4rem)",
               fontWeight: 600,
               lineHeight: 1.08,
               letterSpacing: "-0.03em",
@@ -88,7 +88,7 @@ export default function AntUseCases() {
                 </div>
                 <span
                   style={{
-                    fontSize: "clamp(2rem, 3vw, 3rem)",
+                    fontSize: "clamp(1.6rem, 0.5rem + 2.2vw, 3rem)",
                     fontWeight: 700,
                     color: "rgba(183,191,217,0.25)",
                     letterSpacing: "-0.04em",

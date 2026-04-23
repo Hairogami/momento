@@ -315,7 +315,7 @@ export default function AntFeatureExplorer() {
                 </span>
               </div>
               <h3 className="clone-heading"
-                style={{ fontSize: "clamp(1.8rem, 3.5vw, 3rem)", fontWeight: 600, lineHeight: 1.1, letterSpacing: "-0.02em", color: "var(--dash-text,#121317)" }}
+                style={{ fontSize: "clamp(1.6rem, 0.5rem + 2.5vw, 3rem)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.02em", color: "var(--dash-text,#121317)" }}
               >
                 {f.title}
               </h3>
