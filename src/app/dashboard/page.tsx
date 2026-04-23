@@ -2,6 +2,8 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import BudgetWidget, { type BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
@@ -1177,6 +1179,8 @@ function EnvoiFairepartWidget({ guests, eventId }: { guests: Guest[]; eventId: s
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function CloneDashboardPage() {
+  const router = useRouter()
+  const [showCreateModal, setShowCreateModal] = useState(false)
   // Active event — persisté en localStorage pour synchroniser toutes les pages
   const [events,        setEvents]        = useState<EventMeta[]>([])
   const [activeEventId, setActiveEventId] = useState("")
@@ -1587,7 +1591,26 @@ export default function CloneDashboardPage() {
   )
 
   if (events.length === 0 || !event) return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)", padding: 24 }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)", padding: 24, position: "relative" }}>
+      {/* Back button (haut gauche) */}
+      <Link
+        href="/accueil"
+        style={{
+          position: "absolute", top: 24, left: 24,
+          display: "inline-flex", alignItems: "center", gap: 6,
+          fontSize: 13, fontWeight: 500,
+          color: "var(--dash-text-2,#6a6a71)",
+          textDecoration: "none",
+          padding: "8px 14px", borderRadius: 999,
+          background: "var(--dash-surface,#fff)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+          transition: "opacity 0.15s",
+        }}
+      >
+        ← Retour
+      </Link>
+
       <div style={{ maxWidth: 480, width: "100%", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ width: 72, height: 72, borderRadius: "50%", marginBottom: 28, background: "linear-gradient(135deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 16px 48px rgba(225,29,72,0.25)" }}>
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1605,14 +1628,37 @@ export default function CloneDashboardPage() {
             <span key={f} style={{ fontSize: 11, fontWeight: 600, padding: "5px 12px", borderRadius: 99, background: "rgba(225,29,72,0.07)", color: "#E11D48", border: "1px solid rgba(225,29,72,0.15)" }}>{f}</span>
           ))}
         </div>
-        <Link href="/planner" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 32px", borderRadius: 14, background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 700, boxShadow: "0 8px 24px rgba(225,29,72,0.3)" }}>
+        <button
+          type="button"
+          onClick={() => setShowCreateModal(true)}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "14px 32px", borderRadius: 14,
+            background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff",
+            fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer",
+            fontFamily: "inherit",
+            boxShadow: "0 8px 24px rgba(225,29,72,0.3)",
+          }}
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
           Créer mon premier événement
-        </Link>
+        </button>
         <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 16 }}>Gratuit · Sans commission · Données sécurisées</p>
       </div>
+
+      {/* 3-steps onboarding modal — type événement → catégories → budget */}
+      <CreateEventModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreated={(planner) => {
+          setShowCreateModal(false)
+          try { localStorage.setItem("momento_active_event", planner.id) } catch {}
+          router.push("/dashboard")
+          router.refresh()
+        }}
+      />
     </div>
   )
 
