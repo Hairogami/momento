@@ -369,6 +369,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
               { icon: "notifications", label: "Notifications", href: "/notifications" },
               { icon: "favorite",      label: "Favoris",       href: "/favorites"     },
               { icon: "chat_bubble",   label: "Messages",      href: "/messages"      },
+              { icon: "delete",        label: "Corbeille",     href: "/accueil#corbeille" },
             ].map(item => (
               <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}
                 style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px", textDecoration: "none",

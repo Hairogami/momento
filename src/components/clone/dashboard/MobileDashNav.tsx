@@ -25,6 +25,7 @@ const ALL_ITEMS = [
   { icon: "person",                 label: "Profil",       href: "/profile"       },
   { icon: "settings",               label: "Paramètres",   href: "/settings"      },
   { icon: "notifications",          label: "Notifications",href: "/notifications" },
+  { icon: "delete",                 label: "Corbeille",    href: "/accueil#corbeille" },
 ]
 
 function GIcon({ name, size = 22, color }: { name: string; size?: number; color?: string }) {
