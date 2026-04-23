@@ -5,6 +5,7 @@ import ProgramTimeline, { type ProgramStep } from "@/components/event-site/ui/Pr
 import PhotoGallery, { type PhotoItem } from "@/components/event-site/ui/PhotoGallery"
 import RsvpForm from "@/components/event-site/ui/RsvpForm"
 import MapLinks from "@/components/event-site/ui/MapLinks"
+import SiteNav, { type NavItem } from "@/components/event-site/ui/SiteNav"
 import {
   generateShaderParams, generateDecoratifParams, generateEditorialParams,
 } from "@/lib/eventSiteSeed"
@@ -41,8 +42,20 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
   const heroTitle = hero.title || "Notre mariage"
   const hasDayAfter = Boolean(content.dayAfter?.enabled)
 
+  const navItems: NavItem[] = [
+    { id: "top",       label: "Accueil" },
+    ...(content.couple?.story  ? [{ id: "histoire",   label: "Notre histoire" } as NavItem] : []),
+    ...(content.mainEvent       ? [{ id: "ceremonie",  label: "Cérémonie"      } as NavItem] : []),
+    ...(content.program?.length ? [{ id: "programme",  label: "Programme"      } as NavItem] : []),
+    ...(content.travel?.hotels?.length ? [{ id: "voyage", label: "Voyage"      } as NavItem] : []),
+    { id: "rsvp",      label: "RSVP" },
+  ]
+
   return (
     <main style={{ color: "var(--evt-text)", background: "var(--evt-bg)", fontFamily: "var(--evt-font-body)" }}>
+      <SiteNav title={heroTitle} items={navItems} />
+
+      <div id="top" />
       {/* Hero */}
       <HeroSection
         title={heroTitle}
@@ -66,7 +79,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Notre histoire */}
       {content.couple?.story && (
-        <section style={sectionCentered}>
+        <section id="histoire" style={sectionCentered}>
           <h2 style={h2Style}>Notre histoire</h2>
           <p style={bodyStyle}>{content.couple.story}</p>
         </section>
@@ -74,7 +87,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Événement principal */}
       {content.mainEvent && (
-        <section style={sectionCentered}>
+        <section id="ceremonie" style={sectionCentered}>
           <div style={{ fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--evt-main)", fontWeight: 600, marginBottom: 12 }}>
             {content.mainEvent.time ? `· ${content.mainEvent.time} ·` : "· Cérémonie ·"}
           </div>
@@ -90,7 +103,9 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Programme timeline */}
       {content.program && content.program.length > 0 && (
-        <ProgramTimeline steps={content.program} title="Programme" />
+        <section id="programme">
+          <ProgramTimeline steps={content.program} title="Programme" />
+        </section>
       )}
 
       {/* Day-after */}
@@ -119,7 +134,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Voyage & hôtels */}
       {content.travel?.hotels && content.travel.hotels.length > 0 && (
-        <section style={sectionCentered}>
+        <section id="voyage" style={sectionCentered}>
           <h2 style={h2Style}>Hébergement</h2>
           {content.travel.notes && <p style={{ ...bodyStyle, marginBottom: 28 }}>{content.travel.notes}</p>}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, textAlign: "left" }}>
@@ -181,7 +196,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       )}
 
       {/* RSVP */}
-      <section style={{ ...sectionCentered, paddingTop: 80, paddingBottom: 100, background: "var(--evt-secondary)", margin: "40px -24px 0", borderTop: "1px solid var(--evt-main)" }}>
+      <section id="rsvp" style={{ ...sectionCentered, paddingTop: 80, paddingBottom: 100, background: "var(--evt-secondary)", margin: "40px -24px 0", borderTop: "1px solid var(--evt-main)" }}>
         <h2 style={h2Style}>Confirmez votre présence</h2>
         {content.rsvp?.deadline && (
           <p style={{ ...bodyStyle, marginBottom: 28 }}>
