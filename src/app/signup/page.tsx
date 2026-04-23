@@ -192,9 +192,77 @@ export default function CloneSignupPage() {
               <h2 style={{ fontSize: 22, fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
                 {role === "client" ? "Mon compte" : "Mon profil prestataire"}
               </h2>
-              <p style={{ fontSize: 14, color: "#6a6a71", margin: "0 0 24px" }}>
+              <p style={{ fontSize: 14, color: "#6a6a71", margin: "0 0 20px" }}>
                 {role === "client" ? "Quelques infos pour commencer." : "Quelques infos sur ton activité."}
               </p>
+
+              {/* OAuth — client uniquement (vendor a besoin de companyName/category/phone via formulaire) */}
+              {role === "client" && (
+                <>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 14 }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!tos) { setError("Acceptez les conditions pour continuer."); return }
+                        try {
+                          localStorage.setItem("momento_pending_consent", JSON.stringify({ agreedTos: true, marketingOptIn: marketing, ts: Date.now() }))
+                        } catch {}
+                        signIn("google", { callbackUrl: "/accueil" })
+                      }}
+                      disabled={!tos}
+                      title={!tos ? "Acceptez les conditions pour continuer" : ""}
+                      style={{
+                        width: "100%", height: 46, borderRadius: 12,
+                        border: "1px solid rgba(183,191,217,0.4)",
+                        background: tos ? "#fff" : "rgba(255,255,255,0.55)",
+                        opacity: tos ? 1 : 0.55,
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                        fontSize: 14, fontWeight: 500, color: "#121317",
+                        cursor: tos ? "pointer" : "not-allowed", fontFamily: "inherit",
+                        transition: "opacity 0.15s, background 0.15s",
+                      }}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                      </svg>
+                      Continuer avec Google
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!tos) { setError("Acceptez les conditions pour continuer."); return }
+                        try {
+                          localStorage.setItem("momento_pending_consent", JSON.stringify({ agreedTos: true, marketingOptIn: marketing, ts: Date.now() }))
+                        } catch {}
+                        signIn("facebook", { callbackUrl: "/accueil" })
+                      }}
+                      disabled={!tos}
+                      title={!tos ? "Acceptez les conditions pour continuer" : ""}
+                      style={{
+                        width: "100%", height: 46, borderRadius: 12, border: "none",
+                        background: tos ? "#1877F2" : "rgba(24,119,242,0.35)",
+                        color: tos ? "#fff" : "rgba(255,255,255,0.5)",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                        fontSize: 14, fontWeight: 500, cursor: tos ? "pointer" : "not-allowed",
+                        fontFamily: "inherit", transition: "background 0.15s, color 0.15s",
+                      }}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                      Continuer avec Facebook
+                    </button>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "8px 0 12px" }}>
+                    <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
+                    <span style={{ fontSize: 11, color: "#9a9aaa", letterSpacing: "0.06em", fontWeight: 600 }}>OU AVEC EMAIL</span>
+                    <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
+                  </div>
+                </>
+              )}
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {role === "client" ? (
