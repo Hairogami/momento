@@ -92,23 +92,48 @@ export async function POST(request: NextRequest) {
     if (Object.keys(bb).length > 0) budgetBreakdown = bb
   }
 
-  const planner = await prisma.planner.create({
-    data: {
-      title,
-      coupleNames: typeof b.coupleNames === "string" ? b.coupleNames.slice(0, 200) : "",
-      weddingDate: parseDate(b.weddingDate),
-      budget:      parseBudget(b.budget),
-      location:    typeof b.location === "string"    ? b.location.slice(0, 200)    : null,
-      guestCount,
-      coverColor:  typeof b.coverColor === "string" && HEX_COLOR.test(b.coverColor)
-        ? b.coverColor
-        : "#f9a8d4",
-      categories,
-      eventType,
-      eventSubType,
-      budgetBreakdown: budgetBreakdown ?? undefined,
+  try {
+    const planner = await prisma.planner.create({
+      data: {
+        title,
+        coupleNames: typeof b.coupleNames === "string" ? b.coupleNames.slice(0, 200) : "",
+        weddingDate: parseDate(b.weddingDate),
+        budget:      parseBudget(b.budget),
+        location:    typeof b.location === "string"    ? b.location.slice(0, 200)    : null,
+        guestCount,
+        coverColor:  typeof b.coverColor === "string" && HEX_COLOR.test(b.coverColor)
+          ? b.coverColor
+          : "#f9a8d4",
+        categories,
+        eventType,
+        eventSubType,
+        budgetBreakdown: budgetBreakdown ?? undefined,
+        userId: session.user.id,
+      },
+    })
+    return Response.json(planner, { status: 201 })
+  } catch (err: unknown) {
+    const e = err as { code?: string; message?: string; meta?: unknown }
+    console.error("[POST /api/planners] Prisma error:", {
+      code: e?.code,
+      message: e?.message,
+      meta: e?.meta,
       userId: session.user.id,
-    },
-  })
-  return Response.json(planner, { status: 201 })
+      categoriesCount: categories.length,
+      budgetBreakdownKeys: budgetBreakdown ? Object.keys(budgetBreakdown).length : 0,
+    })
+
+    // FK violation : session référence un user qui n'existe plus (purge + JWT stale)
+    if (e?.code === "P2003") {
+      return Response.json(
+        { error: "Votre session pointe vers un compte qui n'existe plus. Reconnectez-vous." },
+        { status: 409 },
+      )
+    }
+
+    return Response.json(
+      { error: `Erreur interne lors de la création (${e?.code ?? "UNKNOWN"}).` },
+      { status: 500 },
+    )
+  }
 }
