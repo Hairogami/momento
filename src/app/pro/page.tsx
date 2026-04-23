@@ -43,13 +43,13 @@ const STATS = [
   { value: 41,   suffix: "",  label: "Villes couvertes",              color: "#9333EA" },
   { value: 31,   suffix: "",  label: "Catégories de services",        color: "#EC4899" },
   { value: 2300, suffix: "+", label: "Événements organisés",          color: "#F59E0B" },
-  { value: 0,    suffix: " %", label: "Commission sur vos contrats",  color: "#A855F7" },
+  { value: 100,  suffix: " %", label: "De vos revenus vous reviennent",  color: "#A855F7" },
   { value: 48,   suffix: " h", label: "Réponse moyenne aux demandes", color: "#6366F1" },
 ]
 
 const BENEFITS = [
   { icon: "verified",       title: "Vérification sociale",   body: "Badge vérifié via Instagram/Facebook. Les clients savent qui vous êtes avant de vous contacter." },
-  { icon: "payments",       title: "0 % de commission",      body: "Vous signez en direct avec le client. Momento n'entre jamais dans la transaction." },
+  { icon: "payments",       title: "Paiement direct",         body: "Vous signez en direct avec le client. Momento n'entre jamais dans la transaction." },
   { icon: "insights",       title: "Tableau de bord pro",    body: "Vos demandes, messages, packages et statistiques centralisés. Tout piloter en 5 minutes par jour." },
   { icon: "chat_bubble",    title: "Messagerie intégrée",    body: "Les clients vous contactent directement. Notifications mail + in-app pour ne rien manquer." },
   { icon: "language",       title: "Visibilité nationale",   body: "41 villes marocaines, 31 catégories. Référencement SEO natif, pas besoin d'Ads." },
@@ -60,7 +60,7 @@ const STEPS = [
   { n: 1, title: "Inscription gratuite",   body: "Créez votre profil en 3 minutes. Photos, packages, zones de service." },
   { n: 2, title: "Vérification",           body: "Liez votre Instagram ou Facebook. Badge vérifié affiché sur votre fiche." },
   { n: 3, title: "Premières demandes",     body: "Les clients vous trouvent via /explore et vous contactent en messagerie directe." },
-  { n: 4, title: "Signez en direct",       body: "Vous gérez le contrat et le paiement. Pas d'intermédiaire, pas de commission." },
+  { n: 4, title: "Signez en direct",       body: "Vous gérez le contrat et le paiement, en direct avec votre client." },
 ]
 
 export default function ProPage() {
@@ -116,7 +116,7 @@ export default function ProPage() {
           }}
         >
           Rejoignez le plus grand annuaire des prestataires événementiels du Maroc.
-          Profil gratuit, 0&nbsp;% de commission, paiement direct client → prestataire.
+          Profil gratuit, paiement direct client → prestataire.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-8">
           <Link
@@ -287,7 +287,7 @@ export default function ProPage() {
             Prêt à rejoindre les 1 000&nbsp;+ ?
           </h2>
           <p className="clone-body" style={{ fontSize: 17, color: "var(--dash-text-2,#45474D)", marginTop: 16, lineHeight: 1.55 }}>
-            Profil gratuit à vie. 0&nbsp;% de commission, pour toujours.
+            Profil gratuit à vie. Paiement direct, pour toujours.
           </p>
           <Link
             href="/signup?role=vendor"

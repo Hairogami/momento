@@ -19,7 +19,7 @@ export default function Footer() {
               Momento
             </p>
             <p className="text-sm leading-relaxed" style={{ color: "var(--momento-mist)" }}>
-              La plateforme événementielle du Maroc — prestataires vérifiés, zéro commission.
+              La plateforme événementielle du Maroc — prestataires vérifiés, contact direct.
             </p>
             <div className="flex gap-3 mt-4">
               <a href="https://instagram.com/momentoevents.ma" target="_blank" rel="noopener noreferrer"

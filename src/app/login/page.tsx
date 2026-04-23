@@ -35,7 +35,7 @@ export default function CloneLoginPage() {
             L&apos;événement parfait<br />commence ici.
           </h1>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,0.72)", lineHeight: 1.65, margin: 0 }}>
-            1 000+ prestataires vérifiés · 41 villes · 0% commission.
+            1 000+ prestataires vérifiés · 41 villes · Contact direct.
           </p>
 
           {/* Social proof */}

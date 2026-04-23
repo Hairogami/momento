@@ -12,7 +12,7 @@ import AntFooter from "@/components/clone/AntFooter"
 export default function ClonePage() {
   return (
     <div className="ant-root" style={{ backgroundColor: "var(--dash-bg,#fff)", color: "var(--dash-text,#121317)" }}>
-      <AntNav />
+      <AntNav animateInDelay={1200} />
       <AntHero />
       <AntVideoSection />
       <AntUseCases />

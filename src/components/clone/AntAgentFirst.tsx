@@ -8,7 +8,7 @@ const ICONS = [
   "photo_camera","nightlife","deck","cake","emoji_events","star",
 ]
 
-const TEXT = "Comparez 1 000+ prestataires, négociez directement, sans commission cachée."
+const TEXT = "Comparez 1 000+ prestataires, négociez directement, en toute transparence."
 
 export default function AntAgentFirst() {
   const ref          = useRef<HTMLDivElement>(null)
@@ -82,7 +82,7 @@ export default function AntAgentFirst() {
               {typed}
               <span style={{
                 display: "inline-block", width: 2, height: "0.82em",
-                backgroundColor: "#121317", marginLeft: 3,
+                backgroundColor: "var(--dash-text,#121317)", marginLeft: 3,
                 verticalAlign: "text-bottom",
                 opacity: cursor ? 1 : 0,
                 transition: "opacity 0.08s",

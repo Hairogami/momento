@@ -6,11 +6,11 @@ import { useSession, signOut } from "next-auth/react"
 // ─── Navigation items ─────────────────────────────────────────────────────
 // Public nav — "Dashboard" route conditionnellement vers /login si non-connecté.
 // La résolution se fait dans le render (useSession) — href initial = /login par défaut.
+// Nav publique minimale : "À propos" + CTA "Vous êtes prestataire ?" en fin.
+// Dashboard/Explorer retirés — redondants avec le bouton principal hero + menu user.
 const NAV_LINKS_PUBLIC = [
-  { label: "Vous êtes prestataire ?", href: "/pro"       },
-  { label: "Dashboard",               href: "/login"     }, // override si loggué → /accueil
-  { label: "Explorer",                href: "/explore"   },
   { label: "À propos",                href: "/a-propos"  },
+  { label: "Vous êtes prestataire ?", href: "/pro"       },
 ]
 
 const NAV_LINKS_CLIENT = [
@@ -116,10 +116,13 @@ export default function AntNav({
   hideLinks = false,
   centerSlot,
   hideDarkToggle = false,
+  animateInDelay = 0,
 }: {
   hideLinks?: boolean
   centerSlot?: React.ReactNode
   hideDarkToggle?: boolean
+  /** Si > 0, les liens nav fade-in après ce délai (ms). Utilisé sur la landing pour synchro avec l'animation hero. */
+  animateInDelay?: number
 }) {
   const { data: session, status } = useSession()
   const isLoggedIn = status === "authenticated"
@@ -135,7 +138,15 @@ export default function AntNav({
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [paletteIdx,  setPaletteIdx]  = useState(0)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [navReady,    setNavReady]    = useState(animateInDelay === 0)
   const profileRef = useRef<HTMLDivElement>(null)
+
+  // Fade-in des liens nav après le délai (pour synchro avec l'animation typewriter du hero)
+  useEffect(() => {
+    if (animateInDelay <= 0) return
+    const t = setTimeout(() => setNavReady(true), animateInDelay)
+    return () => clearTimeout(t)
+  }, [animateInDelay])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -263,8 +274,16 @@ export default function AntNav({
             </div>
           )}
 
-          {/* Desktop nav — dans le flux, toujours visible, pas d'overlap */}
-          <nav className="hidden md:flex items-center gap-1 flex-shrink-0">
+          {/* Desktop nav — fade-in synchro avec l'animation hero si animateInDelay > 0 */}
+          <nav
+            className="hidden md:flex items-center gap-1 flex-shrink-0"
+            style={{
+              opacity: navReady ? 1 : 0,
+              transform: navReady ? "translateY(0)" : "translateY(-4px)",
+              transition: "opacity 0.5s ease, transform 0.5s ease",
+              pointerEvents: navReady ? "auto" : "none",
+            }}
+          >
             {!hideLinks && navLinks.map(link => {
               const isProCta = link.label === "Vous êtes prestataire ?"
               if (isProCta) {

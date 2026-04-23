@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import AntNav from "@/components/clone/AntNav"
 import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
@@ -1591,61 +1592,117 @@ export default function CloneDashboardPage() {
   )
 
   if (events.length === 0 || !event) return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--dash-bg,#f7f7fb)", padding: 24, position: "relative" }}>
-      {/* Back button (haut gauche) */}
-      <Link
-        href="/accueil"
-        style={{
-          position: "absolute", top: 24, left: 24,
-          display: "inline-flex", alignItems: "center", gap: 6,
-          fontSize: 13, fontWeight: 500,
-          color: "var(--dash-text-2,#6a6a71)",
-          textDecoration: "none",
-          padding: "8px 14px", borderRadius: 999,
-          background: "var(--dash-surface,#fff)",
-          border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-          transition: "opacity 0.15s",
-        }}
-      >
-        ← Retour
-      </Link>
+    <div style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+      {/* Nav complète (logo, profil, theme toggle) — plus d'écran nu sans accès au menu */}
+      <AntNav />
 
-      <div style={{ maxWidth: 480, width: "100%", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ width: 72, height: 72, borderRadius: "50%", marginBottom: 28, background: "linear-gradient(135deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 16px 48px rgba(225,29,72,0.25)" }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "96px 24px 80px" }}>
+        {/* Carte principale */}
+        <div style={{
+          background: "var(--dash-surface,#fff)",
+          borderRadius: 28,
+          padding: "56px 40px",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+          boxShadow: "0 8px 36px rgba(12,14,30,0.05)",
+          textAlign: "center",
+          display: "flex", flexDirection: "column", alignItems: "center",
+          maxWidth: 640, margin: "0 auto",
+        }}>
+          <div style={{
+            width: 80, height: 80, borderRadius: "50%", marginBottom: 24,
+            background: "linear-gradient(135deg,#E11D48,#9333EA)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 16px 48px rgba(225,29,72,0.25)",
+          }}>
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+
+          <p style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
+            color: "#E11D48", margin: "0 0 12px",
+          }}>
+            ✦ Commençons ✦
+          </p>
+
+          <h1 style={{
+            fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 700,
+            color: "var(--dash-text,#121317)", letterSpacing: "-0.025em",
+            margin: "0 0 12px", lineHeight: 1.15,
+          }}>
+            Créez votre premier événement
+          </h1>
+          <p style={{
+            fontSize: 15, color: "var(--dash-text-2,#6a6a71)",
+            margin: "0 0 32px", lineHeight: 1.6, maxWidth: 440,
+          }}>
+            Mariage, anniversaire, corporate… En 3 étapes on calibre budget, invités, prestataires, planning.
+          </p>
+
+          {/* Features grid */}
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 10, marginBottom: 32, width: "100%", maxWidth: 480,
+          }}>
+            {[
+              { icon: "account_balance_wallet", label: "Budget détaillé" },
+              { icon: "people",                  label: "Invités & RSVP" },
+              { icon: "storefront",              label: "1 000+ prestataires" },
+              { icon: "checklist",               label: "Planning & tâches" },
+            ].map(f => (
+              <div key={f.label} style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "12px 14px", borderRadius: 14,
+                background: "var(--dash-faint,rgba(225,29,72,0.04))",
+                border: "1px solid rgba(225,29,72,0.12)",
+                textAlign: "left",
+              }}>
+                <span style={{
+                  fontFamily: "'Google Symbols','Material Symbols Outlined'",
+                  fontSize: 20, color: "#E11D48", lineHeight: 1,
+                }}>{f.icon}</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{f.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowCreateModal(true)}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              padding: "14px 32px", borderRadius: 14,
+              background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff",
+              fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer",
+              fontFamily: "inherit",
+              boxShadow: "0 8px 24px rgba(225,29,72,0.3)",
+              transition: "transform 0.15s, box-shadow 0.15s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(225,29,72,0.35)" }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(225,29,72,0.3)" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Créer mon événement en 3 étapes
+          </button>
+
+          <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 14 }}>
+            Gratuit · Simple · Données sécurisées
+          </p>
+
+          <div style={{ marginTop: 20, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>
+            Ou{" "}
+            <Link href="/accueil" style={{ color: "var(--dash-text-2,#6a6a71)", textDecoration: "underline" }}>
+              retour à l&apos;accueil
+            </Link>
+            {" · "}
+            <Link href="/explore" style={{ color: "var(--dash-text-2,#6a6a71)", textDecoration: "underline" }}>
+              explorer les prestataires
+            </Link>
+          </div>
         </div>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: "var(--dash-text,#121317)", margin: "0 0 10px", lineHeight: 1.2 }}>
-          Bienvenue sur Momento
-        </h1>
-        <p style={{ fontSize: 15, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 32px", lineHeight: 1.6, maxWidth: 340 }}>
-          Créez votre premier événement pour accéder à tous vos outils — budget, invités, prestataires et planning en un seul endroit.
-        </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 36 }}>
-          {["Budget & dépenses", "Liste d'invités", "Trouver des prestataires", "Planning & tâches"].map(f => (
-            <span key={f} style={{ fontSize: 11, fontWeight: 600, padding: "5px 12px", borderRadius: 99, background: "rgba(225,29,72,0.07)", color: "#E11D48", border: "1px solid rgba(225,29,72,0.15)" }}>{f}</span>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowCreateModal(true)}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "14px 32px", borderRadius: 14,
-            background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff",
-            fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer",
-            fontFamily: "inherit",
-            boxShadow: "0 8px 24px rgba(225,29,72,0.3)",
-          }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Créer mon premier événement
-        </button>
-        <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 16 }}>Gratuit · Sans commission · Données sécurisées</p>
       </div>
 
       {/* 3-steps onboarding modal — type événement → catégories → budget */}

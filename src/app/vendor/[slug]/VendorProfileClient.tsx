@@ -270,7 +270,7 @@ export default function VendorProfileClient({
                   { label: "Note", value: `${rating.toFixed(1)} / 5` },
                   { label: "Ville", value: city },
                   { label: "Catégorie", value: category.length > 18 ? category.slice(0, 16) + "…" : category },
-                  { label: "Commission", value: "0%" },
+                  { label: "Contact", value: "Direct" },
                 ].map(({ label, value }) => (
                   <div key={label} style={{
                     background: "var(--dash-faint,#f7f7fb)", borderRadius: 12, padding: "10px 12px",

@@ -229,7 +229,7 @@ export default function CloneAccueilPage() {
               Trouvez les meilleurs prestataires
             </h3>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: 0 }}>
-              1 000+ prestataires vérifiés · 41 villes · 0% commission
+              1 000+ prestataires vérifiés · 41 villes · Contact direct
             </p>
           </div>
           <Link href="/explore" style={{

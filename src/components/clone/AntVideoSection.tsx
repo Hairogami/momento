@@ -144,7 +144,7 @@ export default function AntVideoSection() {
                 letterSpacing: "-0.01em",
                 textAlign: "center",
               }}>
-                1 000+ prestataires · 41 villes · Zéro commission
+                1 000+ prestataires · 41 villes · Contact direct
               </p>
             </div>
           </div>

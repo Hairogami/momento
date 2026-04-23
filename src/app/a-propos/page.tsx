@@ -29,7 +29,7 @@ const FOUNDERS = [
 ]
 
 const VALUES = [
-  { icon: "handshake",  title: "Direct",      body: "Pas d'intermédiaire entre vous et vos clients. 0 % de commission, pour de vrai." },
+  { icon: "handshake",  title: "Direct",      body: "Pas d'intermédiaire entre vous et vos clients. Vous négociez et signez en direct." },
   { icon: "verified",   title: "Honnête",     body: "Vérification sociale de chaque prestataire. Reviews post-événement uniquement." },
   { icon: "public",     title: "Marocain",    body: "Conçu au Maroc pour le Maroc. 41 villes, de Tanger à Dakhla, des villages aux métropoles." },
   { icon: "rocket_launch", title: "Ambitieux", body: "On construit l'infrastructure événementielle qui n'existait pas dans ce pays." },
@@ -201,7 +201,7 @@ export default function AProposPage() {
               Chapitre 3 — La construction
             </p>
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 18 }}>
-              1&nbsp;000&nbsp;+ prestataires. 41 villes. 0 % de commission.
+              1&nbsp;000&nbsp;+ prestataires. 41 villes. Contact direct.
             </h2>
             <p className="clone-body" style={{ fontSize: 17, lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
               On a refusé le modèle classique — capter 15 à 30 % sur chaque contrat comme les

@@ -24,7 +24,7 @@ const FEATURES = [
   {
     icon: "chat",
     title: "Contact direct, devis en minutes",
-    desc: "Contactez vos prestataires en un clic, obtenez un devis en moins de 2h et confirmez votre réservation — sans commission.",
+    desc: "Contactez vos prestataires en un clic, obtenez un devis en moins de 2h et confirmez votre réservation rapidement.",
     mockup: <BookingMockup />,
   },
   {
@@ -164,7 +164,7 @@ function BookingMockup() {
         {/* Messages */}
         <div className="flex flex-col gap-2 mb-3">
           <div className="flex justify-end">
-            <div className="px-3 py-2 rounded-2xl rounded-tr-sm" style={{ background: "#121317", fontSize: 12, color: "#fff", maxWidth: "80%" }}>
+            <div className="px-3 py-2 rounded-2xl rounded-tr-sm" style={{ background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", fontSize: 12, color: "#fff", maxWidth: "80%" }}>
               C'est parfait ! On confirme pour le 15 juin 🎊
             </div>
           </div>
@@ -228,7 +228,7 @@ function EventDashboardMockup() {
             {t.done && <span style={{ color: "#fff", fontSize: 10 }}>✓</span>}
           </div>
           <div>
-            <div className={t.done ? "clone-mockup-muted" : "clone-mockup-text-h"} style={{ fontSize: 12, color: t.done ? "#9a9aaa" : "#121317", textDecoration: t.done ? "line-through" : "none" }}>{t.label}</div>
+            <div className={t.done ? "clone-mockup-muted" : "clone-mockup-text-h"} style={{ fontSize: 12, color: t.done ? "var(--dash-text-3,#9a9aaa)" : "var(--dash-text,#121317)", textDecoration: t.done ? "line-through" : "none" }}>{t.label}</div>
             <div className="clone-mockup-muted" style={{ fontSize: 10, color: "var(--dash-text-2,#6a6a71)" }}>{t.sub}</div>
           </div>
         </div>

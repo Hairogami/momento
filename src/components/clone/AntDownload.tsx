@@ -24,7 +24,7 @@ export default function AntDownload() {
         </h2>
 
         <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginTop: 20, maxWidth: 480, lineHeight: 1.7 }}>
-          Plus de 1 000 prestataires vérifiés. 41 villes au Maroc. Zéro commission. Rejoignez Momento aujourd&apos;hui.
+          Plus de 1 000 prestataires vérifiés. 41 villes au Maroc. Rejoignez Momento aujourd&apos;hui.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-10">

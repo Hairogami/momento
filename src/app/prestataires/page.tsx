@@ -7,7 +7,7 @@ const BENEFITS = [
   { emoji: "✓",  title: "Badge vérifié",      desc: "Un badge de confiance qui rassure tes clients et te distingue de la concurrence." },
   { emoji: "⭐", title: "Avis clients",        desc: "Collecte des avis authentiques et construis ta réputation en ligne." },
   { emoji: "📋", title: "Gestion simplifiée",  desc: "Gère tes demandes, disponibilités et messages depuis un tableau de bord." },
-  { emoji: "💰", title: "0% de commission",    desc: "Aucune commission sur tes contrats. Ce que tu gagnes, c'est à toi." },
+  { emoji: "💰", title: "Paiement direct",     desc: "Tu signes en direct avec tes clients. Ce que tu gagnes, c'est à toi." },
   { emoji: "🌍", title: "41 villes couvertes", desc: "Présent dans toutes les grandes villes du Maroc : Casablanca, Rabat, Marrakech…" },
 ]
 
@@ -37,7 +37,7 @@ const STATS = [
   { n: "1 000+", l: "Prestataires" },
   { n: "2 300+", l: "Événements organisés" },
   { n: "41",     l: "Villes au Maroc" },
-  { n: "0%",     l: "Commission" },
+  { n: "100%",   l: "Pour vous" },
 ]
 
 const TESTIMONIALS = [
@@ -65,7 +65,7 @@ export default function ClonePrestatairesPage() {
           }}>
             Développe ta clientèle<br />
             <span style={{ backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              au Maroc, sans commission
+              au Maroc
             </span>
           </h1>
           <p className="clone-body" style={{ fontSize: 16, color: "#6a6a71", lineHeight: 1.7, margin: "0 0 36px" }}>
@@ -118,7 +118,7 @@ export default function ClonePrestatairesPage() {
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 700, color: "#121317", letterSpacing: "-0.02em", margin: "0 0 12px" }}>
               Tout pour développer ton activité
             </h2>
-            <p className="clone-body" style={{ fontSize: 15, color: "#6a6a71" }}>Gratuit, sans commission, sans engagement.</p>
+            <p className="clone-body" style={{ fontSize: 15, color: "#6a6a71" }}>Gratuit et sans engagement.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px,1fr))", gap: 20 }}>
             {BENEFITS.map(b => (

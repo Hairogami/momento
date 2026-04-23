@@ -7,7 +7,7 @@ const TESTIMONIALS = [
     accent: "linear-gradient(135deg,#E11D48,#9333EA)",
   },
   {
-    quote: "Zéro commission, contact direct. On a négocié nous-mêmes et économisé une fortune sur notre séminaire corporate.",
+    quote: "Contact direct avec les prestas. On a négocié nous-mêmes et économisé une fortune sur notre séminaire corporate.",
     author: "Youssef B.",
     event: "Séminaire · Rabat",
     initials: "YB",

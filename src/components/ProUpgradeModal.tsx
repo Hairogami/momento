@@ -1,13 +1,16 @@
 "use client"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 type Props = {
   open: boolean
   onClose: () => void
-  /** Trigger that opened the paywall — used in copy + analytics */
+  /** Trigger that opened the paywall — used in copy + analytics + reason param on /upgrade */
   reason?: "vendor-contact" | "messages" | "guests" | "checklist" | "favorites" | "theme" | "events-multiple"
+  /** Path de retour après paiement (par défaut : page courante) */
+  from?: string
   onUpgraded?: () => void
 }
 
@@ -21,31 +24,20 @@ const REASON_COPY: Record<NonNullable<Props["reason"]>, { title: string; subtitl
   "events-multiple":  { title: "Plusieurs événements en même temps",      subtitle: "Mariage + soirée du henné + EVJG — gérez-les tous." },
 }
 
-export default function ProUpgradeModal({ open, onClose, reason = "vendor-contact", onUpgraded }: Props) {
+export default function ProUpgradeModal({ open, onClose, reason = "vendor-contact", from, onUpgraded }: Props) {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [err, setErr] = useState("")
+  const [err] = useState("")
 
   if (!open) return null
   const copy = REASON_COPY[reason]
 
-  async function upgrade() {
-    setLoading(true); setErr("")
-    try {
-      const r = await fetch("/api/user/plan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: "pro" }),
-      })
-      if (!r.ok) {
-        const d = await r.json().catch(() => ({}))
-        setErr(d.error || "Erreur. Réessayez.")
-        return
-      }
-      onUpgraded?.()
-      onClose()
-    } finally {
-      setLoading(false)
-    }
+  function upgrade() {
+    setLoading(true)
+    const fromPath = from ?? (typeof window !== "undefined" ? window.location.pathname : "/dashboard")
+    const params = new URLSearchParams({ from: fromPath, reason })
+    onUpgraded?.()
+    router.push(`/upgrade?${params.toString()}`)
   }
 
   return (
@@ -118,7 +110,7 @@ export default function ProUpgradeModal({ open, onClose, reason = "vendor-contac
               boxShadow: "0 8px 24px rgba(225,29,72,0.3)", fontFamily: "inherit",
             }}
           >
-            {loading ? "Activation…" : "Passer Pro maintenant"}
+            {loading ? "Redirection…" : "Voir les offres Pro"}
           </button>
           <button
             onClick={onClose}

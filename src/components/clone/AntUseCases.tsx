@@ -13,7 +13,7 @@ const STEPS = [
     number: "02",
     icon: "chat",
     title: "Contactez",
-    desc: "Échangez directement avec vos prestataires, comparez les devis et confirmez votre événement — zéro commission.",
+    desc: "Échangez directement avec vos prestataires, comparez les devis et confirmez votre événement en toute sérénité.",
     proof: "Devis en moyenne < 2h",
     cta: "Voir comment ça marche",
     href: "#",
