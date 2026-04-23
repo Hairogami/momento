@@ -429,7 +429,7 @@ export default function AntNav({
                               {planLabel}
                             </span>
                           )}
-                          <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name ?? "Mon compte"}</p>
+                          <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0] ?? "Mon compte"}</p>
                         </div>
                       </div>
                     </div>
@@ -475,7 +475,7 @@ export default function AntNav({
                         {planLabel}
                       </span>
                     )}
-                    <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name}</p>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0]}</p>
                   </div>
                 </div>
               )}
