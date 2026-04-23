@@ -85,6 +85,19 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     return () => window.removeEventListener("momento-theme-change", handler)
   }, [])
 
+  // Observer html class — catch ThemeProvider + system listener changes
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const html = document.documentElement
+    setDarkMode(html.classList.contains("dark"))
+    const obs = new MutationObserver(() => {
+      const d = html.classList.contains("dark")
+      setDarkMode(prev => (prev === d ? prev : d))
+    })
+    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
+    return () => obs.disconnect()
+  }, [])
+
   // Fermer le menu sur clic extérieur
   useEffect(() => {
     if (!menuOpen) return
@@ -100,7 +113,10 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     setDarkMode(next)
     document.documentElement.classList.toggle("dark", next)
     document.documentElement.classList.toggle("clone-dark", next)
-    try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next)) } catch {}
+    try {
+      localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next))
+      localStorage.setItem("momento_theme", next ? "dark" : "light")
+    } catch {}
     window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: next } }))
   }
 

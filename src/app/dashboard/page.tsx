@@ -1195,11 +1195,22 @@ export default function CloneDashboardPage() {
   const [tasksByEvent,  setTasksByEvent]  = useState<Record<string, Task[]>>({})
   const [darkMode,      setDarkMode]      = useState(() => {
     if (typeof window === "undefined") return true
-    try {
-      const v = localStorage.getItem("momento_clone_dark_mode")
-      return v !== null ? (JSON.parse(v) as boolean) : true
-    } catch { return true }
+    // Source de vérité = classe html (positionnée par no-flash script + ThemeProvider)
+    return document.documentElement.classList.contains("dark")
   })
+
+  // Sync darkMode avec la classe html (ThemeProvider, toggle AntNav, system listener)
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const html = document.documentElement
+    setDarkMode(html.classList.contains("dark"))
+    const obs = new MutationObserver(() => {
+      const d = html.classList.contains("dark")
+      setDarkMode(prev => (prev === d ? prev : d))
+    })
+    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
+    return () => obs.disconnect()
+  }, [])
   const [palette,       setPalette]       = useState({ g1: "#E11D48", g2: "#9333EA" })
   const [isDragging,    setIsDragging]    = useState(false)
   const [dropTarget,    setDropTarget]    = useState<string | null>(null)

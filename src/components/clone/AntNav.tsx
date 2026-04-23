@@ -161,6 +161,34 @@ export default function AntNav({
     return () => window.removeEventListener("momento-theme-change", handler)
   }, [])
 
+  // Observe <html> class changes (ThemeProvider, matchMedia system listener, etc.)
+  // Garantit que l'état local `dark` reste aligné avec la classe appliquée, même
+  // si le changement vient d'un autre path (ex. /settings theme switch, system OS change).
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const html = document.documentElement
+    // Sync immédiat si la classe a changé entre le useState initial et la première mount
+    setDark(html.classList.contains("dark"))
+    const obs = new MutationObserver(() => {
+      const d = html.classList.contains("dark")
+      setDark(prev => (prev === d ? prev : d))
+    })
+    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
+    return () => obs.disconnect()
+  }, [])
+
+  // Cross-tab sync via storage event (autre onglet change le thème → suit)
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "momento_theme" || e.key === "momento_clone_dark_mode") {
+        setDark(document.documentElement.classList.contains("dark"))
+      }
+    }
+    window.addEventListener("storage", onStorage)
+    return () => window.removeEventListener("storage", onStorage)
+  }, [])
+
   // Palette
   useEffect(() => {
     try {
@@ -313,7 +341,7 @@ export default function AntNav({
           <div className={hideLinks ? "flex-shrink-0 flex items-center justify-end gap-2 ml-auto" : "flex-1 flex items-center justify-end gap-2"}>
 
             {/* Dark mode toggle */}
-            {!hideDarkToggle && <button onClick={() => { const next = !dark; setDark(next); document.documentElement.classList.toggle("dark", next); document.documentElement.classList.toggle("clone-dark", next); try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next)) } catch {}; window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: next } })) }}
+            {!hideDarkToggle && <button onClick={() => { const next = !dark; setDark(next); document.documentElement.classList.toggle("dark", next); document.documentElement.classList.toggle("clone-dark", next); try { localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next)); localStorage.setItem("momento_theme", next ? "dark" : "light") } catch {}; window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: next } })) }}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
               style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}
               title={dark ? "Mode clair" : "Mode sombre"}>
