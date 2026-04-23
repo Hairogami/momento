@@ -6,22 +6,32 @@ import { signOut, useSession } from "next-auth/react"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import MobileDashNav from "./MobileDashNav"
 import CreateEventModal from "./CreateEventModal"
+import ProUpgradeModal from "@/components/ProUpgradeModal"
+import { usePlan } from "@/hooks/usePlan"
 
 // Dev-mode : cet email a accès au switcher Client ↔ Prestataire
 const DEV_SWITCH_EMAIL = "moumene486@gmail.com"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
-const NAV_ITEMS = [
+const NAV_ITEMS: { icon: string; label: string; href: string; pro?: boolean }[] = [
   { icon: "home",                    label: "Accueil",          href: "/accueil"          },
   { icon: "dashboard",               label: "Dashboard",        href: "/dashboard"        },
   { icon: "account_balance_wallet",  label: "Budget",           href: "/budget"           },
-  { icon: "groups",                  label: "Invités",          href: "/guests"           },
-  { icon: "chat_bubble",             label: "Messages",         href: "/messages"         },
-  { icon: "event_note",              label: "Planning",         href: "/planner"          },
-  { icon: "favorite",                label: "Favoris",          href: "/favorites"        },
+  { icon: "groups",                  label: "Invités",          href: "/guests",     pro: true },
+  { icon: "chat_bubble",             label: "Messages",         href: "/messages",   pro: true },
+  { icon: "event_note",              label: "Planning",         href: "/planner",    pro: true },
+  { icon: "favorite",                label: "Favoris",          href: "/favorites",  pro: true },
   { icon: "handshake",               label: "Mes Prestataires", href: "/mes-prestataires" },
 ]
+
+function itemToReason(href: string): "messages" | "guests" | "checklist" | "favorites" | "events-multiple" {
+  if (href === "/messages") return "messages"
+  if (href === "/guests")   return "guests"
+  if (href === "/planner")  return "checklist"
+  if (href === "/favorites")return "favorites"
+  return "events-multiple"
+}
 
 type Event = { id: string; name: string; date: string; color: string }
 
@@ -47,6 +57,9 @@ function GIcon({ name, size = 18, color = "var(--dash-text-2,#6a6a71)" }: { name
 export default function DashSidebar({ events, activeEventId, onEventChange, firstName: firstNameProp, messageUnread = 0 }: DashSidebarProps) {
   const pathname   = usePathname()
   const { data: session } = useSession()
+  const { plan } = usePlan()
+  const [upsellOpen, setUpsellOpen] = useState(false)
+  const [upsellReason, setUpsellReason] = useState<"messages" | "guests" | "checklist" | "favorites" | "events-multiple" | "vendor-contact" | "theme">("messages")
   const canSwitch = session?.user?.email === DEV_SWITCH_EMAIL
   const firstName = firstNameProp || session?.user?.name?.split(" ")[0] || "U"
   const [eventOpen, setEventOpen] = useState(false)
@@ -208,20 +221,19 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
       <nav style={{ flex: 1, padding: "8px 10px", overflowY: "auto", scrollbarWidth: "none" }}>
         {NAV_ITEMS.map(item => {
           const isCurrent = pathname === item.href
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              style={{
-                display: "flex", alignItems: "center", gap: 10,
-                padding: "8px 12px", borderRadius: 10, marginBottom: 1,
-                textDecoration: "none",
-                background: isCurrent
-                  ? "linear-gradient(135deg, rgba(225,29,72,0.07), rgba(147,51,234,0.05))"
-                  : "transparent",
-                position: "relative", transition: "background 0.15s",
-              }}
-            >
+          const isLocked = Boolean(item.pro && plan === "free")
+          const rowStyle: React.CSSProperties = {
+            display: "flex", alignItems: "center", gap: 10,
+            padding: "8px 12px", borderRadius: 10, marginBottom: 1,
+            textDecoration: "none",
+            background: isCurrent
+              ? "linear-gradient(135deg, rgba(225,29,72,0.07), rgba(147,51,234,0.05))"
+              : "transparent",
+            position: "relative", transition: "background 0.15s",
+            opacity: isLocked ? 0.6 : 1,
+          }
+          const inner = (
+            <>
               {isCurrent && (
                 <div style={{
                   position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
@@ -232,11 +244,31 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
               <span style={{ fontSize: 13, fontWeight: isCurrent ? 600 : 400, color: isCurrent ? "var(--dash-text,#121317)" : "var(--dash-text-2,#45474D)", flex: 1 }}>
                 {item.label}
               </span>
-              {item.href === "/messages" && messageUnread > 0 && (
+              {item.href === "/messages" && messageUnread > 0 && !isLocked && (
                 <span style={{ fontSize: 10, fontWeight: 700, background: G, color: "#fff", padding: "1px 6px", borderRadius: 99, minWidth: 18, textAlign: "center" }}>
                   {messageUnread}
                 </span>
               )}
+              {isLocked && (
+                <GIcon name="lock" size={13} color="var(--dash-text-3,#9a9aaa)" />
+              )}
+            </>
+          )
+          if (isLocked) {
+            return (
+              <button
+                key={item.href}
+                type="button"
+                onClick={() => { setUpsellReason(itemToReason(item.href)); setUpsellOpen(true) }}
+                style={{ ...rowStyle, border: "none", cursor: "pointer", fontFamily: "inherit", width: "100%", textAlign: "left" }}
+              >
+                {inner}
+              </button>
+            )
+          }
+          return (
+            <Link key={item.href} href={item.href} style={rowStyle}>
+              {inner}
             </Link>
           )
         })}
@@ -377,6 +409,13 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
         try { localStorage.setItem("momento_active_event", planner.id) } catch {}
         router.push("/mes-prestataires")
       }}
+    />
+
+    <ProUpgradeModal
+      open={upsellOpen}
+      onClose={() => setUpsellOpen(false)}
+      reason={upsellReason}
+      onUpgraded={() => window.location.reload()}
     />
   </>
   )

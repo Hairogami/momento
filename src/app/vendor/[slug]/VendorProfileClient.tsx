@@ -4,6 +4,8 @@ import Link from "next/link"
 import AntNav from "@/components/clone/AntNav"
 import { useTrack } from "@/lib/useTrack"
 import PublicCalendar from "@/components/vendor/public/PublicCalendar"
+import ProUpgradeModal from "@/components/ProUpgradeModal"
+import { usePlan } from "@/hooks/usePlan"
 
 type Review = { author: string; event: string; note: string; stars: number }
 
@@ -39,6 +41,12 @@ export default function VendorProfileClient({
 }: Props) {
   const [activePhoto, setActivePhoto] = useState(0)
   const [contactOpen, setContactOpen] = useState(false)
+  const [upsellOpen, setUpsellOpen] = useState(false)
+  const { plan } = usePlan()
+  const requestContact = useCallback(() => {
+    if (plan === "free") { setUpsellOpen(true); return }
+    setContactOpen(true)
+  }, [plan])
   const [prefillDate, setPrefillDate] = useState<string | null>(null)
   const [shareOpen, setShareOpen] = useState(false)
   const [favorited, setFavorited] = useState(false)
@@ -276,7 +284,7 @@ export default function VendorProfileClient({
 
               {/* CTA */}
               <button
-                onClick={() => { trackClick("contact_click"); setContactOpen(true) }}
+                onClick={() => { trackClick("contact_click"); requestContact() }}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   padding: "13px 20px", borderRadius: 999, width: "100%",
@@ -361,7 +369,7 @@ export default function VendorProfileClient({
                 onDateClick={(date) => {
                   trackClick("contact_click")
                   setPrefillDate(date)
-                  setContactOpen(true)
+                  requestContact()
                 }}
               />
             </div>
@@ -434,6 +442,15 @@ export default function VendorProfileClient({
           onClose={() => { setContactOpen(false); setPrefillDate(null) }}
         />
       )}
+
+      {/* ── Pro paywall sur clic Contacter (plan free) ── */}
+      <ProUpgradeModal
+        open={upsellOpen}
+        onClose={() => setUpsellOpen(false)}
+        reason="vendor-contact"
+        onUpgraded={() => { setUpsellOpen(false); setContactOpen(true) }}
+      />
+
 
       {/* ── Lightbox ── */}
       {lightboxIdx !== null && allPhotos[lightboxIdx] && (
