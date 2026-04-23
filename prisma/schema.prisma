@@ -366,8 +366,8 @@ model Planner {
   guestCount  Int?
   location    String?
   coverColor  String         @default("#f9a8d4")
-  userId      String?
-  user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   steps       Step[]
   events      PlannerEvent[]
   budgetItems BudgetItem[]
