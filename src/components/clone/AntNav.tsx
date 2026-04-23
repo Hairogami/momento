@@ -432,22 +432,6 @@ export default function AntNav({
                               Prestataire
                             </span>
                           )}
-                          {!isVendor && plan === "free" && (
-                            <Link
-                              href="/upgrade"
-                              onClick={() => setProfileOpen(false)}
-                              style={{
-                                display: "inline-block", marginTop: 6,
-                                fontSize: 10, fontWeight: 600,
-                                color: "#fff",
-                                background: "linear-gradient(135deg,#E11D48,#9333EA)",
-                                padding: "4px 10px", borderRadius: 99,
-                                textDecoration: "none",
-                              }}
-                            >
-                              ✨ Passer Pro — 200 MAD/mois
-                            </Link>
-                          )}
                         </div>
                       </div>
                     </div>
