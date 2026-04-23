@@ -370,7 +370,7 @@ function ComingSoonInner() {
         }}>
           <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", margin: 0, flex: 1, minWidth: 240 }}>
             Nous utilisons des cookies pour analyser notre audience et améliorer ton expérience.{" "}
-            <a href="/legal/privacy" style={{ color: "var(--dash-text,#121317)", textDecoration: "underline" }}>
+            <a href="/confidentialite" style={{ color: "var(--dash-text,#121317)", textDecoration: "underline" }}>
               En savoir plus
             </a>
           </p>

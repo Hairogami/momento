@@ -47,13 +47,13 @@ export default function CloneSignupPage() {
       setError("Les mots de passe ne correspondent pas."); setLoading(false); return
     }
 
-    if (role === "client" && !tos) {
+    if (!tos) {
       setError("Acceptez les conditions pour continuer."); setLoading(false); return
     }
 
     const body = role === "client"
       ? { role: "client", email, password, firstName: prenom || undefined, lastName: nom || undefined, marketingOptIn: marketing, agreedTos: true }
-      : { role: "vendor", email: vEmail, password: vPassword, companyName: entreprise || undefined, phone: telephone || undefined, vendorCategory: categorie || undefined }
+      : { role: "vendor", email: vEmail, password: vPassword, companyName: entreprise || undefined, phone: telephone || undefined, vendorCategory: categorie || undefined, marketingOptIn: marketing, agreedTos: true }
 
     const r = await fetch("/api/auth/register", {
       method: "POST", headers: { "Content-Type": "application/json" },

@@ -85,9 +85,9 @@ export default function Footer() {
             </p>
             <ul className="space-y-2">
               {[
-                { href: "/legal/mentions", label: "Mentions légales" },
-                { href: "/legal/privacy", label: "Politique de confidentialité" },
-                { href: "/legal/cgv", label: "CGU" },
+                { href: "/mentions-legales", label: "Mentions légales" },
+                { href: "/confidentialite", label: "Politique de confidentialité" },
+                { href: "/cgu", label: "CGU" },
                 { href: "/help", label: "Aide & Contact" },
                 { href: "/prestataire", label: "Espace Prestataire" },
               ].map(({ href, label }) => (

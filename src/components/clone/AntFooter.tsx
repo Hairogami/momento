@@ -1,11 +1,28 @@
-const LINKS = {
-  "Plateforme": ["Explorer", "Prestataires", "Événements", "Tarifs"],
-  "Entreprise": ["À propos", "Contact", "CGU", "Confidentialité"],
+const LINKS: Record<string, { label: string; href: string }[]> = {
+  "Plateforme": [
+    { label: "Explorer", href: "/explore" },
+    { label: "Prestataires", href: "/prestataires" },
+    { label: "Événements", href: "/explore" },
+    { label: "Tarifs", href: "/pro" },
+  ],
+  "Entreprise": [
+    { label: "À propos", href: "/a-propos" },
+    { label: "Contact", href: "mailto:contact@momentoevents.app" },
+    { label: "CGU", href: "/cgu" },
+    { label: "Confidentialité", href: "/confidentialite" },
+  ],
 }
 
+const LEGAL_LINKS = [
+  { label: "À propos", href: "/a-propos" },
+  { label: "Confidentialité", href: "/confidentialite" },
+  { label: "CGU", href: "/cgu" },
+  { label: "Mentions légales", href: "/mentions-legales" },
+]
+
 const SOCIALS = [
-  { label: "Instagram", short: "In", href: "#" },
-  { label: "Facebook",  short: "Fb", href: "#" },
+  { label: "Instagram", short: "In", href: "https://instagram.com/momentoevents.ma" },
+  { label: "Facebook",  short: "Fb", href: "https://facebook.com/momentoevents" },
   { label: "TikTok",    short: "Tt", href: "#" },
 ]
 
@@ -62,12 +79,12 @@ export default function AntFooter() {
                 </div>
                 {links.map(link => (
                   <a
-                    key={link}
-                    href="#"
+                    key={link.label}
+                    href={link.href}
                     className="clone-body text-sm transition-colors hover:text-black"
                     style={{ color: "var(--dash-text-2,#6a6a71)" }}
                   >
-                    {link}
+                    {link.label}
                   </a>
                 ))}
               </div>
@@ -130,9 +147,9 @@ export default function AntFooter() {
             <span className="clone-muted" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>© 2025 Momento Events · Maroc</span>
           </div>
           <div className="flex gap-5">
-            {["À propos", "Confidentialité", "CGU"].map(link => (
-              <a key={link} href="#" className="clone-body transition-colors hover:text-black" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>
-                {link}
+            {LEGAL_LINKS.map(link => (
+              <a key={link.label} href={link.href} className="clone-body transition-colors hover:text-black" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>
+                {link.label}
               </a>
             ))}
           </div>

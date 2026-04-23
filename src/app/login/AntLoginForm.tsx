@@ -34,6 +34,8 @@ export default function AntLoginForm() {
   const [email, setEmail]     = useState("")
   const [password, setPassword] = useState("")
   const [name, setName]       = useState("")
+  const [tos, setTos]         = useState(false)
+  const [marketing, setMarketing] = useState(true)
   const [error, setError]     = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -46,10 +48,19 @@ export default function AntLoginForm() {
   }
 
   async function handleRegister(e: React.FormEvent) {
-    e.preventDefault(); setError(""); setLoading(true)
+    e.preventDefault()
+    if (!tos) { setError("Veuillez accepter les conditions générales pour créer un compte."); return }
+    setError(""); setLoading(true)
     const r = await fetch("/api/auth/register", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({
+        role: "client",
+        firstName: name,
+        email,
+        password,
+        agreedTos: true,
+        marketingOptIn: marketing,
+      }),
     })
     if (!r.ok) { const d = await r.json(); setError(d.error || "Erreur inscription"); setLoading(false); return }
     const res = await signIn("credentials", { email, password, rememberMe: "true", redirect: false })
@@ -104,6 +115,22 @@ export default function AntLoginForm() {
           </div>
         )}
 
+        {mode === "register" && (
+          <div style={{ marginTop: 2 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "var(--dash-text-2,#45474D)", cursor: "pointer", lineHeight: 1.5 }}>
+              <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2, accentColor: "#E11D48" }} />
+              <span>
+                J&apos;accepte les <a href="/cgu" target="_blank" rel="noopener noreferrer" style={{ color: "#E11D48", fontWeight: 500, textDecoration: "underline" }}>conditions générales</a> et
+                la <a href="/confidentialite" target="_blank" rel="noopener noreferrer" style={{ color: "#E11D48", fontWeight: 500, textDecoration: "underline" }}>politique de confidentialité</a>.
+              </span>
+            </label>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 6, fontSize: 12, color: "var(--dash-text-3,#6a6a71)", cursor: "pointer", lineHeight: 1.5 }}>
+              <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 2, accentColor: "#9333EA" }} />
+              <span>Je souhaite recevoir les conseils &amp; offres Momento (facultatif).</span>
+            </label>
+          </div>
+        )}
+
         {error && (
           <p style={{
             fontSize: 13, padding: "10px 14px", borderRadius: 10,
@@ -111,13 +138,19 @@ export default function AntLoginForm() {
           }}>{error}</p>
         )}
 
-        <button type="submit" disabled={loading} style={{
-          height: 46, borderRadius: 12, border: "none", cursor: loading ? "wait" : "pointer",
-          background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-          color: "#fff", fontSize: 14, fontWeight: 600, fontFamily: "inherit",
-          opacity: loading ? 0.7 : 1, transition: "opacity 0.15s",
+        <button type="submit" disabled={loading || (mode === "register" && !tos)}
+          title={mode === "register" && !tos ? "Acceptez les conditions pour créer un compte" : ""}
+          style={{
+          height: 46, borderRadius: 12, border: "none",
+          cursor: loading ? "wait" : (mode === "register" && !tos ? "not-allowed" : "pointer"),
+          background: (mode === "register" && !tos)
+            ? "rgba(183,191,217,0.3)"
+            : "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+          color: (mode === "register" && !tos) ? "#9a9aaa" : "#fff",
+          fontSize: 14, fontWeight: 600, fontFamily: "inherit",
+          opacity: loading ? 0.7 : 1, transition: "opacity 0.15s, background 0.15s, color 0.15s",
         }}>
-          {loading ? "Chargement…" : mode === "login" ? "Se connecter" : "Créer mon compte"}
+          {loading ? "Chargement…" : mode === "login" ? "Se connecter" : (tos ? "Créer mon compte" : "Acceptez les conditions pour continuer")}
         </button>
       </form>
     </div>

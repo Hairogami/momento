@@ -523,9 +523,9 @@ export default function SettingsPage() {
               <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 14px", color: "var(--dash-text,#121317)" }}>Légal</h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {[
-                  { label: "Conditions d'utilisation", href: "/legal/cgv" },
-                  { label: "Mentions légales",         href: "/legal/mentions" },
-                  { label: "Politique de confidentialité", href: "/legal/privacy" },
+                  { label: "Conditions d'utilisation", href: "/cgu" },
+                  { label: "Mentions légales",         href: "/mentions-legales" },
+                  { label: "Politique de confidentialité", href: "/confidentialite" },
                 ].map(l => (
                   <Link key={l.href} href={l.href} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", textDecoration: "none", color: "var(--dash-text,#121317)", fontSize: 13 }}>
                     <span>{l.label}</span>

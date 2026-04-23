@@ -27,7 +27,7 @@ const ClientSchema = z.object({
   firstName:      z.string().min(1).max(50).optional(),
   lastName:       z.string().min(1).max(50).optional(),
   marketingOptIn: z.boolean().optional(),
-  agreedTos:      z.boolean().optional(),
+  agreedTos:      z.literal(true, { message: "Vous devez accepter les conditions générales." }),
 })
 
 const VendorSchema = z.object({
@@ -37,6 +37,8 @@ const VendorSchema = z.object({
   companyName:    z.string().min(1).max(100).optional(),
   vendorCategory: z.string().max(50).optional(),
   phone:          z.string().max(20).optional(),
+  marketingOptIn: z.boolean().optional(),
+  agreedTos:      z.literal(true, { message: "Vous devez accepter les conditions générales." }),
 })
 
 const RegisterSchema = z.discriminatedUnion("role", [ClientSchema, VendorSchema])
@@ -103,8 +105,8 @@ export async function POST(req: NextRequest) {
         companyName:    data.role === "vendor" ? (data.companyName ?? null) : null,
         vendorCategory: data.role === "vendor" ? (data.vendorCategory ?? null) : null,
         phone:          data.role === "vendor" ? (data.phone ?? null) : null,
-        marketingOptIn: data.role === "client" ? (data.marketingOptIn ?? true) : true,
-        agreedTosAt:    data.role === "client" && data.agreedTos ? new Date() : null,
+        marketingOptIn: data.marketingOptIn ?? true,
+        agreedTosAt:    data.agreedTos ? new Date() : null,
       },
       select: { id: true, email: true, name: true },
     })
