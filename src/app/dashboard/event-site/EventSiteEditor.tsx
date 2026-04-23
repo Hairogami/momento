@@ -26,7 +26,7 @@ type EventSite = {
   layoutVariant: string
   content: unknown
   photos: { id: string; url: string; caption: string | null }[]
-} | null
+}
 
 type Tab = "content" | "style" | "photos"
 
@@ -40,69 +40,23 @@ const TEMPLATES = [
 
 export default function EventSiteEditor({ planner, eventSite }: { planner: Planner; eventSite: EventSite }) {
   const router = useRouter()
-  const [site, setSite] = useState<NonNullable<EventSite> | null>(eventSite)
-  const [creating, setCreating] = useState(false)
+  const [site, setSite] = useState<EventSite>(eventSite)
   const [tab, setTab] = useState<Tab>("content")
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [previewKey, setPreviewKey] = useState(0)
 
-  // Si pas de site, crée-le à la volée
-  async function createSite() {
-    setCreating(true)
-    try {
-      const r = await fetch("/api/event-site", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plannerId: planner.id }),
-      })
-      if (r.ok) {
-        router.refresh()
-      } else {
-        const { error } = await r.json().catch(() => ({ error: "Erreur" }))
-        alert(error ?? "Impossible de créer le site")
-      }
-    } finally {
-      setCreating(false)
-    }
-  }
-
-  if (!site) {
-    return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, background: "var(--dash-bg,#f7f7fb)" }}>
-        <div style={{ maxWidth: 520, textAlign: "center" }}>
-          <div style={{ fontSize: 44, marginBottom: 18 }}>✨</div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 10px" }}>
-            Créez votre site événement
-          </h1>
-          <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 24px", lineHeight: 1.6 }}>
-            Un mini-site public partageable à vos invités. Ils y trouvent tout : programme, lieu, RSVP. Vous gardez le contrôle.
-          </p>
-          <button
-            onClick={createSite}
-            disabled={creating}
-            style={{
-              padding: "14px 30px", borderRadius: 12, border: "none",
-              background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff",
-              fontSize: 15, fontWeight: 600, cursor: creating ? "wait" : "pointer",
-              boxShadow: "0 8px 24px rgba(225,29,72,0.25)",
-            }}
-          >
-            {creating ? "Création…" : "Créer mon site →"}
-          </button>
-        </div>
-      </div>
-    )
-  }
+  // Sync state quand la prop change (router.refresh côté serveur)
+  useEffect(() => { setSite(eventSite) }, [eventSite])
 
   const content = (site.content ?? {}) as Record<string, unknown>
   const hero = (content.hero as Record<string, string> | undefined) ?? {}
 
-  async function patch(partial: Partial<NonNullable<EventSite>>) {
-    setSite(prev => (prev ? { ...prev, ...partial } : prev))
+  async function patch(partial: Partial<EventSite>) {
+    setSite(prev => ({ ...prev, ...partial }))
     setSaving(true)
     try {
-      await fetch(`/api/event-site/${site!.id}`, {
+      await fetch(`/api/event-site/${site.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(partial),
@@ -124,11 +78,10 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
       cursor = cursor[k] as Record<string, unknown>
     }
     cursor[parts[parts.length - 1]!] = value
-    patch({ content: next } as Partial<NonNullable<EventSite>>)
+    patch({ content: next } as Partial<EventSite>)
   }
 
   async function togglePublish() {
-    if (!site) return
     setPublishing(true)
     try {
       const r = await fetch(`/api/event-site/${site.id}/publish`, {
@@ -138,7 +91,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
       })
       if (r.ok) {
         const data = await r.json()
-        setSite(prev => prev ? { ...prev, published: data.published } : prev)
+        setSite(prev => ({ ...prev, published: data.published }))
       } else {
         const { error } = await r.json().catch(() => ({ error: "Erreur" }))
         alert(error ?? "Impossible de changer le statut")
@@ -318,7 +271,7 @@ function ContentTab({
   )
 }
 
-function StyleTab({ site, onPatch }: { site: NonNullable<EventSite>; onPatch: (p: Partial<NonNullable<EventSite>>) => void }) {
+function StyleTab({ site, onPatch }: { site: EventSite; onPatch: (p: Partial<EventSite>) => void }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
       <FieldGroup label="Template">
@@ -368,7 +321,7 @@ function StyleTab({ site, onPatch }: { site: NonNullable<EventSite>; onPatch: (p
   )
 }
 
-function PhotosTab({ site, onPatch, onReload }: { site: NonNullable<EventSite>; onPatch: (p: Partial<NonNullable<EventSite>>) => void; onReload: () => void }) {
+function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: Partial<EventSite>) => void; onReload: () => void }) {
   const [uploading, setUploading] = useState(false)
 
   async function uploadHero(file: File) {
