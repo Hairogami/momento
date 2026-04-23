@@ -2,19 +2,29 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react"
 
-export type Theme = "light" | "dark"
+/**
+ * Theme = choix utilisateur ("system" | "light" | "dark")
+ * Resolved = rendu réel en CSS ("light" | "dark"). Si theme="system", lu depuis prefers-color-scheme.
+ * Nouveau défaut : "system" (suit l'OS).
+ */
+export type Theme = "system" | "light" | "dark"
+export type ResolvedTheme = "light" | "dark"
 export type Palette = "creme" | "ocean" | "forest" | "ardoise"
 
 interface ThemeContextValue {
   theme: Theme
+  resolved: ResolvedTheme
   palette: Palette
+  setTheme: (t: Theme) => void
   toggleTheme: () => void
   setPalette: (p: Palette) => void
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: "light",
+  theme: "system",
+  resolved: "light",
   palette: "creme",
+  setTheme: () => {},
   toggleTheme: () => {},
   setPalette: () => {},
 })
@@ -30,39 +40,82 @@ const PALETTE_CLASSES: Record<Palette, string> = {
   ardoise: "palette-ardoise",
 }
 
-function applyTheme(theme: Theme, palette: Palette) {
+function systemPrefersDark(): boolean {
+  if (typeof window === "undefined") return false
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false
+}
+
+function resolveTheme(theme: Theme): ResolvedTheme {
+  if (theme === "system") return systemPrefersDark() ? "dark" : "light"
+  return theme
+}
+
+function applyTheme(resolved: ResolvedTheme, palette: Palette) {
   const html = document.documentElement
-  // Theme
-  if (theme === "dark") {
+  if (resolved === "dark") {
     html.classList.add("dark")
+    html.classList.add("clone-dark")
   } else {
     html.classList.remove("dark")
+    html.classList.remove("clone-dark")
   }
-  // Palette — remove all palette classes first
   html.classList.remove("palette-ocean", "palette-forest", "palette-ardoise")
   const cls = PALETTE_CLASSES[palette]
   if (cls) html.classList.add(cls)
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark")
+  const [theme, setThemeState] = useState<Theme>("system")
+  const [resolved, setResolved] = useState<ResolvedTheme>("light")
   const [palette, setPaletteState] = useState<Palette>("creme")
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const savedTheme = (localStorage.getItem("momento_theme") as Theme) ?? "dark"
+    const raw = localStorage.getItem("momento_theme")
+    // Migration : anciennes valeurs "auto" (settings) → "system"
+    const saved: Theme =
+      raw === "auto" ? "system"
+      : raw === "light" || raw === "dark" || raw === "system" ? raw
+      : "system"
     const savedPalette = (localStorage.getItem("momento_palette") as Palette) ?? "creme"
-    setTheme(savedTheme)
+    setThemeState(saved)
     setPaletteState(savedPalette)
-    applyTheme(savedTheme, savedPalette)
+    const r = resolveTheme(saved)
+    setResolved(r)
+    applyTheme(r, savedPalette)
     setMounted(true)
+
+    // Écoute les changements OS quand le mode est "system"
+    if (typeof window === "undefined") return
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    const onChange = () => {
+      const current = localStorage.getItem("momento_theme")
+      if (current === "system" || current === null) {
+        const nr: ResolvedTheme = mq.matches ? "dark" : "light"
+        setResolved(nr)
+        applyTheme(nr, (localStorage.getItem("momento_palette") as Palette) ?? "creme")
+      }
+    }
+    mq.addEventListener("change", onChange)
+    return () => mq.removeEventListener("change", onChange)
   }, [])
 
+  const setTheme = useCallback((next: Theme) => {
+    setThemeState(next)
+    localStorage.setItem("momento_theme", next)
+    const r = resolveTheme(next)
+    setResolved(r)
+    applyTheme(r, palette)
+  }, [palette])
+
   const toggleTheme = useCallback(() => {
-    setTheme(prev => {
-      const next: Theme = prev === "light" ? "dark" : "light"
+    // Cycle : system → light → dark → system
+    setThemeState(prev => {
+      const next: Theme = prev === "system" ? "light" : prev === "light" ? "dark" : "system"
       localStorage.setItem("momento_theme", next)
-      applyTheme(next, palette)
+      const r = resolveTheme(next)
+      setResolved(r)
+      applyTheme(r, palette)
       return next
     })
   }, [palette])
@@ -76,7 +129,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   if (!mounted) return <>{children}</>
 
   return (
-    <ThemeContext.Provider value={{ theme, palette, toggleTheme, setPalette }}>
+    <ThemeContext.Provider value={{ theme, resolved, palette, setTheme, toggleTheme, setPalette }}>
       {children}
     </ThemeContext.Provider>
   )
@@ -85,17 +138,30 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 // ── ThemeToggle ──────────────────────────────────────────────────────────────
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, resolved, toggleTheme } = useTheme()
+
+  const labelMap: Record<Theme, string> = {
+    system: "Préférence système (clic : passer en clair)",
+    light: "Mode clair (clic : passer en sombre)",
+    dark: "Mode sombre (clic : suivre le système)",
+  }
 
   return (
     <button
       onClick={toggleTheme}
-      aria-label={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
+      aria-label={labelMap[theme]}
+      title={labelMap[theme]}
       className={`w-9 h-9 flex items-center justify-center rounded-full transition-all hover:opacity-70 ${className}`}
       style={{ color: "var(--text)" }}
-      title={theme === "dark" ? "Mode clair" : "Mode sombre"}
     >
-      {theme === "dark" ? (
+      {theme === "system" ? (
+        /* Monitor icon — suit le système */
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+      ) : resolved === "dark" ? (
         /* Sun icon */
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="4" />

@@ -159,6 +159,9 @@ export default function SettingsPage() {
     try {
       localStorage.setItem("momento_clone_dark_mode", JSON.stringify(isDark))
       localStorage.setItem("momento_clone_theme_pref", s.theme) // pour retrouver "auto" au rechargement
+      // Synchronise avec ThemeProvider (mapping "auto" → "system")
+      const providerTheme = s.theme === "auto" ? "system" : s.theme
+      localStorage.setItem("momento_theme", providerTheme)
     } catch {}
   }, [s])
 
@@ -305,7 +308,7 @@ export default function SettingsPage() {
                         background: s.theme === t ? "rgba(225,29,72,0.06)" : "var(--dash-surface,#fff)",
                         color: "var(--dash-text,#121317)",
                       }}>
-                      {t === "light" ? "☀ Clair" : t === "dark" ? "🌙 Sombre" : "⚙ Auto"}
+                      {t === "light" ? "☀ Clair" : t === "dark" ? "🌙 Sombre" : "🖥 Préférence système"}
                     </button>
                   ))}
                 </div>

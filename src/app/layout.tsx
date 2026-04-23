@@ -80,7 +80,7 @@ export default function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(JSON.parse(localStorage.getItem('momento_clone_dark_mode')||'true')){document.documentElement.classList.add('dark','clone-dark')}else{document.documentElement.classList.remove('dark','clone-dark')}}catch(e){}`,
+            __html: `try{var t=localStorage.getItem('momento_theme');var legacy=localStorage.getItem('momento_clone_dark_mode');var dark;if(t==='dark'){dark=true}else if(t==='light'){dark=false}else if(t==='system'||t===null){if(legacy!==null){dark=legacy==='true'}else{dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches}}else{dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches}if(dark){document.documentElement.classList.add('dark','clone-dark')}else{document.documentElement.classList.remove('dark','clone-dark')}}catch(e){}`,
           }}
         />
         <script
