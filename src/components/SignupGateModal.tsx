@@ -79,8 +79,26 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
     }
   }
 
+  function persistPendingConsent() {
+    try {
+      localStorage.setItem("momento_pending_consent", JSON.stringify({
+        agreedTos: true,
+        marketingOptIn: marketing,
+        ts: Date.now(),
+      }))
+    } catch {}
+  }
+
   async function handleGoogle() {
+    if (!tos) { setErr("Acceptez les conditions pour continuer."); return }
+    persistPendingConsent()
     await signIn("google", { callbackUrl: vendorSlug ? `/vendor/${vendorSlug}` : "/accueil" })
+  }
+
+  async function handleFacebook() {
+    if (!tos) { setErr("Acceptez les conditions pour continuer."); return }
+    persistPendingConsent()
+    await signIn("facebook", { callbackUrl: vendorSlug ? `/vendor/${vendorSlug}` : "/accueil" })
   }
 
   return (
@@ -130,15 +148,48 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
           ))}
         </div>
 
-        {/* Google OAuth */}
-        <button
-          type="button"
-          onClick={handleGoogle}
-          style={{ marginTop: 18, width: "100%", padding: "13px", background: "#fff", color: "#121317", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontFamily: "inherit" }}
-        >
-          <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-          Continuer avec Google
-        </button>
+        {/* OAuth providers */}
+        <div style={{ marginTop: 18, display: "grid", gap: 8 }}>
+          <button
+            type="button"
+            onClick={handleGoogle}
+            disabled={!tos}
+            title={!tos ? "Acceptez les conditions pour continuer" : ""}
+            style={{
+              width: "100%", padding: "13px",
+              background: tos ? "#fff" : "rgba(255,255,255,0.35)",
+              color: tos ? "#121317" : "rgba(18,19,23,0.4)",
+              border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700,
+              cursor: tos ? "pointer" : "not-allowed",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+              fontFamily: "inherit",
+              transition: "background 0.15s, color 0.15s",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 48 48" style={{ opacity: tos ? 1 : 0.4 }}><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Continuer avec Google
+          </button>
+
+          <button
+            type="button"
+            onClick={handleFacebook}
+            disabled={!tos}
+            title={!tos ? "Acceptez les conditions pour continuer" : ""}
+            style={{
+              width: "100%", padding: "13px",
+              background: tos ? "#1877F2" : "rgba(24,119,242,0.35)",
+              color: tos ? "#fff" : "rgba(255,255,255,0.5)",
+              border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700,
+              cursor: tos ? "pointer" : "not-allowed",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+              fontFamily: "inherit",
+              transition: "background 0.15s, color 0.15s",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: tos ? 1 : 0.4 }}><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Continuer avec Facebook
+          </button>
+        </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0" }}>
           <div style={{ flex: 1, height: 1, background: "var(--dash-border, rgba(255,255,255,0.07))" }} />
