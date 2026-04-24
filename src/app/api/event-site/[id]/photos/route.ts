@@ -37,26 +37,44 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: "Limite de 20 photos atteinte dans la galerie." }, { status: 400 })
   }
 
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json(
+      { error: "Le stockage Vercel Blob n'est pas configuré (BLOB_READ_WRITE_TOKEN manquant). En local, lancez : vercel env pull .env.local" },
+      { status: 500 },
+    )
+  }
+
   const ext = file.type.split("/")[1]?.replace("jpeg", "jpg") ?? "jpg"
   const key = `event-sites/${id}/${kind}-${Date.now()}.${ext}`
 
-  const blob = await put(key, file, { access: "public", addRandomSuffix: true })
+  let blob: { url: string }
+  try {
+    blob = await put(key, file, { access: "public", addRandomSuffix: true })
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Erreur inconnue"
+    return NextResponse.json({ error: `Upload Blob échoué : ${msg}` }, { status: 502 })
+  }
 
-  if (kind === "hero") {
-    await prisma.eventSite.update({
-      where: { id },
-      data: { heroImageUrl: blob.url },
-    })
-    return NextResponse.json({ url: blob.url })
-  } else {
-    const photo = await prisma.eventSitePhoto.create({
-      data: {
-        eventSiteId: id,
-        url: blob.url,
-        order: site.photos.length,
-      },
-      select: { id: true, url: true, order: true },
-    })
-    return NextResponse.json(photo, { status: 201 })
+  try {
+    if (kind === "hero") {
+      await prisma.eventSite.update({
+        where: { id },
+        data: { heroImageUrl: blob.url },
+      })
+      return NextResponse.json({ url: blob.url })
+    } else {
+      const photo = await prisma.eventSitePhoto.create({
+        data: {
+          eventSiteId: id,
+          url: blob.url,
+          order: site.photos.length,
+        },
+        select: { id: true, url: true, order: true },
+      })
+      return NextResponse.json(photo, { status: 201 })
+    }
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Erreur DB inconnue"
+    return NextResponse.json({ error: `Écriture DB échouée : ${msg}` }, { status: 500 })
   }
 }

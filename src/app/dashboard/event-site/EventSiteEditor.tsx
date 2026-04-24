@@ -359,12 +359,14 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
         method: "POST",
         body: formData,
       })
+      const data = await r.json().catch(() => ({ error: "Réponse serveur invalide." }))
       if (r.ok) {
-        const data = await r.json()
         onPatch({ heroImageUrl: data.url })
       } else {
-        alert("Upload échoué")
+        alert(data.error ?? `Upload échoué (HTTP ${r.status})`)
       }
+    } catch (e) {
+      alert(`Upload échoué : ${e instanceof Error ? e.message : "erreur réseau"}`)
     } finally {
       setUploading(false)
     }
