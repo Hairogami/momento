@@ -275,7 +275,7 @@ const h2Style: React.CSSProperties = {
   fontWeight: 500,
   letterSpacing: "-0.02em",
   margin: "0 0 20px",
-  color: "var(--evt-text)",
+  color: "var(--evt-main)",
 }
 
 const bodyStyle: React.CSSProperties = {

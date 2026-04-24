@@ -14,7 +14,7 @@ export default function SectionDivider({ variant = "ornament" }: Props) {
         height="28"
         viewBox="0 0 160 28"
         fill="none"
-        style={{ color: "var(--evt-main)", opacity: 0.55 }}
+        style={{ color: "var(--evt-main)", opacity: 0.85 }}
       >
         {variant === "ornament" && (
           <>

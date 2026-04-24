@@ -120,9 +120,9 @@ export default function HeroSection({
             fontSize: "clamp(0.85rem, 1.4vw, 1rem)",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
-            color: mutedColor,
+            color: overPhoto ? "rgba(255,255,255,0.95)" : "var(--evt-main)",
             marginTop: 24,
-            fontWeight: 500,
+            fontWeight: 600,
           }}>
             {subtitle}
           </p>
