@@ -381,6 +381,20 @@ function CustomPaletteButton({
   onActivate: () => void
   onChangeColor: (field: "main" | "accent", value: string) => void
 }) {
+  // State local pour les couleurs — PATCH débouncé pour éviter 60 req/s lors du drag
+  const [localMain, setLocalMain] = useState(mainValue)
+  const [localAccent, setLocalAccent] = useState(accentValue)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Sync si la prop externe change (switch de palette, etc.)
+  useEffect(() => { setLocalMain(mainValue) }, [mainValue])
+  useEffect(() => { setLocalAccent(accentValue) }, [accentValue])
+
+  function scheduleSave(field: "main" | "accent", value: string) {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => { onChangeColor(field, value) }, 350)
+  }
+
   return (
     <div
       onClick={() => { if (!active) onActivate() }}
@@ -392,30 +406,30 @@ function CustomPaletteButton({
       }}
     >
       <span>Personnalisé</span>
-      <span style={{ display: "flex", gap: 4 }}>
+      <span style={{ display: "flex", gap: 4, position: "relative" }}>
         <label style={{
-          width: 14, height: 14, borderRadius: "50%", background: mainValue,
+          width: 14, height: 14, borderRadius: "50%", background: localMain,
           cursor: "pointer", display: "inline-block",
           border: "1px solid rgba(0,0,0,0.1)",
         }}>
           <input
             type="color"
-            value={mainValue}
-            onChange={e => onChangeColor("main", e.target.value)}
+            value={localMain}
+            onChange={e => { setLocalMain(e.target.value); scheduleSave("main", e.target.value) }}
             onClick={e => { e.stopPropagation(); if (!active) onActivate() }}
             style={{ opacity: 0, width: 1, height: 1, position: "absolute" }}
             tabIndex={-1}
           />
         </label>
         <label style={{
-          width: 14, height: 14, borderRadius: "50%", background: accentValue,
+          width: 14, height: 14, borderRadius: "50%", background: localAccent,
           cursor: "pointer", display: "inline-block",
           border: "1px solid rgba(0,0,0,0.1)",
         }}>
           <input
             type="color"
-            value={accentValue}
-            onChange={e => onChangeColor("accent", e.target.value)}
+            value={localAccent}
+            onChange={e => { setLocalAccent(e.target.value); scheduleSave("accent", e.target.value) }}
             onClick={e => { e.stopPropagation(); if (!active) onActivate() }}
             style={{ opacity: 0, width: 1, height: 1, position: "absolute" }}
             tabIndex={-1}
