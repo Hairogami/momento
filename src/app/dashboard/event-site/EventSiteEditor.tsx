@@ -203,7 +203,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
       {/* ── Panel droit : preview live ── */}
       <section style={{ position: "relative", background: "var(--dash-bg,#f7f7fb)", overflow: "hidden" }}>
         <div style={{
-          position: "absolute", top: 12, right: 12, zIndex: 10,
+          position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 10,
           padding: "6px 12px", borderRadius: 99, background: "rgba(0,0,0,0.7)",
           color: "#fff", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase",
         }}>Aperçu live</div>
