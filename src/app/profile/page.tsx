@@ -94,8 +94,12 @@ export default function ProfilePage() {
     const preview = URL.createObjectURL(file)
     setAvatarUrl(preview)
 
+    // Compression client-side — avatar = 512px max suffit pour un rond
+    const { compressImage } = await import("@/lib/imageCompress")
+    const compressed = await compressImage(file, { maxDimension: 512 }).catch(() => file)
+
     const fd = new FormData()
-    fd.append("file", file)
+    fd.append("file", compressed)
 
     try {
       const res = await fetch("/api/upload/avatar", { method: "POST", body: fd })

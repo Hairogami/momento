@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { PALETTES, FONTS, MOODS, type FontId } from "@/lib/eventSiteTokens"
 import PatternPicker, { type PatternId } from "./PatternPicker"
+import { compressImage } from "@/lib/imageCompress"
 
 type Planner = {
   id: string
@@ -349,9 +350,12 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
 function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: Partial<EventSite>) => void; onReload: () => void }) {
   const [uploading, setUploading] = useState(false)
 
-  async function uploadHero(file: File) {
+  async function uploadHero(raw: File) {
     setUploading(true)
     try {
+      // Compression client-side : 1920px max, WebP 82% qualité
+      // Photo iPhone 5 MB → ~250 KB sans perte visible
+      const file = await compressImage(raw).catch(() => raw)
       const formData = new FormData()
       formData.append("file", file)
       formData.append("kind", "hero")
