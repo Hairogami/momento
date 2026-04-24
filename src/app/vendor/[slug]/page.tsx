@@ -7,9 +7,11 @@ import type { Metadata } from "next"
 // OU immédiatement via revalidatePath depuis l'admin / dashboard
 export const revalidate = 3600
 
+// ISR on-demand : pas de pre-render au build (évite saturation DB Neon
+// avec 827 vendors). Chaque page est générée à la première visite
+// et cachée 1h. Gain build time + connexions DB.
 export async function generateStaticParams() {
-  const slugs = await getAllVendorSlugs()
-  return slugs.map(slug => ({ slug }))
+  return []
 }
 
 export async function generateMetadata(
