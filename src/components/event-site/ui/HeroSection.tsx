@@ -25,8 +25,10 @@ export default function HeroSection({
   heroImageUrl, shaderParams, decoratifParams, editorialParams,
 }: Props) {
   const isDark = mood === "shader"
-  const textColor = isDark ? "#fff" : palette.text
-  const mutedColor = isDark ? "rgba(255,255,255,0.7)" : palette.textMuted
+  // Photo uploadée → fond sombre derrière la typo → texte blanc forcé
+  const overPhoto = Boolean(heroImageUrl)
+  const textColor = isDark || overPhoto ? "#fff" : palette.text
+  const mutedColor = isDark || overPhoto ? "rgba(255,255,255,0.82)" : palette.textMuted
 
   return (
     <section
@@ -40,15 +42,43 @@ export default function HeroSection({
         padding: "min(14vw, 80px) 24px",
       }}
     >
-      {/* Background selon le mood */}
-      {mood === "shader" && shaderParams && (
-        <ShaderBackground params={shaderParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.darkBg ?? "#0d0e14"} />
-      )}
-      {mood === "decoratif" && decoratifParams && (
-        <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.bg} />
-      )}
-      {mood === "editorial" && editorialParams && (
-        <EditorialBackground params={editorialParams} heroImageUrl={heroImageUrl} colorBg={palette.bg} colorText={palette.text} />
+      {/* Background — priorité à la photo hero uploadée par l'user,
+          sinon fallback sur le visuel du mood sélectionné */}
+      {heroImageUrl ? (
+        <>
+          {/* Photo hero en fond */}
+          <div aria-hidden style={{
+            position: "absolute", inset: 0, zIndex: 0,
+            backgroundImage: `url(${heroImageUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }} />
+          {/* Overlay sombre doux pour lisibilité de la typo */}
+          <div aria-hidden style={{
+            position: "absolute", inset: 0, zIndex: 1,
+            background: isDark
+              ? "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 100%)"
+              : "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%)",
+          }} />
+          {/* Pattern décoratif discret par-dessus (seulement si mood = decoratif) */}
+          {mood === "decoratif" && decoratifParams && (
+            <div style={{ position: "absolute", inset: 0, zIndex: 2, mixBlendMode: "overlay", opacity: 0.5 }}>
+              <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg="transparent" intensity={0.7} />
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {mood === "shader" && shaderParams && (
+            <ShaderBackground params={shaderParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.darkBg ?? "#0d0e14"} />
+          )}
+          {mood === "decoratif" && decoratifParams && (
+            <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.bg} />
+          )}
+          {mood === "editorial" && editorialParams && (
+            <EditorialBackground params={editorialParams} heroImageUrl={heroImageUrl} colorBg={palette.bg} colorText={palette.text} />
+          )}
+        </>
       )}
 
       {/* Contenu hero */}
