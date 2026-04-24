@@ -376,6 +376,42 @@
 }
 
 /* ── Shimmer badge (Top Prestataire) ── */
+@keyframes evtHeroKenBurns {
+  0%   { transform: scale(1) translate(0, 0); }
+  50%  { transform: scale(1.06) translate(-1%, -0.5%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+@keyframes evtHeroKenBurnsRich {
+  0%   { transform: scale(1) translate(0, 0); }
+  25%  { transform: scale(1.05) translate(-1%, -0.5%); }
+  50%  { transform: scale(1.08) translate(0.5%, -1%); }
+  75%  { transform: scale(1.05) translate(1%, 0%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+@keyframes evtHeroDrift {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-6px) rotate(0.4deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes evtHeroDriftRich {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50%  { transform: translateY(-10px) rotate(-0.6deg); opacity: 0.92; }
+  100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+}
+@keyframes evtHeroShaderPulse {
+  0%   { filter: saturate(1) brightness(1) hue-rotate(0deg); }
+  50%  { filter: saturate(1.08) brightness(1.04) hue-rotate(4deg); }
+  100% { filter: saturate(1) brightness(1) hue-rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .evt-hero-bg-still,
+  .evt-hero-bg-drift,
+  .evt-hero-bg-rich {
+    animation: none !important;
+  }
+}
+
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }

@@ -22,8 +22,8 @@ type Props = {
 
 export default function HeroSection({
   title, subtitle, date, venueName, mood, palette,
-  heroImageUrl, shaderParams, decoratifParams, editorialParams,
-}: Props) {
+  heroImageUrl, shaderParams, decoratifParams, editorialParams, bgVariant = "drift",
+}: Props & { bgVariant?: "still" | "drift" | "rich" }) {
   const isDark = mood === "shader"
   // Photo uploadée → fond sombre derrière la typo → texte blanc forcé
   const overPhoto = Boolean(heroImageUrl)
@@ -47,7 +47,11 @@ export default function HeroSection({
       {heroImageUrl ? (
         <>
           {/* Photo hero en fond */}
-          <div aria-hidden style={{
+          <div aria-hidden className={`evt-hero-bg-${bgVariant}`} style={{
+            animation: bgVariant === "rich" ? "evtHeroKenBurnsRich 22s ease-in-out infinite"
+              : bgVariant === "drift" ? "evtHeroKenBurns 28s ease-in-out infinite"
+              : undefined,
+            willChange: bgVariant === "still" ? undefined : "transform",
             position: "absolute", inset: 0, zIndex: 0,
             backgroundImage: `url(${heroImageUrl})`,
             backgroundSize: "cover",
@@ -96,7 +100,8 @@ export default function HeroSection({
             letterSpacing: "0.3em",
             textTransform: "uppercase",
             color: mutedColor,
-            marginBottom: 20,
+            marginBottom: 18,
+            fontWeight: 500,
           }}>
             · {date} ·
           </div>
@@ -121,7 +126,8 @@ export default function HeroSection({
             letterSpacing: "0.2em",
             textTransform: "uppercase",
             color: overPhoto ? "rgba(255,255,255,0.95)" : "var(--evt-main)",
-            marginTop: 24,
+            marginTop: 16,
+            marginBottom: 0,
             fontWeight: 600,
           }}>
             {subtitle}
@@ -134,7 +140,8 @@ export default function HeroSection({
             fontStyle: "italic",
             fontSize: "clamp(1rem, 2vw, 1.4rem)",
             color: mutedColor,
-            marginTop: 30,
+            marginTop: 20,
+            marginBottom: 0,
             fontWeight: 400,
           }}>
             {venueName}

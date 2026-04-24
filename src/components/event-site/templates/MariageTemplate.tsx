@@ -93,7 +93,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Mot d'accueil */}
       {content.welcomeNote && (
-        <Reveal as="section" style={sectionCentered}>
+        <Reveal as="section" style={{ ...sectionCentered, maxWidth: 580 }}>
           <p style={welcomeStyle}>{dropcap(content.welcomeNote)}</p>
         </Reveal>
       )}
@@ -168,8 +168,16 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Dress code */}
       {content.dressCode && (
-        <Reveal as="section" style={sectionCentered}>
-          <h2 style={h2Style}>Dress code</h2>
+        <Reveal as="section" style={{ ...sectionCentered, paddingTop: 56, paddingBottom: 56, maxWidth: 580 }}>
+          <div style={{
+            fontFamily: "var(--evt-font-body)",
+            fontSize: 11,
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: "var(--evt-main)",
+            fontWeight: 600,
+            marginBottom: 14,
+          }}>· Dress code ·</div>
           <p style={bodyStyle}>{content.dressCode}</p>
         </Reveal>
       )}

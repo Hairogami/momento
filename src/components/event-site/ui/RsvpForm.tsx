@@ -87,7 +87,7 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
         Merci de répondre avant le <strong>{deadline}</strong>
       </p>
     )}
-    <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 460, margin: "0 auto" }}>
+    <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 420, margin: "0 auto", textAlign: "left" }}>
       {/* Honey-pot (caché aux humains, visible aux bots) */}
       <div aria-hidden style={{ position: "absolute", left: -9999, top: -9999, width: 1, height: 1, overflow: "hidden" }}>
         <input
@@ -202,6 +202,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: 12,
   color: "var(--evt-text-muted)",
   fontFamily: "var(--evt-font-body, inherit)",
+  textAlign: "left",
 }
 
 const labelTextStyle: React.CSSProperties = {
