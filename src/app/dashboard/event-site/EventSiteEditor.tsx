@@ -304,19 +304,44 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
 
       <FieldGroup label="Palette de couleurs">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-          {PALETTES.map(p => (
-            <button key={p.id} onClick={() => onPatch({ palette: p.id })} style={{
-              ...chipStyle(site.palette === p.id),
-              justifyContent: "space-between",
-              paddingRight: 10,
-            }}>
-              <span>{p.label}</span>
-              <span style={{ display: "flex", gap: 3 }}>
-                <span style={{ width: 12, height: 12, borderRadius: "50%", background: p.main }} />
-                <span style={{ width: 12, height: 12, borderRadius: "50%", background: p.accent }} />
-              </span>
-            </button>
-          ))}
+          {PALETTES.map(p => {
+            const isActive = site.palette === p.id && !((style as { customColors?: unknown }).customColors)
+            return (
+              <button
+                key={p.id}
+                onClick={() => {
+                  // Désactive custom colors si active, puis applique la palette
+                  if ((style as { customColors?: unknown }).customColors) {
+                    onUpdateContent("style.customColors", null)
+                  }
+                  onPatch({ palette: p.id })
+                }}
+                style={{
+                  ...chipStyle(isActive),
+                  justifyContent: "space-between",
+                  paddingRight: 10,
+                }}
+              >
+                <span>{p.label}</span>
+                <span style={{ display: "flex", gap: 3 }}>
+                  <span style={{ width: 12, height: 12, borderRadius: "50%", background: p.main }} />
+                  <span style={{ width: 12, height: 12, borderRadius: "50%", background: p.accent }} />
+                </span>
+              </button>
+            )
+          })}
+
+          <CustomPaletteButton
+            active={Boolean((style as { customColors?: unknown }).customColors)}
+            mainValue={(style as { customColors?: { main?: string } }).customColors?.main ?? currentPalette?.main ?? "#C1713A"}
+            accentValue={(style as { customColors?: { accent?: string } }).customColors?.accent ?? currentPalette?.accent ?? "#8B4513"}
+            onActivate={() => {
+              // Active le mode custom en seed avec la palette actuelle
+              onUpdateContent("style.customColors.main", currentPalette?.main ?? "#C1713A")
+              onUpdateContent("style.customColors.accent", currentPalette?.accent ?? "#8B4513")
+            }}
+            onChangeColor={(field, value) => onUpdateContent(`style.customColors.${field}`, value)}
+          />
         </div>
       </FieldGroup>
 
@@ -336,17 +361,6 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
         />
       </FieldGroup>
 
-      <FieldGroup label="Couleurs personnalisées (optionnel)">
-        <CustomColorsField
-          main={(style as { customColors?: { main?: string } }).customColors?.main}
-          accent={(style as { customColors?: { accent?: string } }).customColors?.accent}
-          paletteMain={currentPalette?.main}
-          paletteAccent={currentPalette?.accent}
-          onChange={(field, value) => onUpdateContent(`style.customColors.${field}`, value)}
-          onReset={() => onUpdateContent("style.customColors", null)}
-        />
-      </FieldGroup>
-
       <FieldGroup label="Motif décoratif">
         <PatternPicker
           current={style.pattern as PatternId | undefined}
@@ -358,90 +372,57 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
   )
 }
 
-function CustomColorsField({
-  main, accent, paletteMain, paletteAccent, onChange, onReset,
+function CustomPaletteButton({
+  active, mainValue, accentValue, onActivate, onChangeColor,
 }: {
-  main?: string
-  accent?: string
-  paletteMain?: string
-  paletteAccent?: string
-  onChange: (field: "main" | "accent", value: string) => void
-  onReset: () => void
+  active: boolean
+  mainValue: string
+  accentValue: string
+  onActivate: () => void
+  onChangeColor: (field: "main" | "accent", value: string) => void
 }) {
-  const hasCustom = Boolean(main || accent)
   return (
-    <div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-        <ColorSwatch
-          label="Principale"
-          value={main ?? paletteMain ?? "#C1713A"}
-          isCustom={Boolean(main)}
-          onChange={v => onChange("main", v)}
-        />
-        <ColorSwatch
-          label="Accent"
-          value={accent ?? paletteAccent ?? "#8B4513"}
-          isCustom={Boolean(accent)}
-          onChange={v => onChange("accent", v)}
-        />
-      </div>
-      {hasCustom && (
-        <button
-          type="button"
-          onClick={onReset}
-          style={{
-            marginTop: 8,
-            background: "transparent",
-            border: "none",
-            color: "var(--dash-text-3,#9a9aaa)",
-            fontSize: 11,
-            cursor: "pointer",
-            fontFamily: "inherit",
-            textDecoration: "underline",
-            padding: 0,
-          }}
-        >
-          Réinitialiser sur la palette
-        </button>
-      )}
-      <p style={{ fontSize: 10.5, color: "var(--dash-text-3,#9a9aaa)", margin: "6px 0 0", lineHeight: 1.4 }}>
-        Override les couleurs de la palette. Laisse vide pour garder la palette choisie.
-      </p>
+    <div
+      onClick={() => { if (!active) onActivate() }}
+      style={{
+        ...chipStyle(active),
+        justifyContent: "space-between",
+        paddingRight: 8,
+        cursor: active ? "default" : "pointer",
+      }}
+    >
+      <span>Personnalisé</span>
+      <span style={{ display: "flex", gap: 4 }}>
+        <label style={{
+          width: 14, height: 14, borderRadius: "50%", background: mainValue,
+          cursor: "pointer", display: "inline-block",
+          border: "1px solid rgba(0,0,0,0.1)",
+        }}>
+          <input
+            type="color"
+            value={mainValue}
+            onChange={e => onChangeColor("main", e.target.value)}
+            onClick={e => { e.stopPropagation(); if (!active) onActivate() }}
+            style={{ opacity: 0, width: 1, height: 1, position: "absolute" }}
+            tabIndex={-1}
+          />
+        </label>
+        <label style={{
+          width: 14, height: 14, borderRadius: "50%", background: accentValue,
+          cursor: "pointer", display: "inline-block",
+          border: "1px solid rgba(0,0,0,0.1)",
+        }}>
+          <input
+            type="color"
+            value={accentValue}
+            onChange={e => onChangeColor("accent", e.target.value)}
+            onClick={e => { e.stopPropagation(); if (!active) onActivate() }}
+            style={{ opacity: 0, width: 1, height: 1, position: "absolute" }}
+            tabIndex={-1}
+          />
+        </label>
+      </span>
     </div>
-  )
-}
-
-function ColorSwatch({ label, value, isCustom, onChange }: {
-  label: string; value: string; isCustom: boolean; onChange: (v: string) => void
-}) {
-  return (
-    <label style={{
-      display: "flex", alignItems: "center", gap: 8,
-      padding: "8px 10px",
-      border: isCustom ? "1.5px solid var(--g1,#E11D48)" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
-      borderRadius: 9,
-      background: "var(--dash-surface,#fff)",
-      cursor: "pointer",
-      fontSize: 12,
-      color: "var(--dash-text,#121317)",
-      fontFamily: "inherit",
-    }}>
-      <input
-        type="color"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        style={{
-          width: 28, height: 28, padding: 0, border: "none", borderRadius: 6,
-          cursor: "pointer", background: "transparent",
-        }}
-      />
-      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1 }}>
-        <span style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", fontWeight: 500 }}>{label}</span>
-        <span style={{ fontSize: 11, fontFamily: "ui-monospace, monospace", color: "var(--dash-text,#121317)" }}>
-          {value.toUpperCase()}
-        </span>
-      </div>
-    </label>
   )
 }
 
