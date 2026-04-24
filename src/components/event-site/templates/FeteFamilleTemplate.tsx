@@ -125,7 +125,7 @@ export default function FeteFamilleTemplate({ slug, mood, palette, content, hero
         </section>
       )}
 
-      <section id="rsvp" style={{ marginTop: 40, background: "color-mix(in srgb, var(--evt-main) 14%, var(--evt-bg))", borderTop: "2px solid var(--evt-main)", padding: "80px 24px 100px" }}>
+      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-secondary)", borderTop: "3px solid var(--evt-main)", borderBottom: "3px solid var(--evt-main)", padding: "80px 24px 100px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
           <h2 style={h2Style}>Confirmez votre présence</h2>
           <RsvpForm slug={slug} allowPlusOne={content.rsvp?.allowPlusOne ?? true} deadline={content.rsvp?.deadline ?? null} accentColor={palette.main} />
