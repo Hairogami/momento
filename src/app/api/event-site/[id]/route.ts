@@ -55,7 +55,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   const data: Record<string, unknown> = {}
   const ALLOWED_TEMPLATES = new Set(["mariage", "fete-famille", "corporate", "conference", "generique"])
-  const ALLOWED_PALETTES = new Set(["terracotta", "rose-or", "vert-olive", "bleu-marine", "noir-blanc", "pastel"])
+  const ALLOWED_PALETTES = new Set(["terracotta", "rose-or", "vert-olive", "baby-tiffany", "noir-rouge", "pastel"])
   const ALLOWED_FONTS = new Set(["cormorant", "pjs", "inter", "playfair", "poppins"])
   const ALLOWED_LAYOUTS = new Set(["classic", "modern", "minimal"])
 
