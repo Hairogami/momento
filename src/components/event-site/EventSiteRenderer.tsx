@@ -34,7 +34,12 @@ function defaultMood(template: string): MoodId {
 }
 
 export default function EventSiteRenderer({ site }: { site: EventSite }) {
-  const palette = getPalette(site.palette)
+  const basePalette = getPalette(site.palette)
+  // Override avec couleurs custom si l'user en a défini dans content.style.customColors
+  const customColors = (site.content as { style?: { customColors?: { main?: string; accent?: string } } })?.style?.customColors
+  const palette = customColors && (customColors.main || customColors.accent)
+    ? { ...basePalette, main: customColors.main || basePalette.main, accent: customColors.accent || basePalette.accent }
+    : basePalette
   const mood = defaultMood(site.template)
   const fontH = FONTS[site.fontHeading as keyof typeof FONTS] ?? FONTS.cormorant
   const fontB = FONTS[site.fontBody as keyof typeof FONTS] ?? FONTS.pjs

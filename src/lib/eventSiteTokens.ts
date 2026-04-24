@@ -3,7 +3,7 @@
  * Palettes, fonts, layouts — sources de vérité uniques pour l'éditeur et les templates.
  */
 
-export type PaletteId = "terracotta" | "rose-or" | "vert-olive" | "bleu-marine" | "noir-blanc" | "pastel"
+export type PaletteId = "terracotta" | "rose-or" | "vert-olive" | "baby-tiffany" | "noir-rouge" | "pastel"
 
 export type Palette = {
   id: PaletteId
@@ -36,14 +36,14 @@ export const PALETTES: readonly Palette[] = [
   {
     id: "rose-or",
     label: "Rose & Or",
-    main: "#E8B4B8",
-    secondary: "#FFF5F5",
-    accent: "#D4AF37",
-    bg: "#FFF7F7",
+    main: "#B76E79",       // rose gold saturé — clairement rose, pas rouge
+    secondary: "#F7E7E2",
+    accent: "#C9A961",     // or mat
+    bg: "#FFF7F3",
     text: "#3A1F25",
     textMuted: "#8B5A61",
     darkBg: "#1F0F13",
-    darkText: "#FFF5F5",
+    darkText: "#F7E7E2",
   },
   {
     id: "vert-olive",
@@ -58,23 +58,23 @@ export const PALETTES: readonly Palette[] = [
     darkText: "#F5F5DC",
   },
   {
-    id: "bleu-marine",
-    label: "Bleu marine",
-    main: "#1E3A5F",
-    secondary: "#F0F4F8",
-    accent: "#C9A961",
-    bg: "#F7FAFC",
-    text: "#0F1F35",
-    textMuted: "#4A6785",
-    darkBg: "#081224",
-    darkText: "#F0F4F8",
+    id: "baby-tiffany",
+    label: "Baby Blue & Tiffany",
+    main: "#0ABAB5",       // Tiffany & Co signature
+    secondary: "#E0F7F6",
+    accent: "#89CFF0",     // Baby blue
+    bg: "#F4FBFB",
+    text: "#0F3A38",
+    textMuted: "#3D7A78",
+    darkBg: "#062322",
+    darkText: "#E0F7F6",
   },
   {
-    id: "noir-blanc",
-    label: "Noir & Blanc",
+    id: "noir-rouge",
+    label: "Noir & Rouge",
     main: "#111111",
-    secondary: "#FFFFFF",
-    accent: "#E11D48",
+    secondary: "#FFF5F5",
+    accent: "#C1121F",      // rouge profond (pas fuchsia)
     bg: "#FFFFFF",
     text: "#111111",
     textMuted: "#555555",
@@ -84,19 +84,26 @@ export const PALETTES: readonly Palette[] = [
   {
     id: "pastel",
     label: "Pastel",
-    main: "#F4C2C2",
-    secondary: "#FAF3E0",
-    accent: "#7B9E87",
-    bg: "#FEFCF7",
-    text: "#4A3838",
-    textMuted: "#8B7272",
-    darkBg: "#1C1515",
-    darkText: "#FAF3E0",
+    main: "#D4A5D6",        // lavande pastel claire
+    secondary: "#FFE8D6",   // pêche pastel
+    accent: "#A8DADC",      // menthe/bleu d'eau pastel
+    bg: "#FFF9F3",
+    text: "#4A3847",
+    textMuted: "#8E7E8A",
+    darkBg: "#1C141C",
+    darkText: "#FFE8D6",
   },
 ] as const
 
+// Aliases pour retrocompat — sites créés avant le renommage des palettes
+const PALETTE_ALIASES: Record<string, string> = {
+  "noir-blanc": "noir-rouge",
+  "bleu-marine": "baby-tiffany",
+}
+
 export function getPalette(id: string): Palette {
-  return PALETTES.find(p => p.id === id) ?? PALETTES[0]!
+  const resolved = PALETTE_ALIASES[id] ?? id
+  return PALETTES.find(p => p.id === resolved) ?? PALETTES[0]!
 }
 
 // ─── Fonts ───────────────────────────────────────────────────────────────────
