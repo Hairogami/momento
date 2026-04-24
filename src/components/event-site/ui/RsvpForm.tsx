@@ -184,7 +184,7 @@ function radioBtn(active: boolean, accent: string): React.CSSProperties {
     flex: 1,
     padding: "11px 16px",
     borderRadius: 12,
-    border: active ? `1.5px solid ${accent}` : "1px solid rgba(0,0,0,0.12)",
+    border: active ? `1.5px solid ${accent}` : "1px solid color-mix(in srgb, var(--evt-main) 25%, transparent)",
     background: active ? accent : "transparent",
     color: active ? "#fff" : "var(--evt-text)",
     fontSize: 13,
@@ -213,7 +213,7 @@ const labelTextStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   padding: "11px 14px",
   borderRadius: 10,
-  border: "1px solid rgba(0,0,0,0.12)",
+  border: "1px solid color-mix(in srgb, var(--evt-main) 25%, transparent)",
   background: "var(--evt-bg, #fff)",
   color: "var(--evt-text)",
   fontSize: 14,

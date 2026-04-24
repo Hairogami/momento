@@ -3,15 +3,21 @@
 type PatternCategory = "geometrique" | "floral" | "minimaliste"
 
 const PATTERNS = [
+  { id: "triangles",      label: "Triangles",     category: "geometrique" as PatternCategory },
+  { id: "chevrons",       label: "Chevrons",      category: "geometrique" as PatternCategory },
   { id: "losanges",       label: "Losanges",      category: "geometrique" as PatternCategory },
   { id: "hexagone",       label: "Hexagone",      category: "geometrique" as PatternCategory },
   { id: "zellige",        label: "Zellige",       category: "geometrique" as PatternCategory },
+  { id: "art-deco",       label: "Art déco",      category: "geometrique" as PatternCategory },
+  { id: "arche",          label: "Arche",         category: "geometrique" as PatternCategory },
   { id: "constellations", label: "Étoiles",       category: "geometrique" as PatternCategory },
   { id: "vagues",         label: "Vagues",        category: "geometrique" as PatternCategory },
   { id: "arabesque",      label: "Arabesque",     category: "floral" as PatternCategory },
   { id: "florale",        label: "Florale",       category: "floral" as PatternCategory },
   { id: "fleurs-line",    label: "Fleurs",        category: "floral" as PatternCategory },
   { id: "cercles",        label: "Cercles",       category: "minimaliste" as PatternCategory },
+  { id: "grille",         label: "Grille",        category: "minimaliste" as PatternCategory },
+  { id: "contours",       label: "Contours",      category: "minimaliste" as PatternCategory },
 ] as const
 
 export type PatternId = (typeof PATTERNS)[number]["id"]
@@ -177,6 +183,78 @@ function PatternPreview({ id, main, accent }: { id: PatternId; main: string; acc
               opacity="0.75"
             />
           ))}
+        </g>
+      )
+    case "triangles":
+      return (
+        <g>
+          <polygon points="0,0 26,0 0,26" fill={main} opacity="0.7" />
+          <polygon points="26,0 52,0 26,26" fill={accent} opacity="0.45" />
+          <polygon points="0,26 26,52 0,52" fill={accent} opacity="0.45" />
+          <polygon points="52,26 52,52 26,52" fill={main} opacity="0.7" />
+        </g>
+      )
+    case "chevrons":
+      return (
+        <g>
+          {[10, 20, 30, 40].map((y, i) => (
+            <path key={y}
+              d={`M2,${y} L14,${y - 4} L26,${y} L38,${y - 4} L50,${y}`}
+              stroke={i % 2 === 0 ? main : accent}
+              strokeWidth="1.1"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.75"
+            />
+          ))}
+        </g>
+      )
+    case "grille":
+      return (
+        <g>
+          {[0, 1, 2, 3].map(r => [0, 1, 2, 3].map(c => {
+            const x = 4 + c * 11
+            const y = 4 + r * 11
+            const filled = (r + c) % 3 === 0
+            return filled
+              ? <rect key={`${r}-${c}`} x={x} y={y} width="7" height="7" fill={main} opacity="0.65" />
+              : <rect key={`${r}-${c}`} x={x} y={y} width="7" height="7" fill="none" stroke={accent} strokeWidth="0.8" opacity="0.65" />
+          }))}
+        </g>
+      )
+    case "art-deco":
+      return (
+        <g>
+          {Array.from({ length: 9 }, (_, i) => {
+            const angle = Math.PI + (Math.PI * i) / 8
+            const x = 26 + Math.cos(angle) * 24
+            const y = 46 + Math.sin(angle) * 24
+            return <line key={i} x1="26" y1="46" x2={x} y2={y} stroke={i % 2 === 0 ? main : accent} strokeWidth="0.9" opacity="0.7" />
+          })}
+          <path d="M14,46 A12,12 0 0,1 38,46" stroke={accent} strokeWidth="0.7" fill="none" opacity="0.6" />
+          <path d="M18,46 A8,8 0 0,1 34,46" stroke={accent} strokeWidth="0.7" fill="none" opacity="0.6" />
+        </g>
+      )
+    case "arche":
+      return (
+        <g>
+          <path d="M14,36 A12,12 0 0,1 38,36" stroke={main} strokeWidth="1.1" fill="none" opacity="0.8" />
+          <path d="M18,36 A8,8 0 0,1 34,36" stroke={accent} strokeWidth="0.9" fill="none" opacity="0.7" />
+          <circle cx="26" cy="30" r="1.5" fill={main} opacity="0.7" />
+          <line x1="14" y1="36" x2="14" y2="46" stroke={main} strokeWidth="0.9" opacity="0.65" />
+          <line x1="38" y1="36" x2="38" y2="46" stroke={main} strokeWidth="0.9" opacity="0.65" />
+        </g>
+      )
+    case "contours":
+      return (
+        <g>
+          <circle cx="16" cy="18" r="10" stroke={main} strokeWidth="1" fill="none" opacity="0.75" />
+          <circle cx="16" cy="18" r="5" stroke={accent} strokeWidth="0.8" fill="none" opacity="0.65" />
+          <path d="M30,28 Q36,22 42,28 T52,28" stroke={accent} strokeWidth="0.9" fill="none" strokeLinecap="round" opacity="0.7" />
+          <rect x="32" y="36" width="8" height="3" fill={main} opacity="0.6" />
+          <circle cx="44" cy="40" r="1.4" fill={accent} opacity="0.8" />
+          <circle cx="10" cy="42" r="1.2" fill={main} opacity="0.7" />
         </g>
       )
   }

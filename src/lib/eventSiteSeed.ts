@@ -82,7 +82,7 @@ export function generateShaderParams(slug: string): ShaderBgParams {
 }
 
 export type DecoratifBgParams = {
-  pattern: "arabesque" | "losanges" | "cercles" | "hexagone" | "florale" | "zellige" | "fleurs-line" | "constellations" | "vagues"
+  pattern: "arabesque" | "losanges" | "cercles" | "hexagone" | "florale" | "zellige" | "fleurs-line" | "constellations" | "vagues" | "triangles" | "chevrons" | "grille" | "art-deco" | "arche" | "contours"
   scale: number // 0.6 → 1.4
   rotation: number // 0 → 8 deg (faible — évite l'effet "penché")
   opacity: number // 0.25 → 0.55

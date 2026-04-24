@@ -190,5 +190,102 @@ function patternInner(pattern: DecoratifBgParams["pattern"], s: number, main: st
         return `<path d='M0,${y} Q${period / 2},${y - amp} ${period},${y} T${period * 2},${y}' stroke='${color}' stroke-width='${w}' fill='none' opacity='0.55' stroke-linecap='round'/>`
       }).join("")
     }
+    case "triangles": {
+      // Bandes de triangles alternés — style retro géométrique
+      const cols = 4
+      const w = s / cols
+      const h = s / 2
+      const tris: string[] = []
+      for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < cols; col++) {
+          const x = col * w
+          const y = row * h
+          const fill1 = (row + col) % 2 === 0 ? main : accent
+          const fill2 = (row + col) % 2 === 0 ? accent : main
+          tris.push(`<polygon points='${x},${y} ${x + w},${y} ${x},${y + h}' fill='${fill1}' opacity='0.6'/>`)
+          tris.push(`<polygon points='${x + w},${y} ${x + w},${y + h} ${x},${y + h}' fill='${fill2}' opacity='0.35'/>`)
+        }
+      }
+      return tris.join("")
+    }
+    case "chevrons": {
+      // Zigzag bandes
+      const rows = 5
+      const step = s / rows
+      const zig = step * 0.6
+      return Array.from({ length: rows }, (_, i) => {
+        const y = i * step + step / 2
+        const color = i % 2 === 0 ? main : accent
+        return `<path d='M0,${y} L${s * 0.25},${y - zig / 2} L${s * 0.5},${y} L${s * 0.75},${y - zig / 2} L${s},${y}' stroke='${color}' stroke-width='1.1' fill='none' opacity='0.65' stroke-linecap='round' stroke-linejoin='round'/>`
+      }).join("")
+    }
+    case "grille": {
+      // Grille de carrés minimalistes
+      const n = 4
+      const gap = s / n
+      const sq = gap * 0.55
+      const pad = (gap - sq) / 2
+      const cells: string[] = []
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          const x = c * gap + pad
+          const y = r * gap + pad
+          const filled = (r + c) % 3 === 0
+          cells.push(filled
+            ? `<rect x='${x}' y='${y}' width='${sq}' height='${sq}' fill='${main}' opacity='0.55'/>`
+            : `<rect x='${x}' y='${y}' width='${sq}' height='${sq}' fill='none' stroke='${accent}' stroke-width='0.9' opacity='0.55'/>`)
+        }
+      }
+      return cells.join("")
+    }
+    case "art-deco": {
+      // Éventails / rayons art déco
+      const cx = s / 2
+      const cy = s
+      const rays = 9
+      const r = s * 0.9
+      const lines: string[] = []
+      for (let i = 0; i < rays; i++) {
+        const angle = Math.PI + (Math.PI * i) / (rays - 1)
+        const x = cx + Math.cos(angle) * r
+        const y = cy + Math.sin(angle) * r
+        const color = i % 2 === 0 ? main : accent
+        lines.push(`<line x1='${cx}' y1='${cy}' x2='${x}' y2='${y}' stroke='${color}' stroke-width='0.9' opacity='0.6'/>`)
+      }
+      // Arcs concentriques
+      for (let k = 1; k <= 3; k++) {
+        const rr = r * k / 4
+        lines.push(`<path d='M${cx - rr},${cy} A${rr},${rr} 0 0,1 ${cx + rr},${cy}' stroke='${accent}' stroke-width='0.7' fill='none' opacity='0.5'/>`)
+      }
+      return lines.join("")
+    }
+    case "arche": {
+      // Double arche inspiration save-the-date vintage
+      const cx = s / 2
+      const topY = s * 0.18
+      const arcR = s * 0.32
+      const bottomY = topY + arcR
+      return `
+        <path d='M${cx - arcR},${bottomY} A${arcR},${arcR} 0 0,1 ${cx + arcR},${bottomY}' stroke='${main}' stroke-width='1.1' fill='none' opacity='0.7'/>
+        <path d='M${cx - arcR * 0.72},${bottomY} A${arcR * 0.72},${arcR * 0.72} 0 0,1 ${cx + arcR * 0.72},${bottomY}' stroke='${accent}' stroke-width='0.8' fill='none' opacity='0.6'/>
+        <circle cx='${cx}' cy='${s * 0.62}' r='${s * 0.04}' fill='${main}' opacity='0.55'/>
+        <line x1='${cx - arcR}' y1='${bottomY}' x2='${cx - arcR}' y2='${s * 0.85}' stroke='${main}' stroke-width='0.9' opacity='0.55'/>
+        <line x1='${cx + arcR}' y1='${bottomY}' x2='${cx + arcR}' y2='${s * 0.85}' stroke='${main}' stroke-width='0.9' opacity='0.55'/>
+      `
+    }
+    case "contours": {
+      // Cercles, vagues et points — abstrait moderne
+      const cx = s * 0.32
+      const cy = s * 0.35
+      const r = s * 0.24
+      return `
+        <circle cx='${cx}' cy='${cy}' r='${r}' stroke='${main}' stroke-width='1' fill='none' opacity='0.7'/>
+        <circle cx='${cx}' cy='${cy}' r='${r * 0.6}' stroke='${accent}' stroke-width='0.8' fill='none' opacity='0.6'/>
+        <path d='M${s * 0.55},${s * 0.55} Q${s * 0.7},${s * 0.4} ${s * 0.9},${s * 0.55} T${s * 1.1},${s * 0.55}' stroke='${accent}' stroke-width='0.9' fill='none' opacity='0.6' stroke-linecap='round'/>
+        <rect x='${s * 0.6}' y='${s * 0.7}' width='${s * 0.15}' height='${s * 0.06}' fill='${main}' opacity='0.55'/>
+        <circle cx='${s * 0.85}' cy='${s * 0.78}' r='${s * 0.025}' fill='${accent}' opacity='0.7'/>
+        <circle cx='${s * 0.18}' cy='${s * 0.82}' r='${s * 0.02}' fill='${main}' opacity='0.6'/>
+      `
+    }
   }
 }
