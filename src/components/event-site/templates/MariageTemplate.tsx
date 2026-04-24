@@ -272,7 +272,7 @@ const sectionCentered: React.CSSProperties = {
 const h2Style: React.CSSProperties = {
   fontFamily: "var(--evt-font-heading)",
   fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
-  fontWeight: 500,
+  fontWeight: 600,
   letterSpacing: "-0.02em",
   margin: "0 0 20px",
   color: "var(--evt-main)",

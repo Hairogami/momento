@@ -8,6 +8,15 @@ import GeneriqueTemplate from "./templates/GeneriqueTemplate"
 import { getPalette, FONTS, type MoodId } from "@/lib/eventSiteTokens"
 import { generateDecoratifParams, overrideDecoratifParams } from "@/lib/eventSiteSeed"
 import DecoratifBackground from "./backgrounds/DecoratifBackground"
+import FloatingParticles from "./backgrounds/FloatingParticles"
+
+const PARTICLES_VARIANT_BY_TEMPLATE: Record<string, "petals" | "stars" | "confetti" | "dots"> = {
+  mariage: "petals",
+  "fete-famille": "confetti",
+  corporate: "dots",
+  conference: "dots",
+  generique: "stars",
+}
 
 type EventSite = {
   slug: string
@@ -84,6 +93,14 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
             fullPage
           />
         )}
+
+        {/* Particules flottantes — variant selon template */}
+        <FloatingParticles
+          seed={site.slug}
+          variant={PARTICLES_VARIANT_BY_TEMPLATE[site.template] ?? "petals"}
+          color={palette.accent}
+          count={12}
+        />
         <div style={{ position: "relative", zIndex: 1 }}>
           {renderTemplate(site.template, { slug: site.slug, mood, palette, content, heroImageUrl: site.heroImageUrl, photos })}
         </div>
