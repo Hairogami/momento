@@ -66,7 +66,11 @@ export default function HeroSection({
           }} />
           {/* Pattern décoratif discret par-dessus (seulement si mood = decoratif) */}
           {mood === "decoratif" && decoratifParams && (
-            <div style={{ position: "absolute", inset: 0, zIndex: 2, mixBlendMode: "overlay", opacity: 0.5 }}>
+            <div style={{
+              position: "absolute", inset: 0, zIndex: 2, mixBlendMode: "overlay",
+              animation: bgVariant === "still" ? undefined : "evtHeroPatternOverlay 24s ease-in-out infinite",
+              willChange: bgVariant === "still" ? undefined : "transform, opacity",
+            }}>
               <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg="transparent" intensity={0.7} />
             </div>
           )}
@@ -74,13 +78,37 @@ export default function HeroSection({
       ) : (
         <>
           {mood === "shader" && shaderParams && (
-            <ShaderBackground params={shaderParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.darkBg ?? "#0d0e14"} />
+            <div aria-hidden style={{
+              position: "absolute", inset: 0, zIndex: 0,
+              animation: bgVariant === "rich" ? "evtHeroShaderPulse 20s ease-in-out infinite"
+                : bgVariant === "drift" ? "evtHeroShaderPulse 32s ease-in-out infinite"
+                : undefined,
+              willChange: bgVariant === "still" ? undefined : "filter",
+            }}>
+              <ShaderBackground params={shaderParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.darkBg ?? "#0d0e14"} />
+            </div>
           )}
           {mood === "decoratif" && decoratifParams && (
-            <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.bg} />
+            <div aria-hidden style={{
+              position: "absolute", inset: 0, zIndex: 0,
+              animation: bgVariant === "rich" ? "evtHeroDriftRich 18s ease-in-out infinite"
+                : bgVariant === "drift" ? "evtHeroDrift 26s ease-in-out infinite"
+                : undefined,
+              willChange: bgVariant === "still" ? undefined : "transform, opacity",
+            }}>
+              <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.bg} />
+            </div>
           )}
           {mood === "editorial" && editorialParams && (
-            <EditorialBackground params={editorialParams} heroImageUrl={heroImageUrl} colorBg={palette.bg} colorText={palette.text} />
+            <div aria-hidden style={{
+              position: "absolute", inset: 0, zIndex: 0,
+              animation: bgVariant === "rich" ? "evtHeroDriftRich 22s ease-in-out infinite"
+                : bgVariant === "drift" ? "evtHeroDrift 30s ease-in-out infinite"
+                : undefined,
+              willChange: bgVariant === "still" ? undefined : "transform",
+            }}>
+              <EditorialBackground params={editorialParams} heroImageUrl={heroImageUrl} colorBg={palette.bg} colorText={palette.text} />
+            </div>
           )}
         </>
       )}
