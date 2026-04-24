@@ -72,9 +72,10 @@ export const PALETTES: readonly Palette[] = [
   {
     id: "noir-rouge",
     label: "Noir & Rouge",
-    main: "#111111",
+    // main = rouge dominant (h2, subtitle, dropcaps) / accent = noir pour les détails
+    main: "#C1121F",
     secondary: "#FFF5F5",
-    accent: "#C1121F",      // rouge profond (pas fuchsia)
+    accent: "#111111",
     bg: "#FFFFFF",
     text: "#111111",
     textMuted: "#555555",
