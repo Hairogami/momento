@@ -44,7 +44,8 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
   const router = useRouter()
   const [site, setSite] = useState<EventSite>(eventSite)
   const [tab, setTab] = useState<Tab>("content")
-  const [saving, setSaving] = useState(false)
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle")
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [publishing, setPublishing] = useState(false)
   const [previewKey, setPreviewKey] = useState(0)
 
@@ -56,16 +57,20 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
 
   async function patch(partial: Partial<EventSite>) {
     setSite(prev => ({ ...prev, ...partial }))
-    setSaving(true)
+    if (savedTimerRef.current) clearTimeout(savedTimerRef.current)
+    setSaveState("saving")
     try {
-      await fetch(`/api/event-site/${site.id}`, {
+      const r = await fetch(`/api/event-site/${site.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(partial),
       })
+      if (!r.ok) throw new Error(`HTTP ${r.status}`)
       setPreviewKey(k => k + 1)
-    } finally {
-      setSaving(false)
+      setSaveState("saved")
+      savedTimerRef.current = setTimeout(() => setSaveState("idle"), 2000)
+    } catch {
+      setSaveState("error")
     }
   }
 
@@ -124,7 +129,15 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
         <header style={{ padding: "18px 20px", borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.15))" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <Link href="/accueil" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textDecoration: "none" }}>← Retour</Link>
-            {saving && <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Sauvegarde…</span>}
+            {saveState === "saving" && (
+              <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Sauvegarde…</span>
+            )}
+            {saveState === "saved" && (
+              <span style={{ fontSize: 11, color: "#16a34a" }}>✓ Enregistré</span>
+            )}
+            {saveState === "error" && (
+              <span style={{ fontSize: 11, color: "#dc2626" }}>⚠ Erreur de sauvegarde</span>
+            )}
           </div>
           <h1 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
             Site événement
@@ -258,6 +271,13 @@ function ContentTab({
         <Textarea value={(content.welcomeNote as string) ?? ""} onChange={v => onUpdate("welcomeNote", v)} placeholder="Ex: Nous sommes ravis de vous convier à la célébration de notre union…" rows={3} />
       </FieldGroup>
 
+      <FieldGroup label="Programme (facultatif)">
+        <ProgramEditor
+          steps={(content.program as ProgramStepData[] | undefined) ?? []}
+          onChange={next => onUpdate("program", next)}
+        />
+      </FieldGroup>
+
       {template === "mariage" && (
         <FieldGroup label="Dress code (facultatif)">
           <Input value={(content.dressCode as string) ?? ""} onChange={v => onUpdate("dressCode", v)} placeholder="Ex: tenue de cocktail, couleurs claires" />
@@ -280,6 +300,150 @@ function ContentTab({
       )}
     </div>
   )
+}
+
+type ProgramStepData = {
+  id?: string
+  time: string
+  label: string
+  venueName?: string | null
+  description?: string | null
+}
+
+function ProgramEditor({
+  steps, onChange,
+}: {
+  steps: ProgramStepData[]
+  onChange: (next: ProgramStepData[]) => void
+}) {
+  function update(idx: number, partial: Partial<ProgramStepData>) {
+    const next = steps.map((s, i) => (i === idx ? { ...s, ...partial } : s))
+    onChange(next)
+  }
+  function remove(idx: number) {
+    onChange(steps.filter((_, i) => i !== idx))
+  }
+  function add() {
+    const id = (globalThis.crypto?.randomUUID?.() ?? `step-${Date.now()}`)
+    onChange([...steps, { id, time: "", label: "" }])
+  }
+  function move(idx: number, dir: -1 | 1) {
+    const target = idx + dir
+    if (target < 0 || target >= steps.length) return
+    const next = [...steps]
+    const [moved] = next.splice(idx, 1)
+    next.splice(target, 0, moved!)
+    onChange(next)
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      {steps.length === 0 && (
+        <div style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", padding: "8px 2px" }}>
+          Aucune étape pour l&apos;instant. Ajoutez la première ci-dessous.
+        </div>
+      )}
+
+      {steps.map((step, idx) => (
+        <div
+          key={step.id ?? idx}
+          style={{
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+            borderRadius: 10,
+            padding: 10,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            background: "var(--dash-surface,rgba(255,255,255,0.02))",
+          }}
+        >
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div style={{ width: 88 }}>
+              <Input
+                value={step.time}
+                onChange={v => update(idx, { time: v })}
+                placeholder="17h00"
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <Input
+                value={step.label}
+                onChange={v => update(idx, { label: v })}
+                placeholder="Cérémonie"
+              />
+            </div>
+            <div style={{ display: "flex", gap: 4 }}>
+              <button
+                type="button"
+                onClick={() => move(idx, -1)}
+                disabled={idx === 0}
+                aria-label="Monter"
+                style={miniBtn(idx === 0)}
+              >↑</button>
+              <button
+                type="button"
+                onClick={() => move(idx, 1)}
+                disabled={idx === steps.length - 1}
+                aria-label="Descendre"
+                style={miniBtn(idx === steps.length - 1)}
+              >↓</button>
+              <button
+                type="button"
+                onClick={() => remove(idx)}
+                aria-label="Supprimer"
+                style={{ ...miniBtn(false), color: "#dc2626" }}
+              >✕</button>
+            </div>
+          </div>
+          <Input
+            value={step.venueName ?? ""}
+            onChange={v => update(idx, { venueName: v || null })}
+            placeholder="Lieu (facultatif) — Ex: Mosquée Hassan II"
+          />
+          <Textarea
+            value={step.description ?? ""}
+            onChange={v => update(idx, { description: v || null })}
+            placeholder="Description (facultative)"
+            rows={2}
+          />
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={add}
+        style={{
+          padding: "8px 12px",
+          border: "1px dashed var(--dash-border,rgba(183,191,217,0.35))",
+          borderRadius: 9,
+          background: "transparent",
+          color: "var(--dash-text,#121317)",
+          fontSize: 13,
+          cursor: "pointer",
+        }}
+      >
+        + Ajouter une étape
+      </button>
+    </div>
+  )
+}
+
+function miniBtn(disabled: boolean): React.CSSProperties {
+  return {
+    width: 28,
+    height: 28,
+    borderRadius: 7,
+    border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+    background: "transparent",
+    color: "var(--dash-text,#121317)",
+    cursor: disabled ? "not-allowed" : "pointer",
+    opacity: disabled ? 0.4 : 1,
+    fontSize: 13,
+    lineHeight: 1,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }
 }
 
 function StyleTab({ site, onPatch, onUpdateContent, content }: {
@@ -336,9 +500,11 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
             mainValue={(style as { customColors?: { main?: string } }).customColors?.main ?? currentPalette?.main ?? "#C1713A"}
             accentValue={(style as { customColors?: { accent?: string } }).customColors?.accent ?? currentPalette?.accent ?? "#8B4513"}
             onActivate={() => {
-              // Active le mode custom en seed avec la palette actuelle
-              onUpdateContent("style.customColors.main", currentPalette?.main ?? "#C1713A")
-              onUpdateContent("style.customColors.accent", currentPalette?.accent ?? "#8B4513")
+              // Active le mode custom en seed avec la palette actuelle (batch en 1 seul patch — évite race condition)
+              onUpdateContent("style.customColors", {
+                main: currentPalette?.main ?? "#C1713A",
+                accent: currentPalette?.accent ?? "#8B4513",
+              })
             }}
             onChangeColor={(field, value) => onUpdateContent(`style.customColors.${field}`, value)}
           />
@@ -365,6 +531,22 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
         <PatternPicker
           current={style.pattern as PatternId | undefined}
           onPick={id => onUpdateContent("style.pattern", id)}
+          accent={currentPalette?.main}
+        />
+        <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "var(--dash-text,#121317)", cursor: "pointer", marginTop: 10 }}>
+          <input
+            type="checkbox"
+            checked={(style as { patternFullPage?: boolean }).patternFullPage === true}
+            onChange={e => onUpdateContent("style.patternFullPage", e.target.checked)}
+          />
+          <span>Appliquer le motif sur toute la page</span>
+        </label>
+      </FieldGroup>
+
+      <FieldGroup label="Animations">
+        <AnimationIntensityPicker
+          current={((style as { animationIntensity?: string }).animationIntensity as "subtle" | "normal" | "festive" | undefined) ?? "normal"}
+          onChange={v => onUpdateContent("style.animationIntensity", v)}
           accent={currentPalette?.main}
         />
       </FieldGroup>
@@ -442,6 +624,12 @@ function CustomPaletteButton({
 
 function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: Partial<EventSite>) => void; onReload: () => void }) {
   const [uploading, setUploading] = useState(false)
+  const [galleryUploading, setGalleryUploading] = useState(false)
+  const [galleryError, setGalleryError] = useState<string | null>(null)
+
+  const GALLERY_MAX = 20
+  const photos = site.photos ?? []
+  const remaining = GALLERY_MAX - photos.length
 
   async function uploadHero(raw: File) {
     setUploading(true)
@@ -466,6 +654,57 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
       alert(`Upload échoué : ${e instanceof Error ? e.message : "erreur réseau"}`)
     } finally {
       setUploading(false)
+    }
+  }
+
+  async function uploadGallery(files: FileList) {
+    if (files.length === 0) return
+    const toUpload = Array.from(files).slice(0, remaining)
+    if (toUpload.length < files.length) {
+      setGalleryError(`Limite de ${GALLERY_MAX} photos atteinte — ${files.length - toUpload.length} fichier(s) ignoré(s).`)
+    } else {
+      setGalleryError(null)
+    }
+
+    setGalleryUploading(true)
+    try {
+      for (const raw of toUpload) {
+        const file = await compressImage(raw).catch(() => raw)
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("kind", "gallery")
+        const r = await fetch(`/api/event-site/${site.id}/photos`, {
+          method: "POST",
+          body: formData,
+        })
+        if (!r.ok) {
+          const data = await r.json().catch(() => ({ error: "Upload échoué." }))
+          setGalleryError(data.error ?? `Upload échoué (HTTP ${r.status})`)
+          break
+        }
+      }
+      onReload()
+    } catch (e) {
+      setGalleryError(`Upload échoué : ${e instanceof Error ? e.message : "erreur réseau"}`)
+    } finally {
+      setGalleryUploading(false)
+    }
+  }
+
+  async function deletePhoto(photoId: string) {
+    if (!confirm("Supprimer cette photo ?")) return
+    try {
+      const r = await fetch(`/api/event-site/${site.id}/photos/${photoId}`, {
+        method: "DELETE",
+      })
+      if (!r.ok) {
+        const data = await r.json().catch(() => ({ error: "Suppression échouée." }))
+        setGalleryError(data.error ?? `Suppression échouée (HTTP ${r.status})`)
+        return
+      }
+      onReload()
+    } catch (e) {
+      setGalleryError(`Suppression échouée : ${e instanceof Error ? e.message : "erreur réseau"}`)
     }
   }
 
@@ -511,12 +750,114 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
         💡 Pas de photo ? Pas de problème — un fond unique est généré automatiquement pour votre site, basé sur votre mood et palette.
       </div>
 
-      {/* Galerie V2 — on laisse un placeholder pour montrer qu'on prévoit */}
-      <FieldGroup label="Galerie photos">
-        <div style={{ padding: "20px 16px", background: "var(--dash-faint,rgba(183,191,217,0.05))", borderRadius: 10, textAlign: "center", fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>
-          Bientôt disponible — upload de plusieurs photos pour la galerie
+      <FieldGroup label={`Galerie photos (${photos.length}/${GALLERY_MAX})`}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {photos.length > 0 && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+              {photos.map(p => (
+                <div key={p.id} style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 8, overflow: "hidden", background: "var(--dash-faint,rgba(183,191,217,0.05))" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.url} alt={p.caption ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  <button
+                    type="button"
+                    onClick={() => deletePhoto(p.id)}
+                    aria-label="Supprimer"
+                    style={{
+                      position: "absolute", top: 4, right: 4,
+                      width: 24, height: 24, borderRadius: "50%",
+                      background: "rgba(0,0,0,0.75)", color: "#fff",
+                      border: "none", cursor: "pointer", fontSize: 12,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}
+                  >✕</button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {remaining > 0 ? (
+            <label style={{
+              display: "block", padding: "18px 16px", borderRadius: 10,
+              border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))",
+              textAlign: "center", cursor: galleryUploading ? "wait" : "pointer",
+              background: "var(--dash-faint,rgba(183,191,217,0.04))",
+              opacity: galleryUploading ? 0.6 : 1,
+            }}>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                style={{ display: "none" }}
+                disabled={galleryUploading}
+                onChange={e => { if (e.target.files) uploadGallery(e.target.files); e.target.value = "" }}
+              />
+              <div style={{ fontSize: 18, marginBottom: 4 }}>🖼️</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>
+                {galleryUploading ? "Upload en cours…" : `Ajouter des photos (jusqu'à ${remaining} restante${remaining > 1 ? "s" : ""})`}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 3 }}>JPG, PNG, WebP · 5MB max chacune · multi-sélection</div>
+            </label>
+          ) : (
+            <div style={{ padding: "12px", background: "rgba(234,179,8,0.08)", border: "1px solid rgba(234,179,8,0.25)", borderRadius: 9, fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textAlign: "center" }}>
+              Limite atteinte ({GALLERY_MAX} photos max). Supprimez-en pour en ajouter d&apos;autres.
+            </div>
+          )}
+
+          {galleryError && (
+            <div style={{ padding: "10px 12px", background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)", borderRadius: 9, fontSize: 12, color: "#dc2626" }}>
+              {galleryError}
+            </div>
+          )}
         </div>
       </FieldGroup>
+    </div>
+  )
+}
+
+function AnimationIntensityPicker({
+  current, onChange, accent = "#8B3A3A",
+}: {
+  current: "subtle" | "normal" | "festive"
+  onChange: (v: "subtle" | "normal" | "festive") => void
+  accent?: string
+}) {
+  const options: { id: "subtle" | "normal" | "festive"; label: string; hint: string }[] = [
+    { id: "subtle", label: "Subtil", hint: "Discret — seulement hero" },
+    { id: "normal", label: "Normal", hint: "Équilibré (recommandé)" },
+    { id: "festive", label: "Festif", hint: "Max visuel — partout" },
+  ]
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "flex", gap: 4, padding: 3, borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-surface,#fff)" }}>
+        {options.map(o => {
+          const active = current === o.id
+          return (
+            <button
+              key={o.id}
+              type="button"
+              onClick={() => onChange(o.id)}
+              style={{
+                flex: 1,
+                padding: "8px 10px",
+                borderRadius: 7,
+                border: "none",
+                background: active ? `color-mix(in srgb, ${accent} 16%, transparent)` : "transparent",
+                color: active ? "var(--dash-text,#121317)" : "var(--dash-text-2,#6a6a71)",
+                fontSize: 12,
+                fontWeight: active ? 600 : 500,
+                cursor: "pointer",
+                fontFamily: "inherit",
+                transition: "all 120ms ease",
+              }}
+            >
+              {o.label}
+            </button>
+          )
+        })}
+      </div>
+      <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
+        {options.find(o => o.id === current)?.hint}
+      </div>
     </div>
   )
 }

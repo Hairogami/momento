@@ -36,12 +36,12 @@ export const PALETTES: readonly Palette[] = [
   {
     id: "rose-or",
     label: "Rose & Or",
-    main: "#B76E79",       // rose gold saturé — clairement rose, pas rouge
-    secondary: "#F7E7E2",
-    accent: "#C9A961",     // or mat
-    bg: "#FFF7F3",
-    text: "#3A1F25",
-    textMuted: "#8B5A61",
+    main: "#D4506B",       // rose franc saturé
+    secondary: "#F4D5CC",
+    accent: "#D4A847",     // or vif
+    bg: "#FDF2ED",
+    text: "#2E1218",
+    textMuted: "#8E4A56",
     darkBg: "#1F0F13",
     darkText: "#F7E7E2",
   },
@@ -60,12 +60,12 @@ export const PALETTES: readonly Palette[] = [
   {
     id: "baby-tiffany",
     label: "Baby Blue & Tiffany",
-    main: "#0ABAB5",       // Tiffany & Co signature
-    secondary: "#E0F7F6",
-    accent: "#89CFF0",     // Baby blue
-    bg: "#F4FBFB",
-    text: "#0F3A38",
-    textMuted: "#3D7A78",
+    main: "#009B96",       // Tiffany deep — plus saturé
+    secondary: "#B3E8E6",
+    accent: "#4A9FD6",     // bleu franc
+    bg: "#EBF8F7",
+    text: "#052B2A",
+    textMuted: "#266D6B",
     darkBg: "#062322",
     darkText: "#E0F7F6",
   },
@@ -73,24 +73,24 @@ export const PALETTES: readonly Palette[] = [
     id: "noir-rouge",
     label: "Noir & Rouge",
     // main = rouge dominant (h2, subtitle, dropcaps) / accent = noir pour les détails
-    main: "#C1121F",
-    secondary: "#FFF5F5",
-    accent: "#111111",
-    bg: "#FFFFFF",
-    text: "#111111",
-    textMuted: "#555555",
+    main: "#DC1A24",
+    secondary: "#FFE5E7",
+    accent: "#0A0A0A",
+    bg: "#FAFAFA",
+    text: "#0A0A0A",
+    textMuted: "#4A4A4A",
     darkBg: "#0A0A0A",
     darkText: "#FAFAFA",
   },
   {
     id: "pastel",
     label: "Pastel",
-    main: "#D4A5D6",        // lavande pastel claire
-    secondary: "#FFE8D6",   // pêche pastel
-    accent: "#A8DADC",      // menthe/bleu d'eau pastel
-    bg: "#FFF9F3",
-    text: "#4A3847",
-    textMuted: "#8E7E8A",
+    main: "#B88AE8",        // lavande saturée
+    secondary: "#FFCFB3",   // pêche pastel vif
+    accent: "#6FD4D1",      // menthe saturée
+    bg: "#FFF4ED",
+    text: "#3A1F3D",
+    textMuted: "#7A5A85",
     darkBg: "#1C141C",
     darkText: "#FFE8D6",
   },

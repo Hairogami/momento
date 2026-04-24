@@ -8,6 +8,8 @@ type Variant = "petals" | "stars" | "confetti" | "dots"
 type Props = {
   /** Seed pour positions déterministes par site */
   seed: string
+  /** Durée moyenne d'un cycle en secondes (plus bas = plus rapide). Défaut: 25s */
+  speedSeconds?: number
   variant?: Variant
   color?: string
   /** Nombre de particules — défaut 14 */
@@ -19,7 +21,7 @@ type Props = {
  * Respecte prefers-reduced-motion (particules statiques placées).
  * position: fixed, z-index: 0, pointer-events: none → invisible aux interactions.
  */
-export default function FloatingParticles({ seed, variant = "petals", color = "var(--evt-accent)", count = 14 }: Props) {
+export default function FloatingParticles({ seed, variant = "petals", color = "var(--evt-accent)", count = 14, speedSeconds = 25 }: Props) {
   const [reduced, setReduced] = useState(false)
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -34,11 +36,11 @@ export default function FloatingParticles({ seed, variant = "petals", color = "v
       left: Math.round(rng() * 100),               // % horizontal
       size: 8 + Math.round(rng() * 16),            // 8-24 px
       delay: Math.round(rng() * 20000),            // 0-20s offset
-      duration: 18000 + Math.round(rng() * 14000), // 18-32s total
+      duration: Math.round(speedSeconds * 1000 * (0.75 + rng() * 0.65)), // speed ± variance
       rotation: Math.round(rng() * 360),
-      opacity: 0.2 + rng() * 0.35,                 // 0.2 - 0.55
+      opacity: 0.35 + rng() * 0.4,                 // 0.35 - 0.75
     }))
-  }, [seed, variant, count])
+  }, [seed, variant, count, speedSeconds])
 
   return (
     <div

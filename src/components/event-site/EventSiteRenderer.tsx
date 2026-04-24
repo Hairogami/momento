@@ -9,6 +9,7 @@ import { getPalette, FONTS, type MoodId } from "@/lib/eventSiteTokens"
 import { generateDecoratifParams, overrideDecoratifParams } from "@/lib/eventSiteSeed"
 import DecoratifBackground from "./backgrounds/DecoratifBackground"
 import FloatingParticles from "./backgrounds/FloatingParticles"
+import { getPreset, resolveIntensity } from "@/lib/eventSiteAnimations"
 
 const PARTICLES_VARIANT_BY_TEMPLATE: Record<string, "petals" | "stars" | "confetti" | "dots"> = {
   mariage: "petals",
@@ -49,7 +50,10 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
   const palette = customColors && (customColors.main || customColors.accent)
     ? { ...basePalette, main: customColors.main || basePalette.main, accent: customColors.accent || basePalette.accent }
     : basePalette
-  const mood = defaultMood(site.template)
+  const contentStyle = (site.content as { style?: { patternFullPage?: boolean; animationIntensity?: string } } | undefined)?.style
+  const patternFullPage = contentStyle?.patternFullPage === true
+  const mood: MoodId = patternFullPage ? "decoratif" : defaultMood(site.template)
+  const animationPreset = getPreset(resolveIntensity(contentStyle?.animationIntensity))
   const fontH = FONTS[site.fontHeading as keyof typeof FONTS] ?? FONTS.cormorant
   const fontB = FONTS[site.fontBody as keyof typeof FONTS] ?? FONTS.pjs
 
@@ -95,12 +99,15 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
         )}
 
         {/* Particules flottantes — variant selon template */}
-        <FloatingParticles
-          seed={site.slug}
-          variant={PARTICLES_VARIANT_BY_TEMPLATE[site.template] ?? "petals"}
-          color={palette.accent}
-          count={12}
-        />
+        {animationPreset.particlesEnabled && (
+          <FloatingParticles
+            seed={site.slug}
+            variant={PARTICLES_VARIANT_BY_TEMPLATE[site.template] ?? "petals"}
+            color={palette.accent}
+            count={animationPreset.particlesCount}
+            speedSeconds={animationPreset.particlesSpeed}
+          />
+        )}
         <div style={{ position: "relative", zIndex: 1 }}>
           {renderTemplate(site.template, { slug: site.slug, mood, palette, content, heroImageUrl: site.heroImageUrl, photos })}
         </div>

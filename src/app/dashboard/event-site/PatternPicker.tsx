@@ -1,15 +1,17 @@
 "use client"
 
+type PatternCategory = "geometrique" | "floral" | "minimaliste"
+
 const PATTERNS = [
-  { id: "arabesque",      label: "Arabesque" },
-  { id: "losanges",       label: "Losanges" },
-  { id: "cercles",        label: "Cercles" },
-  { id: "hexagone",       label: "Hexagone" },
-  { id: "florale",        label: "Florale" },
-  { id: "zellige",        label: "Zellige" },
-  { id: "fleurs-line",    label: "Fleurs" },
-  { id: "constellations", label: "Étoiles" },
-  { id: "vagues",         label: "Vagues" },
+  { id: "losanges",       label: "Losanges",      category: "geometrique" as PatternCategory },
+  { id: "hexagone",       label: "Hexagone",      category: "geometrique" as PatternCategory },
+  { id: "zellige",        label: "Zellige",       category: "geometrique" as PatternCategory },
+  { id: "constellations", label: "Étoiles",       category: "geometrique" as PatternCategory },
+  { id: "vagues",         label: "Vagues",        category: "geometrique" as PatternCategory },
+  { id: "arabesque",      label: "Arabesque",     category: "floral" as PatternCategory },
+  { id: "florale",        label: "Florale",       category: "floral" as PatternCategory },
+  { id: "fleurs-line",    label: "Fleurs",        category: "floral" as PatternCategory },
+  { id: "cercles",        label: "Cercles",       category: "minimaliste" as PatternCategory },
 ] as const
 
 export type PatternId = (typeof PATTERNS)[number]["id"]
@@ -24,36 +26,56 @@ type Props = {
  * Grille de 9 mini-previews SVG cliquables pour choisir un pattern décoratif.
  * Chaque preview est une vignette 56x56 qui montre un petit aperçu du motif.
  */
+const CATEGORY_LABEL: Record<PatternCategory, string> = {
+  geometrique: "Géométrique",
+  floral: "Floral",
+  minimaliste: "Minimaliste",
+}
+const CATEGORY_ORDER: PatternCategory[] = ["geometrique", "floral", "minimaliste"]
+
 export default function PatternPicker({ current, onPick, accent = "#8B3A3A" }: Props) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-      {PATTERNS.map(p => {
-        const active = current === p.id
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {CATEGORY_ORDER.map(cat => {
+        const items = PATTERNS.filter(p => p.category === cat)
+        if (items.length === 0) return null
         return (
-          <button
-            key={p.id}
-            type="button"
-            onClick={() => onPick(p.id)}
-            title={p.label}
-            style={{
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
-              padding: "10px 6px 8px",
-              borderRadius: 10,
-              border: active ? `1.5px solid ${accent}` : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
-              background: active ? `color-mix(in srgb, ${accent} 10%, var(--dash-surface,#fff))` : "var(--dash-surface,#fff)",
-              cursor: "pointer",
-              fontFamily: "inherit",
-              transition: "all 120ms ease",
-            }}
-          >
-            <svg width="52" height="52" viewBox="0 0 52 52" aria-hidden
-              style={{ background: "color-mix(in srgb, " + accent + " 8%, #faf7f0)", borderRadius: 6 }}>
-              <PatternPreview id={p.id} main={accent} accent={accent} />
-            </svg>
-            <span style={{ fontSize: 10, color: "var(--dash-text-2,#6a6a71)", fontWeight: active ? 600 : 500 }}>
-              {p.label}
-            </span>
-          </button>
+          <div key={cat} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 10, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+              {CATEGORY_LABEL[cat]}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+              {items.map(p => {
+                const active = current === p.id
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => onPick(p.id)}
+                    title={p.label}
+                    style={{
+                      display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+                      padding: "10px 6px 8px",
+                      borderRadius: 10,
+                      border: active ? `1.5px solid ${accent}` : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                      background: active ? `color-mix(in srgb, ${accent} 10%, var(--dash-surface,#fff))` : "var(--dash-surface,#fff)",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      transition: "all 120ms ease",
+                    }}
+                  >
+                    <svg width="52" height="52" viewBox="0 0 52 52" aria-hidden
+                      style={{ background: "color-mix(in srgb, " + accent + " 8%, #faf7f0)", borderRadius: 6 }}>
+                      <PatternPreview id={p.id} main={accent} accent={accent} />
+                    </svg>
+                    <span style={{ fontSize: 10, color: "var(--dash-text-2,#6a6a71)", fontWeight: active ? 600 : 500 }}>
+                      {p.label}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
         )
       })}
     </div>
