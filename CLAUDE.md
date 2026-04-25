@@ -89,13 +89,14 @@ Basés au Maroc. Bootstrap, pas de funding externe. Pas de deadline imposée.
 
 ## Stack
 
-Next.js 16 (App Router), TypeScript, Prisma 7, Neon PostgreSQL, Tailwind v4, shadcn/ui v4, Auth JWT (jose), Resend (email), Vercel (hosting), Upstash Redis (rate limiting)
+Next.js 16 (App Router), TypeScript, Prisma 7, Supabase PostgreSQL (region eu-west-1), Tailwind v4, shadcn/ui v4, NextAuth v5 (beta — JWT strategy), Resend (email), Vercel (hosting), Upstash Redis (rate limiting)
 
 ## Patterns & conventions
 
 - Import Prisma : `@/generated/prisma/client` (JAMAIS `@prisma/client` — Prisma 7)
-- Auth : `jose` JWT, session via `auth()` côté serveur
+- Auth : NextAuth v5 (beta), strategy JWT, session via `auth()` côté serveur (`src/lib/auth.ts`)
 - Middleware : `proxy.ts` (PAS middleware.ts — Next.js 16)
+- DB : Supabase pooler (`aws-0-eu-west-1.pooler.supabase.com`) — runtime port 6543 (`DATABASE_URL`), migrations port 5432 (`DIRECT_URL`)
 - DB migrations : `DATABASE_URL=$DIRECT_URL npx prisma db push` (port 5432, JAMAIS 6543)
 - Commits : `feat(scope): desc` ou `fix(scope): desc`
 - IDOR : toujours filtrer par `userId` dans les routes API

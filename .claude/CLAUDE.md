@@ -28,7 +28,7 @@
 - API : `src/app/api/`
 - Composants : `src/components/`
 - Middleware : `proxy.ts` (PAS middleware.ts — Next.js 16)
-- Auth : `src/lib/auth.ts` (JWT jose)
+- Auth : `src/lib/auth.ts` (NextAuth v5 beta, strategy JWT)
 - DB schema : `prisma/schema.prisma`
 
 ## Commandes
@@ -46,7 +46,7 @@ vercel env pull .env.local                        # sync env vars
 - JAMAIS `git push` / `vercel deploy` sans confirmation explicite
 - Build pass (`npx next build`) avant tout commit de feature
 - DB migrations → DIRECT_URL (port 5432), jamais DATABASE_URL (port 6543)
-- Auth → `jose` uniquement, jamais NextAuth / next-auth
+- Auth → NextAuth v5 (beta) avec strategy JWT — `src/lib/auth.ts` (PAS de jose, PAS de next-auth v4)
 - Commits atomiques : `fix(scope): desc` ou `feat(scope): desc`
 - **Post-commit obligatoire** : `git status` + `git log origin/main..HEAD --oneline` — dire combien de commits non poussés
 - IDOR : toujours filtrer par `userId` dans les routes API
@@ -74,8 +74,8 @@ Référence complète : `.claude/SKILLS/SKILLS_REFERENCE.md`
 ## Notes critiques
 - Next.js 16 : lire `node_modules/next/dist/docs/` si comportement inattendu
 - `overflow-x:clip` sur homepage (pas `hidden`)
-- Google OAuth manuellement sans NextAuth
-- Neon port 6543 = runtime / port 5432 = migrations
+- Google OAuth via NextAuth v5 provider (`auth.ts`)
+- Supabase pooler `aws-0-eu-west-1.pooler.supabase.com` — port 6543 = runtime / port 5432 = migrations
 
 ## MCP servers actifs
 Prisma · Playwright · Sentry · CodeRabbit · Chrome DevTools · Vercel

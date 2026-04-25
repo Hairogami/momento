@@ -67,3 +67,9 @@ explore-*.png
 
 # Local palette preview screenshots (root) — not prod assets
 /palette-*.png
+
+# Playwright E2E artifacts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
