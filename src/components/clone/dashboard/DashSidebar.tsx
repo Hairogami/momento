@@ -17,7 +17,7 @@ const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 const NAV_ITEMS: { icon: string; label: string; href: string; pro?: boolean }[] = [
   { icon: "home",                    label: "Accueil",          href: "/accueil"          },
-  { icon: "dashboard",               label: "Dashboard",        href: "/dashboard"        },
+  { icon: "dashboard",               label: "Mon Planner",      href: "/dashboard"        },
   { icon: "account_balance_wallet",  label: "Budget",           href: "/budget"           },
   { icon: "groups",                  label: "Invités",          href: "/guests",     pro: true },
   { icon: "chat_bubble",             label: "Messages",         href: "/messages",   pro: true },

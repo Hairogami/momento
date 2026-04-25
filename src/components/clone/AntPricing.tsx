@@ -9,7 +9,7 @@ const ESSENTIAL = [
 ]
 
 const PREMIUM_EXTRA = [
-  "Tableau de bord premium",
+  "Planner premium",
   "Intégration Google Calendar",
   "Rappels & notifications push",
   "Outils de planification IA",

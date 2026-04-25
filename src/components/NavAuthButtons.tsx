@@ -169,7 +169,7 @@ export default function NavAuthButtons({ mobile = false }: { mobile?: boolean })
               <Link href="/dashboard" onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 text-sm font-semibold hover:bg-black/5 transition-colors"
                 style={{ color: C.white }}>
-                <LayoutDashboard size={15} /> Tableau de bord
+                <LayoutDashboard size={15} /> Mon Planner
               </Link>
               <Link href="/vendors" onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-black/5 transition-colors"

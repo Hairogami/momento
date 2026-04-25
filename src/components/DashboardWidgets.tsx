@@ -2483,7 +2483,7 @@ export default function DashboardWidgets({ data, neededCategories = [], plannerI
           <div className="flex items-center gap-3 max-w-[1400px] mx-auto w-full">
             <div className="flex-1 h-px" style={{ backgroundColor: C.anthracite }} />
             <span className="text-[10px] font-semibold uppercase tracking-widest px-2" style={{ color: `${C.mist}40` }}>
-              Mon tableau de bord
+              Mon Planner
             </span>
             <div className="flex-1 h-px" style={{ backgroundColor: C.anthracite }} />
           </div>

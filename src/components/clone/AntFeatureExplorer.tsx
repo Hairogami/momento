@@ -30,7 +30,7 @@ const FEATURES = [
   {
     icon: "event",
     title: "Gestion d'événement",
-    desc: "Gérez invités, budget, tâches et timeline depuis votre tableau de bord. Connectez Google Calendar pour ne rien manquer.",
+    desc: "Gérez invités, budget, tâches et timeline depuis votre planner. Connectez Google Calendar pour ne rien manquer.",
     mockup: <EventDashboardMockup />,
   },
 ]

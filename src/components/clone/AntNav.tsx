@@ -16,7 +16,7 @@ const NAV_LINKS_PUBLIC = [
 
 const NAV_LINKS_CLIENT = [
   { label: "Accueil",   href: "/accueil"   },
-  { label: "Dashboard", href: "/dashboard" },
+  { label: "Mon Planner", href: "/dashboard" },
   { label: "Explorer",  href: "/explore"   },
   { label: "Messages",  href: "/messages"  },
 ]
@@ -30,7 +30,7 @@ const NAV_LINKS_VENDOR = [
 
 const DROPDOWN_CLIENT = [
   { icon: "home",           label: "Accueil",       href: "/accueil"       },
-  { icon: "calendar_month", label: "Dashboard",     href: "/dashboard"     },
+  { icon: "calendar_month", label: "Mon Planner",     href: "/dashboard"     },
   { icon: "search",         label: "Explorer",      href: "/explore"       },
   { icon: "chat_bubble",    label: "Messages",      href: "/messages"      },
   { icon: "star",           label: "Favoris",       href: "/favorites"     },
@@ -230,7 +230,7 @@ export default function AntNav({
   const dashboardHref = !isLoggedIn ? "/login" : isVendor ? "/vendor/dashboard" : "/accueil"
   const navLinks = NAV_LINKS_PUBLIC
     .filter(l => !(isVendor && l.label === "Vous êtes prestataire ?"))
-    .map(l => (l.label === "Dashboard" ? { ...l, href: dashboardHref } : l))
+    .map(l => (l.label === "Mon Planner" ? { ...l, href: dashboardHref } : l))
   const dropdown = (isVendor ? DROPDOWN_VENDOR : DROPDOWN_CLIENT) as DropdownItem[]
 
   const bg      = dark
@@ -398,7 +398,7 @@ export default function AntNav({
                   boxShadow: "0 4px 14px color-mix(in srgb, var(--g1,#E11D48) 28%, transparent)",
                   transition: "transform 0.15s, box-shadow 0.15s",
                 }}>
-                Mon planner →
+                Mon Planner →
               </Link>
             )}
 
