@@ -111,9 +111,10 @@ export default function EventSiteList({ sites, orphans }: Props) {
     setShowCreateEventModal(true)
   }
 
-  function handleEventCreated() {
+  function handleEventCreated(planner: { id: string }) {
     setShowCreateEventModal(false)
-    router.push("/planner")
+    try { localStorage.setItem("momento_active_event", planner.id) } catch {}
+    router.push("/dashboard")
   }
 
   function handleNewSiteClick() {
