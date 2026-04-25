@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import VendorEditForm from "./VendorEditForm"
 import VendorDeleteButton from "./VendorDeleteButton"
+import VendorMediaManager from "./VendorMediaManager"
 import CalendarWidget from "@/components/vendor/calendar/CalendarWidget"
 
 export const dynamic = "force-dynamic"
@@ -82,6 +83,11 @@ export default async function AdminVendorEditPage(
       </div>
 
       <VendorEditForm vendor={vendor} />
+
+      {/* Photos — upload, suppression, lien direct fiche publique */}
+      <section style={{ marginTop: 20 }}>
+        <VendorMediaManager slug={vendor.slug} initial={vendor.media} />
+      </section>
 
       {/* Calendrier — édition admin (bloque/débloque pour le compte du prestataire) */}
       <section style={{ marginTop: 32 }}>
