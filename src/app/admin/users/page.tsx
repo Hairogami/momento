@@ -94,25 +94,38 @@ export default function AdminUsersPage() {
   }, [qInput])
 
   async function patchUser(id: string, body: object): Promise<boolean> {
-    const r = await fetch(`/api/admin/users/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
-    if (!r.ok) {
-      const d = await r.json().catch(() => ({}))
-      setActionMsg(`❌ ${d.error ?? "Erreur"}`)
+    try {
+      const r = await fetch(`/api/admin/users/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}))
+        const msg = d.error ?? `HTTP ${r.status}`
+        console.error("[admin patchUser] failed", { id, body, status: r.status, msg })
+        setActionMsg(`❌ ${msg}`)
+        return false
+      }
+      return true
+    } catch (e) {
+      console.error("[admin patchUser] network error", e)
+      setActionMsg(`❌ Erreur réseau`)
       return false
     }
-    return true
   }
 
   async function changeRole(u: AdminUser, role: string) {
     if (role === u.role) return
     if (!confirm(`Changer le rôle de ${u.email} : ${u.role} → ${role} ?`)) return
+    // Optimistic update — l'UI reflète le changement immédiatement
+    setUsers(prev => prev.map(x => x.id === u.id ? { ...x, role } : x))
     if (await patchUser(u.id, { role })) {
       setActionMsg(`✅ Rôle de ${u.email} → ${role}`)
       load()
+    } else {
+      // Rollback
+      setUsers(prev => prev.map(x => x.id === u.id ? { ...x, role: u.role } : x))
     }
   }
   async function changePlan(u: AdminUser, plan: string) {
