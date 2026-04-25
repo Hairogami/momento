@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 type AdminVendor = {
   id:        string
@@ -38,6 +39,7 @@ const C = {
 }
 
 export default function AdminVendorsPage() {
+  const router = useRouter()
   const [vendors, setVendors]       = useState<AdminVendor[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [total, setTotal]           = useState(0)
@@ -47,6 +49,8 @@ export default function AdminVendorsPage() {
   const [cat, setCat]               = useState("")
   const [loading, setLoading]       = useState(true)
   const [err, setErr]               = useState<string | null>(null)
+  const [actionMsg, setActionMsg]   = useState<string | null>(null)
+  const [creating, setCreating]     = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true); setErr(null)
@@ -80,6 +84,53 @@ export default function AdminVendorsPage() {
 
   const totalPages = Math.max(1, Math.ceil(total / limit))
 
+  async function createVendor() {
+    if (creating) return
+    const name = prompt("Nom du prestataire ?")
+    if (!name?.trim()) return
+    const category = prompt("Catégorie ? (ex: Photographe, DJ, Traiteur…)", "Photographe")
+    if (!category?.trim()) return
+    setCreating(true)
+    try {
+      const r = await fetch("/api/vendors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim(), category: category.trim() }),
+      })
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}))
+        setActionMsg(`❌ ${d.error ?? "Erreur création"}`)
+        return
+      }
+      const v = await r.json()
+      setActionMsg(`✅ ${v.name} créé`)
+      router.push(`/admin/vendors/${v.slug}`)
+    } catch (e) {
+      console.error("[admin createVendor]", e)
+      setActionMsg("❌ Erreur réseau")
+    } finally {
+      setCreating(false)
+    }
+  }
+
+  async function deleteVendor(v: AdminVendor) {
+    if (!confirm(`⚠️ Supprimer définitivement "${v.name}" (${v.slug}) ?\nCascade : médias, reviews, packages, etc. IRRÉVERSIBLE.`)) return
+    if (!confirm(`Confirme une dernière fois : SUPPRIMER ${v.name} ?`)) return
+    try {
+      const r = await fetch(`/api/admin/vendors/${v.slug}`, { method: "DELETE" })
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}))
+        setActionMsg(`❌ ${d.error ?? "Erreur suppression"}`)
+        return
+      }
+      setActionMsg(`✅ ${v.name} supprimé`)
+      load()
+    } catch (e) {
+      console.error("[admin deleteVendor]", e)
+      setActionMsg("❌ Erreur réseau")
+    }
+  }
+
   return (
     <div style={{
       minHeight: "100vh", background: C.bg, color: C.text,
@@ -97,10 +148,36 @@ export default function AdminVendorsPage() {
               {total} résultat{total > 1 ? "s" : ""} · page {page}/{totalPages}
             </p>
           </div>
-          <Link href="/admin/users" style={{ fontSize: 13, color: C.textMuted, textDecoration: "none" }}>
-            Users →
-          </Link>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <button
+              onClick={createVendor}
+              disabled={creating}
+              style={{
+                padding: "10px 18px", borderRadius: 10,
+                background: `linear-gradient(135deg, ${C.accent2}, ${C.accent})`,
+                color: "#fff", fontSize: 13, fontWeight: 700,
+                border: "none", cursor: creating ? "wait" : "pointer",
+                fontFamily: "inherit", opacity: creating ? 0.7 : 1,
+              }}
+            >
+              {creating ? "Création…" : "+ Nouveau prestataire"}
+            </button>
+            <Link href="/admin/users" style={{ fontSize: 13, color: C.textMuted, textDecoration: "none" }}>
+              Users →
+            </Link>
+          </div>
         </div>
+
+        {actionMsg && (
+          <div style={{
+            background: C.panel, border: `1px solid ${C.border}`,
+            padding: "10px 14px", borderRadius: 10, fontSize: 13,
+            marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between",
+          }}>
+            <span>{actionMsg}</span>
+            <button onClick={() => setActionMsg(null)} style={{ background: "transparent", border: "none", color: C.textMuted, cursor: "pointer", fontSize: 16 }}>×</button>
+          </div>
+        )}
 
         {/* Filter bar */}
         <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
@@ -167,7 +244,7 @@ export default function AdminVendorsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {vendors.map(v => <VendorRow key={v.id} v={v} />)}
+                  {vendors.map(v => <VendorRow key={v.id} v={v} onDelete={deleteVendor} />)}
                 </tbody>
               </table>
             </div>
@@ -187,7 +264,7 @@ export default function AdminVendorsPage() {
   )
 }
 
-function VendorRow({ v }: { v: AdminVendor }) {
+function VendorRow({ v, onDelete }: { v: AdminVendor; onDelete: (v: AdminVendor) => void }) {
   const price =
     v.priceMin && v.priceMax ? `${v.priceMin.toLocaleString("fr-FR")} – ${v.priceMax.toLocaleString("fr-FR")} MAD`
     : v.priceMin            ? `dès ${v.priceMin.toLocaleString("fr-FR")} MAD`
@@ -226,12 +303,22 @@ function VendorRow({ v }: { v: AdminVendor }) {
         </div>
       </td>
       <td style={{ ...td, textAlign: "right" }}>
-        <Link href={`/admin/vendors/${v.slug}`} style={editBtn}>
-          Éditer →
-        </Link>
+        <div style={{ display: "inline-flex", gap: 6 }}>
+          <Link href={`/admin/vendors/${v.slug}`} style={editBtn}>
+            Éditer
+          </Link>
+          <button onClick={() => onDelete(v)} style={delBtn} title="Supprimer le prestataire">🗑</button>
+        </div>
       </td>
     </tr>
   )
+}
+
+const delBtn: React.CSSProperties = {
+  background: "transparent", color: C.err,
+  border: `1px solid ${C.err}40`, padding: "5px 9px",
+  borderRadius: 8, fontSize: 13, cursor: "pointer",
+  fontFamily: "inherit", lineHeight: 1,
 }
 
 const th: React.CSSProperties = {

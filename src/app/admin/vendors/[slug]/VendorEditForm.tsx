@@ -2,6 +2,20 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 
+const C = {
+  bg:        "#0b0b10",
+  panel:     "#15161d",
+  panel2:    "#1c1d27",
+  border:    "#252633",
+  text:      "#f0f0f5",
+  textMuted: "#9a9aaa",
+  textDim:   "#6a6a78",
+  accent:    "#9333EA",
+  accent2:   "#E11D48",
+  ok:        "#22c55e",
+  err:       "#ef4444",
+}
+
 type VendorFormData = {
   id: string
   slug: string
@@ -69,7 +83,7 @@ export default function VendorEditForm({ vendor }: { vendor: VendorFormData }) {
             value={form.description ?? ""}
             onChange={e => update("description", e.target.value || null)}
             rows={4}
-            style={{ ...inputStyle, resize: "vertical", minHeight: 100, padding: 10 }}
+            style={{ ...inputStyle, resize: "vertical", minHeight: 100, padding: 10, height: "auto" }}
           />
         </Field>
       </Section>
@@ -135,14 +149,14 @@ export default function VendorEditForm({ vendor }: { vendor: VendorFormData }) {
           </Field>
           <Field label="Vérifié">
             <label style={{ display: "flex", alignItems: "center", gap: 8, height: 38 }}>
-              <input type="checkbox" checked={form.verified} onChange={e => update("verified", e.target.checked)} />
-              <span style={{ fontSize: 13, color: "#45474D" }}>Badge ✓ affiché</span>
+              <input type="checkbox" checked={form.verified} onChange={e => update("verified", e.target.checked)} style={{ accentColor: C.accent }} />
+              <span style={{ fontSize: 13, color: C.textMuted }}>Badge ✓ affiché</span>
             </label>
           </Field>
           <Field label="Mis en avant">
             <label style={{ display: "flex", alignItems: "center", gap: 8, height: 38 }}>
-              <input type="checkbox" checked={form.featured} onChange={e => update("featured", e.target.checked)} />
-              <span style={{ fontSize: 13, color: "#45474D" }}>Page d'accueil</span>
+              <input type="checkbox" checked={form.featured} onChange={e => update("featured", e.target.checked)} style={{ accentColor: C.accent }} />
+              <span style={{ fontSize: 13, color: C.textMuted }}>Page d&apos;accueil</span>
             </label>
           </Field>
         </Grid>
@@ -155,7 +169,7 @@ export default function VendorEditForm({ vendor }: { vendor: VendorFormData }) {
           disabled={isPending}
           style={{
             padding: "10px 24px", borderRadius: 10,
-            background: isPending ? "#9a9aaa" : "linear-gradient(135deg,#E11D48,#9333EA)",
+            background: isPending ? C.textDim : `linear-gradient(135deg, ${C.accent2}, ${C.accent})`,
             color: "#fff", border: "none", fontSize: 13, fontWeight: 600,
             cursor: isPending ? "wait" : "pointer", fontFamily: "inherit",
           }}
@@ -163,10 +177,10 @@ export default function VendorEditForm({ vendor }: { vendor: VendorFormData }) {
           {isPending ? "Sauvegarde…" : "Enregistrer"}
         </button>
         {status.type === "ok" && (
-          <span style={{ fontSize: 12, color: "#22c55e" }}>✓ {status.msg}</span>
+          <span style={{ fontSize: 12, color: C.ok }}>✓ {status.msg}</span>
         )}
         {status.type === "error" && (
-          <span style={{ fontSize: 12, color: "#ef4444" }}>✕ {status.msg}</span>
+          <span style={{ fontSize: 12, color: C.err }}>✕ {status.msg}</span>
         )}
       </div>
     </form>
@@ -176,10 +190,10 @@ export default function VendorEditForm({ vendor }: { vendor: VendorFormData }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section style={{
-      background: "#fff", padding: "20px 22px", borderRadius: 14,
-      border: "1px solid rgba(183,191,217,0.2)",
+      background: C.panel, padding: "20px 22px", borderRadius: 14,
+      border: `1px solid ${C.border}`,
     }}>
-      <h3 style={{ fontSize: 13, fontWeight: 600, color: "#121317", marginBottom: 16, marginTop: 0 }}>
+      <h3 style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 16, marginTop: 0, letterSpacing: "0.02em", textTransform: "uppercase" }}>
         {title}
       </h3>
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>{children}</div>
@@ -198,7 +212,7 @@ function Grid({ children }: { children: React.ReactNode }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <span style={{ fontSize: 11, fontWeight: 600, color: "#6a6a71", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+      <span style={{ fontSize: 11, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.04em" }}>
         {label}
       </span>
       {children}
@@ -208,7 +222,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 const inputStyle: React.CSSProperties = {
   height: 38, padding: "0 12px", borderRadius: 10,
-  border: "1px solid rgba(183,191,217,0.35)", background: "#fafafa",
-  fontSize: 13, color: "#121317", outline: "none", fontFamily: "inherit",
+  border: `1px solid ${C.border}`, background: C.bg,
+  fontSize: 13, color: C.text, outline: "none", fontFamily: "inherit",
   boxSizing: "border-box", width: "100%",
 }

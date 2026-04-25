@@ -92,3 +92,42 @@ export async function PATCH(
 
   return NextResponse.json({ success: true, changedFields: Object.keys(changes) })
 }
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
+  }
+  const me = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { id: true, email: true, role: true },
+  })
+  if (me?.role !== "admin") {
+    return NextResponse.json({ error: "Non autorisé." }, { status: 403 })
+  }
+
+  const { slug } = await params
+  const target = await prisma.vendor.findUnique({ where: { slug }, select: { id: true, name: true } })
+  if (!target) {
+    return NextResponse.json({ error: "Prestataire introuvable." }, { status: 404 })
+  }
+
+  await prisma.vendor.delete({ where: { slug } })
+
+  await logAdminAction({
+    adminId:    me.id,
+    adminEmail: me.email,
+    action:     "vendor.delete",
+    targetType: "Vendor",
+    targetId:   slug,
+    changes:    { name: { from: target.name, to: null } },
+  })
+
+  revalidatePath("/explore")
+  revalidatePath("/sitemap.xml")
+
+  return NextResponse.json({ ok: true })
+}
