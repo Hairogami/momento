@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
-import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 
 const schema = z.object({ email: z.string().email() })
 
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   if (!ip) {
     return NextResponse.json({ error: "Requête non identifiable." }, { status: 400 })
   }
-  const rl = rateLimit(`waitlist:${ip}`, 5, 15 * 60_000)
+  const rl = await rateLimitAsync(`waitlist:${ip}`, 5, 15 * 60_000)
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de tentatives. Réessayez dans quelques minutes." },

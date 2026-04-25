@@ -31,14 +31,14 @@ export async function GET(req: NextRequest) {
       where: category
         ? { category: { contains: category, mode: "insensitive" } }
         : {},
-      // W03: public endpoint — exclude sensitive contact/location fields
+      // Public endpoint — exclude PII (phone, email, address). Contact uniquement
+      // via /api/prestataires/interest (auth + ownership). Loi 09-08 / RGPD.
       select: {
         id: true,
         slug: true,
         name: true,
         category: true,
         description: true,
-        address: true,
         city: true,
         priceMin: true,
         priceMax: true,
@@ -49,8 +49,6 @@ export async function GET(req: NextRequest) {
         website: true,
         instagram: true,
         facebook: true,
-        phone: true,
-        email: true,
         region: true,
         verified: true,
         media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },

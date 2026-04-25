@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { randomUUID } from "crypto"
 import { prisma } from "@/lib/prisma"
 import { sendVerificationEmail } from "@/lib/email"
-import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     if (!ip) {
       return NextResponse.json({ message: "Requête non identifiable." }, { status: 400 })
     }
-    const rl = rateLimit(`resend-verification:${ip}`, 3, 15 * 60 * 1000)
+    const rl = await rateLimitAsync(`resend-verification:${ip}`, 3, 15 * 60 * 1000)
     if (!rl.ok) {
       return NextResponse.json(
         { message: "Trop de tentatives. Réessayez dans quelques minutes." },

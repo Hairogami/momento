@@ -21,7 +21,6 @@ type Props = {
   instagram?: string | null
   facebook?: string | null
   website?: string | null
-  phone?: string | null
   reviews: Review[]
 }
 
@@ -37,7 +36,7 @@ function StarRow({ count, size = 14 }: { count: number; size?: number }) {
 
 export default function VendorProfileClient({
   slug, name, category, city, rating, photos, heroImg,
-  description, instagram, facebook, website, phone, reviews,
+  description, instagram, facebook, website, reviews,
 }: Props) {
   const [activePhoto, setActivePhoto] = useState(0)
   const [contactOpen, setContactOpen] = useState(false)
@@ -295,18 +294,7 @@ export default function VendorProfileClient({
               >
                 ✉ Envoyer un message
               </button>
-              {phone && (
-                <a href={`tel:${phone}`} onClick={() => trackClick("phone_click")} style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                  padding: "11px 20px", borderRadius: 999,
-                  background: "var(--dash-faint,rgba(183,191,217,0.1))",
-                  color: "var(--dash-text-2,#45474D)", fontSize: 13,
-                  textDecoration: "none", fontWeight: 500,
-                  border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
-                }}>
-                  📞 {phone}
-                </a>
-              )}
+              {/* Téléphone retiré du HTML public ISR — accessible via /api/prestataires/interest (auth + ownership). */}
 
               {/* Social / web links */}
               {(instagram || facebook || website) && (

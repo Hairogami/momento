@@ -108,8 +108,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           image: user.image,
           emailVerified: user.emailVerified,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           rememberMe: credentials.rememberMe === "true",
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
       },
     }),

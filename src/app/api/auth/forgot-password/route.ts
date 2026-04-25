@@ -2,7 +2,7 @@ import { NextRequest, NextResponse, after } from "next/server"
 import { randomUUID } from "crypto"
 import { prisma } from "@/lib/prisma"
 import { sendPasswordResetEmail } from "@/lib/email"
-import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 import { verifyTurnstile, turnstileEnabled } from "@/lib/turnstile"
 
 export async function POST(req: NextRequest) {
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     if (!ip) {
       return NextResponse.json({ message: "Si un compte existe, un e-mail a été envoyé." }, { status: 400 })
     }
-    const rl = rateLimit(`forgot-password:${ip}`, 5, 15 * 60 * 1000)
+    const rl = await rateLimitAsync(`forgot-password:${ip}`, 5, 15 * 60 * 1000)
     if (!rl.ok) {
       return NextResponse.json(
         { message: "Trop de tentatives. Réessayez dans quelques minutes." },

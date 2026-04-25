@@ -66,9 +66,11 @@ export default async function VendorPage(
 
   return (
     <>
+      {/* JSON-LD : on échappe `<` en `<` pour empêcher un break-out via une
+          description vendor contenant `</script>` (champ user-controlled depuis /api/vendor/profile). */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <VendorProfileClient
         slug={vendor.slug}
@@ -82,7 +84,6 @@ export default async function VendorPage(
         instagram={vendor.instagram}
         facebook={vendor.facebook}
         website={vendor.website}
-        phone={vendor.phone}
         reviews={vendor.reviews}
       />
     </>

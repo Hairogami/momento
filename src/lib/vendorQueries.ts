@@ -46,7 +46,6 @@ export type VendorDetail = {
   instagram: string | null
   facebook: string | null
   website: string | null
-  phone: string | null
   reviews: { author: string; event: string; note: string; stars: number }[]
 }
 
@@ -81,7 +80,6 @@ export async function getVendorBySlug(slug: string): Promise<VendorDetail | null
       instagram: true,
       facebook: true,
       website: true,
-      phone: true,
       media: {
         select: { url: true, order: true },
         orderBy: { order: "asc" },
@@ -117,7 +115,6 @@ export async function getVendorBySlug(slug: string): Promise<VendorDetail | null
     instagram: v.instagram,
     facebook: v.facebook,
     website: v.website,
-    phone: v.phone,
     reviews: v.reviews.map(r => ({
       author: r.author?.name ?? "Anonyme",
       event: r.eventType ?? "Événement",

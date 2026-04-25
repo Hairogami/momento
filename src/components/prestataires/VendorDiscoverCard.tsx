@@ -16,7 +16,6 @@ export type DiscoverVendor = {
   rating?: number | null
   reviewCount?: number
   featured: boolean
-  phone?: string | null
   instagram?: string | null
   facebook?: string | null
   website?: string | null
@@ -148,9 +147,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Pr
               🌐 Site web
             </a>
           )}
-          {vendor.phone && (
-            <span style={socialBadge("#22c55e")}>📞 {vendor.phone}</span>
-          )}
+          {/* Phone retiré du listing public (PII Loi 09-08). Accessible après "Demander le contact" → /api/prestataires/interest */}
         </div>
 
         {/* Lang selector + CTA */}

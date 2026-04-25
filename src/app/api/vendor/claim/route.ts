@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth"
 import { sendVerificationEmail } from "@/lib/email"
 import { vendorSlugExists } from "@/lib/vendorQueries"
 import { randomBytes } from "crypto"
-import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 import { z } from "zod"
 
 const MagicLinkSchema = z.object({
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     if (!ip) {
       return NextResponse.json({ error: "Requête non identifiable." }, { status: 400 })
     }
-    const rl = rateLimit(`vendor-claim:${ip}`, 5, 15 * 60_000)
+    const rl = await rateLimitAsync(`vendor-claim:${ip}`, 5, 15 * 60_000)
     if (!rl.ok) {
       return NextResponse.json({ error: "Trop de tentatives. Réessayez dans quelques minutes." }, { status: 429 })
     }
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       if (!session?.user?.id) return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
 
       // WR-006: per-user rate limit (3 claims per 24h) to block multi-IP abuse
-      const rlUser = rateLimit(`vendor-claim-user:${session.user.id}`, 3, 24 * 60 * 60_000)
+      const rlUser = await rateLimitAsync(`vendor-claim-user:${session.user.id}`, 3, 24 * 60 * 60_000)
       if (!rlUser.ok) {
         return NextResponse.json(
           { error: "Limite quotidienne de revendications atteinte." },

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Paths always allowed through regardless of gates
-const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon", "/evt/"]
+const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon", "/evt/", "/.well-known/"]
 const PROTECTED          = ["/dashboard", "/accueil", "/profile", "/planner", "/favorites",
                              "/budget", "/guests", "/messages", "/notifications", "/settings",
                              "/vendors", "/vendor/dashboard", "/prestataire/dashboard", "/admin",

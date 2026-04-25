@@ -67,9 +67,11 @@ async function getUpstashLimiter() {
 
 /**
  * Rate limit synchrone (in-memory uniquement).
- * Utiliser rateLimitAsync() pour bénéficier d'Upstash en production.
+ * ⚠️ Sur Vercel le state in-memory est par-lambda → un attaquant qui tape via
+ * plusieurs cold starts contourne trivialement le quota. Préférer
+ * rateLimitAsync() partout sauf cas explicite (script local, dev tooling).
  */
-export function rateLimit(
+export function rateLimitMemoryOnly(
   key: string,
   limit: number,
   windowMs: number
