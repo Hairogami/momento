@@ -237,7 +237,7 @@ function ContentTab({
   const toggleVisible = (key: string) => onUpdate(`visibility.${key}`, !isVisible(key))
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      <FieldGroup label="Le titre principal" collapsible>
+      <FieldGroup label="Le titre principal">
         <Input value={hero.title ?? ""} onChange={v => onUpdate("hero.title", v)} placeholder="Ex: Yousra & Ali" />
       </FieldGroup>
 
@@ -249,30 +249,27 @@ function ContentTab({
         <Input value={hero.venue ?? ""} onChange={v => onUpdate("hero.venue", v)} placeholder="Ex: Domaine Terracotta" />
       </FieldGroup>
 
-      <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.15))", margin: "4px 0" }} />
-
-      <LocationField
-        current={(main.location as string) ?? ""}
-        resolved={(main as Record<string, unknown>).locationResolved as { lat: number; lng: number; displayName?: string } | undefined}
-        onResolved={r => {
-          onUpdate("mainEvent.location", r.input)
-          onUpdate("mainEvent.locationResolved", r.resolved)
-          onUpdate("mainEvent.mapsUrl", r.mapsUrl)
-          onUpdate("mainEvent.wazeUrl", r.wazeUrl)
-        }}
-        onClear={() => {
-          onUpdate("mainEvent.location", "")
-          onUpdate("mainEvent.locationResolved", null)
-          onUpdate("mainEvent.mapsUrl", "")
-          onUpdate("mainEvent.wazeUrl", "")
-        }}
-      />
-
-      <div style={{ padding: "10px 12px", background: "rgba(225,29,72,0.06)", border: "1px solid rgba(225,29,72,0.2)", borderRadius: 9, fontSize: 11, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5 }}>
-        🔒 L&apos;adresse exacte n&apos;est jamais affichée en toutes lettres aux invités. Ils voient une carte + boutons Google Maps / Waze.
-      </div>
-
-      <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.15))", margin: "4px 0" }} />
+      <FieldGroup label="Localisation" collapsible>
+        <LocationField
+          current={(main.location as string) ?? ""}
+          resolved={(main as Record<string, unknown>).locationResolved as { lat: number; lng: number; displayName?: string } | undefined}
+          onResolved={r => {
+            onUpdate("mainEvent.location", r.input)
+            onUpdate("mainEvent.locationResolved", r.resolved)
+            onUpdate("mainEvent.mapsUrl", r.mapsUrl)
+            onUpdate("mainEvent.wazeUrl", r.wazeUrl)
+          }}
+          onClear={() => {
+            onUpdate("mainEvent.location", "")
+            onUpdate("mainEvent.locationResolved", null)
+            onUpdate("mainEvent.mapsUrl", "")
+            onUpdate("mainEvent.wazeUrl", "")
+          }}
+        />
+        <div style={{ padding: "10px 12px", background: "rgba(225,29,72,0.06)", border: "1px solid rgba(225,29,72,0.2)", borderRadius: 9, fontSize: 11, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5, marginTop: 10 }}>
+          🔒 L&apos;adresse exacte n&apos;est jamais affichée en toutes lettres aux invités. Ils voient une carte + boutons Google Maps / Waze.
+        </div>
+      </FieldGroup>
 
       <FieldGroup label="Compte à rebours (facultatif)" visible={isVisible("countdown")} onToggleVisible={() => toggleVisible("countdown")} collapsible>
         <CountdownEditor
@@ -1239,13 +1236,18 @@ function FieldGroup({
               border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
               background: "transparent",
               color: visible ? "var(--dash-text,#121317)" : "var(--dash-text-3,#9a9aaa)",
-              fontSize: 13,
-              lineHeight: 1,
               cursor: "pointer",
               fontFamily: "inherit",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {visible ? "👁" : "🚫"}
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+              {!visible && <line x1="3" y1="3" x2="21" y2="21" />}
+            </svg>
           </button>
         )}
       </div>
