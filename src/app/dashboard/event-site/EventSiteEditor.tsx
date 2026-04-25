@@ -1,11 +1,13 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { PALETTES, FONTS, MOODS, type FontId } from "@/lib/eventSiteTokens"
 import PatternPicker, { type PatternId } from "./PatternPicker"
 import { compressImage } from "@/lib/imageCompress"
+import { isAdminEmail } from "@/lib/adminConstants"
 
 type Planner = {
   id: string
@@ -129,7 +131,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
       }}>
         <header style={{ padding: "18px 20px", borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.15))" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <Link href="/accueil" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textDecoration: "none" }}>← Retour</Link>
+            <Link href="/dashboard/event-site" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textDecoration: "none" }}>← Tous mes sites</Link>
             {saveState === "saving" && (
               <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Sauvegarde…</span>
             )}
@@ -601,6 +603,46 @@ function miniBtn(disabled: boolean): React.CSSProperties {
   }
 }
 
+/**
+ * Section Template (W2.4) :
+ * - Admin (moumene486) → picker complet visible (escape pour tester tous les templates)
+ * - User normal → read-only badge "Template : X (lié au type d'événement)"
+ *   Le template est dérivé du eventType côté serveur, le user ne peut pas le changer.
+ */
+function TemplateSection({ site, onPatch }: { site: EventSite; onPatch: (p: Partial<EventSite>) => void }) {
+  const { data: session } = useSession()
+  const isAdmin = isAdminEmail(session?.user?.email)
+  const currentLabel = TEMPLATES.find(t => t.id === site.template)?.label ?? site.template
+
+  if (isAdmin) {
+    return (
+      <FieldGroup label="Template (admin)">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+          {TEMPLATES.map(t => (
+            <button key={t.id} onClick={() => onPatch({ template: t.id })} style={chipStyle(site.template === t.id)}>
+              <span>{t.emoji}</span> {t.label}
+            </button>
+          ))}
+        </div>
+      </FieldGroup>
+    )
+  }
+  return (
+    <FieldGroup label="Template">
+      <div style={{
+        padding: "10px 12px", borderRadius: 9,
+        border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+        background: "var(--dash-faint,rgba(183,191,217,0.05))",
+        fontSize: 13, color: "var(--dash-text,#121317)",
+        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+      }}>
+        <span>{TEMPLATES.find(t => t.id === site.template)?.emoji ?? "✨"} {currentLabel}</span>
+        <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>lié au type d&apos;événement</span>
+      </div>
+    </FieldGroup>
+  )
+}
+
 function StyleTab({ site, onPatch, onUpdateContent, content }: {
   site: EventSite
   onPatch: (p: Partial<EventSite>) => void
@@ -611,15 +653,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
   const currentPalette = PALETTES.find(p => p.id === site.palette)
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-      <FieldGroup label="Template">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-          {TEMPLATES.map(t => (
-            <button key={t.id} onClick={() => onPatch({ template: t.id })} style={chipStyle(site.template === t.id)}>
-              <span>{t.emoji}</span> {t.label}
-            </button>
-          ))}
-        </div>
-      </FieldGroup>
+      <TemplateSection site={site} onPatch={onPatch} />
 
       <FieldGroup label="Palette de couleurs" collapsible>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
