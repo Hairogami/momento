@@ -376,6 +376,10 @@
 }
 
 /* ── Shimmer badge (Top Prestataire) ── */
+/* Force mobile preview mode (playground viewport toggle) — override SiteNav's @media query */
+html.evt-force-mobile .site-nav-desktop { display: none !important; }
+html.evt-force-mobile .site-nav-burger { display: flex !important; }
+
 @keyframes evtHeroKenBurns {
   0%   { transform: scale(1.04) translate(0, 0); }
   50%  { transform: scale(1.12) translate(-2%, -1.5%); }

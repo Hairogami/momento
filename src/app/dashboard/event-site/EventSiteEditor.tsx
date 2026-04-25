@@ -48,6 +48,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [publishing, setPublishing] = useState(false)
   const [previewKey, setPreviewKey] = useState(0)
+  const [viewport, setViewport] = useState<"web" | "mobile">("web")
 
   // Sync state quand la prop change (router.refresh côté serveur)
   useEffect(() => { setSite(eventSite) }, [eventSite])
@@ -205,18 +206,67 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
       </aside>
 
       {/* ── Panel droit : preview live ── */}
-      <section style={{ position: "relative", background: "var(--dash-bg,#f7f7fb)", overflow: "hidden" }}>
+      <section style={{ position: "relative", background: "var(--dash-bg,#f7f7fb)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{
           position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 10,
-          padding: "6px 12px", borderRadius: 99, background: "rgba(0,0,0,0.7)",
-          color: "#fff", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase",
-        }}>Aperçu live</div>
-        <iframe
-          key={previewKey}
-          src={`/evt/preview/${site.id}`}
-          style={{ width: "100%", height: "100%", border: 0 }}
-          title="Preview site événement"
-        />
+          display: "flex", gap: 8, alignItems: "center",
+        }}>
+          <div style={{
+            padding: "6px 12px", borderRadius: 99, background: "rgba(0,0,0,0.7)",
+            color: "#fff", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase",
+          }}>Aperçu live</div>
+          <div style={{
+            display: "flex", gap: 2, padding: 3, borderRadius: 99,
+            background: "rgba(0,0,0,0.7)",
+          }}>
+            <button
+              type="button"
+              onClick={() => setViewport("web")}
+              aria-label="Vue ordinateur"
+              title="Vue ordinateur"
+              style={viewportBtnStyle(viewport === "web")}
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect x="2" y="4" width="20" height="13" rx="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewport("mobile")}
+              aria-label="Vue mobile"
+              title="Vue mobile"
+              style={viewportBtnStyle(viewport === "mobile")}
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect x="6" y="2" width="12" height="20" rx="2" />
+                <line x1="12" y1="18" x2="12" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div
+          style={{
+            width: viewport === "mobile" ? 390 : "100%",
+            maxWidth: viewport === "mobile" ? 390 : "100%",
+            height: viewport === "mobile" ? "min(844px, calc(100vh - 80px))" : "100%",
+            background: "#000",
+            borderRadius: viewport === "mobile" ? 28 : 0,
+            overflow: "hidden",
+            boxShadow: viewport === "mobile" ? "0 30px 60px rgba(0,0,0,0.25)" : "none",
+            transition: "all 250ms ease",
+            border: viewport === "mobile" ? "8px solid #111" : "none",
+          }}
+        >
+          <iframe
+            key={previewKey}
+            src={`/evt/preview/${site.id}`}
+            style={{ width: "100%", height: "100%", border: 0, background: "var(--dash-bg,#f7f7fb)" }}
+            title="Preview site événement"
+          />
+        </div>
       </section>
     </div>
   )
@@ -1416,6 +1466,24 @@ function LocationField({
       )}
     </FieldGroup>
   )
+}
+
+function viewportBtnStyle(active: boolean): React.CSSProperties {
+  return {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 28,
+    height: 24,
+    padding: 0,
+    borderRadius: 99,
+    border: "none",
+    background: active ? "rgba(255,255,255,0.95)" : "transparent",
+    color: active ? "#111" : "rgba(255,255,255,0.7)",
+    cursor: "pointer",
+    fontFamily: "inherit",
+    transition: "all 120ms ease",
+  }
 }
 
 function chipStyle(active: boolean): React.CSSProperties {

@@ -61,13 +61,12 @@ export default function SiteNav({ title, items }: Props) {
           aria-label="Retour en haut"
           style={{
             background: "transparent", border: "none", cursor: "pointer",
-            fontFamily: "var(--evt-font-heading)",
-            fontSize: 17, letterSpacing: "-0.01em",
-            color: "var(--evt-text)",
             padding: 0,
+            width: 0, height: 0, overflow: "hidden",
+            position: "absolute",
           }}
         >
-          {title}
+          <span style={{ position: "absolute", left: -9999, top: -9999 }}>{title}</span>
         </button>
 
         {/* Desktop : liens inline */}
@@ -164,7 +163,7 @@ export default function SiteNav({ title, items }: Props) {
       <style>{`
         @media (max-width: 720px) {
           .site-nav-desktop { display: none !important; }
-          .site-nav-burger { display: flex !important; }
+          .site-nav-burger { display: flex !important; order: -1 !important; margin-right: auto !important; }
         }
       `}</style>
     </>

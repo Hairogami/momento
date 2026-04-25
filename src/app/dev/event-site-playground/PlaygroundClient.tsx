@@ -74,6 +74,14 @@ const INITIAL_SITE: PlaygroundSite = {
 
 export default function PlaygroundClient() {
   const [site, setSite] = useState<PlaygroundSite>(INITIAL_SITE)
+  const [viewport, setViewport] = useState<"web" | "mobile">("web")
+
+  // Force le mode mobile sur SiteNav quand viewport=mobile (override @media query)
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    document.documentElement.classList.toggle("evt-force-mobile", viewport === "mobile")
+    return () => { document.documentElement.classList.remove("evt-force-mobile") }
+  }, [viewport])
 
   function patch(partial: Partial<PlaygroundSite>) {
     setSite(prev => ({ ...prev, ...partial }))
@@ -275,8 +283,78 @@ export default function PlaygroundClient() {
         </div>
       </aside>
 
-      <main style={{ flex: 1, overflow: "auto", maxHeight: "100vh", position: "relative" }}>
-        <EventSiteRenderer site={site} />
+      <main style={{ flex: 1, overflow: "auto", maxHeight: "100vh", position: "relative", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: viewport === "mobile" ? "20px 0" : 0 }}>
+        <style>{`html.evt-force-mobile .site-nav-desktop{display:none !important}html.evt-force-mobile .site-nav-burger{display:inline-flex !important;order:-1 !important;margin-right:auto !important}`}</style>
+        <div style={{
+          position: "fixed",
+          top: 12,
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 9999,
+          display: "flex",
+          gap: 2,
+          padding: 3,
+          borderRadius: 99,
+          background: "rgba(0,0,0,0.85)",
+          backdropFilter: "blur(8px)",
+        }}>
+          <button
+            type="button"
+            onClick={() => setViewport("web")}
+            aria-label="Vue ordinateur"
+            title="Vue ordinateur"
+            style={{
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              width: 30, height: 26, padding: 0, borderRadius: 99, border: "none",
+              background: viewport === "web" ? "rgba(255,255,255,0.95)" : "transparent",
+              color: viewport === "web" ? "#111" : "rgba(255,255,255,0.7)",
+              cursor: "pointer", fontFamily: "inherit", transition: "all 120ms ease",
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <rect x="2" y="4" width="20" height="13" rx="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewport("mobile")}
+            aria-label="Vue mobile"
+            title="Vue mobile"
+            style={{
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              width: 30, height: 26, padding: 0, borderRadius: 99, border: "none",
+              background: viewport === "mobile" ? "rgba(255,255,255,0.95)" : "transparent",
+              color: viewport === "mobile" ? "#111" : "rgba(255,255,255,0.7)",
+              cursor: "pointer", fontFamily: "inherit", transition: "all 120ms ease",
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <rect x="6" y="2" width="12" height="20" rx="2" />
+              <line x1="12" y1="18" x2="12" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div style={{
+          width: viewport === "mobile" ? 390 : "100%",
+          height: viewport === "mobile" ? "min(844px, calc(100vh - 60px))" : "auto",
+          minHeight: viewport === "mobile" ? undefined : "100vh",
+          background: "#000",
+          borderRadius: viewport === "mobile" ? 28 : 0,
+          overflow: viewport === "mobile" ? "hidden" : "visible",
+          boxShadow: viewport === "mobile" ? "0 30px 60px rgba(0,0,0,0.4)" : "none",
+          transition: "all 250ms ease",
+          border: viewport === "mobile" ? "8px solid #111" : "none",
+          // Crée un containing block pour position:fixed des descendants (SiteNav header)
+          // → SiteNav s'ancre au cadre mobile au lieu du viewport entier.
+          transform: viewport === "mobile" ? "translateZ(0)" : undefined,
+        }}>
+          <div style={{ width: "100%", height: "100%", overflow: viewport === "mobile" ? "auto" : "visible" }}>
+            <EventSiteRenderer site={site} />
+          </div>
+        </div>
       </main>
     </div>
   )

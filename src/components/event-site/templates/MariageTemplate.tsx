@@ -73,10 +73,11 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
   const navItems: NavItem[] = [
     { id: "top",       label: "Accueil" },
     ...(content.couple?.story  ? [{ id: "histoire",   label: "Notre histoire" } as NavItem] : []),
-    ...(content.mainEvent       ? [{ id: "ceremonie",  label: "Cérémonie"      } as NavItem] : []),
-    ...(content.program?.length ? [{ id: "programme",  label: "Programme"      } as NavItem] : []),
+    ...(content.mainEvent && isVisible("heroVenue")       ? [{ id: "ceremonie",  label: "Cérémonie"      } as NavItem] : []),
+    ...(content.countdown?.enabled && content.countdown?.targetDate && isVisible("countdown") ? [{ id: "countdown", label: "Compte à rebours" } as NavItem] : []),
+    ...(content.program?.length && isVisible("program") ? [{ id: "programme",  label: "Programme"      } as NavItem] : []),
     ...(content.travel?.hotels?.length ? [{ id: "voyage", label: "Voyage"      } as NavItem] : []),
-    { id: "rsvp",      label: "RSVP" },
+    ...(isVisible("rsvp") ? [{ id: "rsvp", label: "RSVP" } as NavItem] : []),
   ]
 
   return (
@@ -108,7 +109,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Countdown — entre hero et welcome note */}
       {content.countdown?.enabled && content.countdown?.targetDate && isVisible("countdown") && (
-        <Reveal as="section">
+        <Reveal as="section" id="countdown">
           <Countdown
             targetDate={content.countdown.targetDate}
             variant={content.countdown.variant ?? "grand"}
