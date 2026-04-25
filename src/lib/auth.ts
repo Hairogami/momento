@@ -6,6 +6,8 @@ import Resend from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { rateLimitAsync } from "@/lib/rateLimiter";
+import { headers } from "next/headers";
 
 const REMEMBER_ME_MAX_AGE = 30 * 24 * 60 * 60; // 30 jours
 const SESSION_MAX_AGE     = 24 * 60 * 60;       // 1 jour (sans remember me)
@@ -74,6 +76,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null;
         // C-N02: cap password length before bcrypt.compare to prevent DoS via oversized input
         if ((credentials.password as string).length > 128) return null;
+
+        // Rate limit credentials login : 10 tentatives / 5 min par IP, puis 5 tentatives / 15 min par email.
+        // Empêche le brute-force sans bloquer un user qui se trompe une fois.
+        try {
+          const h = await headers();
+          const ip = (h.get("x-forwarded-for")?.split(",")[0].trim()) || h.get("x-real-ip") || "unknown";
+          const email = (credentials.email as string).toLowerCase().trim();
+          const rlIp    = await rateLimitAsync(`login:ip:${ip}`,       10, 5 * 60_000);
+          const rlEmail = await rateLimitAsync(`login:em:${email}`,     5, 15 * 60_000);
+          if (!rlIp.ok || !rlEmail.ok) return null;
+        } catch {
+          // headers() peut throw hors contexte request — fallback sans rate-limit (mieux que casser le login)
+        }
+
         const user = await prisma.user.findUnique({
           where: { email: (credentials.email as string).toLowerCase().trim() },
           select: { id: true, name: true, email: true, image: true, passwordHash: true, emailVerified: true },

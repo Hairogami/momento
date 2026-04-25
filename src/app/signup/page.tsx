@@ -3,6 +3,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import Turnstile from "@/components/Turnstile"
 
 type Role = "client" | "vendor" | null
 
@@ -64,6 +65,8 @@ export default function CloneSignupPage() {
   // CGU + marketing
   const [tos, setTos]               = useState(false)
   const [marketing, setMarketing]   = useState(true)
+  const [turnstileToken, setTurnstileToken] = useState("")
+  const turnstileRequired = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault(); setError(""); setLoading(true)
@@ -80,10 +83,13 @@ export default function CloneSignupPage() {
     if (!tos) {
       setError("Acceptez les conditions pour continuer."); setLoading(false); return
     }
+    if (turnstileRequired && !turnstileToken) {
+      setError("Veuillez compléter la vérification anti-bot."); setLoading(false); return
+    }
 
     const body = role === "client"
-      ? { role: "client", email, password, firstName: prenom || undefined, lastName: nom || undefined, marketingOptIn: marketing, agreedTos: true }
-      : { role: "vendor", email: vEmail, password: vPassword, companyName: entreprise || undefined, phone: telephone || undefined, vendorCategory: categorie || undefined, marketingOptIn: marketing, agreedTos: true }
+      ? { role: "client", email, password, firstName: prenom || undefined, lastName: nom || undefined, marketingOptIn: marketing, agreedTos: true, turnstileToken: turnstileToken || undefined }
+      : { role: "vendor", email: vEmail, password: vPassword, companyName: entreprise || undefined, phone: telephone || undefined, vendorCategory: categorie || undefined, marketingOptIn: marketing, agreedTos: true, turnstileToken: turnstileToken || undefined }
 
     const r = await fetch("/api/auth/register", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -344,6 +350,8 @@ export default function CloneSignupPage() {
                     background: "rgba(225,29,72,0.07)", color: "#E11D48",
                   }}>{error}</p>
                 )}
+
+                <Turnstile onToken={setTurnstileToken} onError={() => setTurnstileToken("")} />
 
                 {/* CGU + marketing */}
                 <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "#45474D", cursor: "pointer", lineHeight: 1.5, marginTop: 4 }}>

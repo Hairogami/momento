@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, after } from "next/server"
 import { randomUUID } from "crypto"
 import { prisma } from "@/lib/prisma"
 import { sendPasswordResetEmail } from "@/lib/email"
 import { rateLimit, getIp } from "@/lib/rateLimiter"
+import { verifyTurnstile, turnstileEnabled } from "@/lib/turnstile"
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +22,14 @@ export async function POST(req: NextRequest) {
     // CR-03: Validate email type and length before hitting the DB
     const body = await req.json().catch(() => null)
     const rawEmail = body?.email
+    const turnstileToken = body?.turnstileToken
+    // Turnstile CAPTCHA — bloque les bots si activé
+    if (turnstileEnabled()) {
+      const ok = await verifyTurnstile(turnstileToken, ip)
+      if (!ok) {
+        return NextResponse.json({ message: "Vérification anti-bot échouée." }, { status: 400 })
+      }
+    }
     if (rawEmail && typeof rawEmail === "string" && rawEmail.length <= 320) {
       const email = rawEmail.toLowerCase().trim()
       const user = await prisma.user.findUnique({ where: { email } })
@@ -39,15 +48,19 @@ export async function POST(req: NextRequest) {
           })
         })
 
-        try {
-          await sendPasswordResetEmail({ to: user.email, firstName: user.firstName, token })
-        } catch (e) {
-          console.error("Forgot password email error:", e)
-        }
-      } else {
-        // Constant-time delay to prevent user-existence enumeration via timing
-        await new Promise(r => setTimeout(r, 200))
+        // Email send déféré via after() — sort de la fenêtre de réponse pour
+        // équilibrer le timing avec la branche "user inconnu" (anti-énumération).
+        after(async () => {
+          try {
+            await sendPasswordResetEmail({ to: user.email, firstName: user.firstName, token })
+          } catch (e) {
+            console.error("Forgot password email error:", e)
+          }
+        })
       }
+      // Délai constant 250ms appliqué dans LES DEUX branches (user existant ou non) :
+      // équilibre le temps de réponse pour empêcher l'énumération par timing.
+      await new Promise(r => setTimeout(r, 250))
     }
 
     return NextResponse.json({ message: "Si un compte existe, un e-mail a été envoyé." })

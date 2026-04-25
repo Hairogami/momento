@@ -5,6 +5,7 @@ import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 import { sendVerificationEmail } from "@/lib/email"
+import { verifyTurnstile, turnstileEnabled } from "@/lib/turnstile"
 
 const strongPassword = z.string().min(8).max(128)
   .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.")
@@ -17,6 +18,7 @@ const ClientSchema = z.object({
   lastName:       z.string().min(1).max(50).optional(),
   marketingOptIn: z.boolean().optional(),
   agreedTos:      z.literal(true, { message: "Vous devez accepter les conditions générales." }),
+  turnstileToken: z.string().max(2048).optional(),
 })
 
 const VendorSchema = z.object({
@@ -28,6 +30,7 @@ const VendorSchema = z.object({
   phone:          z.string().max(20).optional(),
   marketingOptIn: z.boolean().optional(),
   agreedTos:      z.literal(true, { message: "Vous devez accepter les conditions générales." }),
+  turnstileToken: z.string().max(2048).optional(),
 })
 
 const RegisterSchema = z.discriminatedUnion("role", [ClientSchema, VendorSchema])
@@ -63,6 +66,14 @@ export async function POST(req: NextRequest) {
   }
 
   const data = parsed.data
+
+  // Turnstile CAPTCHA — bloque les bots si activé via env vars
+  if (turnstileEnabled()) {
+    const ok = await verifyTurnstile(data.turnstileToken, ip ?? undefined)
+    if (!ok) {
+      return NextResponse.json({ error: "Vérification anti-bot échouée. Réessayez." }, { status: 400 })
+    }
+  }
 
   try {
   // Check existing user

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
+import Turnstile from "@/components/Turnstile"
 
 export function AntLoginGreeting() {
   const [returning, setReturning] = useState<boolean | null>(null)
@@ -63,6 +64,8 @@ export default function AntLoginForm() {
   const [marketing, setMarketing] = useState(true)
   const [error, setError]     = useState("")
   const [loading, setLoading] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState("")
+  const turnstileRequired = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault(); setError(""); setLoading(true)
@@ -77,6 +80,7 @@ export default function AntLoginForm() {
     if (!tos) { setError("Veuillez accepter les conditions générales pour créer un compte."); return }
     if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return }
     if (!PWD_RE.test(password)) { setError("Le mot de passe doit faire 8 caractères minimum, avec majuscule, minuscule et chiffre."); return }
+    if (turnstileRequired && !turnstileToken) { setError("Veuillez compléter la vérification anti-bot."); return }
     setError(""); setLoading(true)
     const r = await fetch("/api/auth/register", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -87,6 +91,7 @@ export default function AntLoginForm() {
         password,
         agreedTos: true,
         marketingOptIn: marketing,
+        turnstileToken: turnstileToken || undefined,
       }),
     })
     if (!r.ok) { const d = await r.json(); setError(d.error || "Erreur inscription"); setLoading(false); return }
@@ -170,6 +175,10 @@ export default function AntLoginForm() {
               <span>Je souhaite recevoir les conseils &amp; offres Momento (facultatif).</span>
             </label>
           </div>
+        )}
+
+        {mode === "register" && (
+          <Turnstile onToken={setTurnstileToken} onError={() => setTurnstileToken("")} />
         )}
 
         {error && (

@@ -1,9 +1,12 @@
 "use client"
 import { useState, FormEvent } from "react"
 import Link from "next/link"
+import Turnstile from "@/components/Turnstile"
 
 export default function CloneForgotPasswordPage() {
   const [email, setEmail]         = useState("")
+  const [turnstileToken, setTurnstileToken] = useState("")
+  const turnstileRequired = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
   const [loading, setLoading]     = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError]         = useState("")
@@ -13,10 +16,13 @@ export default function CloneForgotPasswordPage() {
     setError("")
     if (!email) { setError("Saisis ton adresse e-mail."); return }
     setLoading(true)
+    if (turnstileRequired && !turnstileToken) {
+      setError("Veuillez compléter la vérification anti-bot."); setLoading(false); return
+    }
     await fetch("/api/auth/forgot-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, turnstileToken: turnstileToken || undefined }),
     })
     setLoading(false)
     setSubmitted(true)
@@ -62,6 +68,8 @@ export default function CloneForgotPasswordPage() {
                   onFocus={e => (e.target.style.borderColor = "#E11D48")}
                   onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
                 />
+
+                <Turnstile onToken={setTurnstileToken} onError={() => setTurnstileToken("")} />
 
                 {error && (
                   <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>
