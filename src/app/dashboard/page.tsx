@@ -4,16 +4,48 @@ import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
-import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
-import BudgetWidget, { type BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
-import VendorSwipeWidget from "@/components/clone/dashboard/VendorSwipeWidget"
-import MesPrestatairesWidget from "@/components/clone/dashboard/MesPrestatairesWidget"
-import DashboardProgressBanner from "@/components/clone/dashboard/DashboardProgressBanner"
+import type { BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
 import { getEventLabel } from "@/lib/eventLabel"
 import { computeCompletion } from "@/lib/completionScore"
 
+// Skeleton générique pour les widgets lazy-loaded
+function WidgetSkeleton({ minHeight = 160 }: { minHeight?: number }) {
+  return (
+    <div
+      className="mo-skel"
+      style={{
+        minHeight,
+        borderRadius: 16,
+        background: "linear-gradient(90deg, rgba(183,191,217,0.08) 0%, rgba(183,191,217,0.16) 50%, rgba(183,191,217,0.08) 100%)",
+        backgroundSize: "200% 100%",
+      }}
+    />
+  )
+}
+
+// ── Code-splitting : widgets lourds chargés à la demande ─────────────────────
+const BudgetWidget = dynamic(
+  () => import("@/components/clone/dashboard/BudgetWidget"),
+  { ssr: false, loading: () => <WidgetSkeleton minHeight={220} /> },
+)
+const VendorSwipeWidget = dynamic(
+  () => import("@/components/clone/dashboard/VendorSwipeWidget"),
+  { ssr: false, loading: () => <WidgetSkeleton minHeight={320} /> },
+)
+const MesPrestatairesWidget = dynamic(
+  () => import("@/components/clone/dashboard/MesPrestatairesWidget"),
+  { ssr: false, loading: () => <WidgetSkeleton minHeight={240} /> },
+)
+const DashboardProgressBanner = dynamic(
+  () => import("@/components/clone/dashboard/DashboardProgressBanner"),
+  { ssr: false, loading: () => <WidgetSkeleton minHeight={80} /> },
+)
+const CreateEventModal = dynamic(
+  () => import("@/components/clone/dashboard/CreateEventModal"),
+  { ssr: false, loading: () => null },
+)
 const VendorSwipeModal = dynamic(
   () => import("@/components/VendorSwipeModal"),
   { ssr: false, loading: () => null }
