@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react"
 import { invalidatePlannerCache } from "@/hooks/usePlanners"
 import { EVENT_FAMILIES, getEventSubType, getBudgetMedian, type EventFamilyId, type EventSubType } from "@/lib/eventTypes"
+import { MOROCCAN_CITIES } from "@/lib/cities"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -48,6 +49,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
   const [title, setTitle] = useState("")
   const [weddingDate, setWeddingDate] = useState("")
   const [city, setCity] = useState("")
+  const [cityOpen, setCityOpen] = useState<boolean>(false)
   const [guestCount, setGuestCount] = useState("")
 
   const [selectedCats, setSelectedCats] = useState<string[] | null>(null)
@@ -96,8 +98,8 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
   function reset() {
     setStep(1)
-    setFamilyId("mariage"); setSubtypeId("traditionnel")
-    setTitle(""); setWeddingDate(""); setCity(""); setGuestCount("")
+    setFamilyId("mariage"); setSubtypeId("traditionnel"); setSubtypeOpen(false)
+    setTitle(""); setWeddingDate(""); setCity(""); setCityOpen(false); setGuestCount("")
     setSelectedCats(null); setBudgetTotal(0); setBudgetPerCat({})
     setError(""); setLoading(false)
   }
@@ -282,12 +284,12 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                         role="listbox"
                         style={{
                           position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0,
-                          background: "var(--dash-surface-2, #1c1d25)",
+                          background: "var(--dash-surface, #ffffff)",
                           border: "1.5px solid rgba(225,29,72,0.4)",
                           borderRadius: 12, padding: 5,
                           maxHeight: 260, overflowY: "auto",
                           zIndex: 20,
-                          boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
+                          boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
                         }}
                       >
                         {family.subtypes.map(s => {
@@ -303,12 +305,12 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                                 width: "100%", display: "flex", alignItems: "center", gap: 10,
                                 padding: "10px 12px", borderRadius: 10, border: "none",
                                 background: active ? "rgba(225,29,72,0.14)" : "transparent",
-                                color: "var(--dash-text, #eeeef5)",
+                                color: "var(--dash-text, #121317)",
                                 fontSize: 13, fontWeight: active ? 700 : 500,
                                 cursor: "pointer", textAlign: "left", fontFamily: "inherit",
                                 transition: "background 0.12s",
                               }}
-                              onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2, rgba(255,255,255,0.08))" }}
+                              onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2, rgba(0,0,0,0.05))" }}
                               onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
                             >
                               <span style={{ fontSize: 16 }}>{s.emoji ?? ""}</span>
@@ -338,7 +340,73 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                 </div>
                 <div>
                   <label style={labelStyle}>📍 Ville</label>
-                  <input value={city} onChange={e => setCity(e.target.value)} placeholder="Casablanca" style={inputStyle} />
+                  <div style={{ position: "relative" }}>
+                    <button
+                      type="button"
+                      onClick={() => setCityOpen(o => !o)}
+                      style={{
+                        ...inputStyle,
+                        display: "flex", justifyContent: "space-between", alignItems: "center",
+                        cursor: "pointer", textAlign: "left",
+                        borderColor: cityOpen ? "rgba(225,29,72,0.5)" : "var(--dash-border, rgba(255,255,255,0.07))",
+                      }}
+                      aria-expanded={cityOpen}
+                      aria-haspopup="listbox"
+                    >
+                      <span style={{ color: city ? "var(--dash-text, #121317)" : "var(--dash-text-3, #8888aa)" }}>
+                        {city || "Choisir une ville"}
+                      </span>
+                      <span style={{ fontSize: 11, color: "var(--g1, #E11D48)", transform: cityOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>▼</span>
+                    </button>
+                    {cityOpen && (
+                      <>
+                        <div
+                          onClick={() => setCityOpen(false)}
+                          style={{ position: "fixed", inset: 0, zIndex: 10 }}
+                          aria-hidden
+                        />
+                        <div
+                          role="listbox"
+                          style={{
+                            position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0,
+                            background: "var(--dash-surface, #ffffff)",
+                            border: "1.5px solid rgba(225,29,72,0.4)",
+                            borderRadius: 12, padding: 5,
+                            maxHeight: 260, overflowY: "auto",
+                            zIndex: 20,
+                            boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
+                          }}
+                        >
+                          {MOROCCAN_CITIES.map(c => {
+                            const active = c === city
+                            return (
+                              <button
+                                key={c}
+                                type="button"
+                                role="option"
+                                aria-selected={active}
+                                onClick={() => { setCity(c); setCityOpen(false) }}
+                                style={{
+                                  width: "100%", display: "flex", alignItems: "center", gap: 10,
+                                  padding: "9px 12px", borderRadius: 10, border: "none",
+                                  background: active ? "rgba(225,29,72,0.14)" : "transparent",
+                                  color: "var(--dash-text, #121317)",
+                                  fontSize: 13, fontWeight: active ? 700 : 500,
+                                  cursor: "pointer", textAlign: "left", fontFamily: "inherit",
+                                  transition: "background 0.12s",
+                                }}
+                                onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2, rgba(0,0,0,0.05))" }}
+                                onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
+                              >
+                                <span style={{ flex: 1 }}>{c}</span>
+                                {active && <span style={{ color: "var(--g1, #E11D48)", fontSize: 12, fontWeight: 800 }}>✓</span>}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label style={labelStyle}>👥 Invités</label>
@@ -534,9 +602,9 @@ const subtleStyle: React.CSSProperties = { color: "var(--dash-text-3, #8888aa)",
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "11px 14px", borderRadius: 12, fontSize: 13.5,
-  border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))", outline: "none",
-  fontFamily: "inherit", color: "var(--dash-text, #eeeef5)",
-  background: "var(--dash-input-bg, #1c1d25)", boxSizing: "border-box",
+  border: "1.5px solid var(--dash-border, rgba(0,0,0,0.08))", outline: "none",
+  fontFamily: "inherit", color: "var(--dash-text, #121317)",
+  background: "var(--dash-input-bg, #fafafa)", boxSizing: "border-box",
 }
 
 const btnPrimary: React.CSSProperties = {

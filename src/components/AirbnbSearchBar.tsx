@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
 import DateRangePicker from "@/components/DateRangePicker"
 import { C } from "@/lib/colors"
+import { MOROCCAN_CITIES } from "@/lib/cities"
 
-const CITIES = ["Casablanca","Rabat","Marrakech","Fès","Tanger","Agadir","Meknès","Oujda","Kénitra","El Jadida","Mohammedia","Tétouan","Salé","Béni Mellal","Essaouira","Laâyoune","Dakhla","Settat","Nador","Ouarzazate","Safi","Tiznit","Khouribga","Errachidia","Guelmim","Berkane","Al Hoceima","Ifrane","Chefchaouen","Taroudant","Azrou","Figuig","Témara","Skhirat","Asilah","Ourika","Bouznika","Martil","Saïdia"]
+const CITIES = MOROCCAN_CITIES
 
 type ActiveField = null | "ville" | "date" | "filtres"
 
