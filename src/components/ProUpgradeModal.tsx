@@ -108,7 +108,7 @@ export default function ProUpgradeModal({ open, onClose, reason = "vendor-contac
               width: "100%", padding: "14px", background: G, color: "#fff",
               border: "none", borderRadius: 14, fontSize: 14, fontWeight: 800,
               cursor: loading ? "default" : "pointer", opacity: loading ? 0.65 : 1,
-              boxShadow: "0 8px 24px rgba(225,29,72,0.3)", fontFamily: "inherit",
+              boxShadow: "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)", fontFamily: "inherit",
             }}
           >
             {loading ? "Redirection…" : "Voir les offres Pro"}

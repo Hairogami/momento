@@ -242,7 +242,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                           background: active ? "rgba(225,29,72,0.12)" : "var(--dash-faint, rgba(255,255,255,0.04))",
                           color: active ? "var(--dash-text, #eeeef5)" : "var(--dash-text-2, #b0b0cc)",
                           cursor: "pointer", transition: "all 0.12s",
-                          boxShadow: active ? "0 0 0 1.5px rgba(225,29,72,0.45) inset" : undefined,
+                          boxShadow: active ? "0 0 0 1.5px color-mix(in srgb, var(--g1,#E11D48) 45%, transparent) inset" : undefined,
                         }}>
                         <div style={{ fontSize: 18 }}>{f.emoji}</div>
                         <div style={{ marginTop: 4, lineHeight: 1.2 }}>{f.label.split(" ")[0]}</div>
@@ -254,7 +254,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
               <div>
                 <label style={labelStyle}>Sous-type</label>
-                <div style={{ position: "relative" }}>
+                <div style={{ position: "relative", zIndex: subtypeOpen ? 100 : "auto" }}>
                   <button
                     type="button"
                     onClick={() => setSubtypeOpen(o => !o)}
@@ -338,7 +338,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                   <label style={labelStyle}>📅 Date</label>
                   <input type="date" value={weddingDate} onChange={e => setWeddingDate(e.target.value)} style={inputStyle} />
                 </div>
-                <div>
+                <div style={{ position: "relative", zIndex: cityOpen ? 100 : "auto" }}>
                   <label style={labelStyle}>📍 Ville</label>
                   <div style={{ position: "relative" }}>
                     <button
@@ -444,7 +444,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                         color: selected ? "var(--dash-text, #eeeef5)" : "var(--dash-text-2, #b0b0cc)",
                         cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8,
                         transition: "all 0.12s", position: "relative",
-                        boxShadow: selected ? "0 0 0 1.5px rgba(225,29,72,0.5) inset" : undefined,
+                        boxShadow: selected ? "0 0 0 1.5px color-mix(in srgb, var(--g1,#E11D48) 50%, transparent) inset" : undefined,
                       }}>
                       <span style={{ fontSize: 16 }}>{cat.emoji}</span>
                       <span style={{ lineHeight: 1.25, flex: 1 }}>{cat.value}</span>
@@ -457,7 +457,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                             width: 18, height: 18, borderRadius: "50%",
                             background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))",
                             color: "#fff", flexShrink: 0,
-                            boxShadow: "0 2px 6px rgba(225,29,72,0.3)",
+                            boxShadow: "0 2px 6px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
                           }}
                         >
                           <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
@@ -489,10 +489,29 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
               </p>
 
               <div style={{ background: "var(--dash-faint, rgba(255,255,255,0.04))", border: "1px solid var(--dash-border, rgba(255,255,255,0.07))", borderRadius: 16, padding: "14px 16px", marginBottom: 14 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
                   <span style={{ fontSize: 10.5, color: "var(--dash-text-3, #8888aa)", fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase" }}>Budget total</span>
-                  <span style={{ fontSize: 22, fontWeight: 800, backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-                    {budgetTotal.toLocaleString("fr-FR")} <span style={{ fontSize: 12, color: "var(--dash-text-3, #8888aa)", WebkitTextFillColor: "initial", background: "none", fontWeight: 500 }}>MAD</span>
+                  <span style={{ display: "inline-flex", alignItems: "baseline", gap: 4 }}>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      aria-label="Budget total en MAD"
+                      value={budgetTotal.toLocaleString("fr-FR")}
+                      onChange={e => {
+                        const digits = e.target.value.replace(/\D/g, "")
+                        setBudgetTotal(digits === "" ? 0 : parseInt(digits, 10))
+                      }}
+                      onFocus={e => e.target.select()}
+                      style={{
+                        width: `${Math.max(4, budgetTotal.toLocaleString("fr-FR").length + 1)}ch`,
+                        textAlign: "right",
+                        fontSize: 22, fontWeight: 800,
+                        backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                        background: "none", border: "none", outline: "none", padding: 0,
+                        fontFamily: "inherit", caretColor: "#E11D48",
+                      }}
+                    />
+                    <span style={{ fontSize: 12, color: "var(--dash-text-3, #8888aa)", fontWeight: 500 }}>MAD</span>
                   </span>
                 </div>
                 <input type="range" min={10_000} max={500_000} step={5_000}
@@ -611,7 +630,7 @@ const btnPrimary: React.CSSProperties = {
   padding: "13px 22px", borderRadius: 99, border: "none",
   background: G, color: "#fff", fontSize: 14, fontWeight: 700,
   cursor: "pointer", fontFamily: "inherit", transition: "opacity 0.15s",
-  boxShadow: "0 6px 18px rgba(225,29,72,0.3)",
+  boxShadow: "0 6px 18px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
 }
 
 const btnSecondary: React.CSSProperties = {

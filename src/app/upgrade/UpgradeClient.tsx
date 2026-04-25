@@ -339,7 +339,7 @@ function FooterCell({
       fontSize: 13, fontWeight: 700,
       color: "#fff",
       background: "linear-gradient(135deg, #E11D48, #9333EA)",
-      boxShadow: "0 6px 20px rgba(225,29,72,0.3)",
+      boxShadow: "0 6px 20px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
       textDecoration: "none",
     },
     outline: {

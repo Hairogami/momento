@@ -58,7 +58,7 @@ export default function DevPanelClient() {
             <button
               onClick={() => setPlanTo("pro")}
               disabled={saving || plan === "pro"}
-              style={{ flex: 1, padding: "13px", borderRadius: 12, border: "none", background: plan === "pro" ? "rgba(34,197,94,0.12)" : G, color: "#fff", fontSize: 13, fontWeight: 800, cursor: saving || plan === "pro" ? "default" : "pointer", fontFamily: "inherit", boxShadow: plan === "pro" ? "none" : "0 6px 18px rgba(225,29,72,0.3)" }}>
+              style={{ flex: 1, padding: "13px", borderRadius: 12, border: "none", background: plan === "pro" ? "rgba(34,197,94,0.12)" : G, color: "#fff", fontSize: 13, fontWeight: 800, cursor: saving || plan === "pro" ? "default" : "pointer", fontFamily: "inherit", boxShadow: plan === "pro" ? "none" : "0 6px 18px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)" }}>
               {plan === "pro" ? "✓ Pro" : "Basculer Pro"}
             </button>
           </div>

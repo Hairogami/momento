@@ -181,7 +181,7 @@ function RecoSlot({
         padding: "4px 10px", fontSize: 10, color: "#fff",
         background: G, borderRadius: 99, fontWeight: 800,
         letterSpacing: "0.06em", textTransform: "uppercase",
-        boxShadow: "0 3px 10px rgba(225,29,72,0.4)",
+        boxShadow: "0 3px 10px color-mix(in srgb, var(--g1,#E11D48) 40%, transparent)",
         display: "inline-flex", alignItems: "center", gap: 4,
       }}>
         <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
@@ -191,7 +191,7 @@ function RecoSlot({
       </div>
 
       {/* Carte identique à celle des prestataires sélectionnés */}
-      <VendorDiscoverCard vendor={vendor} plannerId={plannerId} />
+      <VendorDiscoverCard vendor={vendor} plannerId={plannerId} hideContactButton />
 
       {/* Actions reco : Sélectionner + Changer */}
       <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
@@ -204,11 +204,11 @@ function RecoSlot({
             fontSize: 12, fontWeight: 700, fontFamily: "inherit",
             cursor: (selecting || changing) ? "wait" : "pointer",
             opacity: (selecting || changing) ? 0.6 : 1,
-            boxShadow: "0 3px 10px rgba(225,29,72,0.25)",
+            boxShadow: "0 3px 10px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)",
             transition: "opacity 0.15s",
           }}
         >
-          {selecting ? "Sélection…" : "✓ Sélectionner"}
+          {selecting ? "Ajout…" : "+ Ajouter"}
         </button>
         <button
           onClick={onChange}

@@ -77,7 +77,7 @@ export default function ClonePrestatairesPage() {
               padding: "14px 32px", borderRadius: 999,
               background: G, color: "#fff",
               fontSize: 15, fontWeight: 600, textDecoration: "none",
-              boxShadow: "0 4px 24px rgba(225,29,72,0.3)",
+              boxShadow: "0 4px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
             }}>
               Créer mon profil gratuitement →
             </Link>

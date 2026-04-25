@@ -420,7 +420,7 @@ export function CalendarDay({
           <div style={{
             padding: "18px 22px", borderRadius: 16,
             background: G, color: "#fff",
-            display: "flex", alignItems: "center", gap: 12, boxShadow: "0 10px 30px rgba(225,29,72,0.25)",
+            display: "flex", alignItems: "center", gap: 12, boxShadow: "0 10px 30px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)",
           }}>
             <span style={iconStyle(28, "#fff")}>favorite</span>
             <div>

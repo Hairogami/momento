@@ -140,7 +140,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
           <div style={{
             width: 30, height: 30, borderRadius: 9, background: G,
             display: "flex", alignItems: "center", justifyContent: "center",
-            flexShrink: 0, boxShadow: "0 2px 10px rgba(225,29,72,0.3)",
+            flexShrink: 0, boxShadow: "0 2px 10px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
           }}>
             <span style={{ color: "#fff", fontSize: 13, fontWeight: 800, letterSpacing: "-0.03em" }}>M</span>
           </div>
@@ -336,7 +336,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
           display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
           padding: "10px 14px", borderRadius: 11, background: G, color: "#fff",
           fontSize: 12, fontWeight: 600, textDecoration: "none",
-          boxShadow: "0 3px 16px rgba(225,29,72,0.25)", transition: "opacity 0.15s",
+          boxShadow: "0 3px 16px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)", transition: "opacity 0.15s",
         }}>
           <GIcon name="search" size={15} color="#fff" />
           Trouver un prestataire

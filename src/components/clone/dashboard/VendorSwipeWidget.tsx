@@ -321,7 +321,7 @@ export default function VendorSwipeWidget({
         {/* ♥ Favori */}
         <button onClick={() => { const isFav = favoritedIds.has(card.slug); setFavoritedIds(prev => { const s = new Set(prev); isFav ? s.delete(card.slug) : s.add(card.slug); return s; }); fetch(`/api/vendor/${card.slug}/favorite`, { method: "POST" }).catch(() => {}) }} style={{ width: 36, height: 36, borderRadius: "50%", border: favoritedIds.has(card.slug) ? "1.5px solid rgba(239,68,68,0.6)" : "1.5px solid rgba(239,68,68,0.25)", background: favoritedIds.has(card.slug) ? "rgba(239,68,68,0.2)" : "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
         {/* 🎉 Sélectionné */}
-        <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(225,29,72,0.35)", transition: "all 0.15s" }}>🎉</button>
+        <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px color-mix(in srgb, var(--g1,#E11D48) 35%, transparent)", transition: "all 0.15s" }}>🎉</button>
       </div>
     </div>
   )

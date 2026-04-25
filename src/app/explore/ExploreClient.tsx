@@ -43,12 +43,12 @@ function PillSelect({ value, onChange, options, placeholder }: {
           display: "flex", alignItems: "center", gap: 6,
           whiteSpace: "nowrap",
           transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
-          boxShadow: value ? "0 4px 14px rgba(225,29,72,0.3)" : "none",
+          boxShadow: value ? "0 4px 14px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)" : "none",
         }}
         onMouseEnter={e => { if (!value) { e.currentTarget.style.background = "var(--dash-faint-2,rgba(183,191,217,0.18))"; e.currentTarget.style.color = "var(--dash-text,#121317)" } }}
         onMouseLeave={e => { if (!value) { e.currentTarget.style.background = open ? "var(--dash-faint-2,rgba(183,191,217,0.18))" : "transparent"; e.currentTarget.style.color = "var(--dash-text-3,#9a9aaa)" } }}
       >
-        {current?.label ?? placeholder}
+        {value && current ? current.label : placeholder}
         <svg width="8" height="5" viewBox="0 0 8 5" style={{ opacity: 0.5, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s", flexShrink: 0 }}>
           <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
         </svg>
@@ -409,7 +409,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               color: activeMajor !== "Tous" ? "#fff" : "var(--dash-text-2,#45474D)",
               fontSize: 13, fontWeight: activeMajor !== "Tous" ? 600 : 400,
               cursor: "pointer", fontFamily: "inherit",
-              boxShadow: activeMajor !== "Tous" ? "0 2px 12px rgba(225,29,72,0.25)" : "none",
+              boxShadow: activeMajor !== "Tous" ? "0 2px 12px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)" : "none",
             }}
           >
             <span>{MAJOR_CATS.find(c => c.label === activeMajor)?.emoji ?? "✦"}</span>
@@ -447,7 +447,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                     cursor: "pointer", transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
                     fontFamily: "inherit",
                     whiteSpace: "nowrap",
-                    boxShadow: active ? "0 4px 14px rgba(225,29,72,0.3)" : "none",
+                    boxShadow: active ? "0 4px 14px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)" : "none",
                     letterSpacing: active ? "0.01em" : "0",
                   }}
                   onMouseEnter={e => { if (!active) { e.currentTarget.style.background = "var(--dash-faint-2,rgba(183,191,217,0.18))"; e.currentTarget.style.color = "var(--dash-text,#121317)" } }}
@@ -737,7 +737,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                         : "var(--dash-surface,#fff)",
                       color: active ? "#fff" : "var(--dash-text,#121317)",
                       cursor: "pointer", fontFamily: "inherit",
-                      boxShadow: active ? "0 4px 16px rgba(225,29,72,0.3)" : "0 1px 4px rgba(0,0,0,0.06)",
+                      boxShadow: active ? "0 4px 16px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)" : "0 1px 4px rgba(0,0,0,0.06)",
                       transition: "all 0.15s",
                       minHeight: 80,
                     }}

@@ -310,7 +310,7 @@ function EmptyHero({ onCreate }: { onCreate: () => void }) {
         background: G,
         display: "flex", alignItems: "center", justifyContent: "center",
         marginBottom: 24,
-        boxShadow: "0 16px 48px rgba(225,29,72,0.25)",
+        boxShadow: "0 16px 48px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)",
       }}>
         <span style={{
           fontFamily: "'Google Symbols','Material Symbols Outlined'",
@@ -348,7 +348,7 @@ function EmptyHero({ onCreate }: { onCreate: () => void }) {
           background: G, color: "#fff",
           fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer",
           fontFamily: "inherit",
-          boxShadow: "0 8px 24px rgba(225,29,72,0.3)",
+          boxShadow: "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
         }}
       >
         Créer un événement
@@ -535,7 +535,7 @@ function OrphanCard({ orphan, onCreate, busy }: { orphan: Orphan; onCreate: () =
             fontSize: 13, fontWeight: 600, cursor: busy ? "wait" : "pointer",
             fontFamily: "inherit",
             opacity: busy ? 0.7 : 1,
-            boxShadow: "0 4px 12px rgba(225,29,72,0.18)",
+            boxShadow: "0 4px 12px color-mix(in srgb, var(--g1,#E11D48) 18%, transparent)",
           }}
         >
           {busy ? "Création…" : "Créer le site"}
@@ -666,7 +666,7 @@ function OrphanPickerModal({
               cursor: (creating || !selectedId) ? "not-allowed" : "pointer",
               opacity: (creating || !selectedId) ? 0.6 : 1,
               fontFamily: "inherit",
-              boxShadow: "0 4px 12px rgba(225,29,72,0.2)",
+              boxShadow: "0 4px 12px color-mix(in srgb, var(--g1,#E11D48) 20%, transparent)",
             }}
           >{creating ? "Création…" : "Créer le site"}</button>
         </div>

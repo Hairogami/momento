@@ -133,7 +133,7 @@ export default function WelcomePreview() {
               color: canSubmit ? "#fff" : "#9a9aaa",
               fontSize: 15, fontWeight: 700, fontFamily: "inherit",
               cursor: canSubmit ? "pointer" : "not-allowed",
-              boxShadow: canSubmit ? "0 8px 24px rgba(225,29,72,0.25)" : "none",
+              boxShadow: canSubmit ? "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)" : "none",
               transition: "all 0.2s",
               letterSpacing: "-0.005em",
             }}>

@@ -518,7 +518,7 @@ export default function AntNav({
         .clone-icon-accent { background: linear-gradient(140deg, rgba(225,29,72,0.10), rgba(147,51,234,0.10)) !important; }
         .clone-accent-line { background: linear-gradient(90deg, var(--g1,#E11D48), var(--g2,#9333EA)); height: 2px; border: none; }
         .clone-tab-underline { border-bottom: 2px solid var(--g1,#E11D48) !important; color: var(--g1,#E11D48) !important; }
-        .clone-input:focus { border-color: var(--g1,#E11D48) !important; box-shadow: 0 0 0 3px rgba(225,29,72,0.12) !important; outline: none !important; }
+        .clone-input:focus { border-color: var(--g1,#E11D48) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--g1,#E11D48) 12%, transparent) !important; outline: none !important; }
 
         .clone-logo-dark { display: none; }
         .clone-dark .clone-logo-light { display: none !important; }

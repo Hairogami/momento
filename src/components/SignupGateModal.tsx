@@ -228,7 +228,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
               border: "none", borderRadius: 12, fontSize: 14, fontWeight: 800,
               cursor: (loading || !tos) ? "not-allowed" : "pointer",
               opacity: loading ? 0.6 : 1,
-              boxShadow: tos ? "0 8px 24px rgba(225,29,72,0.3)" : "none",
+              boxShadow: tos ? "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)" : "none",
               fontFamily: "inherit",
               transition: "background 0.15s, box-shadow 0.15s, color 0.15s",
             }}

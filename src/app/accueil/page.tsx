@@ -1,9 +1,9 @@
 "use client"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useMemo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import AntNav from "@/components/clone/AntNav"
 import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
+import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -34,8 +34,35 @@ export default function CloneAccueilPage() {
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Planner | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [activeEventId, setActiveEventId] = useState<string>(() => {
+    if (typeof window === "undefined") return ""
+    return localStorage.getItem("momento_active_event") ?? ""
+  })
   const menuRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+
+  const events = useMemo(
+    () => planners.filter(p => !p.trashedAt).map(p => ({
+      id:    p.id,
+      name:  p.coupleNames || p.title || "Mon événement",
+      date:  p.weddingDate ?? "",
+      color: p.coverColor ?? "#E11D48",
+    })),
+    [planners]
+  )
+
+  useEffect(() => {
+    if (events.length === 0) return
+    if (!activeEventId || !events.some(e => e.id === activeEventId)) {
+      setActiveEventId(events[0].id)
+    }
+  }, [events, activeEventId])
+
+  useEffect(() => {
+    if (activeEventId) {
+      try { localStorage.setItem("momento_active_event", activeEventId) } catch {}
+    }
+  }, [activeEventId])
 
   useEffect(() => {
     fetch("/api/planners")
@@ -116,10 +143,10 @@ export default function CloneAccueilPage() {
   }
 
   return (
-    <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-      <AntNav hideLinks />
+    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+      <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} firstName={firstName} />
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 24px 80px" }}>
+      <div style={{ flex: 1, maxWidth: 1100, margin: "0 auto", padding: "32px 24px 80px", width: "100%" }}>
 
         {/* Greeting */}
         <div style={{ marginBottom: 36 }}>

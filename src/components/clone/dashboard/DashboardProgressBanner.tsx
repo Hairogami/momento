@@ -48,7 +48,7 @@ export default function DashboardProgressBanner({ eventLabel, completionPct, max
               background: "linear-gradient(90deg, var(--g1,#E11D48), var(--g2,#9333EA), var(--g1,#E11D48))",
               backgroundSize: "200% 100%",
               borderRadius: 99,
-              boxShadow: "0 2px 12px rgba(225,29,72,0.25)",
+              boxShadow: "0 2px 12px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)",
               animation: "momento-fluid-sweep 3s linear infinite, momento-width-grow 1.4s cubic-bezier(.22,1,.36,1) both",
             }}
           >

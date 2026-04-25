@@ -26,9 +26,10 @@ type Props = {
   vendor: DiscoverVendor
   plannerId: string
   onInterest?: (result: { type: "message"; conversationId: string } | { type: "whatsapp"; phone: string | null }) => void
+  hideContactButton?: boolean
 }
 
-export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Props) {
+export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hideContactButton }: Props) {
   const [lang, setLang] = useState("fr")
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
@@ -153,7 +154,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Pr
         {/* Lang selector + CTA */}
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {/* Language selector — only relevant for partners */}
-          {vendor.featured && (
+          {vendor.featured && !hideContactButton && (
             <div style={{ display: "flex", gap: 4 }}>
               {LANGS.map(l => (
                 <button
@@ -172,25 +173,27 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest }: Pr
             </div>
           )}
 
-          <button
-            onClick={handleInterest}
-            disabled={loading || done}
-            style={{
-              flex: 1, padding: "10px 14px", borderRadius: 12, border: "none",
-              background: done
-                ? "rgba(34,197,94,0.12)"
-                : "linear-gradient(135deg,#E11D48,#9333EA)",
-              color: done ? "#22c55e" : "#fff",
-              fontSize: 12, fontWeight: 700, cursor: done ? "default" : "pointer",
-              fontFamily: "inherit", transition: "all 0.2s",
-            }}
-          >
-            {done
-              ? vendor.featured ? "✓ Message envoyé" : "✓ Contact ouvert"
-              : loading ? "…"
-              : vendor.featured ? "Je suis intéressé(e) 🎉" : "Contacter via WhatsApp 💬"
-            }
-          </button>
+          {!hideContactButton && (
+            <button
+              onClick={handleInterest}
+              disabled={loading || done}
+              style={{
+                flex: 1, padding: "10px 14px", borderRadius: 12, border: "none",
+                background: done
+                  ? "rgba(34,197,94,0.12)"
+                  : "linear-gradient(135deg,#E11D48,#9333EA)",
+                color: done ? "#22c55e" : "#fff",
+                fontSize: 12, fontWeight: 700, cursor: done ? "default" : "pointer",
+                fontFamily: "inherit", transition: "all 0.2s",
+              }}
+            >
+              {done
+                ? vendor.featured ? "✓ Message envoyé" : "✓ Contact ouvert"
+                : loading ? "…"
+                : vendor.featured ? "Je suis intéressé(e) 🎉" : "Contacter via WhatsApp 💬"
+              }
+            </button>
+          )}
 
           <Link
             href={`/vendor/${vendor.slug}`}

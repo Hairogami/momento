@@ -63,10 +63,31 @@ export default function MesPrestatairesPage() {
   const [addingCategory, setAddingCategory] = useState<string | null>(null)
   const [categoryVendors, setCategoryVendors] = useState<DiscoverVendor[]>([])
   const [loadingCatVendors, setLoadingCatVendors] = useState(false)
+  const [addingSlug, setAddingSlug] = useState<string | null>(null)
   const [showNewCategoryPicker, setShowNewCategoryPicker] = useState(false)
   const [savingCategory, setSavingCategory] = useState(false)
   const [statusDropdown, setStatusDropdown] = useState<string | null>(null)
   const statusRef = useRef<HTMLDivElement>(null)
+
+  // Ajoute un vendor au planner actif depuis la modale "Choisir un X"
+  // → crée un PlannerVendor (status: contacted) et rafraîchit la liste.
+  async function addVendorToPlanner(slug: string) {
+    if (!planner) return
+    setAddingSlug(slug)
+    try {
+      const r = await fetch(`/api/planners/${planner.id}/vendors`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vendorSlug: slug, status: "contacted" }),
+      })
+      if (r.ok) {
+        await loadPlanner(planner.id)
+        setAddingCategory(null)
+      }
+    } finally {
+      setAddingSlug(null)
+    }
+  }
 
   const loadPlanner = useCallback(async (id: string) => {
     setLoading(true)
@@ -436,17 +457,33 @@ export default function MesPrestatairesPage() {
                 <PageSkeleton variant="cards" />
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  {categoryVendors.map(v => (
-                    <VendorDiscoverCard
-                      key={v.slug}
-                      vendor={v}
-                      plannerId={planner?.id ?? ""}
-                      onInterest={result => {
-                        handleInterestResult(v.slug, result)
-                        setAddingCategory(null)
-                      }}
-                    />
-                  ))}
+                  {categoryVendors.map(v => {
+                    const alreadyAdded = plannerVendors.some(pv => pv.vendorSlug === v.slug)
+                    return (
+                      <div key={v.slug} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        <VendorDiscoverCard
+                          vendor={v}
+                          plannerId={planner?.id ?? ""}
+                          hideContactButton
+                        />
+                        <button
+                          onClick={() => !alreadyAdded && addVendorToPlanner(v.slug)}
+                          disabled={addingSlug === v.slug || alreadyAdded}
+                          style={{
+                            padding: "10px 14px", borderRadius: 12, border: "none",
+                            background: alreadyAdded ? "rgba(34,197,94,0.12)" : "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+                            color: alreadyAdded ? "#22c55e" : "#fff",
+                            fontSize: 13, fontWeight: 700,
+                            cursor: alreadyAdded ? "default" : (addingSlug === v.slug ? "wait" : "pointer"),
+                            opacity: addingSlug === v.slug ? 0.7 : 1,
+                            fontFamily: "inherit", transition: "all 0.15s",
+                          }}
+                        >
+                          {alreadyAdded ? "✓ Déjà ajouté" : addingSlug === v.slug ? "Ajout…" : "+ Ajouter"}
+                        </button>
+                      </div>
+                    )
+                  })}
                   {categoryVendors.length === 0 && (
                     <p style={{ textAlign: "center", color: "var(--dash-text-3,#9a9aaa)", padding: 40, fontSize: 13 }}>
                       Aucun prestataire trouvé dans cette catégorie.
