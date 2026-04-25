@@ -422,6 +422,16 @@ html.evt-force-mobile .site-nav-burger { display: flex !important; }
   }
 }
 
+/* ── Skeleton loaders — pulse animation utilisée par <Skel*> et legacy PageSkeleton ── */
+@keyframes moPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+.mo-skel { animation: moPulse 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .mo-skel { animation: none; opacity: 0.7; }
+}
+
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }
