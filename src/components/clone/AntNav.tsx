@@ -398,7 +398,7 @@ export default function AntNav({
                   boxShadow: "0 4px 14px color-mix(in srgb, var(--g1,#E11D48) 28%, transparent)",
                   transition: "transform 0.15s, box-shadow 0.15s",
                 }}>
-                Planner
+                Mon Planner
               </Link>
             )}
 
