@@ -10,6 +10,8 @@ type Props = {
   colorBg?: string
   intensity?: number
   fullPage?: boolean
+  /** Override manuel de l'opacité (0-1). Si défini, ignore la logique intensity/fullPage. */
+  customOpacity?: number
 }
 
 /**
@@ -20,7 +22,7 @@ type Props = {
  * Respecte prefers-reduced-motion pour l'animation de drift.
  */
 export default function DecoratifBackground({
-  params, colorMain, colorAccent, colorBg = "#FAF3E8", intensity = 1, fullPage = false,
+  params, colorMain, colorAccent, colorBg = "#FAF3E8", intensity = 1, fullPage = false, customOpacity,
 }: Props) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   useEffect(() => {
@@ -34,10 +36,17 @@ export default function DecoratifBackground({
 
   // Opacité contrôlée — plus basse si full page
   const rawOpacity = Math.max(0.08, Math.min(0.55, params.opacity * intensity))
-  const opacity = fullPage ? Math.min(0.13, rawOpacity * 0.28) : rawOpacity
+  // Si customOpacity fourni (user slider), il override toute la logique automatique.
+  const autoOpacity = fullPage
+    ? (intensity > 1.5 ? Math.min(0.22, Math.max(0.18, rawOpacity * 0.35)) : Math.min(0.13, rawOpacity * 0.28))
+    : rawOpacity
+  const opacity = typeof customOpacity === "number" ? Math.max(0, Math.min(1, customOpacity)) : autoOpacity
 
-  // Taille de tile en px — plus grande si full page (pattern plus espacé)
-  const baseTile = fullPage ? 180 : (params.dense ? 110 : 150)
+  // Taille de tile en px — harmonisée avec le hero (150px) quand user toggle explicite,
+  // pour que le motif parent matche celui du hero visuellement.
+  const baseTile = fullPage
+    ? (intensity > 1.5 ? 150 : 180)
+    : (params.dense ? 110 : 150)
   const tileSize = Math.round(baseTile / params.scale)
 
   const svg = buildPatternSvg(params.pattern, tileSize, colorMain, colorAccent)
@@ -45,7 +54,7 @@ export default function DecoratifBackground({
 
   const wrapperStyle: React.CSSProperties = fullPage
     ? {
-        position: "fixed",
+        position: "absolute",
         inset: 0,
         zIndex: 0,
         pointerEvents: "none",

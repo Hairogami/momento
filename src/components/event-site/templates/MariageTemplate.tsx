@@ -9,6 +9,7 @@ import SiteNav, { type NavItem } from "@/components/event-site/ui/SiteNav"
 import LocationMap from "@/components/event-site/ui/LocationMap"
 import Reveal from "@/components/event-site/ui/Reveal"
 import SectionDivider from "@/components/event-site/ui/SectionDivider"
+import Countdown, { type CountdownVariant } from "@/components/event-site/ui/Countdown"
 import {
   generateShaderParams, generateDecoratifParams, generateEditorialParams,
   overrideDecoratifParams,
@@ -34,6 +35,10 @@ type MariageContent = {
   travel?: { airports?: string[]; hotels?: { name: string; mapsUrl?: string; promoCode?: string; priceRange?: string }[]; notes?: string }
   registry?: { label: string; url: string }[]
   dressCode?: string
+  /** Compte à rebours jusqu'au grand jour. */
+  countdown?: { enabled?: boolean; targetDate?: string; variant?: CountdownVariant; label?: string }
+  /** Toggles de visibilité (œil user) — si false, la section est masquée sur le site rendu. */
+  visibility?: Partial<Record<"heroDate" | "heroVenue" | "welcomeNote" | "program" | "dressCode" | "rsvp" | "countdown", boolean>>
   welcomeNote?: string
   rsvp?: { deadline?: string; allowPlusOne?: boolean }
   /** Overrides visuels utilisateurs (pattern choisi manuellement dans l'éditeur). */
@@ -62,6 +67,8 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
   const hero = content.hero ?? {}
   const heroTitle = hero.title || "Notre mariage"
   const hasDayAfter = Boolean(content.dayAfter?.enabled)
+  const isVisible = (key: "heroDate" | "heroVenue" | "welcomeNote" | "program" | "dressCode" | "rsvp" | "countdown") =>
+    content.visibility?.[key] !== false
 
   const navItems: NavItem[] = [
     { id: "top",       label: "Accueil" },
@@ -73,7 +80,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
   ]
 
   return (
-    <main style={{ color: "var(--evt-text)", background: "var(--evt-bg)", fontFamily: "var(--evt-font-body)" }}>
+    <main style={{ color: "var(--evt-text)", fontFamily: "var(--evt-font-body)" }}>
       <SiteNav title={heroTitle} items={navItems} />
 
       <div id="top" />
@@ -81,18 +88,37 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       <HeroSection
         title={heroTitle}
         subtitle={hero.subtitle}
-        date={hero.date}
-        venueName={hero.venue}
+        date={isVisible("heroDate") ? hero.date : null}
+        venueName={isVisible("heroVenue") ? hero.venue : null}
         mood={mood}
         palette={palette}
         heroImageUrl={heroImageUrl}
         shaderParams={shaderParams}
         decoratifParams={decoratifParams}
         editorialParams={editorialParams}
+        bgVariant={
+          (content.style as { animationIntensity?: string } | undefined)?.animationIntensity === "none" ? "still"
+          : (content.style as { animationIntensity?: string } | undefined)?.animationIntensity === "subtle" ? "still"
+          : (content.style as { animationIntensity?: string } | undefined)?.animationIntensity === "festive" ? "rich"
+          : "drift"
+        }
+        suppressInnerPattern={(content.style as { patternFullPage?: boolean } | undefined)?.patternFullPage === true}
+        customPatternOpacity={(content.style as { patternOpacity?: number } | undefined)?.patternOpacity}
       />
 
+      {/* Countdown — entre hero et welcome note */}
+      {content.countdown?.enabled && content.countdown?.targetDate && isVisible("countdown") && (
+        <Reveal as="section">
+          <Countdown
+            targetDate={content.countdown.targetDate}
+            variant={content.countdown.variant ?? "grand"}
+            label={content.countdown.label}
+          />
+        </Reveal>
+      )}
+
       {/* Mot d'accueil */}
-      {content.welcomeNote && (
+      {content.welcomeNote && isVisible("welcomeNote") && (
         <Reveal as="section" style={{ ...sectionCentered, maxWidth: 580 }}>
           <p style={welcomeStyle}>{dropcap(content.welcomeNote)}</p>
         </Reveal>
@@ -141,7 +167,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       )}
 
       {/* Programme timeline */}
-      {content.program && content.program.length > 0 && (
+      {content.program && content.program.length > 0 && isVisible("program") && (
         <>
           <SectionDivider variant="dot-line" />
           <Reveal as="section" id="programme">
@@ -167,7 +193,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       )}
 
       {/* Dress code */}
-      {content.dressCode && (
+      {content.dressCode && isVisible("dressCode") && (
         <Reveal as="section" style={{ ...sectionCentered, paddingTop: 56, paddingBottom: 56, maxWidth: 580 }}>
           <div style={{
             fontFamily: "var(--evt-font-body)",
@@ -249,6 +275,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       )}
 
       {/* RSVP — full-bleed background, contenu centré */}
+      {isVisible("rsvp") && (
       <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-secondary)", borderTop: "3px solid var(--evt-main)", borderBottom: "3px solid var(--evt-main)", padding: "80px 24px 100px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
         <h2 style={h2Style}>Confirmez votre présence</h2>
@@ -261,6 +288,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
         />
         </div>
       </section>
+      )}
 
       {/* Footer minimal */}
       <footer style={{ padding: "32px 24px", textAlign: "center", fontSize: 11, color: "var(--evt-text-muted)", fontFamily: "var(--evt-font-body)", letterSpacing: "0.15em", textTransform: "uppercase" }}>

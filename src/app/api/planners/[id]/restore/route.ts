@@ -32,7 +32,8 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     select: { plan: true },
   })
   const plan = (userRow?.plan ?? "free") as string
-  if (plan === "free") {
+  const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
+  if (!isDev && plan === "free") {
     const liveCount = await prisma.planner.count({
       where: { userId: session.user.id, trashedAt: null },
     })

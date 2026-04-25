@@ -2,7 +2,7 @@
 // Le user choisit un preset global dans l'éditeur (Style tab).
 // Chaque template consomme ces valeurs via EventSiteRenderer → AnimationConfigProvider.
 
-export type AnimationIntensity = "subtle" | "normal" | "festive"
+export type AnimationIntensity = "none" | "subtle" | "normal" | "festive"
 
 export type AnimationPreset = {
   particlesEnabled: boolean
@@ -15,6 +15,15 @@ export type AnimationPreset = {
 }
 
 export const ANIMATION_PRESETS: Record<AnimationIntensity, AnimationPreset> = {
+  none: {
+    particlesEnabled: false,
+    particlesSections: [],
+    particlesCount: 0,
+    particlesSpeed: 0,
+    parallax: false,
+    revealDistance: 0,
+    revealDuration: 0,
+  },
   subtle: {
     particlesEnabled: true,
     particlesSections: ["hero"],
@@ -44,10 +53,10 @@ export const ANIMATION_PRESETS: Record<AnimationIntensity, AnimationPreset> = {
   },
 }
 
-export const DEFAULT_INTENSITY: AnimationIntensity = "normal"
+export const DEFAULT_INTENSITY: AnimationIntensity = "none"
 
 export function resolveIntensity(raw: unknown): AnimationIntensity {
-  if (raw === "subtle" || raw === "normal" || raw === "festive") return raw
+  if (raw === "none" || raw === "subtle" || raw === "normal" || raw === "festive") return raw
   return DEFAULT_INTENSITY
 }
 

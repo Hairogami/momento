@@ -22,8 +22,8 @@ type Props = {
 
 export default function HeroSection({
   title, subtitle, date, venueName, mood, palette,
-  heroImageUrl, shaderParams, decoratifParams, editorialParams, bgVariant = "drift",
-}: Props & { bgVariant?: "still" | "drift" | "rich" }) {
+  heroImageUrl, shaderParams, decoratifParams, editorialParams, bgVariant = "drift", suppressInnerPattern = false, customPatternOpacity,
+}: Props & { bgVariant?: "still" | "drift" | "rich"; suppressInnerPattern?: boolean; customPatternOpacity?: number }) {
   const isDark = mood === "shader"
   // Photo uploadée → fond sombre derrière la typo → texte blanc forcé
   const overPhoto = Boolean(heroImageUrl)
@@ -65,13 +65,13 @@ export default function HeroSection({
               : "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%)",
           }} />
           {/* Pattern décoratif discret par-dessus (seulement si mood = decoratif) */}
-          {mood === "decoratif" && decoratifParams && (
+          {mood === "decoratif" && decoratifParams && !suppressInnerPattern && (
             <div style={{
               position: "absolute", inset: 0, zIndex: 2, mixBlendMode: "overlay",
               animation: bgVariant === "still" ? undefined : "evtHeroPatternOverlay 24s ease-in-out infinite",
               willChange: bgVariant === "still" ? undefined : "transform, opacity",
             }}>
-              <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg="transparent" intensity={0.7} />
+              <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg="transparent" intensity={0.7} customOpacity={customPatternOpacity} />
             </div>
           )}
         </>
@@ -88,7 +88,7 @@ export default function HeroSection({
               <ShaderBackground params={shaderParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.darkBg ?? "#0d0e14"} />
             </div>
           )}
-          {mood === "decoratif" && decoratifParams && (
+          {mood === "decoratif" && decoratifParams && !suppressInnerPattern && (
             <div aria-hidden style={{
               position: "absolute", inset: 0, zIndex: 0,
               animation: bgVariant === "rich" ? "evtHeroDriftRich 18s ease-in-out infinite"
@@ -96,7 +96,7 @@ export default function HeroSection({
                 : undefined,
               willChange: bgVariant === "still" ? undefined : "transform, opacity",
             }}>
-              <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.bg} />
+              <DecoratifBackground params={decoratifParams} colorMain={palette.main} colorAccent={palette.accent} colorBg={palette.bg} customOpacity={customPatternOpacity} />
             </div>
           )}
           {mood === "editorial" && editorialParams && (

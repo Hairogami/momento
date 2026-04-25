@@ -46,7 +46,7 @@ export default function FloatingParticles({ seed, variant = "petals", color = "v
     <div
       aria-hidden
       style={{
-        position: "fixed",
+        position: "absolute",
         inset: 0,
         zIndex: 0,
         pointerEvents: "none",

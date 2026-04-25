@@ -165,6 +165,10 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
           >
             {publishing ? "…" : site.published ? "Retirer de la publication" : "Publier le site"}
           </button>
+
+          {site.published && (
+            <ShareBlock publicUrl={publicUrl} eventTitle={(hero.title as string) ?? "notre événement"} />
+          )}
         </header>
 
         {/* Tabs */}
@@ -228,17 +232,20 @@ function ContentTab({
 }) {
   const main = (content.mainEvent as Record<string, string> | undefined) ?? {}
   const rsvp = (content.rsvp as Record<string, string | boolean> | undefined) ?? {}
+  const visibility = (content.visibility as Record<string, boolean> | undefined) ?? {}
+  const isVisible = (key: string) => visibility[key] !== false
+  const toggleVisible = (key: string) => onUpdate(`visibility.${key}`, !isVisible(key))
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <FieldGroup label="Le titre principal">
         <Input value={hero.title ?? ""} onChange={v => onUpdate("hero.title", v)} placeholder="Ex: Yousra & Ali" />
       </FieldGroup>
 
-      <FieldGroup label="Date de l'événement (affichée)">
+      <FieldGroup label="Date de l'événement (affichée)" visible={isVisible("heroDate")} onToggleVisible={() => toggleVisible("heroDate")}>
         <Input value={hero.date ?? ""} onChange={v => onUpdate("hero.date", v)} placeholder="Ex: 04 avril 2026" />
       </FieldGroup>
 
-      <FieldGroup label="Lieu principal (nom visible)">
+      <FieldGroup label="Lieu principal (nom visible)" visible={isVisible("heroVenue")} onToggleVisible={() => toggleVisible("heroVenue")}>
         <Input value={hero.venue ?? ""} onChange={v => onUpdate("hero.venue", v)} placeholder="Ex: Domaine Terracotta" />
       </FieldGroup>
 
@@ -267,11 +274,18 @@ function ContentTab({
 
       <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.15))", margin: "4px 0" }} />
 
-      <FieldGroup label="Un mot à vos invités (facultatif)">
+      <FieldGroup label="Compte à rebours (facultatif)" visible={isVisible("countdown")} onToggleVisible={() => toggleVisible("countdown")}>
+        <CountdownEditor
+          countdown={(content.countdown as CountdownState | undefined) ?? {}}
+          onChange={next => onUpdate("countdown", next)}
+        />
+      </FieldGroup>
+
+      <FieldGroup label="Un mot à vos invités (facultatif)" visible={isVisible("welcomeNote")} onToggleVisible={() => toggleVisible("welcomeNote")}>
         <Textarea value={(content.welcomeNote as string) ?? ""} onChange={v => onUpdate("welcomeNote", v)} placeholder="Ex: Nous sommes ravis de vous convier à la célébration de notre union…" rows={3} />
       </FieldGroup>
 
-      <FieldGroup label="Programme (facultatif)">
+      <FieldGroup label="Programme (facultatif)" visible={isVisible("program")} onToggleVisible={() => toggleVisible("program")}>
         <ProgramEditor
           steps={(content.program as ProgramStepData[] | undefined) ?? []}
           onChange={next => onUpdate("program", next)}
@@ -279,12 +293,12 @@ function ContentTab({
       </FieldGroup>
 
       {template === "mariage" && (
-        <FieldGroup label="Dress code (facultatif)">
+        <FieldGroup label="Dress code (facultatif)" visible={isVisible("dressCode")} onToggleVisible={() => toggleVisible("dressCode")}>
           <Input value={(content.dressCode as string) ?? ""} onChange={v => onUpdate("dressCode", v)} placeholder="Ex: tenue de cocktail, couleurs claires" />
         </FieldGroup>
       )}
 
-      <FieldGroup label="Date limite RSVP (facultatif)">
+      <FieldGroup label="Date limite RSVP (facultatif)" visible={isVisible("rsvp")} onToggleVisible={() => toggleVisible("rsvp")}>
         <Input value={(rsvp.deadline as string) ?? ""} onChange={v => onUpdate("rsvp.deadline", v)} placeholder="Ex: 15 février 2026" />
       </FieldGroup>
 
@@ -297,6 +311,100 @@ function ContentTab({
           />
           <span>Autoriser les invités à amener un +1</span>
         </label>
+      )}
+    </div>
+  )
+}
+
+type CountdownState = {
+  enabled?: boolean
+  targetDate?: string
+  variant?: "grand" | "minimal" | "flip" | "circle"
+  label?: string
+}
+
+function CountdownEditor({
+  countdown, onChange,
+}: {
+  countdown: CountdownState
+  onChange: (next: CountdownState) => void
+}) {
+  const variants: { id: NonNullable<CountdownState["variant"]>; label: string }[] = [
+    { id: "grand", label: "Grand" },
+    { id: "minimal", label: "Minimal" },
+    { id: "flip", label: "Flip digital" },
+    { id: "circle", label: "Cercle" },
+  ]
+  // Conversion datetime-local (YYYY-MM-DDTHH:mm) pour l'input
+  const inputValue = countdown.targetDate
+    ? (() => {
+        const d = new Date(countdown.targetDate)
+        if (isNaN(d.getTime())) return ""
+        const pad = (n: number) => String(n).padStart(2, "0")
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+      })()
+    : ""
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "var(--dash-text,#121317)", cursor: "pointer" }}>
+        <input
+          type="checkbox"
+          checked={countdown.enabled === true}
+          onChange={e => onChange({ ...countdown, enabled: e.target.checked })}
+        />
+        <span>Activer le compte à rebours</span>
+      </label>
+
+      {countdown.enabled && (
+        <>
+          <div>
+            <div style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", marginBottom: 5, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>Date & heure cible</div>
+            <input
+              type="datetime-local"
+              value={inputValue}
+              onChange={e => {
+                const val = e.target.value
+                if (!val) return onChange({ ...countdown, targetDate: undefined })
+                onChange({ ...countdown, targetDate: new Date(val).toISOString() })
+              }}
+              style={{
+                width: "100%",
+                padding: "10px 12px",
+                borderRadius: 9,
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                background: "var(--dash-surface,#fff)",
+                color: "var(--dash-text,#121317)",
+                fontSize: 13,
+                fontFamily: "inherit",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          <div>
+            <div style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", marginBottom: 6, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>Style</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+              {variants.map(v => (
+                <button
+                  key={v.id}
+                  type="button"
+                  onClick={() => onChange({ ...countdown, variant: v.id })}
+                  style={chipStyle((countdown.variant ?? "grand") === v.id)}
+                >
+                  {v.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Input
+            value={countdown.label ?? ""}
+            onChange={v => onChange({ ...countdown, label: v })}
+            placeholder="Label (facultatif) — Ex: Jusqu'au grand jour"
+          />
+        </>
       )}
     </div>
   )
@@ -541,11 +649,52 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
           />
           <span>Appliquer le motif sur toute la page</span>
         </label>
+
+        <div style={{ marginTop: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--dash-text-2,#6a6a71)", marginBottom: 6 }}>
+            <span>Opacité du motif</span>
+            <span style={{ fontFamily: "monospace", fontWeight: 600 }}>
+              {typeof (style as { patternOpacity?: number }).patternOpacity === "number"
+                ? `${Math.round(((style as { patternOpacity?: number }).patternOpacity as number) * 100)}%`
+                : "auto"}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={typeof (style as { patternOpacity?: number }).patternOpacity === "number"
+              ? Math.round(((style as { patternOpacity?: number }).patternOpacity as number) * 100)
+              : 22}
+            onChange={e => onUpdateContent("style.patternOpacity", Number(e.target.value) / 100)}
+            style={{ width: "100%", accentColor: currentPalette?.main ?? "#E11D48" }}
+          />
+          {typeof (style as { patternOpacity?: number }).patternOpacity === "number" && (
+            <button
+              type="button"
+              onClick={() => onUpdateContent("style.patternOpacity", null)}
+              style={{
+                marginTop: 4,
+                padding: "4px 9px",
+                borderRadius: 6,
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+                background: "transparent",
+                color: "var(--dash-text-2,#6a6a71)",
+                fontSize: 11,
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
+            >
+              réinitialiser (auto)
+            </button>
+          )}
+        </div>
       </FieldGroup>
 
       <FieldGroup label="Animations">
         <AnimationIntensityPicker
-          current={((style as { animationIntensity?: string }).animationIntensity as "subtle" | "normal" | "festive" | undefined) ?? "normal"}
+          current={((style as { animationIntensity?: string }).animationIntensity as "none" | "subtle" | "normal" | "festive" | undefined) ?? "none"}
           onChange={v => onUpdateContent("style.animationIntensity", v)}
           accent={currentPalette?.main}
         />
@@ -814,14 +963,161 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
   )
 }
 
+function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: string }) {
+  const [copied, setCopied] = useState(false)
+  const [fullUrl, setFullUrl] = useState<string>(publicUrl)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFullUrl(`${window.location.origin}${publicUrl}`)
+    }
+  }, [publicUrl])
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(fullUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      /* clipboard denied */
+    }
+  }
+
+  const whatsappMessage = encodeURIComponent(
+    `Vous êtes invité·e à ${eventTitle} ! Toutes les infos + RSVP : ${fullUrl}`,
+  )
+  const whatsappUrl = `https://wa.me/?text=${whatsappMessage}`
+  const mailSubject = encodeURIComponent(`Invitation — ${eventTitle}`)
+  const mailBody = encodeURIComponent(
+    `Bonjour,\n\nVous êtes invité·e à ${eventTitle}.\n\nToutes les infos + RSVP : ${fullUrl}\n\nAu plaisir de vous voir !`,
+  )
+  const mailUrl = `mailto:?subject=${mailSubject}&body=${mailBody}`
+
+  return (
+    <div style={{
+      marginTop: 12, padding: 12,
+      borderRadius: 10,
+      border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+      background: "var(--dash-surface,rgba(255,255,255,0.02))",
+      display: "flex", flexDirection: "column", gap: 10,
+    }}>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--dash-text-2,#6a6a71)" }}>
+        Partager avec les invités
+      </div>
+
+      <div style={{ display: "flex", gap: 6 }}>
+        <div style={{
+          flex: 1,
+          padding: "8px 10px",
+          borderRadius: 7,
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+          background: "var(--dash-surface,#fff)",
+          color: "var(--dash-text,#121317)",
+          fontSize: 11,
+          fontFamily: "monospace",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}>
+          {fullUrl}
+        </div>
+        <button
+          type="button"
+          onClick={copy}
+          style={{
+            padding: "8px 12px",
+            borderRadius: 7,
+            border: "none",
+            background: copied ? "#16a34a" : "linear-gradient(135deg,#E11D48,#9333EA)",
+            color: "#fff",
+            fontSize: 11,
+            fontWeight: 600,
+            cursor: "pointer",
+            fontFamily: "inherit",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {copied ? "✓ Copié" : "Copier"}
+        </button>
+      </div>
+
+      <div style={{ display: "flex", gap: 6 }}>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener"
+          style={{
+            flex: 1,
+            padding: "9px 10px",
+            borderRadius: 7,
+            border: "1px solid rgba(37,211,102,0.4)",
+            background: "rgba(37,211,102,0.08)",
+            color: "#25D366",
+            fontSize: 12,
+            fontWeight: 600,
+            textAlign: "center",
+            textDecoration: "none",
+            fontFamily: "inherit",
+          }}
+        >
+          WhatsApp
+        </a>
+        <a
+          href={mailUrl}
+          style={{
+            flex: 1,
+            padding: "9px 10px",
+            borderRadius: 7,
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+            background: "var(--dash-surface,#fff)",
+            color: "var(--dash-text,#121317)",
+            fontSize: 12,
+            fontWeight: 600,
+            textAlign: "center",
+            textDecoration: "none",
+            fontFamily: "inherit",
+          }}
+        >
+          Email
+        </a>
+        <a
+          href={publicUrl}
+          target="_blank"
+          rel="noopener"
+          style={{
+            flex: 1,
+            padding: "9px 10px",
+            borderRadius: 7,
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
+            background: "var(--dash-surface,#fff)",
+            color: "var(--dash-text,#121317)",
+            fontSize: 12,
+            fontWeight: 600,
+            textAlign: "center",
+            textDecoration: "none",
+            fontFamily: "inherit",
+          }}
+        >
+          Ouvrir
+        </a>
+      </div>
+
+      <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", lineHeight: 1.5 }}>
+        Lien public — pas besoin de compte pour consulter ou RSVP.
+      </div>
+    </div>
+  )
+}
+
 function AnimationIntensityPicker({
   current, onChange, accent = "#8B3A3A",
 }: {
-  current: "subtle" | "normal" | "festive"
-  onChange: (v: "subtle" | "normal" | "festive") => void
+  current: "none" | "subtle" | "normal" | "festive"
+  onChange: (v: "none" | "subtle" | "normal" | "festive") => void
   accent?: string
 }) {
-  const options: { id: "subtle" | "normal" | "festive"; label: string; hint: string }[] = [
+  const options: { id: "none" | "subtle" | "normal" | "festive"; label: string; hint: string }[] = [
+    { id: "none", label: "Aucune", hint: "Pas d'animation — site statique" },
     { id: "subtle", label: "Subtil", hint: "Discret — seulement hero" },
     { id: "normal", label: "Normal", hint: "Équilibré (recommandé)" },
     { id: "festive", label: "Festif", hint: "Max visuel — partout" },
@@ -887,10 +1183,42 @@ function FontSelector({ current, onChange, preview }: { current: string; onChang
   )
 }
 
-function FieldGroup({ label, children }: { label: string; children: React.ReactNode }) {
+function FieldGroup({
+  label, children, visible, onToggleVisible,
+}: {
+  label: string
+  children: React.ReactNode
+  /** Si défini, active l'œil de visibilité — la section peut être masquée sur le site rendu. */
+  visible?: boolean
+  onToggleVisible?: () => void
+}) {
+  const isHideable = typeof visible === "boolean" && typeof onToggleVisible === "function"
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-      <label style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{label}</label>
+    <div style={{ display: "flex", flexDirection: "column", gap: 7, opacity: isHideable && !visible ? 0.5 : 1 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+        <label style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{label}</label>
+        {isHideable && (
+          <button
+            type="button"
+            onClick={onToggleVisible}
+            title={visible ? "Masquer cette section sur le site" : "Afficher cette section sur le site"}
+            aria-label={visible ? "Masquer" : "Afficher"}
+            style={{
+              padding: "4px 7px",
+              borderRadius: 6,
+              border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+              background: "transparent",
+              color: visible ? "var(--dash-text,#121317)" : "var(--dash-text-3,#9a9aaa)",
+              fontSize: 13,
+              lineHeight: 1,
+              cursor: "pointer",
+              fontFamily: "inherit",
+            }}
+          >
+            {visible ? "👁" : "🚫"}
+          </button>
+        )}
+      </div>
       {children}
     </div>
   )

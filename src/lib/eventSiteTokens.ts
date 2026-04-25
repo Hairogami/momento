@@ -38,7 +38,7 @@ export const PALETTES: readonly Palette[] = [
     label: "Rose & Or",
     main: "#D4506B",       // rose franc saturé
     secondary: "#F4D5CC",
-    accent: "#D4A847",     // or vif
+    accent: "#D4AF37",     // or métallique classique (gold standard)
     bg: "#FDF2ED",
     text: "#2E1218",
     textMuted: "#8E4A56",

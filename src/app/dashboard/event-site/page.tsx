@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { generateUniqueSlug } from "@/lib/eventSiteSlug"
+import { IS_DEV } from "@/lib/devMock"
 import EventSiteEditor from "./EventSiteEditor"
 
 export const dynamic = "force-dynamic"
@@ -28,7 +29,7 @@ export default async function EventSitePage() {
     select: { plan: true },
   })
   const plan = user?.plan ?? "free"
-  if (plan === "free") {
+  if (!IS_DEV && plan === "free") {
     redirect("/upgrade?reason=pro-required&from=/dashboard/event-site")
   }
 

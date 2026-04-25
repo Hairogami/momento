@@ -38,7 +38,7 @@ export default function GeneriqueTemplate({ slug, mood, palette, content, heroIm
     { id: "rsvp", label: "RSVP" },
   ]
   return (
-    <main style={{ color: "var(--evt-text)", background: "var(--evt-bg)", fontFamily: "var(--evt-font-body)" }}>
+    <main style={{ color: "var(--evt-text)", fontFamily: "var(--evt-font-body)" }}>
       <SiteNav title={title} items={navItems} />
       <div id="top" />
       <HeroSection
@@ -52,6 +52,14 @@ export default function GeneriqueTemplate({ slug, mood, palette, content, heroIm
         shaderParams={generateShaderParams(slug)}
         decoratifParams={overrideDecoratifParams(generateDecoratifParams(slug), (content as unknown as { style?: { pattern?: string; rotation?: number; dense?: boolean } }).style as never)}
         editorialParams={generateEditorialParams(slug)}
+        bgVariant={
+          (content as unknown as { style?: { animationIntensity?: string } }).style?.animationIntensity === "none" ? "still"
+          : (content as unknown as { style?: { animationIntensity?: string } }).style?.animationIntensity === "subtle" ? "still"
+          : (content as unknown as { style?: { animationIntensity?: string } }).style?.animationIntensity === "festive" ? "rich"
+          : "drift"
+        }
+        suppressInnerPattern={(content as unknown as { style?: { patternFullPage?: boolean } }).style?.patternFullPage === true}
+        customPatternOpacity={(content as unknown as { style?: { patternOpacity?: number } }).style?.patternOpacity}
       />
 
       {content.welcomeNote && (

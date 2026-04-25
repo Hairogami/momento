@@ -17,7 +17,8 @@ export async function POST(req: NextRequest) {
     select: { plan: true },
   })
   const plan = user?.plan ?? "free"
-  if (plan === "free") {
+  const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
+  if (!isDev && plan === "free") {
     return NextResponse.json(
       { error: "Feature réservée aux abonnés Pro et Max.", upgradeUrl: "/upgrade?reason=pro-required&from=event-site" },
       { status: 402 },

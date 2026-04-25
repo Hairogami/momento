@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import type { Feature } from "@/lib/planGate"
 import { isPro, type UserPlan } from "@/lib/planGate"
+import { IS_DEV } from "@/lib/devMock"
 
 /**
  * Server-side Pro plan gate.
@@ -21,6 +22,9 @@ export async function requireProPlan(opts: {
   /** Raison affichée sur /upgrade pour personnaliser le pitch */
   reason?: Feature | "messages" | "guests" | "checklist" | "favorites" | "theme" | "events-multiple" | "planner" | "budget-detailed"
 }): Promise<UserPlan> {
+  // DEV bypass — aucune restriction en local, zéro impact prod (IS_DEV=false sur Vercel)
+  if (IS_DEV) return "pro"
+
   const session = await auth()
   if (!session?.user?.id) {
     const next = encodeURIComponent(opts.from)
@@ -69,6 +73,9 @@ export async function getCurrentPlan(): Promise<{
   planExpiresAt: Date | null
   userId: string | null
 }> {
+  // DEV bypass — toujours pro en local
+  if (IS_DEV) return { plan: "pro", planExpiresAt: null, userId: "dev" }
+
   const session = await auth()
   if (!session?.user?.id) return { plan: "free", planExpiresAt: null, userId: null }
 

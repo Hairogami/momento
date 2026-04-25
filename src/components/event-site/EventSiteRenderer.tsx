@@ -50,9 +50,10 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
   const palette = customColors && (customColors.main || customColors.accent)
     ? { ...basePalette, main: customColors.main || basePalette.main, accent: customColors.accent || basePalette.accent }
     : basePalette
-  const contentStyle = (site.content as { style?: { patternFullPage?: boolean; animationIntensity?: string } } | undefined)?.style
+  const contentStyle = (site.content as { style?: { patternFullPage?: boolean; animationIntensity?: string; patternOpacity?: number } } | undefined)?.style
   const patternFullPage = contentStyle?.patternFullPage === true
-  const mood: MoodId = patternFullPage ? "decoratif" : defaultMood(site.template)
+  const customPatternOpacity = typeof contentStyle?.patternOpacity === "number" ? contentStyle.patternOpacity : undefined
+  const mood: MoodId = defaultMood(site.template)
   const animationPreset = getPreset(resolveIntensity(contentStyle?.animationIntensity))
   const fontH = FONTS[site.fontHeading as keyof typeof FONTS] ?? FONTS.cormorant
   const fontB = FONTS[site.fontBody as keyof typeof FONTS] ?? FONTS.pjs
@@ -72,6 +73,8 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
     background: "var(--evt-bg)",
     color: "var(--evt-text)",
     fontFamily: "var(--evt-font-body)",
+    position: "relative",
+    overflow: "hidden",
   }
 
   const content = site.content as Parameters<typeof MariageTemplate>[0]["content"]
@@ -84,7 +87,9 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
       <link rel="stylesheet" href={fontB.googleUrl} />
       <div style={style}>
         {/* Pattern décoratif continu sur toute la page (mood decoratif seulement) */}
-        {mood === "decoratif" && (
+        {/* Pattern fullpage : rendu UNIQUEMENT si patternFullPage=true (toggle explicite user).
+            Le hero a son propre pattern via HeroSection quand mood=decoratif. */}
+        {patternFullPage && (
           <DecoratifBackground
             params={overrideDecoratifParams(
               generateDecoratifParams(site.slug),
@@ -93,8 +98,9 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
             colorMain={palette.main}
             colorAccent={palette.accent}
             colorBg={palette.bg}
-            intensity={1}
+            intensity={2.5}
             fullPage
+            customOpacity={customPatternOpacity}
           />
         )}
 

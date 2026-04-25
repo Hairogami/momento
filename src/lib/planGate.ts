@@ -44,9 +44,13 @@ const PLAN_FEATURES: Record<UserPlan, Set<Feature>> = {
 }
 
 export function canAccess(plan: UserPlan, feature: Feature): boolean {
+  // DEV bypass — unlock toutes les features en local (zéro impact prod)
+  if (process.env.NODE_ENV === "development" && process.env.VERCEL !== "1") return true
   return PLAN_FEATURES[plan].has(feature)
 }
 
 export function isPro(plan: UserPlan): boolean {
+  // DEV bypass — considéré pro en local
+  if (process.env.NODE_ENV === "development" && process.env.VERCEL !== "1") return true
   return plan === "pro" || plan === "max"
 }

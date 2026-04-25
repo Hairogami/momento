@@ -32,7 +32,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (typeof b?.publish === "boolean") publish = b.publish
   } catch {}
 
-  if (publish && plan === "free") {
+  const isDev = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
+  if (!isDev && publish && plan === "free") {
     return NextResponse.json(
       { error: "Publication réservée aux abonnés Pro et Max.", upgradeUrl: "/upgrade?reason=pro-required&from=event-site" },
       { status: 402 },
