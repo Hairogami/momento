@@ -55,6 +55,27 @@ export default function CloneBudgetPage() {
   const [newCat, setNewCat]         = useState("Divers")
   const [newAmount, setNewAmount]   = useState("")
 
+  // Sync le total depuis la DB (planner.budget) à chaque changement d'event actif.
+  // Sans ça, le total restait 0 alors que /accueil affichait la vraie valeur.
+  useEffect(() => {
+    if (!activeEventId) return
+    let cancelled = false
+    fetch(`/api/planners/${activeEventId}`, { cache: "no-store" })
+      .then(r => r.ok ? r.json() : null)
+      .then((p: { budget?: number | null } | null) => {
+        if (cancelled || !p) return
+        setDataByEvent(prev => ({
+          ...prev,
+          [activeEventId]: {
+            total: typeof p.budget === "number" ? p.budget : 0,
+            expenses: prev[activeEventId]?.expenses ?? [],
+          },
+        }))
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [activeEventId])
+
   function handleEventChange(id: string) {
     setActiveEventId(id)
     try { localStorage.setItem("momento_active_event", id) } catch {}

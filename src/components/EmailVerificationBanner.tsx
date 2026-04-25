@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 
 export default function EmailVerificationBanner() {
@@ -8,11 +8,35 @@ export default function EmailVerificationBanner() {
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [dismissed, setDismissed] = useState(false)
+  const [checking, setChecking] = useState(false)
+  const [verifiedLive, setVerifiedLive] = useState<boolean | null>(null)
+
+  // Le JWT NextAuth ne se rafraîchit pas après que l'user clique le lien de vérif
+  // (jwt callback ne re-fetche emailVerified que sur sign-in). On va donc lire
+  // la vérité depuis /api/me au mount, et offrir un bouton de re-check.
+  async function refreshVerification() {
+    setChecking(true)
+    try {
+      const r = await fetch("/api/me", { cache: "no-store" })
+      if (r.ok) {
+        const u = await r.json()
+        setVerifiedLive(Boolean(u?.emailVerified))
+      }
+    } catch {
+      // silent — keep showing banner
+    } finally {
+      setChecking(false)
+    }
+  }
+
+  useEffect(() => {
+    if (status === "authenticated") void refreshVerification()
+  }, [status])
 
   if (status !== "authenticated" || !session?.user?.email) return null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const emailVerified = (session.user as any).emailVerified
-  if (emailVerified) return null
+  const sessionVerified = (session.user as any).emailVerified
+  if (sessionVerified || verifiedLive) return null
   if (dismissed) return null
 
   async function resend() {
@@ -57,6 +81,16 @@ export default function EmailVerificationBanner() {
           {loading ? "Envoi…" : "Renvoyer l'e-mail"}
         </button>
       )}
+      <button onClick={refreshVerification} disabled={checking}
+        style={{
+          background: "transparent", color: "#9A3412",
+          border: "1px solid #FED7AA",
+          padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+          cursor: checking ? "wait" : "pointer", opacity: checking ? 0.6 : 1,
+          fontFamily: "inherit",
+        }}>
+        {checking ? "Vérif…" : "✓ J'ai vérifié"}
+      </button>
       <button onClick={() => setDismissed(true)} aria-label="Fermer"
         style={{
           background: "transparent", border: "none", color: "#9A3412",
