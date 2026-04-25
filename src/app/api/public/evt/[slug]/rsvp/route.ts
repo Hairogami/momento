@@ -18,6 +18,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ slu
 
   // Rate limit 5 tentatives / 15 min / IP
   const ip = getIp(req)
+  // Si IP non détectable en prod (W3.6) : reject — sinon attaquant peut bypasser via clé partagée "null"
+  if (!ip && process.env.NODE_ENV === "production") {
+    return NextResponse.json(
+      { error: "Origine non identifiable. Réessayez depuis un autre réseau." },
+      { status: 403 },
+    )
+  }
   const rl = await rateLimitAsync(`rsvp:${slug}:${ip}`, 5, 15 * 60_000)
   if (!rl.ok) {
     return NextResponse.json(

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { templateForEventType } from "@/lib/eventTemplateMapping"
+import { isAdminUser } from "@/lib/adminAuth"
 
 /**
  * POST /api/event-site
@@ -47,22 +49,12 @@ export async function POST(req: NextRequest) {
   })
   if (existing) return NextResponse.json({ error: "Un site existe déjà pour cet événement.", id: existing.id }, { status: 409 })
 
-  // Choix template auto selon eventType (user peut changer ensuite)
-  const familyToTemplate: Record<string, string> = {
-    mariage: "mariage",
-    fete: "fete-famille",
-    naissance: "fete-famille",
-    milestones: "fete-famille",
-    corporate: "corporate",
-    conference: "conference",
-    religieux: "generique",
-    caritatif: "generique",
-    loisirs: "generique",
-    autre: "generique",
-  }
-  const template = typeof b.template === "string"
+  // Template forcé selon eventType (lock strict). Admin uniquement peut override via b.template.
+  const isAdmin = await isAdminUser(session.user.id)
+  const expectedTemplate = templateForEventType(planner.eventType)
+  const template = (isAdmin && typeof b.template === "string")
     ? b.template
-    : (familyToTemplate[planner.eventType ?? "autre"] ?? "generique")
+    : expectedTemplate
 
   // Slug provisoire (non publié — sera finalisé au publish)
   const { generateUniqueSlug } = await import("@/lib/eventSiteSlug")

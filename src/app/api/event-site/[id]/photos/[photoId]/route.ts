@@ -22,11 +22,12 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  const photo = await prisma.eventSitePhoto.findUnique({
-    where: { id: photoId },
+  // W3.7 — atomic check : la photo doit appartenir au site (compose where avec eventSiteId).
+  const photo = await prisma.eventSitePhoto.findFirst({
+    where: { id: photoId, eventSiteId: id },
     select: { id: true, url: true, eventSiteId: true },
   })
-  if (!photo || photo.eventSiteId !== id) {
+  if (!photo) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
   }
 

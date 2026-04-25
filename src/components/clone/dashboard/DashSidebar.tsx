@@ -8,9 +8,10 @@ import MobileDashNav from "./MobileDashNav"
 import CreateEventModal from "./CreateEventModal"
 import ProUpgradeModal from "@/components/ProUpgradeModal"
 import { usePlan } from "@/hooks/usePlan"
+import { DEV_OWNER_EMAIL } from "@/lib/adminConstants"
 
 // Dev-mode : cet email a accès au switcher Client ↔ Prestataire
-const DEV_SWITCH_EMAIL = "moumene486@gmail.com"
+// DEV_OWNER_EMAIL importé depuis @/lib/adminAuth (DEV_OWNER_EMAIL)
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -62,7 +63,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const { plan } = usePlan()
   const [upsellOpen, setUpsellOpen] = useState(false)
   const [upsellReason, setUpsellReason] = useState<"messages" | "guests" | "checklist" | "favorites" | "events-multiple" | "vendor-contact" | "theme" | "event-site">("messages")
-  const canSwitch = session?.user?.email === DEV_SWITCH_EMAIL
+  const canSwitch = session?.user?.email === DEV_OWNER_EMAIL
   const firstName = firstNameProp || session?.user?.name?.split(" ")[0] || "U"
   const [eventOpen, setEventOpen] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false)

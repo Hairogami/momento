@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { DEV_OWNER_EMAIL } from "@/lib/adminAuth"
 
-const DEV_EMAIL = "moumene486@gmail.com"
+// DEV_OWNER_EMAIL centralisé via @/lib/adminAuth (DEV_OWNER_EMAIL)
 
 /**
  * POST /api/dev/switch-role — bascule role client ↔ vendor.
@@ -11,7 +12,7 @@ const DEV_EMAIL = "moumene486@gmail.com"
  */
 export async function POST(_req: NextRequest) {
   const session = await auth()
-  if (!session?.user?.id || session.user.email !== DEV_EMAIL) {
+  if (!session?.user?.id || session.user.email !== DEV_OWNER_EMAIL) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
