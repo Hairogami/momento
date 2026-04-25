@@ -1,21 +1,10 @@
 import { NextRequest, NextResponse, after } from "next/server"
+import { randomUUID } from "crypto"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
-import { Resend } from "resend"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
-}
-
-const resend = new Resend(process.env.RESEND_API_KEY!)
-const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@momentoevents.app"
+import { sendVerificationEmail } from "@/lib/email"
 
 const strongPassword = z.string().min(8).max(128)
   .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.")
@@ -118,33 +107,23 @@ export async function POST(req: NextRequest) {
     throw createErr
   }
 
-  // Welcome email — deferred after response via after() so the lambda doesn't
-  // terminate before the send completes (WR-012 fix).
-  const firstName = escapeHtml(data.role === "client" ? (data.firstName ?? name ?? "là") : (data.companyName ?? "vous"))
+  // Email vérification — créé en transaction puis envoyé via after() pour ne pas bloquer la réponse
+  const verifFirstName = data.role === "client" ? (data.firstName ?? null) : (data.companyName ?? null)
+  const token = randomUUID()
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
+  try {
+    await prisma.emailVerification.create({
+      data: { token, userId: user.id, expiresAt, type: "email_verification" },
+    })
+  } catch (e) {
+    console.error("[register] emailVerification create error:", e)
+  }
+
   after(async () => {
     try {
-      await resend.emails.send({
-        from: FROM,
-        to: user.email,
-        subject: "Bienvenue sur Momento 🎉",
-        html: `
-          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#0f0f0f;color:#f5f0eb;border-radius:12px">
-            <h1 style="font-size:22px;font-weight:600;margin-bottom:8px">Bienvenue, ${firstName} !</h1>
-            <p style="color:#9a9a9a;font-size:14px;line-height:1.6;margin-bottom:24px">
-              Votre compte Momento est prêt. Commencez à organiser votre événement ou trouvez les meilleurs prestataires au Maroc.
-            </p>
-            <a href="https://momentoevents.app/dashboard"
-               style="display:inline-block;background:#C1713A;color:#0f0f0f;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">
-              Accéder à mon espace →
-            </a>
-            <p style="color:#555;font-size:12px;margin-top:32px">
-              Momento · Votre plateforme événementielle au Maroc
-            </p>
-          </div>
-        `,
-      })
+      await sendVerificationEmail({ to: user.email, firstName: verifFirstName, token })
     } catch (e) {
-      console.error("[register] welcome email error:", e)
+      console.error("[register] verification email error:", e)
     }
   })
 

@@ -29,11 +29,36 @@ const inputStyle: React.CSSProperties = {
   transition: "border-color 0.15s",
 }
 
+const PWD_RE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+
+function PasswordRequirements({ value }: { value: string }) {
+  const checks = [
+    { ok: value.length >= 8,   label: "8 caractères minimum" },
+    { ok: /[A-Z]/.test(value), label: "Une majuscule" },
+    { ok: /[a-z]/.test(value), label: "Une minuscule" },
+    { ok: /\d/.test(value),    label: "Un chiffre" },
+  ]
+  return (
+    <ul style={{ listStyle: "none", padding: 0, margin: "-2px 0 2px", display: "flex", flexDirection: "column", gap: 4 }}>
+      {checks.map((c, i) => {
+        const color = !value ? "var(--dash-text-3,#9a9aaa)" : c.ok ? "#16a34a" : "#dc2626"
+        return (
+          <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color }}>
+            <span aria-hidden="true" style={{ width: 14, display: "inline-block", textAlign: "center", fontWeight: 700 }}>{c.ok ? "✓" : "·"}</span>
+            <span>{c.label}</span>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
 export default function AntLoginForm() {
   const [mode, setMode]       = useState<"login" | "register">("login")
   const [email, setEmail]     = useState("")
   const [password, setPassword] = useState("")
   const [name, setName]       = useState("")
+  const [confirm, setConfirm] = useState("")
   const [tos, setTos]         = useState(false)
   const [marketing, setMarketing] = useState(true)
   const [error, setError]     = useState("")
@@ -50,6 +75,8 @@ export default function AntLoginForm() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     if (!tos) { setError("Veuillez accepter les conditions générales pour créer un compte."); return }
+    if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return }
+    if (!PWD_RE.test(password)) { setError("Le mot de passe doit faire 8 caractères minimum, avec majuscule, minuscule et chiffre."); return }
     setError(""); setLoading(true)
     const r = await fetch("/api/auth/register", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -65,8 +92,9 @@ export default function AntLoginForm() {
     if (!r.ok) { const d = await r.json(); setError(d.error || "Erreur inscription"); setLoading(false); return }
     const res = await signIn("credentials", { email, password, rememberMe: "true", redirect: false })
     setLoading(false)
-    if (res?.error) { setError("Compte créé ! Connectez-vous."); setMode("login") }
-    else { try { localStorage.setItem("momento_has_logged_in", "1") } catch {} ; window.location.href = "/accueil" }
+    if (res?.error) { setError("Compte créé. Erreur de connexion automatique — connectez-vous manuellement."); setMode("login"); return }
+    try { localStorage.setItem("momento_has_logged_in", "1") } catch {}
+    window.location.href = "/dashboard"
   }
 
   return (
@@ -106,6 +134,19 @@ export default function AntLoginForm() {
           onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle}
           onFocus={e => (e.target.style.borderColor = "#E11D48")}
           onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+
+        {mode === "register" && (
+          <>
+            <PasswordRequirements value={password} />
+            <input type="password" placeholder="Confirmer le mot de passe" value={confirm}
+              onChange={e => setConfirm(e.target.value)} required style={inputStyle}
+              onFocus={e => (e.target.style.borderColor = "#E11D48")}
+              onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+            {confirm && password !== confirm && (
+              <p style={{ fontSize: 12, color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
+            )}
+          </>
+        )}
 
         {mode === "login" && (
           <div style={{ textAlign: "right" }}>

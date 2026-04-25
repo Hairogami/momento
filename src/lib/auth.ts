@@ -84,14 +84,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           user.passwordHash,
         );
         if (!valid) return null;
-        // W13: Enforce email verification before allowing login
-        if (!user.emailVerified) return null;
-        // On passe rememberMe à travers le user pour le JWT callback
+        // Soft-gate : on autorise le login même si l'email n'est pas vérifié.
+        // Une bannière s'affiche dans l'app tant que `emailVerified === null`.
         return {
           id: user.id,
           name: user.name,
           email: user.email,
           image: user.image,
+          emailVerified: user.emailVerified,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           rememberMe: credentials.rememberMe === "true",
         } as any;
@@ -137,11 +137,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         try {
           const dbUser = await prisma.user.findUnique({
             where: { id: user.id! },
-            select: { role: true, image: true },
+            select: { role: true, image: true, emailVerified: true },
           });
           if (dbUser) {
             token.role = dbUser.role;
             if (!token.picture) token.picture = dbUser.image;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (token as any).emailVerified = dbUser.emailVerified;
           }
         } catch {
           // DB lookup failed — non-blocking, sign-in proceeds anyway
@@ -152,8 +154,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
-        (session.user as { id: string; role?: string; provider?: string }).role = token.role as string | undefined;
-        (session.user as { id: string; role?: string; provider?: string }).provider = token.provider as string | undefined;
+        (session.user as { id: string; role?: string; provider?: string; emailVerified?: Date | string | null }).role = token.role as string | undefined;
+        (session.user as { id: string; role?: string; provider?: string; emailVerified?: Date | string | null }).provider = token.provider as string | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (session.user as any).emailVerified = (token as any).emailVerified ?? null;
         // accessToken intentionally NOT exposed to client (security)
       }
       return session;

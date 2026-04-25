@@ -4,7 +4,9 @@ function getResend() {
   const key = process.env.RESEND_API_KEY ?? "re_placeholder"
   return new Resend(key)
 }
-const FROM = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev"
+const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@momentoevents.app"
+const REPLY_TO = process.env.RESEND_REPLY_TO ?? "support@momentoevents.app"
+const UNSUB = `<mailto:unsubscribe@momentoevents.app?subject=unsubscribe>`
 // W06: fail hard in production if APP_URL is unset — broken localhost links in emails are worse than a 500
 if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_APP_URL) {
   throw new Error("[email] NEXT_PUBLIC_APP_URL is not set — refusing to send emails with localhost links")
@@ -66,7 +68,10 @@ export async function sendVerificationEmail({
   await getResend().emails.send({
     from: FROM,
     to,
+    replyTo: REPLY_TO,
     subject: "Vérifiez votre adresse e-mail — Momento",
+    headers: { "List-Unsubscribe": UNSUB, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
+    text: `Bonjour ${firstName ?? "là"},\n\nMerci de rejoindre Momento. Cliquez sur le lien ci-dessous pour vérifier votre adresse e-mail et activer votre compte :\n\n${link}\n\nCe lien expire dans 24 heures. Si vous n'avez pas créé de compte, ignorez cet e-mail.\n\n— L'équipe Momento`,
     html: emailWrapper(`
       <h2 style="margin:0 0 12px;font-size:28px;font-weight:300;font-style:italic;color:#2C1A0E">
         Bonjour ${name} !
@@ -101,7 +106,10 @@ export async function sendPasswordResetEmail({
   await getResend().emails.send({
     from: FROM,
     to,
+    replyTo: REPLY_TO,
     subject: "Réinitialisation de votre mot de passe — Momento",
+    headers: { "List-Unsubscribe": UNSUB, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
+    text: `Bonjour ${firstName ?? "là"},\n\nVous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour en choisir un nouveau :\n\n${link}\n\nCe lien expire dans 1 heure. Si vous n'avez pas fait cette demande, ignorez cet e-mail.\n\n— L'équipe Momento`,
     html: emailWrapper(`
       <h2 style="margin:0 0 12px;font-size:28px;font-weight:300;font-style:italic;color:#2C1A0E">
         Bonjour ${name},

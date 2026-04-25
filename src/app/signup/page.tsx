@@ -15,6 +15,30 @@ const inputStyle: React.CSSProperties = {
 
 const GRADIENT = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
+function PasswordRequirements({ value }: { value: string }) {
+  const checks = [
+    { ok: value.length >= 8,         label: "8 caractères minimum" },
+    { ok: /[A-Z]/.test(value),       label: "Une majuscule" },
+    { ok: /[a-z]/.test(value),       label: "Une minuscule" },
+    { ok: /\d/.test(value),          label: "Un chiffre" },
+  ]
+  return (
+    <ul style={{ listStyle: "none", padding: 0, margin: "-2px 0 2px", display: "flex", flexDirection: "column", gap: 4 }}>
+      {checks.map((c, i) => {
+        const color = !value ? "#9a9aaa" : c.ok ? "#16a34a" : "#dc2626"
+        return (
+          <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color }}>
+            <span aria-hidden="true" style={{ width: 14, display: "inline-block", textAlign: "center", fontWeight: 700 }}>{c.ok ? "✓" : "·"}</span>
+            <span>{c.label}</span>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+const PWD_RE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+
 export default function CloneSignupPage() {
   const router = useRouter()
   const [step, setStep]     = useState<1 | 2>(1)
@@ -35,6 +59,7 @@ export default function CloneSignupPage() {
   const [telephone, setTelephone]   = useState("")
   const [vEmail, setVEmail]         = useState("")
   const [vPassword, setVPassword]   = useState("")
+  const [vConfirm, setVConfirm]     = useState("")
 
   // CGU + marketing
   const [tos, setTos]               = useState(false)
@@ -43,10 +68,15 @@ export default function CloneSignupPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault(); setError(""); setLoading(true)
 
-    if (role === "client" && password !== confirm) {
+    const pwd = role === "client" ? password : vPassword
+    const cfm = role === "client" ? confirm : vConfirm
+
+    if (pwd !== cfm) {
       setError("Les mots de passe ne correspondent pas."); setLoading(false); return
     }
-
+    if (!PWD_RE.test(pwd)) {
+      setError("Le mot de passe doit faire 8 caractères minimum, avec majuscule, minuscule et chiffre."); setLoading(false); return
+    }
     if (!tos) {
       setError("Acceptez les conditions pour continuer."); setLoading(false); return
     }
@@ -71,8 +101,11 @@ export default function CloneSignupPage() {
       rememberMe: "true", redirect: false,
     })
     setLoading(false)
-    if (res?.error) { setError("Compte créé ! Connectez-vous."); router.push("/login") }
-    else router.push("/accueil")
+    if (res?.error) {
+      setError("Compte créé. Erreur de connexion automatique — connectez-vous manuellement.")
+      return
+    }
+    router.push("/dashboard")
   }
 
   return (
@@ -275,10 +308,14 @@ export default function CloneSignupPage() {
                     </div>
                     <input type="email" placeholder="Email *" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <input type="password" placeholder="Mot de passe (8+ car.) *" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle}
+                    <input type="password" placeholder="Mot de passe *" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <PasswordRequirements value={password} />
                     <input type="password" placeholder="Confirmer le mot de passe *" value={confirm} onChange={e => setConfirm(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    {confirm && password !== confirm && (
+                      <p style={{ fontSize: 12, color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
+                    )}
                   </>
                 ) : (
                   <>
@@ -290,8 +327,14 @@ export default function CloneSignupPage() {
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     <input placeholder="Téléphone" value={telephone} onChange={e => setTelephone(e.target.value)} style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <input type="password" placeholder="Mot de passe (8+ car.) *" value={vPassword} onChange={e => setVPassword(e.target.value)} required minLength={8} style={inputStyle}
+                    <input type="password" placeholder="Mot de passe *" value={vPassword} onChange={e => setVPassword(e.target.value)} required minLength={8} style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    <PasswordRequirements value={vPassword} />
+                    <input type="password" placeholder="Confirmer le mot de passe *" value={vConfirm} onChange={e => setVConfirm(e.target.value)} required style={inputStyle}
+                      onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                    {vConfirm && vPassword !== vConfirm && (
+                      <p style={{ fontSize: 12, color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
+                    )}
                   </>
                 )}
 

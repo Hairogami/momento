@@ -3,6 +3,7 @@
 import { SessionProvider as NextAuthProvider, useSession } from "next-auth/react";
 import { createContext, useContext } from "react";
 import ConsentApplier from "./ConsentApplier";
+import EmailVerificationBanner from "./EmailVerificationBanner";
 
 // Compatibility shim: exposes useSessionUser() used by Farah components
 // Maps NextAuth session onto the shape Farah components expect
@@ -48,6 +49,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   return (
     <NextAuthProvider>
       <ConsentApplier />
+      <EmailVerificationBanner />
       <SessionUserBridge>{children}</SessionUserBridge>
     </NextAuthProvider>
   );
