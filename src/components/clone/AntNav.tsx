@@ -386,6 +386,22 @@ export default function AntNav({
               <GsIcon icon={menuOpen ? "close" : "menu"} size={16} color={text} />
             </button>
 
+            {/* Mon planner — visible quand connecté, entre palette et avatar */}
+            {isLoggedIn && (
+              <Link href={isVendor ? "/vendor/dashboard" : "/dashboard"}
+                className="hidden md:inline-flex items-center"
+                style={{
+                  gap: 6, padding: "6px 14px", borderRadius: 999,
+                  background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+                  color: "#fff", fontSize: 12, fontWeight: 600,
+                  textDecoration: "none", whiteSpace: "nowrap",
+                  boxShadow: "0 4px 14px color-mix(in srgb, var(--g1,#E11D48) 28%, transparent)",
+                  transition: "transform 0.15s, box-shadow 0.15s",
+                }}>
+                Mon planner →
+              </Link>
+            )}
+
             {/* ── Auth zone ── */}
             {status === "loading" ? (
               /* Skeleton pendant chargement session */
