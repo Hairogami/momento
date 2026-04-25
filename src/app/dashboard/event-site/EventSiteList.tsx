@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
+import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
+import { usePlanners } from "@/hooks/usePlanners"
 import { PALETTES, FONTS } from "@/lib/eventSiteTokens"
 
 type SiteCard = {
@@ -60,6 +62,7 @@ function formatDate(d: string | Date | null): string {
 
 export default function EventSiteList({ sites, orphans }: Props) {
   const router = useRouter()
+  const { events, activeEventId, setActiveEventId } = usePlanners()
   const [creating, setCreating] = useState(false)
   const [selectedPlannerId, setSelectedPlannerId] = useState<string>(orphans[0]?.id ?? "")
   const [error, setError] = useState<string | null>(null)
@@ -101,124 +104,134 @@ export default function EventSiteList({ sites, orphans }: Props) {
   // Empty state — aucun planner du tout
   if (sites.length === 0 && orphans.length === 0) {
     return (
-      <>
-        <AntNav hideLinks />
-        <div style={{ padding: "60px 24px", maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
-          <h1 style={titleStyle}>Sites événement</h1>
-          <div style={{ marginTop: 32, padding: "40px 24px", borderRadius: 14, border: "1px dashed var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,rgba(183,191,217,0.04))" }}>
-            <div style={{ fontSize: 38, marginBottom: 12 }}>🎉</div>
-            <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 18px", lineHeight: 1.6 }}>
-              Vous n&apos;avez pas encore d&apos;événement.
-              <br />
-              Créez-en un pour pouvoir générer son site.
-            </p>
-            <button type="button" onClick={openCreateEventModal} style={ctaPrimaryStyle}>Créer un événement</button>
-          </div>
+      <div className="ant-root" style={pageStyle}>
+        <div className="hidden lg:flex">
+          <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
         </div>
+        <div className="lg:hidden"><AntNav /></div>
+        <main className="pb-20 md:pb-0" style={contentStyle}>
+          <div style={{ padding: "60px 24px", maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
+            <h1 style={titleStyle}>Sites événement</h1>
+            <div style={{ marginTop: 32, padding: "40px 24px", borderRadius: 14, border: "1px dashed var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,rgba(183,191,217,0.04))" }}>
+              <div style={{ fontSize: 38, marginBottom: 12 }}>🎉</div>
+              <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 18px", lineHeight: 1.6 }}>
+                Vous n&apos;avez pas encore d&apos;événement.
+                <br />
+                Créez-en un pour pouvoir générer son site.
+              </p>
+              <button type="button" onClick={openCreateEventModal} style={ctaPrimaryStyle}>Créer un événement</button>
+            </div>
+          </div>
+        </main>
         <CreateEventModal
           open={showCreateEventModal}
           onClose={() => setShowCreateEventModal(false)}
           onCreated={handleEventCreated}
         />
-      </>
+      </div>
     )
   }
 
   return (
-    <>
-      <AntNav hideLinks />
-      <div style={{ padding: "32px 24px 80px", maxWidth: 1200, margin: "0 auto" }}>
-        <header style={{ marginBottom: 28 }}>
-          <h1 style={titleStyle}>Sites événement</h1>
-          <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "6px 0 0" }}>
-            Un site personnalisable par événement — pour partager les infos et collecter les RSVP.
-          </p>
-        </header>
-
-      {/* Section : sites existants */}
-      {sites.length > 0 && (
-        <section style={{ marginBottom: 36 }}>
-          <h2 style={sectionTitleStyle}>Vos sites ({sites.length})</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
-            {sites.map(({ planner, site }) => (
-              <SiteCardItem key={site.id} planner={planner} site={site} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Section : créer un site pour un événement orphelin */}
-      <section>
-        <h2 style={sectionTitleStyle}>Créer un nouveau site</h2>
-        {orphans.length === 0 ? (
-          <div style={{ padding: "20px 18px", borderRadius: 12, background: "var(--dash-faint,rgba(183,191,217,0.05))", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))" }}>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 10px" }}>
-              Tous vos événements ont déjà un site. Créez un nouvel événement pour ajouter un autre site.
+    <div className="ant-root" style={pageStyle}>
+      <div className="hidden lg:flex">
+        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
+      </div>
+      <div className="lg:hidden"><AntNav /></div>
+      <main className="pb-20 md:pb-0" style={contentStyle}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <header style={{ marginBottom: 28 }}>
+            <h1 style={titleStyle}>Sites événement</h1>
+            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "6px 0 0" }}>
+              Un site personnalisable par événement — pour partager les infos et collecter les RSVP.
             </p>
-            <button type="button" onClick={openCreateEventModal} style={ctaSecondaryStyle}>Créer un événement</button>
-          </div>
-        ) : (
-          <div style={{ padding: "18px", borderRadius: 12, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.25))" }}>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 12px" }}>
-              Choisissez l&apos;événement pour lequel créer un site :
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 14 }}>
-              {orphans.map(o => (
-                <label key={o.id} style={{
-                  display: "flex", alignItems: "center", gap: 10,
-                  padding: "10px 12px", borderRadius: 8,
-                  border: selectedPlannerId === o.id ? "1.5px solid var(--g1,#E11D48)" : "1px solid var(--dash-border,rgba(183,191,217,0.2))",
-                  background: selectedPlannerId === o.id ? "rgba(225,29,72,0.04)" : "transparent",
-                  cursor: "pointer", transition: "all 120ms ease",
-                }}>
-                  <input
-                    type="radio"
-                    name="orphan"
-                    value={o.id}
-                    checked={selectedPlannerId === o.id}
-                    onChange={() => setSelectedPlannerId(o.id)}
-                  />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#121317)" }}>
-                      {o.coupleNames || o.title}
-                    </div>
-                    <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 2 }}>
-                      {EVENT_TYPE_LABEL[o.eventType ?? "autre"] ?? "Événement"} · {formatDate(o.weddingDate)}
-                    </div>
+          </header>
+
+          {/* Section : sites existants */}
+          {sites.length > 0 && (
+            <section style={{ marginBottom: 36 }}>
+              <h2 style={sectionTitleStyle}>Vos sites ({sites.length})</h2>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
+                {sites.map(({ planner, site }) => (
+                  <SiteCardItem key={site.id} planner={planner} site={site} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Section : créer un site pour un événement orphelin */}
+          <section>
+            <h2 style={sectionTitleStyle}>Créer un nouveau site</h2>
+            {orphans.length === 0 ? (
+              <div style={{ padding: "20px 18px", borderRadius: 12, background: "var(--dash-faint,rgba(183,191,217,0.05))", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))" }}>
+                <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 10px" }}>
+                  Tous vos événements ont déjà un site. Créez un nouvel événement pour ajouter un autre site.
+                </p>
+                <button type="button" onClick={openCreateEventModal} style={ctaSecondaryStyle}>Créer un événement</button>
+              </div>
+            ) : (
+              <div style={{ padding: "18px", borderRadius: 12, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.25))" }}>
+                <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 12px" }}>
+                  Choisissez l&apos;événement pour lequel créer un site :
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 14 }}>
+                  {orphans.map(o => (
+                    <label key={o.id} style={{
+                      display: "flex", alignItems: "center", gap: 10,
+                      padding: "10px 12px", borderRadius: 8,
+                      border: selectedPlannerId === o.id ? "1.5px solid var(--g1,#E11D48)" : "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+                      background: selectedPlannerId === o.id ? "rgba(225,29,72,0.04)" : "transparent",
+                      cursor: "pointer", transition: "all 120ms ease",
+                    }}>
+                      <input
+                        type="radio"
+                        name="orphan"
+                        value={o.id}
+                        checked={selectedPlannerId === o.id}
+                        onChange={() => setSelectedPlannerId(o.id)}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#121317)" }}>
+                          {o.coupleNames || o.title}
+                        </div>
+                        <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 2 }}>
+                          {EVENT_TYPE_LABEL[o.eventType ?? "autre"] ?? "Événement"} · {formatDate(o.weddingDate)}
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+
+                {error && (
+                  <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)", fontSize: 12, color: "#dc2626", marginBottom: 12 }}>
+                    {error}
                   </div>
-                </label>
-              ))}
-            </div>
+                )}
 
-            {error && (
-              <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)", fontSize: 12, color: "#dc2626", marginBottom: 12 }}>
-                {error}
+                <button
+                  type="button"
+                  onClick={createSite}
+                  disabled={creating || !selectedPlannerId}
+                  style={{
+                    ...ctaPrimaryStyle,
+                    opacity: (creating || !selectedPlannerId) ? 0.6 : 1,
+                    cursor: (creating || !selectedPlannerId) ? "not-allowed" : "pointer",
+                    display: "inline-block",
+                  }}
+                >
+                  {creating ? "Création…" : "Créer le site"}
+                </button>
               </div>
             )}
-
-            <button
-              type="button"
-              onClick={createSite}
-              disabled={creating || !selectedPlannerId}
-              style={{
-                ...ctaPrimaryStyle,
-                opacity: (creating || !selectedPlannerId) ? 0.6 : 1,
-                cursor: (creating || !selectedPlannerId) ? "not-allowed" : "pointer",
-                display: "inline-block",
-              }}
-            >
-              {creating ? "Création…" : "Créer le site"}
-            </button>
-          </div>
-        )}
-        </section>
-      </div>
+          </section>
+        </div>
+      </main>
       <CreateEventModal
         open={showCreateEventModal}
         onClose={() => setShowCreateEventModal(false)}
         onCreated={handleEventCreated}
       />
-    </>
+    </div>
   )
 }
 
@@ -399,4 +412,14 @@ const ctaSecondaryStyle: React.CSSProperties = {
   textDecoration: "none",
   fontFamily: "inherit",
   cursor: "pointer",
+}
+
+const pageStyle: React.CSSProperties = {
+  display: "flex", minHeight: "100vh",
+  background: "var(--dash-bg,#f7f7fb)",
+  fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+}
+
+const contentStyle: React.CSSProperties = {
+  flex: 1, padding: "clamp(16px, 4vw, 32px)", overflowY: "auto",
 }
