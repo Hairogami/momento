@@ -62,3 +62,8 @@ explore-*.png
 # local caches / brainstorm artifacts
 .playwright-mcp/
 .superpowers/brainstorm/
+
+.env*.local
+
+# Local palette preview screenshots (root) — not prod assets
+/palette-*.png
