@@ -237,7 +237,7 @@ function ContentTab({
   const toggleVisible = (key: string) => onUpdate(`visibility.${key}`, !isVisible(key))
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      <FieldGroup label="Le titre principal">
+      <FieldGroup label="Le titre principal" collapsible>
         <Input value={hero.title ?? ""} onChange={v => onUpdate("hero.title", v)} placeholder="Ex: Yousra & Ali" />
       </FieldGroup>
 
@@ -274,18 +274,18 @@ function ContentTab({
 
       <div style={{ height: 1, background: "var(--dash-border,rgba(183,191,217,0.15))", margin: "4px 0" }} />
 
-      <FieldGroup label="Compte à rebours (facultatif)" visible={isVisible("countdown")} onToggleVisible={() => toggleVisible("countdown")}>
+      <FieldGroup label="Compte à rebours (facultatif)" visible={isVisible("countdown")} onToggleVisible={() => toggleVisible("countdown")} collapsible>
         <CountdownEditor
           countdown={(content.countdown as CountdownState | undefined) ?? {}}
           onChange={next => onUpdate("countdown", next)}
         />
       </FieldGroup>
 
-      <FieldGroup label="Un mot à vos invités (facultatif)" visible={isVisible("welcomeNote")} onToggleVisible={() => toggleVisible("welcomeNote")}>
+      <FieldGroup label="Un mot à vos invités (facultatif)" visible={isVisible("welcomeNote")} onToggleVisible={() => toggleVisible("welcomeNote")} collapsible>
         <Textarea value={(content.welcomeNote as string) ?? ""} onChange={v => onUpdate("welcomeNote", v)} placeholder="Ex: Nous sommes ravis de vous convier à la célébration de notre union…" rows={3} />
       </FieldGroup>
 
-      <FieldGroup label="Programme (facultatif)" visible={isVisible("program")} onToggleVisible={() => toggleVisible("program")}>
+      <FieldGroup label="Programme (facultatif)" visible={isVisible("program")} onToggleVisible={() => toggleVisible("program")} collapsible>
         <ProgramEditor
           steps={(content.program as ProgramStepData[] | undefined) ?? []}
           onChange={next => onUpdate("program", next)}
@@ -574,7 +574,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
         </div>
       </FieldGroup>
 
-      <FieldGroup label="Palette de couleurs">
+      <FieldGroup label="Palette de couleurs" collapsible>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
           {PALETTES.map(p => {
             const isActive = site.palette === p.id && !((style as { customColors?: unknown }).customColors)
@@ -619,7 +619,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
         </div>
       </FieldGroup>
 
-      <FieldGroup label="Police des titres">
+      <FieldGroup label="Police des titres" collapsible>
         <FontSelector
           current={site.fontHeading}
           onChange={v => onPatch({ fontHeading: v })}
@@ -627,7 +627,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
         />
       </FieldGroup>
 
-      <FieldGroup label="Police du corps de texte">
+      <FieldGroup label="Police du corps de texte" collapsible>
         <FontSelector
           current={site.fontBody}
           onChange={v => onPatch({ fontBody: v })}
@@ -635,7 +635,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
         />
       </FieldGroup>
 
-      <FieldGroup label="Motif décoratif">
+      <FieldGroup label="Motif décoratif" collapsible>
         <PatternPicker
           current={style.pattern as PatternId | undefined}
           onPick={id => onUpdateContent("style.pattern", id)}
@@ -1184,23 +1184,53 @@ function FontSelector({ current, onChange, preview }: { current: string; onChang
 }
 
 function FieldGroup({
-  label, children, visible, onToggleVisible,
+  label, children, visible, onToggleVisible, collapsible = false, defaultCollapsed = true,
 }: {
   label: string
   children: React.ReactNode
   /** Si défini, active l'œil de visibilité — la section peut être masquée sur le site rendu. */
   visible?: boolean
   onToggleVisible?: () => void
+  /** Si true, la section est repliable. Header click → toggle. */
+  collapsible?: boolean
+  /** Quand collapsible=true : repliée par défaut au premier mount. */
+  defaultCollapsed?: boolean
 }) {
   const isHideable = typeof visible === "boolean" && typeof onToggleVisible === "function"
+  const [collapsed, setCollapsed] = useState(collapsible ? defaultCollapsed : false)
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 7, opacity: isHideable && !visible ? 0.5 : 1 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-        <label style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.05em", textTransform: "uppercase" }}>{label}</label>
+      <div
+        onClick={collapsible ? () => setCollapsed(c => !c) : undefined}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+          cursor: collapsible ? "pointer" : "default",
+          userSelect: collapsible ? "none" : "auto",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {collapsible && (
+            <span
+              aria-hidden
+              style={{
+                display: "inline-block",
+                fontSize: 9,
+                color: "var(--dash-text-3,#9a9aaa)",
+                transform: collapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                transition: "transform 150ms ease",
+              }}
+            >▼</span>
+          )}
+          <label style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.05em", textTransform: "uppercase", cursor: collapsible ? "pointer" : "default" }}>{label}</label>
+        </div>
         {isHideable && (
           <button
             type="button"
-            onClick={onToggleVisible}
+            onClick={e => { e.stopPropagation(); onToggleVisible?.() }}
             title={visible ? "Masquer cette section sur le site" : "Afficher cette section sur le site"}
             aria-label={visible ? "Masquer" : "Afficher"}
             style={{
@@ -1219,7 +1249,7 @@ function FieldGroup({
           </button>
         )}
       </div>
-      {children}
+      {!collapsed && children}
     </div>
   )
 }
