@@ -87,6 +87,63 @@ export function SkelPill({ width = 80, height = 28, style, delay }: SkelProps & 
   )
 }
 
+/**
+ * Sidebar skeleton — mime DashSidebar (visible lg+).
+ * Réutilisé par tous les loaders dashboard authentifié.
+ */
+export function DashSidebarSkel() {
+  return (
+    <aside
+      className="hidden lg:flex"
+      style={{
+        width: 260,
+        flexShrink: 0,
+        flexDirection: "column",
+        gap: 14,
+        padding: "20px 16px",
+        background: "var(--dash-sidebar, #ffffff)",
+        borderRight: "1px solid var(--dash-border, rgba(183,191,217,0.15))",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+        <SkelCircle size={36} />
+        <SkelLine width={120} height={14} delay={0.05} />
+      </div>
+      <SkelBlock style={{ height: 64, borderRadius: 14 }} delay={0.1} />
+      {Array.from({ length: 7 }).map((_, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 6px" }}>
+          <SkelBlock style={{ width: 18, height: 18, borderRadius: 6 }} delay={0.12 + i * 0.04} />
+          <SkelLine width={`${50 + (i % 3) * 12}%`} height={11} delay={0.14 + i * 0.04} />
+        </div>
+      ))}
+    </aside>
+  )
+}
+
+/**
+ * Topbar mobile minimal — burger + titre.
+ */
+export function DashTopbarMobileSkel() {
+  return (
+    <div
+      className="flex lg:hidden"
+      style={{
+        alignItems: "center",
+        gap: 12,
+        padding: "12px 16px",
+        background: "var(--dash-surface, #fff)",
+        borderBottom: "1px solid var(--dash-border, rgba(183,191,217,0.15))",
+        position: "sticky",
+        top: 0,
+        zIndex: 20,
+      }}
+    >
+      <SkelBlock style={{ width: 32, height: 32, borderRadius: 8 }} />
+      <SkelLine width={140} height={14} delay={0.05} />
+    </div>
+  )
+}
+
 export function SkelCard({ children, style }: { children?: React.ReactNode; style?: CSSProperties }) {
   return (
     <div
