@@ -604,7 +604,7 @@ function ContactModal({ slug, vendorName, prefillDate, onClose }: { slug: string
               <Field label="Téléphone (optionnel)">
                 <input type="tel" value={form.clientPhone} onChange={e => setForm(p => ({ ...p, clientPhone: e.target.value }))} style={inputStyle} />
               </Field>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10 }}>
                 <Field label="Type d'événement">
                   <select value={form.eventType} onChange={e => setForm(p => ({ ...p, eventType: e.target.value }))} style={inputStyle}>
                     <option>Mariage</option>

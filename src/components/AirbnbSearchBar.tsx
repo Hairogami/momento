@@ -85,8 +85,9 @@ export default function AirbnbSearchBar() {
     <div ref={barRef} className="relative w-full max-w-3xl mx-auto mt-8">
 
       {/* ── Barre principale ── */}
+      {/* Mobile: stack vertical full-width / Desktop md+: row inline */}
       <div
-        className="flex items-stretch"
+        className="flex flex-col md:flex-row md:items-stretch"
         style={{
           backgroundColor: "var(--bg-card)",
           border: `0.5px solid ${active ? C.terra : "var(--border)"}`,
@@ -98,7 +99,7 @@ export default function AirbnbSearchBar() {
       >
         {/* Champ Ville */}
         <button
-          className="flex-1 flex flex-col items-start px-5 py-4 text-left"
+          className="flex-1 flex flex-col items-start px-5 py-3 md:py-4 text-left"
           style={fieldStyle("ville")}
           onClick={() => setActive(a => a === "ville" ? null : "ville")}
           onMouseEnter={() => setHover("ville")}
@@ -111,11 +112,15 @@ export default function AirbnbSearchBar() {
           </span>
         </button>
 
-        <div style={{ width: "0.5px", backgroundColor: "var(--border)", alignSelf: "stretch", margin: "8px 0" }} />
+        {/* Séparateur — horizontal sur mobile, vertical sur desktop */}
+        <div
+          className="md:w-px md:h-auto md:my-2"
+          style={{ height: "0.5px", width: "100%", backgroundColor: "var(--border)", alignSelf: "stretch" }}
+        />
 
         {/* Champ Date */}
         <button
-          className="flex-1 flex flex-col items-start px-5 py-4 text-left"
+          className="flex-1 flex flex-col items-start px-5 py-3 md:py-4 text-left"
           style={fieldStyle("date")}
           onClick={() => setActive(a => a === "date" ? null : "date")}
           onMouseEnter={() => setHover("date")}
@@ -128,11 +133,14 @@ export default function AirbnbSearchBar() {
           </span>
         </button>
 
-        <div style={{ width: "0.5px", backgroundColor: "var(--border)", alignSelf: "stretch", margin: "8px 0" }} />
+        <div
+          className="md:w-px md:h-auto md:my-2"
+          style={{ height: "0.5px", width: "100%", backgroundColor: "var(--border)", alignSelf: "stretch" }}
+        />
 
         {/* Champ Filtres */}
         <button
-          className="flex-1 flex flex-col items-start px-5 py-4 text-left"
+          className="flex-1 flex flex-col items-start px-5 py-3 md:py-4 text-left"
           style={fieldStyle("filtres")}
           onClick={() => setActive(a => a === "filtres" ? null : "filtres")}
           onMouseEnter={() => setHover("filtres")}
@@ -145,11 +153,11 @@ export default function AirbnbSearchBar() {
           </span>
         </button>
 
-        {/* Bouton recherche */}
+        {/* Bouton recherche — full-width sur mobile, inline sur desktop */}
         <button
           onClick={handleSearch}
           aria-label="Rechercher"
-          className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase px-5 py-4 transition-opacity hover:opacity-85"
+          className="flex items-center justify-center gap-2 text-xs font-semibold tracking-widest uppercase px-5 py-4 transition-opacity hover:opacity-85"
           style={{
             backgroundColor: C.terra,
             color: "var(--bg)",
@@ -158,7 +166,7 @@ export default function AirbnbSearchBar() {
           }}
         >
           <Search size={15} />
-          <span className="hidden sm:inline">Rechercher</span>
+          <span>Rechercher</span>
         </button>
       </div>
 
