@@ -2135,17 +2135,17 @@ export default function AntVideoSection() {
           {/* ── Contenu bento — remplace le placeholder vidéo ── */}
           <div style={{ width: "100%", height: "100%", background: "#0e0e0e", display: "flex", flexDirection: "column", position: "relative" }}>
             {/* Zone principale — flex:1, layout vertical : texte haut + grille bas */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "3vh 4vw", boxSizing: "border-box", gap: "2.5vh", minHeight: 0 }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "1.6vh 4vw 2vh", boxSizing: "border-box", gap: "1.4vh", minHeight: 0 }}>
 
               {/* Texte en-tête — centré */}
               <div style={{ textAlign: "center" }}>
-                <p style={{ fontSize: "clamp(1.4rem, 0.6rem + 2.4vw, 3.2rem)", fontWeight: 500, lineHeight: 1.2, color: "#f5f5f5", margin: "0 0 0.6vh", letterSpacing: "-0.02em" }}>
+                <p style={{ fontSize: "clamp(1.25rem, 0.5rem + 1.6vw, 2.4rem)", fontWeight: 500, lineHeight: 1.15, color: "#f5f5f5", margin: "0 0 0.4vh", letterSpacing: "-0.02em" }}>
                   Tout ce qu&apos;il te faut pour organiser{" "}
                   <span style={{ background: "linear-gradient(90deg,#E11D48,#9333EA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                     le mariage que tu veux.
                   </span>
                 </p>
-                <p style={{ fontSize: "clamp(0.85rem, 0.45rem + 0.9vw, 1.25rem)", color: "rgba(255,255,255,0.35)", margin: 0 }}>
+                <p style={{ fontSize: "clamp(0.78rem, 0.4rem + 0.7vw, 1.1rem)", color: "rgba(255,255,255,0.35)", margin: 0 }}>
                   Pour chaque jour jusqu&apos;au grand jour.
                 </p>
               </div>
