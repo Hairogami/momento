@@ -88,15 +88,30 @@ export function rateLimitMemoryOnly(
 
 /**
  * Rate limit async : Upstash en production, Map en dev/CI.
+ *
+ * Si Upstash est mal configuré en prod (env vars manquantes ou erreur
+ * réseau), on log un warning critique et on fail-OPEN (`ok:true`) pour
+ * éviter de 500-er toutes les routes du site. Le rate-limit est défense
+ * en profondeur — les vrais gates (auth, key check, validation Zod)
+ * doivent rester suffisants.
  */
 export async function rateLimitAsync(
   key: string,
   limit: number,
   windowMs: number
 ): Promise<{ ok: true } | { ok: false; retryAfter: number }> {
-  const upstash = await getUpstashLimiter()
-  if (upstash) return upstash(key, limit, windowMs)
-  return rateLimitMemory(key, limit, windowMs)
+  try {
+    const upstash = await getUpstashLimiter()
+    if (upstash) return upstash(key, limit, windowMs)
+    return rateLimitMemory(key, limit, windowMs)
+  } catch (e) {
+    console.error(
+      "[rateLimit] CRITICAL: rate limiter unavailable, failing open. " +
+      "Configure UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN in Vercel env.",
+      e instanceof Error ? e.message : e
+    )
+    return { ok: true }
+  }
 }
 
 /**
