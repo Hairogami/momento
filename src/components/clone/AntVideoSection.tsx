@@ -280,8 +280,21 @@ function VendorSwipePreview() {
   const isSwiping  = step === 7
   const isList     = step >= 8
   const isZoomBtn  = step === 6
-  // Photo affichée : Image 2 (steps 0, 2, 6) / Image 1 (step 1)
-  const photoIdx   = step === 1 ? 1 : 0
+  // Photo affichée : sync avec le clic curseur (délai 1050ms = animation cursorClick)
+  // Step 1 (clic droite) : photo 1 → 2 à t=1.05s
+  // Step 2 (clic gauche) : photo 2 → 1 à t=1.05s
+  const [photoIdx, setPhotoIdx] = useState(0)
+  useEffect(() => {
+    if (step === 1) {
+      const id = setTimeout(() => setPhotoIdx(1), 1050)
+      return () => clearTimeout(id)
+    }
+    if (step === 2) {
+      const id = setTimeout(() => setPhotoIdx(0), 1050)
+      return () => clearTimeout(id)
+    }
+    if (step === 0) setPhotoIdx(0) // reset à chaque nouveau cycle
+  }, [step])
 
   // Photo 1 = Image 1 user (femme chemise noire bouquet rouge), Photo 2 = Image 2 (femme bleue bouquet)
   // User flow : Image 2 first, browse → Image 1, retour Image 2
@@ -1726,41 +1739,296 @@ function AgentAIPreview() {
   )
 }
 
-// ── 6. Budget — rappel paiement + barres animées ──────────────────────────────
+// ── 6. Budget — donut SVG fidèle + zoom sur ajout dépense ──────────────────
 function BudgetPreview() {
-  const step = useAnimLoop([2000, 600, 2200, 800])
-  const showNotif = step === 1 || step === 2
-  const items = [
-    { l: "Traiteur", p: 65, c: "#E11D48", hi: step === 2 },
-    { l: "Photos",   p: 42, c: "#9333EA", hi: false },
-    { l: "Salle",    p: 88, c: "#0EA5E9", hi: false },
+  // 8 steps : 0 wide-shot donut cascade, 1 zoom-in bouton +, 2 form ouvert,
+  // 3 typing montant, 4 clic Valider, 5 zoom-out, 6 nouvelle slice + toast, 7 pause
+  const step = useAnimLoop([3500, 1300, 1500, 2500, 1000, 1000, 2700, 1500])
+  const [typedAmount, setTypedAmount] = useState("")
+  const fontMomento = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif"
+
+  useEffect(() => {
+    if (step === 3) {
+      setTypedAmount("")
+      const txt = "5 000"
+      let i = 0
+      const id = setInterval(() => {
+        i++
+        setTypedAmount(txt.slice(0, i))
+        if (i >= txt.length) clearInterval(id)
+      }, 200)
+      return () => clearInterval(id)
+    }
+    if (step === 7 || step === 0) setTypedAmount("")
+  }, [step])
+
+  // Catégories budget (couleurs réelles BudgetChart.tsx — Traiteur incrémenté +5K)
+  type Slice = { name: string; value: number; color: string; isNew?: boolean }
+  const SLICES_BASE: Slice[] = [
+    { name: "Lieu",     value: 22000, color: "#C4532A" },
+    { name: "Traiteur", value: 15000, color: "#D4733A" },
+    { name: "Photo",    value: 8000,  color: "#A03820" },
+    { name: "Musique",  value: 5000,  color: "#E08050" },
+    { name: "Déco",     value: 6000,  color: "#B84830" },
+    { name: "Robe",     value: 3000,  color: "#F09060" },
+    { name: "Autre",    value: 1000,  color: "#8C6A5A" },
   ]
+  const SLICES_AFTER: Slice[] = [
+    { name: "Lieu",     value: 22000, color: "#C4532A" },
+    { name: "Traiteur", value: 20000, color: "#D4733A", isNew: true },
+    { name: "Photo",    value: 8000,  color: "#A03820" },
+    { name: "Musique",  value: 5000,  color: "#E08050" },
+    { name: "Déco",     value: 6000,  color: "#B84830" },
+    { name: "Robe",     value: 3000,  color: "#F09060" },
+    { name: "Autre",    value: 1000,  color: "#8C6A5A" },
+  ]
+  const BUDGET_TOTAL = 100000
+  const slices = step >= 6 ? SLICES_AFTER : SLICES_BASE
+  const spent = slices.reduce((s, x) => s + x.value, 0)
+  const pct = Math.round((spent / BUDGET_TOTAL) * 100)
+
+  // Donut SVG geometry
+  const cx = 75, cy = 75, r = 48
+  const circumference = 2 * Math.PI * r
+  let acc = 0
+  const slicesWithGeo = slices.map((s) => {
+    const portion = s.value / spent
+    const arcLen = portion * circumference
+    const offset = -acc * circumference
+    acc += portion
+    return { ...s, arcLen, offset }
+  })
+
+  // 2 layouts crossfade :
+  // wide-shot (donut + legend + bouton) actif aux steps 0, 5, 6, 7
+  // form-zoom (form ajout dépense) actif aux steps 1-4
+  const showWide = step <= 0 || step >= 5
+  const showForm = step >= 1 && step <= 4
+  const showToast = step === 6 || step === 7
+
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, minHeight: 0, position: "relative" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexShrink: 0 }}>
-        <span style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>Budget total</span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#f5f5f5" }}>120 000 Dhs</span>
-      </div>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 7 }}>
-        {items.map((it,i) => (
-          <div key={i}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-              <span style={{ fontSize: 8, color: it.hi ? "#fbbf24" : "rgba(255,255,255,0.5)", transition: "color 0.4s", fontWeight: it.hi ? 600 : 400 }}>{it.l}</span>
-              <span style={{ fontSize: 8, color: "rgba(255,255,255,0.3)" }}>{it.p}%</span>
-            </div>
-            <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${it.p}%`, background: it.hi ? "#fbbf24" : it.c, transition: "background 0.5s", borderRadius: 99 }} />
-            </div>
-          </div>
-        ))}
-      </div>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, background: "rgba(251,191,36,0.14)", border: "1px solid rgba(251,191,36,0.35)", borderRadius: 8, padding: "5px 7px", display: "flex", alignItems: "center", gap: 5, opacity: showNotif ? 1 : 0, transform: showNotif ? "translateY(0)" : "translateY(-8px)", transition: "opacity 0.35s, transform 0.35s", pointerEvents: "none" }}>
-        <span style={{ fontSize: 11 }}>⏰</span>
+    <div style={{
+      flex: 1, display: "flex", flexDirection: "column",
+      minHeight: 0, overflow: "hidden",
+      background: "#0E0F12", borderRadius: 8,
+      fontFamily: fontMomento,
+      position: "relative",
+    }}>
+      {/* HEADER */}
+      <div style={{
+        padding: "10px 13px",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        display: "flex", alignItems: "center", gap: 9,
+        flexShrink: 0,
+      }}>
+        <span style={{ fontSize: 18 }}>💰</span>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 8, fontWeight: 600, color: "#fbbf24" }}>Rappel paiement</div>
-          <div style={{ fontSize: 7, color: "rgba(255,255,255,0.45)" }}>Traiteur — 5 000 Dhs dû ce mois</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Budget</div>
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>Yasmine & Yazid · 17 nov 2025</div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontVariantNumeric: "tabular-nums" }}>
+            {spent.toLocaleString("fr-FR")} <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 10 }}>/ 100 000 Dhs</span>
+          </div>
         </div>
       </div>
+
+      {/* MAIN content — 2 layouts empilés (wide-shot vs form-zoom) crossfade */}
+      <div style={{
+        flex: "1 1 0", minHeight: 0,
+        position: "relative",
+        overflow: "hidden",
+      }}>
+        {/* WIDE-SHOT : donut + legend + bouton */}
+        <div style={{
+          position: "absolute", inset: 0,
+          padding: "10px 12px",
+          display: "flex", flexDirection: "column",
+          opacity: showWide ? 1 : 0,
+          transform: showWide ? "scale(1)" : "scale(0.5)",
+          transition: "opacity 0.5s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: showWide ? "auto" : "none",
+        }}>
+          <div style={{
+            flex: 1, display: "flex", alignItems: "center",
+            justifyContent: "center", gap: 14,
+          }}>
+            {/* Donut */}
+            <div style={{ position: "relative", width: 150, height: 150, flexShrink: 0 }}>
+              <svg width="150" height="150" viewBox="0 0 150 150" style={{ transform: "rotate(-90deg)" }}>
+                <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="18" />
+                {slicesWithGeo.map((s, i) => (
+                  <circle
+                    key={s.name}
+                    cx={cx} cy={cy} r={r}
+                    fill="none"
+                    stroke={s.color}
+                    strokeWidth="18"
+                    strokeDasharray={`${s.arcLen} ${circumference - s.arcLen}`}
+                    strokeDashoffset={s.offset}
+                    style={{
+                      opacity: step === 0 ? 0 : 1,
+                      animation: step === 0
+                        ? `slideIn 0.4s ease ${i * 0.18 + 0.2}s forwards`
+                        : (s.isNew && step === 6 ? "slideIn 0.55s ease forwards" : undefined),
+                      transition: "stroke-dasharray 0.6s ease, stroke-dashoffset 0.6s ease",
+                    }}
+                  />
+                ))}
+              </svg>
+              <div style={{
+                position: "absolute", inset: 0,
+                display: "flex", flexDirection: "column",
+                alignItems: "center", justifyContent: "center",
+              }}>
+                <div style={{
+                  fontSize: 26, fontWeight: 800,
+                  fontVariantNumeric: "tabular-nums",
+                  lineHeight: 1,
+                  transition: "color 0.5s",
+                  color: step === 6 ? "#22c55e" : "#fff",
+                }}>{pct}%</div>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 4, letterSpacing: "0.06em" }}>dépensé</div>
+              </div>
+            </div>
+            {/* Legend (centré vertical avec donut) */}
+            <div style={{
+              display: "flex", flexDirection: "column",
+              gap: 6, minWidth: 0,
+              justifyContent: "center",
+            }}>
+              {slices.slice(0, 5).map((s, i) => (
+                <div key={s.name} style={{
+                  display: "flex", alignItems: "center", gap: 8,
+                  fontSize: 13,
+                  animation: step === 0 ? `slideIn 0.4s ease ${i * 0.18 + 0.3}s backwards` :
+                              (s.isNew && step === 6 ? "slideIn 0.5s ease 0.3s backwards" : undefined),
+                }}>
+                  <div style={{
+                    width: 13, height: 13, borderRadius: 4,
+                    background: s.color,
+                    flexShrink: 0,
+                    boxShadow: s.isNew && step >= 6 ? `0 0 10px ${s.color}` : "none",
+                  }} />
+                  <span style={{ flex: 1, color: s.isNew && step >= 6 ? "#22c55e" : "rgba(255,255,255,0.85)", fontWeight: s.isNew ? 700 : 600, whiteSpace: "nowrap" }}>{s.name}</span>
+                  <span style={{ color: "rgba(255,255,255,0.6)", fontVariantNumeric: "tabular-nums", fontSize: 12, fontWeight: 600, marginLeft: 4 }}>
+                    {s.value.toLocaleString("fr-FR")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Bouton "+ Ajouter dépense" centré horizontal */}
+          <div style={{ display: "flex", justifyContent: "center", flexShrink: 0 }}>
+            <button style={{
+              padding: "12px 22px", borderRadius: 11,
+              background: step === 1 ? "linear-gradient(135deg,#E11D48,#9333EA)" : "linear-gradient(135deg,rgba(225,29,72,0.18),rgba(147,51,234,0.18))",
+              border: `1.5px solid ${step === 1 ? "transparent" : "rgba(225,29,72,0.4)"}`,
+              color: "#fff", fontSize: 14, fontWeight: 700,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+              cursor: "pointer",
+              transform: step === 1 ? "scale(0.95)" : "scale(1)",
+              boxShadow: step === 1 ? "0 0 0 5px rgba(225,29,72,0.25), 0 4px 16px rgba(225,29,72,0.55)" : "0 2px 8px rgba(225,29,72,0.2)",
+              transition: "all 0.3s ease",
+              fontFamily: fontMomento,
+            }}>
+              <span style={{ fontSize: 17, lineHeight: 1 }}>＋</span> Ajouter une dépense
+            </button>
+          </div>
+        </div>
+
+        {/* FORM-ZOOM : prend tout l'espace centré */}
+        <div style={{
+          position: "absolute", inset: 0,
+          padding: "10px 12px",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          opacity: showForm ? 1 : 0,
+          transform: showForm ? "scale(1)" : "scale(1.4)",
+          transition: "opacity 0.5s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: showForm ? "auto" : "none",
+        }}>
+          <div style={{
+            width: "100%", maxWidth: 280,
+            background: "rgba(255,255,255,0.06)",
+            border: "1.5px solid rgba(255,255,255,0.12)",
+            borderRadius: 14,
+            padding: 14,
+            display: "flex", flexDirection: "column", gap: 10,
+          }}>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, textAlign: "center" }}>
+              Nouvelle dépense
+            </div>
+            {/* Catégorie pré-remplie */}
+            <div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", marginBottom: 4, fontWeight: 600 }}>Catégorie</div>
+              <div style={{
+                background: "rgba(212,115,58,0.2)",
+                border: "1.5px solid rgba(212,115,58,0.55)",
+                borderRadius: 8, padding: "8px 12px",
+                fontSize: 14, color: "#fff", fontWeight: 600,
+                display: "flex", alignItems: "center", gap: 9,
+              }}>
+                <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#D4733A" }} />
+                Traiteur
+              </div>
+            </div>
+            {/* Montant */}
+            <div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", marginBottom: 4, fontWeight: 600 }}>Montant</div>
+              <div style={{
+                background: "rgba(255,255,255,0.06)",
+                border: `2px solid ${step === 3 ? "rgba(225,29,72,0.55)" : "rgba(255,255,255,0.12)"}`,
+                borderRadius: 8, padding: "8px 12px",
+                fontSize: 17, color: "#fff", fontWeight: 700,
+                minHeight: 28, display: "flex", alignItems: "center",
+                boxShadow: step === 3 ? "0 0 0 4px rgba(225,29,72,0.15)" : "none",
+                transition: "border 0.2s, box-shadow 0.2s",
+                fontVariantNumeric: "tabular-nums",
+              }}>
+                {typedAmount || (step !== 3 ? <span style={{ color: "rgba(255,255,255,0.3)", fontWeight: 400 }}>0</span> : null)}
+                <span style={{ color: "rgba(255,255,255,0.5)", marginLeft: 7, fontSize: 13, fontWeight: 500 }}>Dhs</span>
+              </div>
+            </div>
+            {/* Bouton Valider */}
+            <button style={{
+              padding: "11px 0", borderRadius: 9,
+              background: step === 4 ? "#22c55e" : "linear-gradient(135deg,#E11D48,#9333EA)",
+              color: "#fff", fontSize: 15, fontWeight: 700, border: "none",
+              cursor: "pointer", textAlign: "center",
+              transform: step === 4 ? "scale(0.94)" : "scale(1)",
+              boxShadow: step === 4 ? "0 0 0 5px rgba(34,197,94,0.3), 0 4px 14px rgba(34,197,94,0.55)" : "0 3px 10px rgba(225,29,72,0.35)",
+              transition: "all 0.3s ease",
+              fontFamily: fontMomento,
+            }}>
+              {step === 4 ? "✓ Validé" : "Valider"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Toast (wrapper centré pour éviter conflit translateX/animation) */}
+      {showToast && (
+        <div style={{
+          position: "absolute", top: 60, left: 0, right: 0,
+          display: "flex", justifyContent: "center",
+          zIndex: 5, pointerEvents: "none",
+        }}>
+          <div style={{
+            background: "linear-gradient(135deg,#22c55e,#16a34a)",
+            color: "#fff", padding: "8px 16px",
+            borderRadius: 99,
+            fontSize: 13, fontWeight: 700,
+            display: "flex", alignItems: "center", gap: 6,
+            boxShadow: "0 6px 20px rgba(34,197,94,0.55)",
+            animation: "slideIn 0.45s ease",
+            fontFamily: fontMomento,
+            whiteSpace: "nowrap",
+          }}>
+            <span>✓</span>
+            <span>Traiteur · +5 000 Dhs</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
