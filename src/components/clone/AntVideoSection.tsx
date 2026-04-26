@@ -709,7 +709,7 @@ function VendorSwipePreview() {
 
 // ── 3. Invitations & RSVP — Omar remplit RSVP, notif planner, widget update ──
 function RsvpPreview() {
-  // 9 étapes : (0) typing nom Omar, (1) Oui highlight, (2) typing +1 Meryem,
+  // 9 étapes : (0) typing nom Omar, (1) Oui highlight, (2) typing +1 Mariam,
   // (3) submit highlight, (4) success "Merci Omar", (5) dashboard wide-shot,
   // (6) zoom sur Invités + badge "1" pop, (7) widget update, (8) pause finale
   const step = useAnimLoop([2400, 1000, 2400, 1000, 1500, 1800, 2200, 2800, 1500])
@@ -731,7 +731,7 @@ function RsvpPreview() {
       return () => clearInterval(id)
     }
     if (step === 2) {
-      const txt = "Meryem"
+      const txt = "Mariam"
       let i = 0
       const id = setInterval(() => {
         i++
@@ -818,7 +818,7 @@ function RsvpPreview() {
           marginBottom: 11,
         }}>
           <span style={{ fontSize: 15, color: "#fff", fontWeight: 700, fontFamily: fontMomento, letterSpacing: "0.01em" }}>
-            Yazid & Sara — 17 nov 2025
+            Yazid & Yasmine — 17 nov 2025
           </span>
         </div>
         <div style={{ fontSize: 10, color: "#8B4513", letterSpacing: "0.18em", fontWeight: 700, textAlign: "center", marginBottom: 13, fontFamily: fontMomento }}>
@@ -989,7 +989,7 @@ function RsvpPreview() {
               }} />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                  Mariage Sara
+                  Mariage Yasmine
                 </div>
                 <div style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Événement actif</div>
               </div>
@@ -1072,9 +1072,9 @@ function RsvpPreview() {
               display: "flex", alignItems: "center", justifyContent: "center",
               color: "#fff", fontSize: 13, fontWeight: 700,
               flexShrink: 0,
-            }}>S</div>
+            }}>Y</div>
             <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Sara</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Yasmine</div>
               <div style={{ fontSize: 9, color: "#E11D48", fontWeight: 500 }}>Voir mon profil →</div>
             </div>
           </div>
@@ -1162,7 +1162,7 @@ function RsvpPreview() {
               }}>O</div>
               <div style={{ flex: 1, fontSize: 7, color: "#fff", lineHeight: 1.3 }}>
                 <span style={{ fontWeight: 700 }}>Omar</span>
-                <span style={{ color: "rgba(255,255,255,0.55)" }}> · +1 Meryem</span>
+                <span style={{ color: "rgba(255,255,255,0.55)" }}> · +1 Mariam</span>
               </div>
               <span style={{ color: "#4ade80", fontSize: 9, fontWeight: 700 }}>✓</span>
             </div>
@@ -2139,13 +2139,13 @@ export default function AntVideoSection() {
 
               {/* Texte en-tête — centré */}
               <div style={{ textAlign: "center" }}>
-                <p style={{ fontSize: "clamp(1.4rem,2.4vw,2.2rem)", fontWeight: 500, lineHeight: 1.25, color: "#f5f5f5", margin: "0 0 8px", letterSpacing: "-0.02em" }}>
+                <p style={{ fontSize: "clamp(1.4rem, 0.6rem + 2.4vw, 3.2rem)", fontWeight: 500, lineHeight: 1.2, color: "#f5f5f5", margin: "0 0 0.6vh", letterSpacing: "-0.02em" }}>
                   Tout ce qu&apos;il te faut pour organiser{" "}
                   <span style={{ background: "linear-gradient(90deg,#E11D48,#9333EA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                     le mariage que tu veux.
                   </span>
                 </p>
-                <p style={{ fontSize: "clamp(0.8rem,1.1vw,0.95rem)", color: "rgba(255,255,255,0.35)", margin: 0 }}>
+                <p style={{ fontSize: "clamp(0.85rem, 0.45rem + 0.9vw, 1.25rem)", color: "rgba(255,255,255,0.35)", margin: 0 }}>
                   Pour chaque jour jusqu&apos;au grand jour.
                 </p>
               </div>
@@ -2160,10 +2160,10 @@ export default function AntVideoSection() {
                       onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.07)" }}
                     >
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: "clamp(0.78rem,1vw,0.95rem)", fontWeight: 600, color: "#f5f5f5" }}>{f.title}</span>
-                        <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 14 }}>→</span>
+                        <span style={{ fontSize: "clamp(0.85rem, 0.5rem + 0.85vw, 1.35rem)", fontWeight: 600, color: "#f5f5f5" }}>{f.title}</span>
+                        <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "clamp(0.85rem, 0.5rem + 0.6vw, 1.2rem)" }}>→</span>
                       </div>
-                      <p style={{ fontSize: "clamp(0.65rem,0.8vw,0.78rem)", color: "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.4 }}>{f.desc}</p>
+                      <p style={{ fontSize: "clamp(0.7rem, 0.4rem + 0.65vw, 1.05rem)", color: "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.4 }}>{f.desc}</p>
                       <div style={{ flex: 1, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", display: "flex", flexDirection: "column", minHeight: 0 }}>{f.preview}</div>
                     </div>
                   </Link>

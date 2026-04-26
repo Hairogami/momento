@@ -204,7 +204,7 @@ export default function AntFeatureBento() {
         <div style={{ position: "sticky", top: 80 }}>
           <p
             style={{
-              fontSize: "clamp(1.6rem,3.2vw,2.4rem)",
+              fontSize: "clamp(1.6rem, 0.6rem + 2.4vw, 3.4rem)",
               fontWeight: 500,
               lineHeight: 1.2,
               color: "#f5f5f5",
@@ -225,7 +225,7 @@ export default function AntFeatureBento() {
           </p>
           <p
             style={{
-              fontSize: "clamp(0.85rem,1.4vw,1rem)",
+              fontSize: "clamp(0.9rem, 0.5rem + 0.9vw, 1.3rem)",
               color: "rgba(255,255,255,0.4)",
               margin: 0,
               lineHeight: 1.6,
@@ -280,7 +280,7 @@ export default function AntFeatureBento() {
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <span
                     style={{
-                      fontSize: "clamp(0.75rem,1.1vw,0.9rem)",
+                      fontSize: "clamp(0.85rem, 0.5rem + 0.85vw, 1.3rem)",
                       fontWeight: 600,
                       color: "#f5f5f5",
                       letterSpacing: "-0.01em",
@@ -294,7 +294,7 @@ export default function AntFeatureBento() {
                 {/* Description */}
                 <p
                   style={{
-                    fontSize: "clamp(0.7rem,0.9vw,0.78rem)",
+                    fontSize: "clamp(0.7rem, 0.4rem + 0.65vw, 1.05rem)",
                     color: "rgba(255,255,255,0.4)",
                     margin: 0,
                     lineHeight: 1.5,

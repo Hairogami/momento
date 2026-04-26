@@ -58,7 +58,7 @@ export default function AntPricing() {
           >
             <div>
               <p style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>Gratuit · Pour toujours</p>
-              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 700, lineHeight: 1.1, color: "var(--dash-text,#121317)" }}>Essentiel</div>
+              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 0.6rem + 1.6vw, 2.6rem)", fontWeight: 700, lineHeight: 1.1, color: "var(--dash-text,#121317)" }}>Essentiel</div>
               <p className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", marginTop: 6 }}>Tout pour trouver le bon prestataire</p>
             </div>
             <ul className="clone-body" style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", lineHeight: 2.2, listStyle: "none", padding: 0, flex: 1 }}>
@@ -97,7 +97,7 @@ export default function AntPricing() {
                 <p style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Freemium · Été 2025</p>
                 <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: "rgba(225,29,72,0.2)", color: "#F87171", border: "1px solid rgba(225,29,72,0.3)" }}>Été 2025</span>
               </div>
-              <div style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 700, lineHeight: 1.1, color: "#fff" }}>Premium</div>
+              <div style={{ fontSize: "clamp(1.4rem, 0.6rem + 1.6vw, 2.6rem)", fontWeight: 700, lineHeight: 1.1, color: "#fff" }}>Premium</div>
               <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>Outils avancés pour grands événements</p>
             </div>
             <ul className="relative" style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 2.2, listStyle: "none", padding: 0, flex: 1 }}>
@@ -133,7 +133,7 @@ export default function AntPricing() {
             }} />
             <div className="relative">
               <p style={{ fontSize: 11, color: "#9333EA", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>Sur mesure · Disponible maintenant</p>
-              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)", fontWeight: 700, lineHeight: 1.1, color: "var(--dash-text,#121317)" }}>Platine</div>
+              <div className="clone-heading" style={{ fontSize: "clamp(1.4rem, 0.6rem + 1.6vw, 2.6rem)", fontWeight: 700, lineHeight: 1.1, color: "var(--dash-text,#121317)" }}>Platine</div>
               <p className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", marginTop: 6 }}>Un event planner dédié, pour vous</p>
             </div>
             <ul className="clone-body relative" style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", lineHeight: 2.2, listStyle: "none", padding: 0, flex: 1 }}>
