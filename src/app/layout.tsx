@@ -75,7 +75,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Google+Symbols:opsz,wght,FILL,GRAD,ROND@40..48,300,0..1,0,50&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Google+Symbols:opsz,wght,FILL,GRAD,ROND@40..48,300,0..1,0,50&display=block"
           rel="stylesheet"
         />
         <script
@@ -93,9 +93,18 @@ export default function RootLayout({
             .ant-root * {
               font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
             }
-            .ant-root .gs-icon {
+            .ant-root .gs-icon,
+            [style*="Google Symbols"] {
               font-family: 'Google Symbols', 'Material Symbols Outlined';
               font-weight: normal; font-style: normal; display: inline-block;
+            }
+            /* Fallback : si la font ne charge pas, on cache le nom textuel
+               de l'icône (évite "celebration emoji_events" en clair). */
+            @supports (font-feature-settings: 'liga') {
+              .gs-icon, [style*="Google Symbols"] {
+                font-feature-settings: 'liga';
+                -webkit-font-feature-settings: 'liga';
+              }
             }
           `,
         }} />

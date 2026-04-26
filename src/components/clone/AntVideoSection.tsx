@@ -2058,20 +2058,6 @@ export default function AntVideoSection() {
     const loop = () => {
       const rect = container.getBoundingClientRect()
       const vh   = window.innerHeight
-      const vw   = window.innerWidth
-
-      // Petit écran (MacBook 13", tablette, mobile) : on désactive l'animation
-      // cinématique sticky parce que le bento 3×2 ne tient pas dans 100dvh.
-      // Le bento s'affiche en hauteur naturelle (cf. CSS .ant-video-shell).
-      const isCompact = vh < 900 || vw < 1100
-      if (isCompact) {
-        win.style.transform    = "none"
-        win.style.borderRadius = "0px"
-        win.style.opacity      = "1"
-        if (overlayRef.current) overlayRef.current.style.opacity = "0"
-        rafRef.current = requestAnimationFrame(loop)
-        return
-      }
 
       /*
        * Ancien déclencheur : démarre quand le container entre dans
@@ -2165,8 +2151,8 @@ export default function AntVideoSection() {
                 </p>
               </div>
 
-              {/* Grille 3×2 — remplit toute la hauteur restante */}
-              <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3,1fr)", gridTemplateRows: "1fr 1fr", gap: "1vw", minHeight: 0 }}>
+              {/* Grille 3×2 desktop / 2×3 mid / 1×6 mobile — cf @media */}
+              <div className="ant-bento-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3,1fr)", gridTemplateRows: "1fr 1fr", gap: "1vw", minHeight: 0 }}>
                 {BENTO_FEATURES.map((f, i) => (
                   <Link key={i} href={f.href} style={{ textDecoration: "none", display: "flex", flexDirection: "column" }}>
                     <div
@@ -2203,14 +2189,23 @@ export default function AntVideoSection() {
               @keyframes badgeRingPulse{0%{transform:scale(0.7);opacity:0.8}100%{transform:scale(2.6);opacity:0}}
               .ai-chat-scroll::-webkit-scrollbar{display:none}
 
-              /* Petit écran : on désactive le sticky cinématique 130dvh.
-                 Le bento prend sa hauteur naturelle et scrolle normalement. */
-              @media (max-height: 899px), (max-width: 1099px) {
+              /* Petit écran (MacBook 13" et moins) : on garde l'animation
+                 cinématique sticky mais on passe la grille en 2×3 pour
+                 que les 6 cartes tiennent dans 100dvh. Cartes plus larges,
+                 plus hautes, contenu lisible. */
+              @media (max-height: 899px) and (min-width: 768px),
+                     (max-width: 1099px) and (min-width: 768px) {
+                .ant-bento-grid {
+                  grid-template-columns: repeat(2, 1fr) !important;
+                  grid-template-rows: repeat(3, 1fr) !important;
+                }
+              }
+              /* Mobile vertical : 1 colonne × 6 lignes, full natural scroll */
+              @media (max-width: 767px) {
                 .ant-video-shell { height: auto !important; }
                 .ant-video-sticky {
                   position: static !important;
                   height: auto !important;
-                  min-height: 0 !important;
                 }
                 .ant-video-window {
                   position: relative !important;
@@ -2219,11 +2214,11 @@ export default function AntVideoSection() {
                   border-radius: 0 !important;
                   opacity: 1 !important;
                   width: 100%;
-                  /* Hauteur min pour que le bento ait l'espace du contenu */
-                  min-height: 100vh;
+                  min-height: auto !important;
                 }
-                .ant-video-window > div {
-                  min-height: 100vh;
+                .ant-bento-grid {
+                  grid-template-columns: 1fr !important;
+                  grid-template-rows: repeat(6, minmax(280px, auto)) !important;
                 }
               }
             `}</style>
