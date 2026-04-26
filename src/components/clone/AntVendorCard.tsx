@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 type Props = {
   id: string
@@ -78,6 +78,24 @@ function getGradient(category: string): [string, string] {
 export default function AntVendorCard({ id, name, category, city, rating, photo, onGatedClick }: Props) {
   const [fav, setFav] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
+
+  useEffect(() => {
+    fetch(`/api/vendor/${id}/favorite`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && typeof d.favorited === "boolean") setFav(d.favorited) })
+      .catch(() => {})
+  }, [id])
+
+  async function toggleFav(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    setFav(f => !f) // optimistic
+    try {
+      const res = await fetch(`/api/vendor/${id}/favorite`, { method: "POST" })
+      const data = await res.json()
+      if (typeof data.favorited === "boolean") setFav(data.favorited)
+    } catch {}
+  }
   const imgUrl = photo || CAT_IMAGES[category]
   const [g1, g2] = getGradient(category)
 
@@ -143,7 +161,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
 
           {/* Fav button */}
           <button
-            onClick={e => { e.preventDefault(); e.stopPropagation(); setFav(f => !f) }}
+            onClick={toggleFav}
             aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
             style={{
               position: "absolute", top: 12, right: 12,
