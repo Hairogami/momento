@@ -1163,48 +1163,203 @@ function RsvpPreview() {
 
 // ── 4. Messages — chat en temps réel ──────────────────────────────────────────
 function MessagesPreview() {
-  const step = useAnimLoop([1200, 1000, 2500, 1000, 2000])
+  // 9 steps : 0 typing msg1, 1 send, 2 vendor typing, 3 vendor msg1,
+  // 4 typing msg2, 5 send, 6 vendor typing, 7 vendor msg2, 8 pause
+  const step = useAnimLoop([2800, 800, 1400, 2400, 2700, 800, 1400, 2400, 1600])
+  const [typed, setTyped] = useState("")
+  const fontMomento = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif"
+
+  const MSG_USER_1 = "Vous êtes disponibles le 17 novembre ?"
+  const MSG_USER_2 = "Super ! Nous serons 40 personnes, pouvez-vous m'envoyer un devis ?"
+  const MSG_VENDOR_1 = "Oui, disponibles le 17 Nov ✓ Pour combien de personnes ?"
+  const MSG_VENDOR_2 = "Pas de souci, je vous envoie ça tout de suite."
+
+  useEffect(() => {
+    if (step === 0) {
+      setTyped("")
+      const txt = MSG_USER_1
+      let i = 0
+      const id = setInterval(() => {
+        i++
+        setTyped(txt.slice(0, i))
+        if (i >= txt.length) clearInterval(id)
+      }, 70)
+      return () => clearInterval(id)
+    }
+    if (step === 4) {
+      setTyped("")
+      const txt = MSG_USER_2
+      let i = 0
+      const id = setInterval(() => {
+        i++
+        setTyped(txt.slice(0, i))
+        if (i >= txt.length) clearInterval(id)
+      }, 60)
+      return () => clearInterval(id)
+    }
+    if (step === 1 || step === 5) setTyped("")
+  }, [step])
+
+  // Bubbles visibility
+  const showUserMsg1   = step >= 1 && step <= 8
+  const showVendorTyp1 = step === 2
+  const showVendorMsg1 = step >= 3 && step <= 8
+  const showUserMsg2   = step >= 5 && step <= 8
+  const showVendorTyp2 = step === 6
+  const showVendorMsg2 = step >= 7 && step <= 8
+  const inputText = (step === 0 || step === 4) ? typed : ""
+  const showCursor = step === 0 || step === 4
+
+  // Bubble styles (convention WhatsApp : user RIGHT gradient, vendor LEFT gris)
+  const userBubble: React.CSSProperties = {
+    maxWidth: "78%",
+    background: "linear-gradient(135deg,#E11D48,#9333EA)",
+    color: "#fff",
+    fontSize: 13, lineHeight: 1.4,
+    padding: "9px 13px",
+    borderRadius: "15px 15px 3px 15px",
+    fontFamily: fontMomento, fontWeight: 500,
+    boxShadow: "0 2px 6px rgba(225,29,72,0.28)",
+  }
+  const vendorBubble: React.CSSProperties = {
+    maxWidth: "78%",
+    background: "rgba(255,255,255,0.1)",
+    color: "#f5f5f5",
+    fontSize: 13, lineHeight: 1.4,
+    padding: "9px 13px",
+    borderRadius: "15px 15px 15px 3px",
+    fontFamily: fontMomento, fontWeight: 500,
+    border: "1px solid rgba(255,255,255,0.08)",
+  }
+  const vendorAvatar = (
+    <div style={{
+      width: 22, height: 22, borderRadius: "50%",
+      background: "linear-gradient(135deg,#0369A1,#0891B2)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: 12, flexShrink: 0,
+    }}>🏛</div>
+  )
+
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, gap: 5 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 7px", background: "rgba(255,255,255,0.05)", borderRadius: 8, flexShrink: 0 }}>
-        <div style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#0369A1,#0891B2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, flexShrink: 0 }}>🏛</div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 9, fontWeight: 600, color: "#f5f5f5" }}>Salle des fêtes Royale</div>
-          <div style={{ fontSize: 7, color: "rgba(255,255,255,0.35)" }}>Casablanca</div>
+    <div style={{
+      flex: 1, display: "flex", flexDirection: "column",
+      minHeight: 0, overflow: "hidden",
+      background: "#0E0F12", borderRadius: 8,
+      fontFamily: fontMomento,
+    }}>
+      {/* HEADER thread */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "10px 13px",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(255,255,255,0.03)",
+        flexShrink: 0,
+      }}>
+        <div style={{
+          width: 34, height: 34, borderRadius: "50%",
+          background: "linear-gradient(135deg,#0369A1,#0891B2)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 17, flexShrink: 0,
+        }}>🏛</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            Salle des fêtes Royale
+          </div>
+          <div style={{ fontSize: 10, color: "#22c55e", display: "flex", alignItems: "center", gap: 4, marginTop: 1 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} /> En ligne · Casablanca
+          </div>
         </div>
-        <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
       </div>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: 4, overflow: "hidden", minHeight: 0 }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <div style={{ maxWidth: "82%", background: "linear-gradient(135deg,#E11D48,#9333EA)", borderRadius: "9px 9px 2px 9px", padding: "4px 7px" }}>
-            <span style={{ fontSize: 8, color: "#fff" }}>Bonjour, disponibles le 17 Nov ?</span>
+
+      {/* BODY bubbles */}
+      <div style={{
+        flex: 1, overflow: "hidden",
+        padding: "10px 10px 6px",
+        display: "flex", flexDirection: "column",
+        gap: 6,
+        justifyContent: "flex-end",
+      }}>
+        {showUserMsg1 && (
+          <div style={{ display: "flex", justifyContent: "flex-end", animation: step === 1 ? "slideIn 0.32s ease" : undefined }}>
+            <div style={userBubble}>{MSG_USER_1}</div>
           </div>
+        )}
+        {showVendorTyp1 && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+            {vendorAvatar}
+            <div style={{ ...vendorBubble, padding: "8px 12px", display: "flex", gap: 4, alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            </div>
+          </div>
+        )}
+        {showVendorMsg1 && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: step === 3 ? "slideIn 0.32s ease" : undefined }}>
+            {vendorAvatar}
+            <div style={vendorBubble}>{MSG_VENDOR_1}</div>
+          </div>
+        )}
+        {showUserMsg2 && (
+          <div style={{ display: "flex", justifyContent: "flex-end", animation: step === 5 ? "slideIn 0.32s ease" : undefined }}>
+            <div style={userBubble}>{MSG_USER_2}</div>
+          </div>
+        )}
+        {showVendorTyp2 && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+            {vendorAvatar}
+            <div style={{ ...vendorBubble, padding: "8px 12px", display: "flex", gap: 4, alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            </div>
+          </div>
+        )}
+        {showVendorMsg2 && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: step === 7 ? "slideIn 0.32s ease" : undefined }}>
+            {vendorAvatar}
+            <div style={vendorBubble}>{MSG_VENDOR_2}</div>
+          </div>
+        )}
+      </div>
+
+      {/* INPUT bar */}
+      <div style={{
+        padding: "10px 12px",
+        borderTop: "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(255,255,255,0.03)",
+        display: "flex", alignItems: "center", gap: 9,
+        flexShrink: 0,
+      }}>
+        <div style={{
+          flex: 1, minHeight: 34, padding: "8px 14px",
+          background: "rgba(255,255,255,0.06)",
+          border: `1.5px solid ${showCursor ? "rgba(225,29,72,0.5)" : "rgba(255,255,255,0.1)"}`,
+          borderRadius: 99,
+          fontSize: 13, color: inputText ? "#fff" : "rgba(255,255,255,0.4)",
+          fontFamily: fontMomento, fontWeight: 500,
+          display: "flex", alignItems: "center",
+          boxShadow: showCursor ? "0 0 0 3px rgba(225,29,72,0.15)" : "none",
+          transition: "border 0.2s, box-shadow 0.2s",
+          lineHeight: 1.3,
+        }}>
+          {inputText || (showCursor ? "" : "Tapez votre message…")}
+          {showCursor && (
+            <span style={{ color: "#E11D48", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>
+          )}
         </div>
-        {step === 1 && (
-          <div style={{ display: "flex", gap: 4, alignItems: "flex-end", animation: "slideIn 0.3s ease" }}>
-            <div style={{ width: 16, height: 16, borderRadius: "50%", background: "linear-gradient(135deg,#0369A1,#0891B2)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8 }}>🏛</div>
-            <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: "9px 9px 9px 2px", padding: "5px 9px", display: "flex", gap: 3, alignItems: "center" }}>
-              <div className="typing-dot" style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.5)" }} />
-              <div className="typing-dot" style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.5)", animationDelay: "150ms" }} />
-              <div className="typing-dot" style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.5)", animationDelay: "300ms" }} />
-            </div>
-          </div>
-        )}
-        {step >= 2 && (
-          <div style={{ display: "flex", gap: 4, alignItems: "flex-end", animation: step === 2 ? "slideIn 0.3s ease" : "none" }}>
-            <div style={{ width: 16, height: 16, borderRadius: "50%", background: "linear-gradient(135deg,#0369A1,#0891B2)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8 }}>🏛</div>
-            <div style={{ flex: 1, background: "rgba(255,255,255,0.1)", borderRadius: "9px 9px 9px 2px", padding: "4px 7px" }}>
-              <span style={{ fontSize: 8, color: "#f5f5f5", lineHeight: 1.4 }}>Oui, disponibles le 17 Nov ✓ Pour combien de personnes ?</span>
-            </div>
-          </div>
-        )}
-        {step >= 4 && (
-          <div style={{ display: "flex", justifyContent: "flex-end", animation: "slideIn 0.3s ease" }}>
-            <div style={{ maxWidth: "78%", background: "linear-gradient(135deg,#E11D48,#9333EA)", borderRadius: "9px 9px 2px 9px", padding: "4px 7px" }}>
-              <span style={{ fontSize: 8, color: "#fff" }}>Merci ! Pouvons-nous nous appeler ?</span>
-            </div>
-          </div>
-        )}
+        <button style={{
+          width: 34, height: 34, borderRadius: "50%",
+          background: "linear-gradient(135deg,#E11D48,#9333EA)",
+          color: "#fff", border: "none",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 17, fontWeight: 700,
+          flexShrink: 0,
+          transform: (step === 1 || step === 5) ? "scale(0.88)" : "scale(1)",
+          transition: "transform 0.2s",
+          boxShadow: "0 2px 10px rgba(225,29,72,0.45)",
+          cursor: "pointer",
+        }}>↑</button>
       </div>
     </div>
   )
