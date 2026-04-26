@@ -495,7 +495,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                     <input
                       type="text"
                       inputMode="numeric"
-                      aria-label="Budget total en MAD"
+                      aria-label="Budget total en Dhs"
                       value={budgetTotal.toLocaleString("fr-FR")}
                       onChange={e => {
                         const digits = e.target.value.replace(/\D/g, "")
@@ -511,7 +511,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                         fontFamily: "inherit", caretColor: "#E11D48",
                       }}
                     />
-                    <span style={{ fontSize: 12, color: "var(--dash-text-3, #8888aa)", fontWeight: 500 }}>MAD</span>
+                    <span style={{ fontSize: 12, color: "var(--dash-text-3, #8888aa)", fontWeight: 500 }}>Dhs</span>
                   </span>
                 </div>
                 <input type="range" min={10_000} max={500_000} step={5_000}
@@ -527,7 +527,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                   color: over ? "#f59e0b" : "#22c55e",
                   border: over ? "1px solid rgba(245,158,11,0.3)" : "1px solid rgba(34,197,94,0.3)",
                 }}>
-                  {over ? "⚠" : "✓"} {budgetSum.toLocaleString("fr-FR")} / {budgetTotal.toLocaleString("fr-FR")} MAD
+                  {over ? "⚠" : "✓"} {budgetSum.toLocaleString("fr-FR")} / {budgetTotal.toLocaleString("fr-FR")} Dhs
                 </span>
               </div>
 
@@ -543,7 +543,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                           <input type="number" min={0} max={budgetTotal * 2} step={500} value={amount}
                             onChange={e => updateCatBudget(cat, parseInt(e.target.value, 10) || 0)}
                             style={{ width: 80, padding: "5px 7px", borderRadius: 7, border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))", background: "var(--dash-bg, #0d0e14)", color: "var(--dash-text, #eeeef5)", fontSize: 12, fontWeight: 700, textAlign: "right", fontFamily: "inherit" }} />
-                          <span style={{ fontSize: 10, color: "var(--dash-text-3, #8888aa)" }}>MAD</span>
+                          <span style={{ fontSize: 10, color: "var(--dash-text-3, #8888aa)" }}>Dhs</span>
                         </span>
                       </div>
                       <input type="range" min={0} max={budgetTotal} step={500} value={amount}
@@ -565,13 +565,13 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                   <button onClick={alignTotalToSum} type="button"
                     title="Augmente le budget final pour couvrir la somme actuelle"
                     style={{ padding: "9px", background: G, color: "#fff", border: "none", borderRadius: 99, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
-                    ↑ Passer le total à {budgetSum.toLocaleString("fr-FR")} MAD
+                    ↑ Passer le total à {budgetSum.toLocaleString("fr-FR")} Dhs
                   </button>
                 ) : (
                   <button onClick={alignTotalToSum} type="button"
                     title="Aligne le total sur la somme actuelle"
                     style={{ padding: "9px", background: "rgba(225,29,72,0.08)", color: "#E11D48", border: "1px solid rgba(225,29,72,0.25)", borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                    = Total = somme ({budgetSum.toLocaleString("fr-FR")} MAD)
+                    = Total = somme ({budgetSum.toLocaleString("fr-FR")} Dhs)
                   </button>
                 )}
               </div>
@@ -591,7 +591,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
               {over && (
                 <p style={{ fontSize: 11, color: "#f59e0b", marginTop: 8, textAlign: "center" }}>
-                  La somme des catégories dépasse le total de <strong>{(budgetSum - budgetTotal).toLocaleString("fr-FR")} MAD</strong>.
+                  La somme des catégories dépasse le total de <strong>{(budgetSum - budgetTotal).toLocaleString("fr-FR")} Dhs</strong>.
                 </p>
               )}
 

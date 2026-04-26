@@ -329,7 +329,7 @@ function EventCard({ data, eventName, eventDate, budget, guestCount, daysUntil, 
               icon: <Wallet size={15} />,
               label: "Budget",
               value: budget ? `${budgetPct}%` : "—",
-              sub: budget ? `${totalBudgetSpent.toLocaleString("fr-FR")} / ${budget.toLocaleString("fr-FR")} MAD` : "pas encore fixé",
+              sub: budget ? `${totalBudgetSpent.toLocaleString("fr-FR")} / ${budget.toLocaleString("fr-FR")} Dhs` : "pas encore fixé",
               href: "/budget",
             },
             {

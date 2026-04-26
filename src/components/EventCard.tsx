@@ -155,7 +155,7 @@ export default function EventCard({ eventName, eventDate, daysUntil, budget, gue
           </div>
           <div className="w-full max-w-sm">
             <label className="block text-[10px] uppercase tracking-wider mb-1" style={{ color: C.mist }}>
-              <Wallet size={10} className="inline mr-1" />Budget total (MAD)
+              <Wallet size={10} className="inline mr-1" />Budget total (Dhs)
             </label>
             <input
               type="number"
@@ -216,7 +216,7 @@ export default function EventCard({ eventName, eventDate, daysUntil, budget, gue
               )}
               {displayBudget !== null && (
                 <span className="text-xs flex items-center gap-1" style={{ color: C.mist }}>
-                  <Wallet size={11} /> {displayBudget.toLocaleString("fr-FR")} MAD
+                  <Wallet size={11} /> {displayBudget.toLocaleString("fr-FR")} Dhs
                 </span>
               )}
             </div>

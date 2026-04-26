@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
   title: "Passer Pro — Momento",
   description:
-    "Débloquez la messagerie prestas, la checklist temporelle, la gestion invités et tous les outils Momento Pro à partir de 200 MAD / mois.",
+    "Débloquez la messagerie prestas, la checklist temporelle, la gestion invités et tous les outils Momento Pro à partir de 200 Dhs / mois.",
 }
 
 export default async function UpgradePage({

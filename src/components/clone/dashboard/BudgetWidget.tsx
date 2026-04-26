@@ -124,7 +124,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
             }}>
               {spent.toLocaleString("fr-MA")}
             </div>
-            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>MAD</div>
+            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Dhs</div>
           </div>
           <div>
             <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Restant</div>
@@ -132,7 +132,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
               fontSize: 14, fontWeight: 700,
               color: remaining < total * 0.1 ? "#ef4444" : "var(--dash-text,#121317)",
             }}>
-              {remaining.toLocaleString("fr-MA")} MAD
+              {remaining.toLocaleString("fr-MA")} Dhs
             </div>
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
       }}>
         <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Total budget</span>
         <span style={{ fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)" }}>
-          {total.toLocaleString("fr-MA")} MAD
+          {total.toLocaleString("fr-MA")} Dhs
         </span>
       </div>
     </div>

@@ -217,7 +217,7 @@ export default function PackagesEditor() {
               >
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#121317" }}>{t.tier}</div>
                 <div style={{ fontSize: 12, color: "#6b7280", marginTop: 3 }}>
-                  {t.draft.price} MAD · {t.draft.duration}
+                  {t.draft.price} Dhs · {t.draft.duration}
                 </div>
               </button>
             ))}
@@ -275,7 +275,7 @@ export default function PackagesEditor() {
               </div>
 
               <div style={{ fontSize: 22, fontWeight: 800, color: "#121317", margin: "10px 0 6px" }}>
-                {p.price.toLocaleString("fr-MA")} <span style={{ fontSize: 12, color: "#6b7280", fontWeight: 500 }}>MAD</span>
+                {p.price.toLocaleString("fr-MA")} <span style={{ fontSize: 12, color: "#6b7280", fontWeight: 500 }}>Dhs</span>
               </div>
 
               {p.description && (
@@ -401,7 +401,7 @@ function DraftEditor({
         </Field>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          <Field label="Prix (MAD) *">
+          <Field label="Prix (Dhs) *">
             <input
               type="number" inputMode="decimal" min="0"
               value={draft.price}

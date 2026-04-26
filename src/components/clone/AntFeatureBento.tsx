@@ -142,7 +142,7 @@ function BudgetMockup() {
     <div style={{ background: "#fff", borderRadius: 14, padding: "12px 14px", boxShadow: "0 2px 16px rgba(0,0,0,0.10)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
         <span style={{ fontSize: 9, color: "#6b7280" }}>Budget total</span>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>120 000 MAD</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>120 000 Dhs</span>
       </div>
       {items.map((item, i) => (
         <div key={i} style={{ marginBottom: 6 }}>

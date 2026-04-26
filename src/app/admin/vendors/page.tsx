@@ -266,8 +266,8 @@ export default function AdminVendorsPage() {
 
 function VendorRow({ v, onDelete }: { v: AdminVendor; onDelete: (v: AdminVendor) => void }) {
   const price =
-    v.priceMin && v.priceMax ? `${v.priceMin.toLocaleString("fr-FR")} – ${v.priceMax.toLocaleString("fr-FR")} MAD`
-    : v.priceMin            ? `dès ${v.priceMin.toLocaleString("fr-FR")} MAD`
+    v.priceMin && v.priceMax ? `${v.priceMin.toLocaleString("fr-FR")} – ${v.priceMax.toLocaleString("fr-FR")} Dhs`
+    : v.priceMin            ? `dès ${v.priceMin.toLocaleString("fr-FR")} Dhs`
     : "—"
 
   return (

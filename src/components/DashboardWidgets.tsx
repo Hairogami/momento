@@ -351,8 +351,8 @@ function BudgetWidget({ data, onEditActual }: { data: DashboardData; onEditActua
     <div className="flex flex-col gap-3">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-2xl font-bold" style={{ color: C.white }}>{spent.toLocaleString("fr-FR")} MAD</p>
-          {data.budget && <p className="text-xs" style={{ color: C.mist }}>sur {data.budget.toLocaleString("fr-FR")} MAD prévus</p>}
+          <p className="text-2xl font-bold" style={{ color: C.white }}>{spent.toLocaleString("fr-FR")} Dhs</p>
+          {data.budget && <p className="text-xs" style={{ color: C.mist }}>sur {data.budget.toLocaleString("fr-FR")} Dhs prévus</p>}
         </div>
         <span className="text-xs px-2 py-0.5 rounded-full font-medium"
           style={{ backgroundColor: pct > 90 ? `${C.terra}30` : C.anthracite, color: pct > 90 ? C.terra : C.mist }}>
@@ -388,7 +388,7 @@ function BudgetWidget({ data, onEditActual }: { data: DashboardData; onEditActua
                 className="text-[10px] font-semibold px-2 py-0.5 rounded-lg transition-all hover:opacity-70"
                 style={{ backgroundColor: `${C.anthracite}60`, color: item.actual !== null ? C.terra : `${C.mist}60` }}
               >
-                {item.actual !== null ? `${item.actual.toLocaleString("fr-FR")} MAD` : "— MAD"}
+                {item.actual !== null ? `${item.actual.toLocaleString("fr-FR")} Dhs` : "— Dhs"}
               </button>
             )}
           </div>
@@ -919,7 +919,7 @@ function DepensesRecentesWidget({ data, budgetHref }: { data: DashboardData; bud
                 className="text-xs truncate flex-1" style={{ color: C.mist }} />
             )}
             <span className="text-xs font-semibold ml-2 flex-shrink-0" style={{ color: C.terra }}>
-              {(b.actual ?? b.estimated).toLocaleString("fr-FR")} MAD
+              {(b.actual ?? b.estimated).toLocaleString("fr-FR")} Dhs
             </span>
           </div>
           <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: C.anthracite }}>
@@ -942,7 +942,7 @@ function DepensesRecentesWidget({ data, budgetHref }: { data: DashboardData; bud
           type="number"
           value={newAmount}
           onChange={e => setNewAmount(e.target.value)}
-          placeholder="MAD"
+          placeholder="Dhs"
           className="w-16 text-xs bg-transparent outline-none text-right"
           style={{ color: C.mist }}
           onKeyDown={e => e.key === "Enter" && handleAdd()}
@@ -979,8 +979,8 @@ function ObjectifEpargneWidget({ data }: { data: DashboardData }) {
     <div className="flex flex-col gap-3">
       <div className="flex justify-between items-end">
         <div>
-          <p className="text-xl font-bold" style={{ color: C.terra }}>{remaining.toLocaleString("fr-FR")} MAD</p>
-          <p className="text-xs" style={{ color: C.mist }}>non engagé sur {s.budget.expected.toLocaleString("fr-FR")} MAD</p>
+          <p className="text-xl font-bold" style={{ color: C.terra }}>{remaining.toLocaleString("fr-FR")} Dhs</p>
+          <p className="text-xs" style={{ color: C.mist }}>non engagé sur {s.budget.expected.toLocaleString("fr-FR")} Dhs</p>
         </div>
         {days !== null && (
           <div className="text-right">
@@ -1042,7 +1042,7 @@ function RepartitionBudgetWidget({ data }: { data: DashboardData }) {
                 <span className="text-xs" style={{ color: C.mist }}>{p.label}</span>
               </div>
               <span className="text-xs font-semibold" style={{ color: p.color }}>
-                {p.value.toLocaleString("fr-FR")} MAD
+                {p.value.toLocaleString("fr-FR")} Dhs
               </span>
             </div>
             <div className="w-full h-1 rounded-full overflow-hidden" style={{ backgroundColor: C.anthracite }}>
@@ -1760,7 +1760,7 @@ function ProgressionWidget({ data }: { data: DashboardData }) {
 
   const bars = [
     { label: "Tâches",        pct: s.tasks.pct,    icon: "📋", detail: `${s.tasks.done}/${s.tasks.total}` },
-    { label: "Budget",        pct: s.budget.pct,   icon: "💰", detail: `${s.budget.spent.toLocaleString("fr-FR")} MAD` },
+    { label: "Budget",        pct: s.budget.pct,   icon: "💰", detail: `${s.budget.spent.toLocaleString("fr-FR")} Dhs` },
     { label: "Prestataires",  pct: s.bookings.pct, icon: "🤝", detail: `${s.bookings.confirmed}/${s.bookings.total}` },
     { label: "Invités",       pct: s.guests.pct,   icon: "👥", detail: `${s.guests.confirmed}/${s.guests.expected}` },
   ];

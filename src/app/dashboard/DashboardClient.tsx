@@ -830,7 +830,7 @@ function DepensesRecentesWidget({ budgetItems }: { budgetItems: BudgetItem[] }) 
         <div key={i} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
             <span style={{ color: "var(--dash-text,#121317)" }}>{"icon" in b ? (b as BudgetItem).icon + " " : ""}{b.label}</span>
-            <span style={{ fontWeight: 600, color: "var(--g1,#E11D48)" }}>{b.spent.toLocaleString("fr-FR")} MAD</span>
+            <span style={{ fontWeight: 600, color: "var(--g1,#E11D48)" }}>{b.spent.toLocaleString("fr-FR")} Dhs</span>
           </div>
           <div style={{ height: 4, borderRadius: 99, background: "var(--dash-faint,rgba(183,191,217,0.18))", overflow: "hidden" }}>
             <div style={{ width: `${(b.spent / max) * 100}%`, height: "100%", background: b.color ?? "var(--g1,#E11D48)", transition: "width 0.4s" }} />
@@ -840,7 +840,7 @@ function DepensesRecentesWidget({ budgetItems }: { budgetItems: BudgetItem[] }) 
       <div style={{ display: "flex", gap: 4, marginTop: 4, borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.2))", paddingTop: 8 }}>
         <input value={label} onChange={e => setLabel(e.target.value)} placeholder="Label" onKeyDown={e => e.key === "Enter" && handleAdd()}
           style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: 11, color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
-        <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="MAD" type="number" onKeyDown={e => e.key === "Enter" && handleAdd()}
+        <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Dhs" type="number" onKeyDown={e => e.key === "Enter" && handleAdd()}
           style={{ width: 60, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: 11, color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit", textAlign: "right" }} />
         <button onClick={handleAdd} style={{ height: 28, width: 28, borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>+</button>
       </div>
@@ -857,8 +857,8 @@ function ObjectifEpargneWidget({ budget, budgetSpent, eventDate }: { budget: num
     <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 10, boxSizing: "border-box" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "var(--g1,#E11D48)", margin: 0 }}>{remaining.toLocaleString("fr-FR")} MAD</p>
-          <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>non engagé sur {budget.toLocaleString("fr-FR")} MAD</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: "var(--g1,#E11D48)", margin: 0 }}>{remaining.toLocaleString("fr-FR")} Dhs</p>
+          <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>non engagé sur {budget.toLocaleString("fr-FR")} Dhs</p>
         </div>
         <div style={{ textAlign: "right" }}>
           <p style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>J-{days}</p>
@@ -1477,7 +1477,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 10 }}>
           {[
             { val: bookings.length, label: "Prestataires", href: "/explore" },
-            { val: totalAmt > 0 ? `${(totalAmt / 1000).toFixed(0)}k MAD` : "—", label: "Engagé", href: "/budget" },
+            { val: totalAmt > 0 ? `${(totalAmt / 1000).toFixed(0)}k Dhs` : "—", label: "Engagé", href: "/budget" },
           ].map(({ val, label, href }) => (
             <Link key={label} href={href} style={{ padding: "9px 10px", borderRadius: 10, background: "var(--dash-faint,rgba(183,191,217,0.07))", border: "1px solid var(--dash-border)", textDecoration: "none" }}>
               <div style={{ fontSize: 16, fontWeight: 800, backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{val}</div>

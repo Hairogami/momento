@@ -221,7 +221,7 @@ export default function CloneAccueilPage() {
                             <p style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                               {p.budget.toLocaleString("fr-MA")}
                             </p>
-                            <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>budget MAD</p>
+                            <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>budget Dhs</p>
                           </div>
                         )}
                         {p.guestCount && (

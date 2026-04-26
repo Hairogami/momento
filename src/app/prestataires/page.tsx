@@ -23,7 +23,7 @@ const PLANS = [
   },
   {
     name: "Pro",
-    price: "299 MAD",
+    price: "299 Dhs",
     sub: "/ mois",
     features: ["Tout Standard inclus", "Photos illimitées", "Badge Pro vérifié", "Priorité dans les résultats", "Stats détaillées", "Support prioritaire"],
     cta: "Démarrer Pro",

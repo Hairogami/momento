@@ -71,9 +71,9 @@ function SearchMockup() {
       </div>
       {/* Vendor cards */}
       {[
-        { name: "Karim Benali",   cat: "Photographe", city: "Casablanca", price: "3 000–8 000 MAD", rating: "4.9" },
-        { name: "Studio Lumière", cat: "Photographie", city: "Rabat",       price: "2 500–6 000 MAD", rating: "4.7" },
-        { name: "Fatima Zahra",   cat: "Photographe", city: "Marrakech",    price: "1 800–5 000 MAD", rating: "4.8" },
+        { name: "Karim Benali",   cat: "Photographe", city: "Casablanca", price: "3 000–8 000 Dhs", rating: "4.9" },
+        { name: "Studio Lumière", cat: "Photographie", city: "Rabat",       price: "2 500–6 000 Dhs", rating: "4.7" },
+        { name: "Fatima Zahra",   cat: "Photographe", city: "Marrakech",    price: "1 800–5 000 Dhs", rating: "4.8" },
       ].map((v, i) => (
         <div key={i} className="clone-mockup-surface flex items-center gap-3 p-3 rounded-xl mb-2" style={{ background: "var(--dash-surface,#fff)", border: "1px solid rgba(183,191,217,0.18)" }}>
           <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center" style={{ background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff", fontSize: 13, fontWeight: 700 }}>
@@ -157,7 +157,7 @@ function BookingMockup() {
               <div className="clone-mockup-text-h" style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)" }}>Package Mariage Complet</div>
               <div className="clone-mockup-muted" style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)" }}>8h · 2 photographes · retouches incluses</div>
             </div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: "var(--dash-text,#121317)" }}>4 500 MAD</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "var(--dash-text,#121317)" }}>4 500 Dhs</div>
           </div>
         </div>
 
@@ -209,7 +209,7 @@ function EventDashboardMockup() {
       <div className="mb-5">
         <div className="flex justify-between mb-1.5">
           <span className="clone-mockup-muted" style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)" }}>Budget utilisé</span>
-          <span className="clone-mockup-text-h" style={{ fontSize: 11, fontWeight: 700, color: "var(--dash-text,#121317)" }}>62 000 / 100 000 MAD</span>
+          <span className="clone-mockup-text-h" style={{ fontSize: 11, fontWeight: 700, color: "var(--dash-text,#121317)" }}>62 000 / 100 000 Dhs</span>
         </div>
         <div className="rounded-full overflow-hidden" style={{ height: 6, background: "rgba(183,191,217,0.25)" }}>
           <div className="clone-progress-fill" style={{ width: "62%", height: "100%", background: "linear-gradient(90deg, var(--g1, #E11D48), var(--g2, #9333EA))", borderRadius: 99 }} />

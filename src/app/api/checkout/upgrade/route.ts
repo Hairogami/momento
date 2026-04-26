@@ -63,7 +63,7 @@ export async function POST(req: Request) {
   // TODO (phase paiement) : brancher CMI ou PayPal ici.
   //
   // CMI :
-  //   - Créer un POST signé vers CMI (oid, amount, currency=MAD, storetype=3D_PAY)
+  //   - Créer un POST signé vers CMI (oid, amount, currency=Dhs, storetype=3D_PAY)
   //   - Renvoyer { redirectUrl: cmiPaymentUrl }
   //   - Webhook retour → /api/webhooks/cmi (vérifier signature HMAC)
   //     → prisma.user.update({ plan: "pro", planExpiresAt: +30j })

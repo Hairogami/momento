@@ -92,7 +92,7 @@ export default function EditEventInfo({ eventName, eventDate, budget, guestCount
 
         <div>
           <label className="text-xs font-semibold uppercase tracking-wider block mb-1" style={{ color: C.mist }}>
-            Budget total (MAD)
+            Budget total (Dhs)
           </label>
           <input
             type="number"

@@ -126,7 +126,7 @@ export default function CloneFavoritesPage() {
                       }}>★ {fav.rating.toFixed(1)}</span>
                       {fav.priceMin && (
                         <span style={{ fontSize: 11, color: "#9a9aaa" }}>
-                          dès {fav.priceMin.toLocaleString("fr-MA")} MAD
+                          dès {fav.priceMin.toLocaleString("fr-MA")} Dhs
                         </span>
                       )}
                     </div>

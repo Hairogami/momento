@@ -171,7 +171,7 @@ export default function CguPage() {
 
       <Section id="s7" n={7} title="Services payants — abonnement Pro">
         <p>
-          L&apos;abonnement <strong>Pro</strong> est un service payant proposé aux Clients au tarif de <strong>200 MAD toutes taxes comprises par mois</strong>, renouvelable mensuellement par tacite reconduction.
+          L&apos;abonnement <strong>Pro</strong> est un service payant proposé aux Clients au tarif de <strong>200 Dhs toutes taxes comprises par mois</strong>, renouvelable mensuellement par tacite reconduction.
         </p>
         <p>
           Il donne accès à :
@@ -195,7 +195,7 @@ export default function CguPage() {
 
       <Section id="s8" n={8} title="Services payants — Pro + Planner">
         <p>
-          L&apos;abonnement <strong>Pro + Planner</strong> est un service payant au tarif de <strong>500 MAD toutes taxes comprises par mois</strong>.
+          L&apos;abonnement <strong>Pro + Planner</strong> est un service payant au tarif de <strong>500 Dhs toutes taxes comprises par mois</strong>.
           Il inclut toutes les fonctionnalités du plan Pro, ainsi que l&apos;accès à un wedding planner humain et à un agent IA d&apos;assistance à l&apos;organisation.
         </p>
         <p>

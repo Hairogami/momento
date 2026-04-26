@@ -120,7 +120,7 @@ export default function CloneBudgetPage() {
     setNewLabel(""); setNewCat("Divers"); setNewAmount(""); setShowAdd(false)
   }
 
-  const fmt = (n: number) => n.toLocaleString("fr-MA") + " MAD"
+  const fmt = (n: number) => n.toLocaleString("fr-MA") + " Dhs"
 
   return (
     <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
@@ -154,7 +154,7 @@ export default function CloneBudgetPage() {
               <select value={newCat} onChange={e => setNewCat(e.target.value)} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }}>
                 {Object.keys(CAT_COLORS).map(c => <option key={c}>{c}</option>)}
               </select>
-              <input type="number" value={newAmount} onChange={e => setNewAmount(e.target.value)} placeholder="Montant MAD" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
+              <input type="number" value={newAmount} onChange={e => setNewAmount(e.target.value)} placeholder="Montant Dhs" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
               <button onClick={addExpense} style={{ padding: "9px 20px", borderRadius: 10, background: G, color: "#fff", border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Ajouter</button>
@@ -229,7 +229,7 @@ export default function CloneBudgetPage() {
                   <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{exp.label}</p>
                   <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{exp.category} · {exp.date}</p>
                 </div>
-                <span style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", flexShrink: 0 }}>{exp.amount.toLocaleString("fr-MA")} MAD</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", flexShrink: 0 }}>{exp.amount.toLocaleString("fr-MA")} Dhs</span>
                 <button
                   onClick={() => togglePaid(exp.id)}
                   style={{

@@ -154,7 +154,7 @@ export default function BudgetChart({ items, total }: BudgetChartProps) {
               className="text-xs font-medium flex-shrink-0"
               style={{ color: "var(--momento-white)" }}
             >
-              {s.value.toLocaleString("fr-FR")} €
+              {s.value.toLocaleString("fr-FR")} Dhs
             </span>
           </div>
         ))}

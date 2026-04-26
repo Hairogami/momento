@@ -124,10 +124,10 @@ export default function VendorEditForm({ vendor }: { vendor: VendorFormData }) {
 
       <Section title="Tarifs">
         <Grid>
-          <Field label="Prix min (MAD)">
+          <Field label="Prix min (Dhs)">
             <input type="number" value={form.priceMin ?? ""} onChange={e => update("priceMin", e.target.value ? Number(e.target.value) : null)} style={inputStyle} />
           </Field>
-          <Field label="Prix max (MAD)">
+          <Field label="Prix max (Dhs)">
             <input type="number" value={form.priceMax ?? ""} onChange={e => update("priceMax", e.target.value ? Number(e.target.value) : null)} style={inputStyle} />
           </Field>
           <Field label="Fourchette">

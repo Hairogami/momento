@@ -94,7 +94,7 @@ export default function UpgradeClient({
             <div />
             <PlanHeaderCell
               name="Free"
-              price="0 MAD"
+              price="0 Dhs"
               tagline="Pour commencer"
               highlighted={false}
               current={currentPlan === "free"}
@@ -103,7 +103,7 @@ export default function UpgradeClient({
             />
             <PlanHeaderCell
               name="Pro"
-              price="200 MAD"
+              price="200 Dhs"
               priceSuffix="/ mois"
               tagline="Le couteau suisse"
               highlighted

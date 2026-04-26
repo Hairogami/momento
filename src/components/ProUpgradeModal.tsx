@@ -95,7 +95,7 @@ export default function ProUpgradeModal({ open, onClose, reason = "vendor-contac
           </div>
 
           <div style={{ textAlign: "center", marginBottom: 14 }}>
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontWeight: 600, letterSpacing: "-0.02em", backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>200 MAD</span>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontWeight: 600, letterSpacing: "-0.02em", backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>200 Dhs</span>
             <span style={{ fontSize: 13, color: "var(--dash-text-3, #8888aa)", marginLeft: 6 }}>/ mois</span>
           </div>
 

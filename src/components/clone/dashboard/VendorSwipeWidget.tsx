@@ -307,7 +307,7 @@ export default function VendorSwipeWidget({
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", marginBottom: 10, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>{card.category} · {card.city}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: theme.accent, background: `${theme.accent}25`, padding: "2px 7px", borderRadius: 99, textShadow: "none" }}>★ {card.rating.toFixed(1)}</span>
-              {card.priceMin && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.85)", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>dès {card.priceMin.toLocaleString("fr-MA")} MAD</span>}
+              {card.priceMin && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.85)", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>dès {card.priceMin.toLocaleString("fr-MA")} Dhs</span>}
             </div>
           </div>
         </div>

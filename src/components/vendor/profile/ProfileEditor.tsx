@@ -307,7 +307,7 @@ export default function ProfileEditor() {
       {/* Prix */}
       <Section id="prices" title="Tarifs" icon="payments">
         <Row>
-          <Field label="Prix min (MAD)">
+          <Field label="Prix min (Dhs)">
             <input
               type="number" inputMode="decimal" min="0"
               value={vendor.priceMin ?? ""}
@@ -315,7 +315,7 @@ export default function ProfileEditor() {
               style={inp}
             />
           </Field>
-          <Field label="Prix max (MAD)">
+          <Field label="Prix max (Dhs)">
             <input
               type="number" inputMode="decimal" min="0"
               value={vendor.priceMax ?? ""}

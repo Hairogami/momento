@@ -158,9 +158,9 @@ export default function AntAgentFirst() {
 
                 {/* Vendor cards */}
                 {[
-                  { name: "Karim Benali",   city: "Casablanca", price: "3 000 MAD", r: "4.9", n: 34 },
-                  { name: "Studio Lumière", city: "Rabat",       price: "2 500 MAD", r: "4.7", n: 21 },
-                  { name: "Anissa Photo",   city: "Marrakech",   price: "1 800 MAD", r: "4.8", n: 18 },
+                  { name: "Karim Benali",   city: "Casablanca", price: "3 000 Dhs", r: "4.9", n: 34 },
+                  { name: "Studio Lumière", city: "Rabat",       price: "2 500 Dhs", r: "4.7", n: 21 },
+                  { name: "Anissa Photo",   city: "Marrakech",   price: "1 800 Dhs", r: "4.8", n: 18 },
                 ].map((v, i) => (
                   <div key={i} style={{
                     display: "flex", alignItems: "center", gap: 10,
