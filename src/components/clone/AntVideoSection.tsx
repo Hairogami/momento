@@ -2058,6 +2058,20 @@ export default function AntVideoSection() {
     const loop = () => {
       const rect = container.getBoundingClientRect()
       const vh   = window.innerHeight
+      const vw   = window.innerWidth
+
+      // Petit écran (MacBook 13", tablette, mobile) : on désactive l'animation
+      // cinématique sticky parce que le bento 3×2 ne tient pas dans 100dvh.
+      // Le bento s'affiche en hauteur naturelle (cf. CSS .ant-video-shell).
+      const isCompact = vh < 900 || vw < 1100
+      if (isCompact) {
+        win.style.transform    = "none"
+        win.style.borderRadius = "0px"
+        win.style.opacity      = "1"
+        if (overlayRef.current) overlayRef.current.style.opacity = "0"
+        rafRef.current = requestAnimationFrame(loop)
+        return
+      }
 
       /*
        * Ancien déclencheur : démarre quand le container entre dans
@@ -2099,9 +2113,9 @@ export default function AntVideoSection() {
   return (
     /* 130dvh : animation termine au moment où le sticky démarre,
        puis ~30dvh de hold avant de laisser passer AntAgentFirst */
-    <div ref={containerRef} style={{ height: "130dvh", position: "relative" }}>
+    <div ref={containerRef} className="ant-video-shell" style={{ height: "130dvh", position: "relative" }}>
       <div
-        className="clone-video-bg"
+        className="clone-video-bg ant-video-sticky"
         style={{
           position: "sticky",
           top: 0,
@@ -2121,6 +2135,7 @@ export default function AntVideoSection() {
          */}
         <div
           ref={windowRef}
+          className="ant-video-window"
           style={{
             position: "absolute",
             inset: 0,
@@ -2187,6 +2202,30 @@ export default function AntVideoSection() {
               @keyframes badgePopBig{0%{transform:scale(0);opacity:0}35%{transform:scale(1.7);opacity:1}65%{transform:scale(0.85)}85%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
               @keyframes badgeRingPulse{0%{transform:scale(0.7);opacity:0.8}100%{transform:scale(2.6);opacity:0}}
               .ai-chat-scroll::-webkit-scrollbar{display:none}
+
+              /* Petit écran : on désactive le sticky cinématique 130dvh.
+                 Le bento prend sa hauteur naturelle et scrolle normalement. */
+              @media (max-height: 899px), (max-width: 1099px) {
+                .ant-video-shell { height: auto !important; }
+                .ant-video-sticky {
+                  position: static !important;
+                  height: auto !important;
+                  min-height: 0 !important;
+                }
+                .ant-video-window {
+                  position: relative !important;
+                  inset: auto !important;
+                  transform: none !important;
+                  border-radius: 0 !important;
+                  opacity: 1 !important;
+                  width: 100%;
+                  /* Hauteur min pour que le bento ait l'espace du contenu */
+                  min-height: 100vh;
+                }
+                .ant-video-window > div {
+                  min-height: 100vh;
+                }
+              }
             `}</style>
           </div>
         </div>
