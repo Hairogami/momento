@@ -491,7 +491,7 @@ function VendorSwipePreview() {
                         borderRadius: 6, padding: "4px 5px",
                       }}>
                         <div style={{ fontSize: 6, color: f.c, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>{f.l}</div>
-                        <div style={{ fontSize: 9.5, color: "#fff", fontWeight: 800, marginTop: 1.5, lineHeight: 1 }}>{f.p}<span style={{ fontSize: 5, fontWeight: 600, marginLeft: 2 }}>MAD</span></div>
+                        <div style={{ fontSize: 9.5, color: "#fff", fontWeight: 800, marginTop: 1.5, lineHeight: 1 }}>{f.p}<span style={{ fontSize: 5, fontWeight: 600, marginLeft: 2 }}>Dhs</span></div>
                         <div style={{ fontSize: 5, color: "rgba(255,255,255,0.55)", marginTop: 2, lineHeight: 1.2 }}>{f.desc}</div>
                       </div>
                     ))}
@@ -1345,7 +1345,7 @@ function MessagesPreview() {
         }}>
           {inputText || (showCursor ? "" : "Tapez votre message…")}
           {showCursor && (
-            <span style={{ color: "#E11D48", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>
+            <span style={{ color: "#fff", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>
           )}
         </div>
         <button style={{
@@ -1367,46 +1367,360 @@ function MessagesPreview() {
 
 // ── 5. Agent IA — assistant conseil ───────────────────────────────────────────
 function AgentAIPreview() {
-  const step = useAnimLoop([1200, 1200, 3000, 2000])
+  // 14 steps : 3 conversations enchaînées
+  // Q1 (presta search) : 0 typing → 1 send → 2 IA dots → 3 réponse + cards
+  // Q2 (budget) : 4 typing → 5 send → 6 IA dots → 7 réponse + chart
+  // Q3 (couleur) : 8 typing → 9 send → 10 IA dots → 11 réponse + swatches → 12 pause
+  const step = useAnimLoop([2400, 700, 1300, 3000, 2400, 700, 1300, 3300, 2200, 700, 1300, 3000, 1500])
+  const [typed, setTyped] = useState("")
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const fontMomento = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif"
+
+  // Auto-scroll vers le bas à chaque step (comme une vraie conversation)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight
+    }, 50)
+    return () => clearTimeout(id)
+  }, [step])
+
+  const Q1 = "Photographe sous 8000 Dhs à Rabat ?"
+  const Q2 = "Qu'est-ce que tu penses de mon budget ?"
+  const Q3 = "Et mon thème de couleur ?"
+
+  useEffect(() => {
+    let txt = ""
+    if (step === 0) txt = Q1
+    else if (step === 4) txt = Q2
+    else if (step === 8) txt = Q3
+    else { setTyped(""); return }
+    setTyped("")
+    let i = 0
+    const id = setInterval(() => {
+      i++
+      setTyped(txt.slice(0, i))
+      if (i >= txt.length) clearInterval(id)
+    }, 65)
+    return () => clearInterval(id)
+  }, [step])
+
+  // Visibility flags
+  const showQ1 = step >= 1
+  const showA1Typing = step === 2
+  const showA1 = step >= 3
+  const showQ2 = step >= 5
+  const showA2Typing = step === 6
+  const showA2 = step >= 7
+  const showQ3 = step >= 9
+  const showA3Typing = step === 10
+  const showA3 = step >= 11
+  const inputText = (step === 0 || step === 4 || step === 8) ? typed : ""
+  const showCursor = step === 0 || step === 4 || step === 8
+
+  // Bubble styles
+  const userBubble: React.CSSProperties = {
+    maxWidth: "80%",
+    background: "linear-gradient(135deg,#E11D48,#9333EA)",
+    color: "#fff",
+    fontSize: 12, lineHeight: 1.4,
+    padding: "8px 12px",
+    borderRadius: "14px 14px 3px 14px",
+    fontFamily: fontMomento, fontWeight: 500,
+    boxShadow: "0 1px 4px rgba(225,29,72,0.25)",
+  }
+  const aiBubble: React.CSSProperties = {
+    maxWidth: "82%",
+    background: "rgba(147,51,234,0.12)",
+    color: "#f5f5f5",
+    fontSize: 12, lineHeight: 1.4,
+    padding: "8px 12px",
+    borderRadius: "14px 14px 14px 3px",
+    fontFamily: fontMomento, fontWeight: 500,
+    border: "1px solid rgba(147,51,234,0.25)",
+  }
+  const aiAvatar = (
+    <div style={{
+      width: 22, height: 22, borderRadius: 7,
+      background: "linear-gradient(135deg,#E11D48,#9333EA)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: 12, flexShrink: 0,
+      boxShadow: "0 1px 4px rgba(147,51,234,0.4)",
+    }}>✨</div>
+  )
+
+  // 3 photo cards data
+  const PHOTOS = [
+    { name: "Studio Lumière", price: "6 500 Dhs", match: 92, color: "#22c55e" },
+    { name: "Anas Photographie", price: "7 800 Dhs", match: 88, color: "#22c55e" },
+    { name: "Yasmine Studio", price: "5 500 Dhs", match: 85, color: "#84cc16" },
+  ]
+  // Budget categories with proposed change
+  const BUDGET_BEFORE = [
+    { cat: "Lieu", amount: 22000, color: "#C4532A" },
+    { cat: "Traiteur", amount: 12000, color: "#D4733A" },
+    { cat: "Photo", amount: 1500, color: "#A03820", flag: "low" },
+    { cat: "Déco", amount: 4000, color: "#B84830" },
+  ]
+  const BUDGET_AFTER = [
+    { cat: "Lieu", amount: 18000, color: "#C4532A", changed: true },
+    { cat: "Traiteur", amount: 12000, color: "#D4733A" },
+    { cat: "Photo", amount: 3000, color: "#A03820", changed: true },
+    { cat: "Déco", amount: 4000, color: "#B84830" },
+  ]
+  const BUDGET_TOTAL_AFTER = BUDGET_AFTER.reduce((s, b) => s + b.amount, 0)
+
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, gap: 5 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
-        <div style={{ width: 20, height: 20, borderRadius: 7, background: "linear-gradient(135deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, flexShrink: 0 }}>✨</div>
-        <span style={{ fontSize: 9, fontWeight: 600, color: "#f5f5f5" }}>Agent Momento</span>
-        <div style={{ flex: 1 }} />
-        <div style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.07)", borderRadius: 4, padding: "2px 5px" }}>IA</div>
-      </div>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: 4, overflow: "hidden", minHeight: 0 }}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <div style={{ maxWidth: "85%", background: "rgba(255,255,255,0.1)", borderRadius: "9px 9px 2px 9px", padding: "4px 7px" }}>
-            <span style={{ fontSize: 8, color: "rgba(255,255,255,0.85)" }}>Quelle palette pour un mariage élégant ?</span>
+    <div style={{
+      flex: 1, display: "flex", flexDirection: "column",
+      minHeight: 0, overflow: "hidden",
+      background: "#0E0F12", borderRadius: 8,
+      fontFamily: fontMomento,
+    }}>
+      {/* HEADER Agent Layali ✨ */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "10px 13px",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(147,51,234,0.06)",
+        flexShrink: 0,
+      }}>
+        <div style={{
+          width: 34, height: 34, borderRadius: 9,
+          background: "linear-gradient(135deg,#E11D48,#9333EA)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 17, flexShrink: 0,
+          boxShadow: "0 2px 10px rgba(147,51,234,0.5)",
+        }}>✨</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+            Agent Layali <span style={{
+              background: "linear-gradient(135deg,#E11D48,#9333EA)",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>✨</span>
+          </div>
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 1 }}>
+            IA · Toujours dispo
           </div>
         </div>
-        {step === 1 && (
-          <div style={{ display: "flex", gap: 4, alignItems: "flex-end", animation: "slideIn 0.3s ease" }}>
-            <div style={{ width: 16, height: 16, borderRadius: 6, background: "linear-gradient(135deg,#E11D48,#9333EA)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8 }}>✨</div>
-            <div style={{ background: "rgba(255,255,255,0.07)", borderRadius: "9px 9px 9px 2px", padding: "5px 9px", display: "flex", gap: 3, alignItems: "center" }}>
-              <div className="typing-dot" style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.4)" }} />
-              <div className="typing-dot" style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.4)", animationDelay: "150ms" }} />
-              <div className="typing-dot" style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.4)", animationDelay: "300ms" }} />
+        <div style={{
+          fontSize: 9, color: "#fff",
+          background: "linear-gradient(135deg,#E11D48,#9333EA)",
+          borderRadius: 99, padding: "3px 9px",
+          fontWeight: 700, letterSpacing: "0.04em",
+          boxShadow: "0 1px 5px rgba(147,51,234,0.4)",
+        }}>IA</div>
+      </div>
+
+      {/* BODY conversation scrollable (newest at bottom, oldest hidden behind header) */}
+      <div ref={bodyRef} className="ai-chat-scroll" style={{
+        flex: "1 1 0", minHeight: 0,
+        overflowY: "auto", overflowX: "hidden",
+        padding: "10px 10px 6px",
+        display: "flex", flexDirection: "column",
+        gap: 6, justifyContent: "flex-end",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+        scrollBehavior: "smooth",
+      }}>
+        {/* Q1 user */}
+        {showQ1 && (
+          <div style={{ display: "flex", justifyContent: "flex-end", animation: step === 1 ? "slideIn 0.32s ease" : undefined }}>
+            <div style={userBubble}>{Q1}</div>
+          </div>
+        )}
+        {showA1Typing && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+            {aiAvatar}
+            <div style={{ ...aiBubble, padding: "9px 13px", display: "flex", gap: 4, alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
             </div>
           </div>
         )}
-        {step >= 2 && (
-          <div style={{ display: "flex", gap: 4, alignItems: "flex-end", animation: step === 2 ? "slideIn 0.3s ease" : "none" }}>
-            <div style={{ width: 16, height: 16, borderRadius: 6, background: "linear-gradient(135deg,#E11D48,#9333EA)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8 }}>✨</div>
-            <div style={{ flex: 1, background: "rgba(255,255,255,0.07)", borderRadius: "9px 9px 9px 2px", padding: "4px 7px" }}>
-              <span style={{ fontSize: 8, color: "#f5f5f5", lineHeight: 1.5 }}>Je recommande <span style={{ color: "#f87171", fontWeight: 600 }}>Bordeaux</span> + <span style={{ color: "#fbbf24", fontWeight: 600 }}>Or</span> — raffiné et intemporel ✨</span>
+        {showA1 && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-start", animation: step === 3 ? "slideIn 0.32s ease" : undefined }}>
+            {aiAvatar}
+            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: 6 }}>
+              <span>J&apos;ai trouvé 3 photographes pour toi 📸</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {PHOTOS.map((p, i) => (
+                  <div key={p.name} style={{
+                    display: "flex", alignItems: "center", gap: 7,
+                    padding: "5px 7px", borderRadius: 8,
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    animation: step === 3 ? `slideIn 0.4s ease ${0.2 + i * 0.18}s backwards` : undefined,
+                  }}>
+                    <div style={{
+                      width: 18, height: 18, borderRadius: 5,
+                      background: "linear-gradient(135deg,#DC2626,#D97706)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 9, flexShrink: 0,
+                    }}>📷</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 10.5, fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
+                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.55)" }}>{p.price}</div>
+                    </div>
+                    <div style={{
+                      fontSize: 9, fontWeight: 700,
+                      color: p.color,
+                      background: "rgba(34,197,94,0.15)",
+                      padding: "2px 6px", borderRadius: 99,
+                      flexShrink: 0,
+                    }}>{p.match}%</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
-        {step === 3 && (
-          <div style={{ display: "flex", justifyContent: "flex-end", animation: "slideIn 0.3s ease" }}>
-            <div style={{ maxWidth: "78%", background: "linear-gradient(135deg,#E11D48,#9333EA)", borderRadius: "9px 9px 2px 9px", padding: "4px 7px" }}>
-              <span style={{ fontSize: 8, color: "#fff" }}>Très bonne idée ! 🎉</span>
+
+        {/* Q2 budget */}
+        {showQ2 && (
+          <div style={{ display: "flex", justifyContent: "flex-end", animation: step === 5 ? "slideIn 0.32s ease" : undefined }}>
+            <div style={userBubble}>{Q2}</div>
+          </div>
+        )}
+        {showA2Typing && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+            {aiAvatar}
+            <div style={{ ...aiBubble, padding: "9px 13px", display: "flex", gap: 4, alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
             </div>
           </div>
         )}
+        {showA2 && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-start", animation: step === 7 ? "slideIn 0.32s ease" : undefined }}>
+            {aiAvatar}
+            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: 6 }}>
+              <span>
+                Le <span style={{ color: "#fbbf24", fontWeight: 700 }}>photographe</span> est sous-représenté 📊 Je propose <span style={{ color: "#22c55e", fontWeight: 700 }}>3 000 Dh</span> au lieu de <span style={{ textDecoration: "line-through", opacity: 0.6 }}>1 500 Dh</span>, et baisser <span style={{ color: "#fbbf24", fontWeight: 700 }}>Lieu</span> à <span style={{ color: "#22c55e", fontWeight: 700 }}>18 000 Dh</span>.
+              </span>
+              {/* Mini répartition budget */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                {BUDGET_AFTER.map((b, i) => {
+                  const pct = (b.amount / BUDGET_TOTAL_AFTER) * 100
+                  return (
+                    <div key={b.cat} style={{
+                      animation: step === 7 ? `slideIn 0.4s ease ${0.3 + i * 0.12}s backwards` : undefined,
+                    }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "rgba(255,255,255,0.7)", marginBottom: 2 }}>
+                        <span style={{ fontWeight: b.changed ? 700 : 500, color: b.changed ? "#22c55e" : "rgba(255,255,255,0.7)" }}>
+                          {b.cat} {b.changed && "✓"}
+                        </span>
+                        <span style={{ fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>
+                          {b.amount.toLocaleString("fr-FR")} Dh
+                        </span>
+                      </div>
+                      <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                        <div style={{
+                          height: "100%", width: `${pct}%`,
+                          background: b.color,
+                          transition: "width 0.7s ease",
+                          borderRadius: 99,
+                        }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Q3 thème couleur */}
+        {showQ3 && (
+          <div style={{ display: "flex", justifyContent: "flex-end", animation: step === 9 ? "slideIn 0.32s ease" : undefined }}>
+            <div style={userBubble}>{Q3}</div>
+          </div>
+        )}
+        {showA3Typing && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+            {aiAvatar}
+            <div style={{ ...aiBubble, padding: "9px 13px", display: "flex", gap: 4, alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            </div>
+          </div>
+        )}
+        {showA3 && (
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-start", animation: step === 11 ? "slideIn 0.32s ease" : undefined }}>
+            {aiAvatar}
+            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: 6 }}>
+              <span>
+                J&apos;aime beaucoup le <span style={{ color: "#F5E6D3", fontWeight: 700 }}>Beige crème</span>. À ta place je rajouterais une touche de <span style={{ color: "#C1713A", fontWeight: 700 }}>Terracotta</span> ou de <span style={{ color: "#556B2F", fontWeight: 700 }}>Vert olive</span> 🎨
+              </span>
+              {/* Swatches */}
+              <div style={{ display: "flex", gap: 5 }}>
+                {[
+                  { name: "Beige", color: "#F5E6D3" },
+                  { name: "Terracotta", color: "#C1713A" },
+                  { name: "Vert olive", color: "#556B2F" },
+                ].map((s, i) => (
+                  <div key={s.name} style={{
+                    display: "flex", alignItems: "center", gap: 4,
+                    padding: "3px 7px", borderRadius: 99,
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    animation: step === 11 ? `slideIn 0.4s ease ${0.25 + i * 0.13}s backwards` : undefined,
+                  }}>
+                    <div style={{
+                      width: 10, height: 10, borderRadius: "50%",
+                      background: s.color,
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      flexShrink: 0,
+                    }} />
+                    <span style={{ fontSize: 9, color: "#fff", fontWeight: 500 }}>{s.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* INPUT bar */}
+      <div style={{
+        padding: "10px 12px",
+        borderTop: "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(255,255,255,0.03)",
+        display: "flex", alignItems: "center", gap: 9,
+        flexShrink: 0,
+      }}>
+        <div style={{
+          flex: 1, minHeight: 34, padding: "8px 14px",
+          background: "rgba(255,255,255,0.06)",
+          border: `1.5px solid ${showCursor ? "rgba(147,51,234,0.5)" : "rgba(255,255,255,0.1)"}`,
+          borderRadius: 99,
+          fontSize: 12, color: inputText ? "#fff" : "rgba(255,255,255,0.4)",
+          fontFamily: fontMomento, fontWeight: 500,
+          display: "flex", alignItems: "center",
+          boxShadow: showCursor ? "0 0 0 3px rgba(147,51,234,0.15)" : "none",
+          transition: "border 0.2s, box-shadow 0.2s",
+          lineHeight: 1.3,
+        }}>
+          {inputText || (showCursor ? "" : "Demande à Layali…")}
+          {showCursor && (
+            <span style={{ color: "#fff", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>
+          )}
+        </div>
+        <button style={{
+          width: 34, height: 34, borderRadius: "50%",
+          background: "linear-gradient(135deg,#E11D48,#9333EA)",
+          color: "#fff", border: "none",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 17, fontWeight: 700,
+          flexShrink: 0,
+          transform: (step === 1 || step === 5 || step === 9) ? "scale(0.88)" : "scale(1)",
+          transition: "transform 0.2s",
+          boxShadow: "0 2px 10px rgba(147,51,234,0.45)",
+          cursor: "pointer",
+        }}>↑</button>
       </div>
     </div>
   )
@@ -1425,7 +1739,7 @@ function BudgetPreview() {
     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, minHeight: 0, position: "relative" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexShrink: 0 }}>
         <span style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>Budget total</span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#f5f5f5" }}>120 000 MAD</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: "#f5f5f5" }}>120 000 Dhs</span>
       </div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 7 }}>
         {items.map((it,i) => (
@@ -1444,7 +1758,7 @@ function BudgetPreview() {
         <span style={{ fontSize: 11 }}>⏰</span>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 8, fontWeight: 600, color: "#fbbf24" }}>Rappel paiement</div>
-          <div style={{ fontSize: 7, color: "rgba(255,255,255,0.45)" }}>Traiteur — 5 000 MAD dû ce mois</div>
+          <div style={{ fontSize: 7, color: "rgba(255,255,255,0.45)" }}>Traiteur — 5 000 Dhs dû ce mois</div>
         </div>
       </div>
     </div>
@@ -1604,6 +1918,7 @@ export default function AntVideoSection() {
               @keyframes badgePop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.35);opacity:1}100%{transform:scale(1);opacity:1}}
               @keyframes badgePopBig{0%{transform:scale(0);opacity:0}35%{transform:scale(1.7);opacity:1}65%{transform:scale(0.85)}85%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
               @keyframes badgeRingPulse{0%{transform:scale(0.7);opacity:0.8}100%{transform:scale(2.6);opacity:0}}
+              .ai-chat-scroll::-webkit-scrollbar{display:none}
             `}</style>
           </div>
         </div>
