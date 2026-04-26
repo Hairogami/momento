@@ -140,7 +140,7 @@ export default function FeteFamilleTemplate({ slug, mood, palette, content, hero
         </div>
       </section>
 
-      <footer style={footerStyle}>· créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Momento</a> ·</footer>
+      <footer style={footerStyle}>· créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Layali</a> ·</footer>
     </main>
   )
 }

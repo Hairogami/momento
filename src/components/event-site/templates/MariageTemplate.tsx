@@ -293,7 +293,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Footer minimal */}
       <footer style={{ padding: "32px 24px", textAlign: "center", fontSize: 11, color: "var(--evt-text-muted)", fontFamily: "var(--evt-font-body)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
-        · créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Momento</a> ·
+        · créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Layali</a> ·
       </footer>
     </main>
   )

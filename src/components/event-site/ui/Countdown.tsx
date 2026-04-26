@@ -87,19 +87,19 @@ function VariantGrand({ r }: { r: Remaining }) {
     { value: r.seconds, label: "secondes" },
   ]
   return (
-    <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
+    <div style={{ display: "flex", gap: 18, flexWrap: "wrap", justifyContent: "center" }}>
       {units.map(u => (
         <div key={u.label} style={{
-          minWidth: 90,
-          padding: "18px 12px",
-          borderRadius: 12,
+          minWidth: 130,
+          padding: "26px 18px",
+          borderRadius: 14,
           border: "1px solid color-mix(in srgb, var(--evt-main) 20%, transparent)",
           background: "color-mix(in srgb, var(--evt-main) 6%, transparent)",
           textAlign: "center",
         }}>
           <div style={{
             fontFamily: "var(--evt-font-heading)",
-            fontSize: "clamp(2rem, 5vw, 3.2rem)",
+            fontSize: "clamp(2.6rem, 6vw, 4rem)",
             fontWeight: 600,
             color: "var(--evt-main)",
             lineHeight: 1,
@@ -107,11 +107,11 @@ function VariantGrand({ r }: { r: Remaining }) {
           }}>{String(u.value).padStart(2, "0")}</div>
           <div style={{
             fontFamily: "var(--evt-font-body)",
-            fontSize: 10,
-            letterSpacing: "0.2em",
+            fontSize: 12,
+            letterSpacing: "0.22em",
             textTransform: "uppercase",
             color: "var(--evt-text-muted)",
-            marginTop: 8,
+            marginTop: 10,
           }}>{u.label}</div>
         </div>
       ))}
@@ -188,35 +188,35 @@ function VariantCircle({ r }: { r: Remaining }) {
     { value: r.seconds, label: "Sec", max: 60, color: "var(--evt-accent)" },
   ]
   return (
-    <div style={{ display: "flex", gap: 18, flexWrap: "wrap", justifyContent: "center" }}>
+    <div style={{ display: "flex", gap: 26, flexWrap: "wrap", justifyContent: "center" }}>
       {units.map(u => {
         const pct = Math.min(1, u.value / u.max)
-        const radius = 36
+        const radius = 58
         const circumference = 2 * Math.PI * radius
         const offset = circumference * (1 - pct)
         return (
-          <div key={u.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-            <div style={{ position: "relative", width: 90, height: 90 }}>
-              <svg width="90" height="90" viewBox="0 0 90 90">
-                <circle cx="45" cy="45" r={radius} fill="none" stroke="color-mix(in srgb, currentColor 15%, transparent)" strokeWidth="3" style={{ color: u.color }} />
+          <div key={u.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <div style={{ position: "relative", width: 140, height: 140 }}>
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r={radius} fill="none" stroke="color-mix(in srgb, currentColor 15%, transparent)" strokeWidth="4" style={{ color: u.color }} />
                 <circle
-                  cx="45"
-                  cy="45"
+                  cx="70"
+                  cy="70"
                   r={radius}
                   fill="none"
                   stroke={u.color}
-                  strokeWidth="3"
+                  strokeWidth="4"
                   strokeLinecap="round"
                   strokeDasharray={circumference}
                   strokeDashoffset={offset}
-                  transform="rotate(-90 45 45)"
+                  transform="rotate(-90 70 70)"
                   style={{ transition: "stroke-dashoffset 0.8s linear" }}
                 />
               </svg>
               <div style={{
                 position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
                 fontFamily: "var(--evt-font-heading)",
-                fontSize: "1.4rem",
+                fontSize: "2.4rem",
                 fontWeight: 600,
                 color: "var(--evt-text)",
                 fontVariantNumeric: "tabular-nums",
@@ -224,8 +224,8 @@ function VariantCircle({ r }: { r: Remaining }) {
             </div>
             <div style={{
               fontFamily: "var(--evt-font-body)",
-              fontSize: 10,
-              letterSpacing: "0.2em",
+              fontSize: 12,
+              letterSpacing: "0.22em",
               textTransform: "uppercase",
               color: "var(--evt-text-muted)",
               fontWeight: 600,

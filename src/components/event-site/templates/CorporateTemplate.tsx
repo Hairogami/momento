@@ -159,7 +159,7 @@ export default function CorporateTemplate({ slug, mood, palette, content, heroIm
         </div>
       </section>
 
-      <footer style={footerStyle}>· créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Momento</a> ·</footer>
+      <footer style={footerStyle}>· créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Layali</a> ·</footer>
     </main>
   )
 }
