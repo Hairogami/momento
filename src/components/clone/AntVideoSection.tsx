@@ -694,54 +694,469 @@ function VendorSwipePreview() {
   )
 }
 
-// ── 3. Invitations & RSVP — clic "Oui" ───────────────────────────────────────
+// ── 3. Invitations & RSVP — Omar remplit RSVP, notif planner, widget update ──
 function RsvpPreview() {
-  const step = useAnimLoop([2000, 400, 1600, 2000])
-  const pct = step >= 2 ? 72 : 68
+  // 9 étapes : (0) typing nom Omar, (1) Oui highlight, (2) typing +1 Meryem,
+  // (3) submit highlight, (4) success "Merci Omar", (5) dashboard wide-shot,
+  // (6) zoom sur Invités + badge "1" pop, (7) widget update, (8) pause finale
+  const step = useAnimLoop([2400, 1000, 2400, 1000, 1500, 1800, 2200, 2800, 1500])
+
+  const [typedName, setTypedName] = useState("")
+  const [typedPlusOne, setTypedPlusOne] = useState("")
+
+  useEffect(() => {
+    if (step === 0) {
+      setTypedName("")
+      setTypedPlusOne("")
+      const txt = "Omar"
+      let i = 0
+      const id = setInterval(() => {
+        i++
+        setTypedName(txt.slice(0, i))
+        if (i >= txt.length) clearInterval(id)
+      }, 240)
+      return () => clearInterval(id)
+    }
+    if (step === 2) {
+      const txt = "Meryem"
+      let i = 0
+      const id = setInterval(() => {
+        i++
+        setTypedPlusOne(txt.slice(0, i))
+        if (i >= txt.length) clearInterval(id)
+      }, 220)
+      return () => clearInterval(id)
+    }
+    if (step === 8) {
+      setTypedName("")
+      setTypedPlusOne("")
+    }
+  }, [step])
+
+  const ouiSelected = step >= 1 && step <= 4
+  const submitted = step === 4
+  const showForm = step <= 4
+  const showDashboard = step === 5 || step === 6
+  const showWidget = step >= 7
+
+  // Frame 2 zoom (cinematic sur badge Notifications — N6 mappé par user, ×2)
+  // Pour CENTRER le focal point : translate(50%-origin) APRÈS scale
+  const dashZoom = step === 6 ? 5.2 : 1
+  const dashOriginX = "96%"
+  const dashOriginY = "39%"
+  const dashTranslateX = step === 6 ? "-46%" : "0%"  // 50% - 96%
+  const dashTranslateY = step === 6 ? "11%" : "0%"   // 50% - 39%
+  const showBadge = step === 6
+
+  // Widget counters (live update at step 7+)
+  const guestCount = showWidget ? 100 : 99
+  const confirmedCount = showWidget ? 73 : 72
+  const declinedCount = 8
+  const pendingCount = guestCount - confirmedCount - declinedCount
+  const pct = Math.round((confirmedCount / guestCount) * 100)
+
+  // Police Momento (landing) = Plus Jakarta Sans (body de layout.tsx ligne 94)
+  const fontMomento = "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif"
+
+  // Sidebar items (fidèle à DashSidebar.tsx + Notifications du popup user déplacé en NAV)
+  const NAV: { label: string; icon: string; active?: boolean; isNotif?: boolean }[] = [
+    { label: "Accueil", icon: "home" },
+    { label: "Notifications", icon: "bell", isNotif: true },
+    { label: "Mon Planner", icon: "dashboard", active: true },
+    { label: "Budget", icon: "wallet" },
+    { label: "Invités", icon: "groups" },
+    { label: "Messages", icon: "chat" },
+    { label: "Planning", icon: "event" },
+    { label: "Favoris", icon: "favorite" },
+    { label: "Mes Prestataires", icon: "handshake" },
+    { label: "Site événement", icon: "share" },
+  ]
+  // Icônes SVG inline (fallback Material Symbols)
+  const ICON: Record<string, React.ReactNode> = {
+    home: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z" /></svg>,
+    dashboard: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v5h-8zm0 7h8v11h-8zm-10 3h8v8H3z" /></svg>,
+    wallet: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 7H5V5h14V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16zM18 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>,
+    groups: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 8c0-3 4-5 8-5s8 2 8 5v1H4z"/></svg>,
+    chat: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v14H7l-4 4z"/></svg>,
+    event: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4h2V2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 6v10h14V10z"/></svg>,
+    favorite: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21l-1.5-1.4C5 15 2 12 2 8.5A5.5 5.5 0 0 1 7.5 3c1.7 0 3.4.8 4.5 2.1A6.1 6.1 0 0 1 16.5 3 5.5 5.5 0 0 1 22 8.5c0 3.5-3 6.5-8.5 11.1z"/></svg>,
+    handshake: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 6L9 9.5l5.5 5.5 1.5-1.5-2-2 5-5-1.5-1.5-5 5z M5 17l4-4 5.5 5.5L13 20l-3-3-3 3z"/></svg>,
+    share: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M9 11l6-4M9 13l6 4" stroke="currentColor" strokeWidth="2" fill="none"/></svg>,
+    bell: <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.9V4a1 1 0 0 0-2 0v1.1A6 6 0 0 0 6 11v5l-2 2v1h16v-1z"/></svg>,
+  }
+
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, minHeight: 0 }}>
-      <div style={{ borderRadius: 8, overflow: "hidden", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", flexShrink: 0 }}>
-        <div style={{ height: 19, background: "linear-gradient(90deg,#C2410C,#B45309)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontSize: 8, color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>Yazid & Sara — 17 Nov 2025</span>
+    <div style={{ position: "relative", flex: 1, minHeight: 0, overflow: "hidden", borderRadius: 8 }}>
+      {/* FRAME 1 — RSVP form Momento, PJS, tailles encore +30% */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "#FAF7F2",
+        opacity: showForm ? 1 : 0,
+        transform: showForm ? "scale(1)" : "scale(0.94)",
+        transition: "opacity 0.5s ease, transform 0.6s ease",
+        display: "flex", flexDirection: "column",
+        padding: "14px 16px",
+        fontFamily: fontMomento,
+      }}>
+        {/* header bandeau terracotta */}
+        <div style={{
+          background: "#C1713A", borderRadius: 7,
+          padding: "9px 0", textAlign: "center",
+          marginBottom: 11,
+        }}>
+          <span style={{ fontSize: 15, color: "#fff", fontWeight: 700, fontFamily: fontMomento, letterSpacing: "0.01em" }}>
+            Yazid & Sara — 17 nov 2025
+          </span>
         </div>
-        <div style={{ padding: "6px 7px", display: "flex", gap: 5 }}>
-          <div style={{ flex: 1, height: 20, borderRadius: 6, background: step === 1 ? "rgba(34,197,94,0.35)" : "rgba(34,197,94,0.15)", border: `1px solid ${step === 1 ? "#4ade80" : "rgba(34,197,94,0.3)"}`, display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s, border 0.2s", transform: step === 1 ? "scale(0.94)" : "scale(1)" }}>
-            <span style={{ fontSize: 9, color: "#4ade80", fontWeight: 600 }}>✓ Oui</span>
+        <div style={{ fontSize: 10, color: "#8B4513", letterSpacing: "0.18em", fontWeight: 700, textAlign: "center", marginBottom: 13, fontFamily: fontMomento }}>
+          CONFIRMEZ VOTRE PRÉSENCE
+        </div>
+
+        {/* Nom complet */}
+        <div style={{ marginBottom: 11 }}>
+          <div style={{ fontSize: 12, color: "#5a3a20", marginBottom: 5, fontWeight: 600, fontFamily: fontMomento }}>Nom complet</div>
+          <div style={{
+            background: "#fff",
+            border: `2px solid ${step === 0 ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
+            borderRadius: 8, padding: "7px 10px",
+            fontSize: 15, color: "#2a1a0a",
+            minHeight: 23, display: "flex", alignItems: "center",
+            boxShadow: step === 0 ? "0 0 0 4px rgba(193,113,58,0.15)" : "none",
+            transition: "box-shadow 0.2s, border-color 0.2s",
+            fontFamily: fontMomento,
+            fontWeight: 500,
+          }}>
+            {typedName || (step !== 0 ? <span style={{ color: "#bbb", fontWeight: 400 }}>Prénom Nom</span> : null)}
+            {step === 0 && <span style={{ color: "#C1713A", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>}
           </div>
-          <div style={{ flex: 1, height: 20, borderRadius: 6, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: 9, color: "rgba(255,255,255,0.4)" }}>✗ Non</span>
+        </div>
+
+        {/* Présent ? */}
+        <div style={{ marginBottom: 11 }}>
+          <div style={{ fontSize: 12, color: "#5a3a20", marginBottom: 5, fontWeight: 600, fontFamily: fontMomento }}>Présent à l&apos;événement ?</div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <div style={{
+              flex: 1, padding: "8px 0", borderRadius: 99,
+              background: ouiSelected ? "#C1713A" : "#fff",
+              border: `2px solid ${ouiSelected ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
+              color: ouiSelected ? "#fff" : "#5a3a20",
+              fontSize: 14, fontWeight: 700, textAlign: "center",
+              transition: "all 0.3s ease",
+              transform: step === 1 ? "scale(0.93)" : "scale(1)",
+              boxShadow: step === 1 ? "0 0 0 4px rgba(193,113,58,0.25)" : "none",
+              fontFamily: fontMomento,
+            }}>Oui</div>
+            <div style={{
+              flex: 1, padding: "8px 0", borderRadius: 99,
+              background: "#fff", border: "2px solid rgba(193,113,58,0.25)",
+              color: "#8a6a5a", fontSize: 14, fontWeight: 700, textAlign: "center",
+              fontFamily: fontMomento,
+            }}>Non</div>
           </div>
+        </div>
+
+        {/* +1 */}
+        <div style={{ marginBottom: 13 }}>
+          <div style={{ fontSize: 12, color: "#5a3a20", marginBottom: 5, fontWeight: 600, fontFamily: fontMomento }}>
+            Nom de votre +1
+          </div>
+          <div style={{
+            background: "#fff",
+            border: `2px solid ${step === 2 ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
+            borderRadius: 8, padding: "7px 10px",
+            fontSize: 15, color: "#2a1a0a",
+            minHeight: 23, display: "flex", alignItems: "center",
+            boxShadow: step === 2 ? "0 0 0 4px rgba(193,113,58,0.15)" : "none",
+            transition: "box-shadow 0.2s, border-color 0.2s",
+            fontFamily: fontMomento,
+            fontWeight: 500,
+          }}>
+            {typedPlusOne || (step !== 2 ? <span style={{ color: "#bbb", fontWeight: 400 }}>Prénom Nom</span> : null)}
+            {step === 2 && <span style={{ color: "#C1713A", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>}
+          </div>
+        </div>
+
+        {/* Confirmer / Success */}
+        <div style={{ marginTop: "auto" }}>
+          {!submitted ? (
+            <div style={{
+              padding: "12px 0", borderRadius: 99,
+              background: "#C1713A", color: "#fff",
+              fontSize: 15, fontWeight: 700, textAlign: "center",
+              transform: step === 3 ? "scale(0.94)" : "scale(1)",
+              transition: "transform 0.3s ease",
+              boxShadow: step === 3 ? "0 0 0 5px rgba(193,113,58,0.3)" : "0 4px 12px rgba(193,113,58,0.32)",
+              fontFamily: fontMomento,
+            }}>
+              Confirmer ma réponse
+            </div>
+          ) : (
+            <div style={{
+              padding: "14px 0", textAlign: "center",
+              animation: "slideIn 0.4s ease",
+            }}>
+              <div style={{ fontSize: 34, color: "#C1713A", lineHeight: 1, marginBottom: 7, fontFamily: fontMomento, fontWeight: 700 }}>✓</div>
+              <div style={{ fontSize: 20, color: "#2a1a0a", fontFamily: fontMomento, fontWeight: 700 }}>
+                Merci Omar !
+              </div>
+              <div style={{ fontSize: 12, color: "#8a6a5a", marginTop: 4, fontFamily: fontMomento }}>Votre réponse a bien été enregistrée.</div>
+            </div>
+          )}
         </div>
       </div>
-      {step >= 2 ? (
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 5 }}>
-          <div style={{ fontSize: 9, color: "#4ade80", textAlign: "center", fontWeight: 500, animation: "slideIn 0.4s ease" }}>Merci ! Ta place est confirmée 🎉</div>
-          <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${pct}%`, background: "linear-gradient(90deg,#22c55e,#16a34a)", transition: "width 0.8s ease", borderRadius: 99 }} />
+
+      {/* FRAME 2 — DashSidebar pixel-perfect FULL WIDTH (zoom step 6 sur Notifications) */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "#15171c",
+        opacity: showDashboard ? 1 : 0,
+        transition: "opacity 0.5s ease",
+        overflow: "hidden",
+        fontFamily: fontMomento,
+      }}>
+        <div style={{
+          width: "100%", height: "100%",
+          transform: `translate(${dashTranslateX}, ${dashTranslateY}) scale(${dashZoom})`,
+          transformOrigin: `${dashOriginX} ${dashOriginY}`,
+          transition: "transform 0.85s cubic-bezier(0.4, 0, 0.2, 1)",
+          display: "flex", flexDirection: "column",
+        }}>
+          {/* Header — Logo + Espace client + Toggle dark */}
+          <div style={{
+            padding: "11px 13px",
+            borderBottom: "1px solid rgba(183,191,217,0.1)",
+            display: "flex", alignItems: "center", gap: 9,
+            flexShrink: 0,
+          }}>
+            <div style={{
+              width: 28, height: 28, borderRadius: 8,
+              background: "linear-gradient(135deg,#E11D48,#9333EA)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 2px 10px rgba(225,29,72,0.5)",
+              flexShrink: 0,
+            }}>
+              <span style={{ color: "#fff", fontSize: 14, fontWeight: 800, letterSpacing: "-0.05em" }}>M</span>
+            </div>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>Momento</div>
+              <div style={{ fontSize: 8.5, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>Espace client</div>
+            </div>
+            <div style={{
+              width: 28, height: 17, borderRadius: 99,
+              background: "#E11D48",
+              position: "relative", flexShrink: 0,
+            }}>
+              <div style={{
+                position: "absolute", top: 2.5, left: 13.5,
+                width: 12, height: 12, borderRadius: "50%",
+                background: "#fff",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
+              }} />
+            </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>Confirmés</span>
-            <span style={{ fontSize: 8, color: "#4ade80", fontWeight: 600 }}>{pct}%</span>
+
+          {/* Event switcher */}
+          <div style={{
+            padding: "9px 11px",
+            borderBottom: "1px solid rgba(183,191,217,0.07)",
+            flexShrink: 0,
+          }}>
+            <div style={{
+              padding: "8px 10px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 9,
+              display: "flex", alignItems: "center", gap: 7,
+            }}>
+              <div style={{
+                width: 8, height: 8, borderRadius: "50%",
+                background: "#E11D48",
+                boxShadow: "0 0 6px rgba(225,29,72,0.7)",
+                flexShrink: 0,
+              }} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  Mariage Sara
+                </div>
+                <div style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Événement actif</div>
+              </div>
+              <span style={{ fontSize: 9, color: "rgba(255,255,255,0.4)" }}>▾</span>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 5 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>RSVP reçus</span>
-            <span style={{ fontSize: 8, color: "#4ade80", fontWeight: 600 }}>{pct}%</span>
-          </div>
-          <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${pct}%`, background: "linear-gradient(90deg,#22c55e,#16a34a)", borderRadius: 99 }} />
-          </div>
-          <div style={{ display: "flex", gap: 4 }}>
-            {[{s:"68 Oui ✓",g:true},{s:"12 Attente",g:false},{s:"8 Non",g:false}].map((x,i) => (
-              <div key={i} style={{ flex: 1, padding: "3px 0", borderRadius: 5, background: x.g ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)", textAlign: "center" }}>
-                <span style={{ fontSize: 7, color: x.g ? "#4ade80" : "rgba(255,255,255,0.35)" }}>{x.s}</span>
+
+          {/* Nav items (Notifications inclus) */}
+          <nav style={{
+            flex: 1, padding: "6px 7px", overflow: "hidden",
+            display: "flex", flexDirection: "column", gap: 1,
+          }}>
+            {NAV.map((item) => (
+              <div key={item.label} style={{
+                position: "relative",
+                padding: "7px 11px", borderRadius: 8,
+                fontSize: 12.5,
+                background: item.active
+                  ? "linear-gradient(135deg, rgba(225,29,72,0.1), rgba(147,51,234,0.07))"
+                  : "transparent",
+                display: "flex", alignItems: "center", gap: 9,
+                fontWeight: item.active ? 600 : 400,
+                color: item.active ? "#fff" : "rgba(255,255,255,0.62)",
+              }}>
+                {item.active && (
+                  <div style={{
+                    position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
+                    width: 3, height: 18, borderRadius: 99,
+                    background: "linear-gradient(135deg,#E11D48,#9333EA)",
+                  }} />
+                )}
+                <span style={{
+                  color: item.active ? "#E11D48" : "rgba(255,255,255,0.62)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  width: 16, height: 16, flexShrink: 0,
+                  position: "relative",
+                }}>
+                  {ICON[item.icon]}
+                </span>
+                <span style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {item.label}
+                </span>
+                {item.isNotif && showBadge && (
+                  <div style={{ position: "relative", width: 18, height: 18, flexShrink: 0 }}>
+                    <div key={`ring-${step}`} style={{
+                      position: "absolute", inset: 0,
+                      borderRadius: "50%",
+                      border: "2px solid #E11D48",
+                      transformOrigin: "center",
+                      animation: "badgeRingPulse 1.2s ease-out 0.2s",
+                      pointerEvents: "none",
+                    }} />
+                    <div key={`badge-${step}`} style={{
+                      position: "absolute", inset: 0,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg,#E11D48,#9333EA)",
+                      color: "#fff", fontSize: 11, fontWeight: 800,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      animation: "badgePopBig 0.7s cubic-bezier(0.34,1.56,0.64,1)",
+                      boxShadow: "0 0 0 2px #15171c, 0 0 10px rgba(225,29,72,0.75)",
+                      lineHeight: 1,
+                      fontFamily: fontMomento,
+                    }}>1</div>
+                  </div>
+                )}
               </div>
             ))}
+          </nav>
+
+          {/* Footer user */}
+          <div style={{
+            padding: "9px 13px",
+            borderTop: "1px solid rgba(183,191,217,0.07)",
+            display: "flex", alignItems: "center", gap: 9,
+            flexShrink: 0,
+          }}>
+            <div style={{
+              width: 26, height: 26, borderRadius: "50%",
+              background: "linear-gradient(135deg,#E11D48,#9333EA)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff", fontSize: 13, fontWeight: 700,
+              flexShrink: 0,
+            }}>S</div>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Sara</div>
+              <div style={{ fontSize: 9, color: "#E11D48", fontWeight: 500 }}>Voir mon profil →</div>
+            </div>
           </div>
         </div>
-      )}
+
+      </div>
+
+      {/* FRAME 3 — InvitesWidget zoom avec update */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "#0E0F12",
+        opacity: showWidget ? 1 : 0,
+        transform: showWidget ? "scale(1)" : "scale(0.95)",
+        transition: "opacity 0.5s ease, transform 0.6s ease",
+        padding: "12px 14px",
+        display: "flex", alignItems: "center",
+      }}>
+        <div style={{
+          width: "100%",
+          background: "rgba(255,255,255,0.05)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: 10,
+          padding: "10px 12px",
+          display: "flex", flexDirection: "column", gap: 7,
+        }}>
+          <div style={{ fontSize: 6.5, color: "rgba(255,255,255,0.45)", letterSpacing: "0.18em", fontWeight: 700 }}>
+            INVITÉS
+          </div>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 5 }}>
+            <div style={{
+              fontSize: 22, fontWeight: 700, color: "#fff", lineHeight: 1,
+              fontVariantNumeric: "tabular-nums",
+              transition: "color 0.4s ease",
+            }}>{guestCount}</div>
+            <div style={{ fontSize: 7, color: "rgba(255,255,255,0.5)", paddingBottom: 2 }}>
+              invités · <span style={{ color: "#4ade80", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{confirmedCount}</span> confirmés
+            </div>
+            <div style={{
+              marginLeft: "auto",
+              padding: "2px 7px", borderRadius: 99,
+              background: "rgba(193,113,58,0.2)",
+              color: "#C1713A", fontSize: 8, fontWeight: 800,
+              fontVariantNumeric: "tabular-nums",
+            }}>{pct}%</div>
+          </div>
+          {/* Bar */}
+          <div style={{
+            height: 6, borderRadius: 99, overflow: "hidden",
+            background: "rgba(255,255,255,0.08)",
+            display: "flex",
+          }}>
+            <div style={{
+              height: "100%",
+              width: `${(confirmedCount / guestCount) * 100}%`,
+              background: "#4ade80",
+              transition: "width 0.9s cubic-bezier(0.4,0,0.2,1)",
+            }} />
+            <div style={{
+              height: "100%",
+              width: `${(declinedCount / guestCount) * 100}%`,
+              background: "#C1713A",
+            }} />
+          </div>
+          {/* Legend */}
+          <div style={{ display: "flex", gap: 8, fontSize: 7, color: "rgba(255,255,255,0.55)" }}>
+            <span><span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "#4ade80", marginRight: 3, verticalAlign: "middle" }} />{confirmedCount} oui</span>
+            <span><span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "#C1713A", marginRight: 3, verticalAlign: "middle" }} />{declinedCount} non</span>
+            <span><span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "#3a3a40", marginRight: 3, verticalAlign: "middle" }} />{pendingCount} attente</span>
+          </div>
+          {/* Toast nouvelle ligne */}
+          {showWidget && (
+            <div style={{
+              marginTop: 2,
+              padding: "5px 7px", borderRadius: 6,
+              background: "rgba(74,222,128,0.12)",
+              border: "1px solid rgba(74,222,128,0.3)",
+              display: "flex", alignItems: "center", gap: 6,
+              animation: "slideIn 0.5s ease 0.6s backwards",
+            }}>
+              <div style={{
+                width: 14, height: 14, borderRadius: "50%",
+                background: "rgba(193,113,58,0.3)", color: "#C1713A",
+                fontSize: 7, fontWeight: 800,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>O</div>
+              <div style={{ flex: 1, fontSize: 7, color: "#fff", lineHeight: 1.3 }}>
+                <span style={{ fontWeight: 700 }}>Omar</span>
+                <span style={{ color: "rgba(255,255,255,0.55)" }}> · +1 Meryem</span>
+              </div>
+              <span style={{ color: "#4ade80", fontSize: 9, fontWeight: 700 }}>✓</span>
+            </div>
+          )}
+        </div>
+      </div>
+
     </div>
   )
 }
@@ -1030,6 +1445,10 @@ export default function AntVideoSection() {
               @keyframes detailZoom{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
               @keyframes cursorClick{0%{transform:scale(1)}30%{transform:scale(0.78)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
               @keyframes cursorRing{0%{transform:scale(0);opacity:0.7}100%{transform:scale(2.4);opacity:0}}
+              @keyframes rsvpBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+              @keyframes badgePop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.35);opacity:1}100%{transform:scale(1);opacity:1}}
+              @keyframes badgePopBig{0%{transform:scale(0);opacity:0}35%{transform:scale(1.7);opacity:1}65%{transform:scale(0.85)}85%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+              @keyframes badgeRingPulse{0%{transform:scale(0.7);opacity:0.8}100%{transform:scale(2.6);opacity:0}}
             `}</style>
           </div>
         </div>
