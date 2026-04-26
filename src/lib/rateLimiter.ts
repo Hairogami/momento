@@ -44,7 +44,14 @@ async function getUpstashLimiter() {
   if (upstashRatelimit) return upstashRatelimit
   const url   = process.env.UPSTASH_REDIS_REST_URL
   const token = process.env.UPSTASH_REDIS_REST_TOKEN
-  if (!url || !token) return null
+  // H-3: fail-secure en production — le fallback in-memory est bypass-able sur Vercel
+  // (chaque cold start = nouvelle Map vide = compteurs remis à zéro)
+  if (!url || !token) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("UPSTASH_REDIS_REST_URL et UPSTASH_REDIS_REST_TOKEN sont requis en production. Configurer ces variables dans Vercel Dashboard → Settings → Environment Variables.")
+    }
+    return null
+  }
 
   try {
     const { Ratelimit } = await import("@upstash/ratelimit")

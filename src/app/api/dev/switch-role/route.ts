@@ -8,9 +8,13 @@ import { DEV_OWNER_EMAIL } from "@/lib/adminAuth"
 /**
  * POST /api/dev/switch-role — bascule role client ↔ vendor.
  * Réservé à moumene486@gmail.com uniquement.
- * Crée un Vendor idempotent si nécessaire (pour avoir un slug valide côté vendor dashboard).
+ * Désactivé en production stricte (pas de preview).
  */
 export async function POST(_req: NextRequest) {
+  // H-2: désactiver en production pour éviter l'exposition de cette route dev
+  if (process.env.NODE_ENV === "production" && process.env.VERCEL_ENV !== "preview") {
+    return NextResponse.json({ error: "Not Found" }, { status: 404 })
+  }
   const session = await auth()
   if (!session?.user?.id || session.user.email !== DEV_OWNER_EMAIL) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })

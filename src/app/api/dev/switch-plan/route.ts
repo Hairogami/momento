@@ -10,12 +10,13 @@ const ALLOWED_PLANS = new Set(["free", "pro", "max"])
  * POST /api/dev/switch-plan
  * Body: { plan: "free" | "pro" | "max" }
  * Réservé à moumene486@gmail.com — permet de tester le gating par plan.
- *
- * Contrairement à /api/user/plan (qui refuse les upgrades client-side pour la prod),
- * cet endpoint force le plan pour le dev. Ne contourne AUCUN check en prod pour
- * un autre email — 403 sinon.
+ * Désactivé en production stricte (pas de preview).
  */
 export async function POST(req: NextRequest) {
+  // H-2: désactiver en production pour éviter l'exposition de cette route dev
+  if (process.env.NODE_ENV === "production" && process.env.VERCEL_ENV !== "preview") {
+    return NextResponse.json({ error: "Not Found" }, { status: 404 })
+  }
   const session = await auth()
   if (!session?.user?.id || session.user.email !== DEV_OWNER_EMAIL) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
