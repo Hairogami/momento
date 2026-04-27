@@ -2,13 +2,38 @@ import { z } from "zod"
 
 // ── Guest ────────────────────────────────────────────────────────────────────
 export const GuestPatchSchema = z.object({
-  rsvp: z.enum(["PENDING", "CONFIRMED", "DECLINED"]).optional(),
+  rsvp: z.enum(["yes", "no", "pending", "invited"]).optional(),
   name: z.string().min(1).max(200).optional(),
   email: z.string().email().max(200).optional().nullable(),
   phone: z.string().max(30).optional().nullable(),
-  table: z.string().max(100).optional().nullable(),
+  tableNumber: z.number().int().min(0).max(9999).optional().nullable(),
   notes: z.string().max(1000).optional().nullable(),
+  plusOne: z.boolean().optional(),
+  linkedRsvpId: z.string().cuid().nullable().optional(),
 })
+
+export const GuestCreateSchema = z.object({
+  name: z.string().min(1).max(200),
+  plannerId: z.string().cuid().optional(),
+  email: z.string().email().max(200).optional().nullable(),
+  phone: z.string().max(30).optional().nullable(),
+})
+
+// ── EventRsvp ────────────────────────────────────────────────────────────────
+export const RsvpPatchSchema = z.object({
+  guestName: z.string().min(1).max(120).optional(),
+  guestEmail: z.string().email().max(200).nullable().optional(),
+  guestPhone: z.string().max(40).nullable().optional(),
+  attendingMain: z.boolean().optional(),
+  attendingDayAfter: z.boolean().nullable().optional(),
+  plusOneName: z.string().max(120).nullable().optional(),
+  dietaryNeeds: z.string().max(300).nullable().optional(),
+  message: z.string().max(1000).nullable().optional(),
+}).strict()
+
+export const GuestLinkSchema = z.object({
+  rsvpId: z.string().cuid(),
+}).strict()
 
 // ── Budget item ──────────────────────────────────────────────────────────────
 export const BudgetItemPatchSchema = z.object({
