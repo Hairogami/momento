@@ -29,12 +29,12 @@ export function LinkRsvpDialog({ rsvpId, guests, onLink, onClose }: Props) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "var(--dash-surface-1)", padding: "var(--space-5)",
+          background: "var(--dash-surface, #fff)", padding: "var(--space-5)",
           borderRadius: "var(--radius-lg)", minWidth: 320, maxWidth: 480,
           display: "flex", flexDirection: "column", gap: "var(--space-3)",
         }}
       >
-        <h3 style={{ margin: 0, fontSize: "var(--text-lg)", fontWeight: 600, color: "var(--dash-text-1)" }}>
+        <h3 style={{ margin: 0, fontSize: "var(--text-lg)", fontWeight: 600, color: "var(--dash-text, #121317)" }}>
           Lier à un invité
         </h3>
         <select
@@ -42,7 +42,7 @@ export function LinkRsvpDialog({ rsvpId, guests, onLink, onClose }: Props) {
           onChange={(e) => setSelected(e.target.value)}
           style={{
             padding: "var(--space-2) var(--space-3)", fontSize: "var(--text-sm)",
-            background: "var(--dash-surface-2)", color: "var(--dash-text-1)",
+            background: "var(--dash-faint, rgba(183,191,217,0.07))", color: "var(--dash-text, #121317)",
             border: "1px solid var(--dash-border)", borderRadius: "var(--radius-md)",
           }}
         >
@@ -67,6 +67,6 @@ const btnSecondary: CSSProperties = {
 }
 const btnPrimary: CSSProperties = {
   padding: "var(--space-2) var(--space-3)", fontSize: "var(--text-sm)",
-  background: "var(--dash-text-1)", color: "var(--dash-surface-1)",
+  background: "var(--dash-text, #121317)", color: "var(--dash-surface, #fff)",
   border: "none", borderRadius: "var(--radius-md)", cursor: "pointer",
 }

@@ -164,6 +164,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       id: r.id,
       guestName: r.guestName,
       attendingMain: r.attendingMain,
+      createdAt: r.createdAt.toISOString(),
     })),
   }
 

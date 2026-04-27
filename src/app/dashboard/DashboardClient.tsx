@@ -523,39 +523,31 @@ function ChecklistJXWidget({ tasks, eventDate }: { tasks: Task[]; eventDate: str
 
 function RSVPLiveWidget({ guests, rsvpStats }: {
   guests: Guest[]
-  rsvpStats?: { viewCount: number; confirmed: number; plusOnes: number; total: number; recent: Array<{ id: string; guestName: string; attendingMain: boolean }> }
+  rsvpStats?: { viewCount: number; confirmed: number; plusOnes: number; total: number; recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }> }
 }) {
   // Si stats site présentes, afficher la vraie source (réponses publiques) au lieu de la liste manuelle
   if (rsvpStats) {
     return (
-      <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 10, height: "100%", boxSizing: "border-box" }}>
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-          <div>
-            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text-1,#121317)" }}>{rsvpStats.viewCount}</div>
-            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>vues</div>
-          </div>
-          <div>
-            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#22c55e" }}>{rsvpStats.confirmed}</div>
-            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>confirmés</div>
-          </div>
-          <div>
-            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text-1,#121317)" }}>{rsvpStats.plusOnes}</div>
-            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>+1</div>
-          </div>
+      <div style={{ padding: "14px 16px 14px", display: "flex", flexDirection: "column", gap: 12, height: "100%", boxSizing: "border-box" }}>
+        <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", gap: 8, paddingBottom: 8, borderBottom: "1px solid var(--dash-divider, rgba(183,191,217,0.10))" }}>
+          <KpiCol value={rsvpStats.viewCount} label="vues" color="var(--dash-text, #121317)" />
+          <KpiCol value={rsvpStats.confirmed} label="confirmés" color="#22c55e" />
+          <KpiCol value={rsvpStats.plusOnes} label="+1" color="#9333EA" />
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minHeight: 0, overflow: "hidden" }}>
           {rsvpStats.recent.length === 0 ? (
-            <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Aucune réponse pour le moment.</p>
+            <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #9a9aaa)", margin: 0 }}>Aucune réponse pour le moment.</p>
           ) : (
             rsvpStats.recent.map(r => (
-              <div key={r.id} style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}>
-                <span style={{ color: "var(--dash-text-1,#121317)" }}>{r.guestName}</span>
-                <span style={{ color: r.attendingMain ? "#22c55e" : "#ef4444" }}>{r.attendingMain ? "✓" : "✗"}</span>
+              <div key={r.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, fontSize: "var(--text-xs)" }}>
+                <span style={{ color: "var(--dash-text, #121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1, fontWeight: 500 }}>{r.guestName}</span>
+                <span style={{ color: "var(--dash-text-3, #9a9aaa)", fontSize: "var(--text-2xs)" }}>{relativeTime(r.createdAt)}</span>
+                <span style={{ color: r.attendingMain ? "#22c55e" : "#ef4444", fontWeight: 700 }}>{r.attendingMain ? "✓" : "✗"}</span>
               </div>
             ))
           )}
         </div>
-        <a href="/guests" style={{ marginTop: "auto", fontSize: "var(--text-2xs)", color: "var(--dash-text-2,#6a6a71)", textDecoration: "underline" }}>
+        <a href="/guests" style={{ marginTop: "auto", fontSize: "var(--text-2xs)", color: "var(--dash-text-2, #6a6a71)", textDecoration: "underline" }}>
           Voir tout →
         </a>
       </div>
@@ -564,6 +556,30 @@ function RSVPLiveWidget({ guests, rsvpStats }: {
 
   // Fallback : affichage Guest manuel historique
   return _RSVPLiveWidgetLocal({ guests })
+}
+
+function KpiCol({ value, label, color }: { value: number; label: string; color: string }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+      <div style={{ fontSize: "var(--text-lg)", fontWeight: 800, color, lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
+      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #9a9aaa)", textTransform: "uppercase", letterSpacing: "0.04em", fontWeight: 600 }}>{label}</div>
+    </div>
+  )
+}
+
+function relativeTime(iso?: string): string {
+  if (!iso) return ""
+  const d = new Date(iso).getTime()
+  if (isNaN(d)) return ""
+  const diff = Date.now() - d
+  const m = Math.floor(diff / 60000)
+  if (m < 1) return "à l'instant"
+  if (m < 60) return `${m} min`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h}h`
+  const days = Math.floor(h / 24)
+  if (days < 7) return `${days}j`
+  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
 }
 
 function _RSVPLiveWidgetLocal({ guests }: { guests: Guest[] }) {
@@ -1302,7 +1318,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
       confirmed: number
       plusOnes: number
       total: number
-      recent: Array<{ id: string; guestName: string; attendingMain: boolean }>
+      recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }>
     }
   } | null>(null)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
