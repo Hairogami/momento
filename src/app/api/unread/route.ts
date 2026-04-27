@@ -17,14 +17,18 @@ export async function GET() {
       where: { id: session.user.id },
       select: { role: true, vendorSlug: true },
     })
-    if (user?.role === "vendor" && user.vendorSlug) {
-      messages = await prisma.message.count({
-        where: {
-          read: false,
-          senderId: { not: session.user.id },
-          conversation: { vendorSlug: user.vendorSlug },
-        },
-      })
+    if (user?.role === "vendor") {
+      // Vendor sans vendorSlug = pas configuré → 0 (pas de fallback client
+      // qui mélangerait les 2 mondes et fausserait le badge).
+      if (user.vendorSlug) {
+        messages = await prisma.message.count({
+          where: {
+            read: false,
+            senderId: { not: session.user.id },
+            conversation: { vendorSlug: user.vendorSlug },
+          },
+        })
+      }
     } else {
       messages = await prisma.message.count({
         where: {
