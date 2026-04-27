@@ -20,7 +20,7 @@ export default function VendorTopBar({ email }: { email: string | null }) {
         <Link
           href="/vendor/dashboard"
           style={{
-            fontSize: 14, fontWeight: 700, color: "#fff",
+            fontSize: "var(--text-sm)", fontWeight: 700, color: "#fff",
             textDecoration: "none", letterSpacing: "-0.01em",
           }}
         >
@@ -30,12 +30,12 @@ export default function VendorTopBar({ email }: { email: string | null }) {
 
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
         {email && (
-          <span style={{ fontSize: 12, color: "#9aa0ad" }}>{email}</span>
+          <span style={{ fontSize: "var(--text-xs)", color: "#9aa0ad" }}>{email}</span>
         )}
         <Link
           href="/"
           style={{
-            fontSize: 12, color: "#cfd3dc",
+            fontSize: "var(--text-xs)", color: "#cfd3dc",
             textDecoration: "none",
             padding: "6px 10px",
             borderRadius: 6,

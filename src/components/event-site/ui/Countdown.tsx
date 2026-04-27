@@ -62,7 +62,7 @@ export default function Countdown({
       {label && (
         <div style={{
           fontFamily: "var(--evt-font-body)",
-          fontSize: 11,
+          fontSize: "var(--text-xs)",
           letterSpacing: "0.3em",
           textTransform: "uppercase",
           color: "var(--evt-main)",
@@ -107,7 +107,7 @@ function VariantGrand({ r }: { r: Remaining }) {
           }}>{String(u.value).padStart(2, "0")}</div>
           <div style={{
             fontFamily: "var(--evt-font-body)",
-            fontSize: 12,
+            fontSize: "var(--text-xs)",
             letterSpacing: "0.22em",
             textTransform: "uppercase",
             color: "var(--evt-text-muted)",
@@ -168,7 +168,7 @@ function VariantFlip({ r }: { r: Remaining }) {
           </div>
           <div style={{
             fontFamily: "var(--evt-font-body)",
-            fontSize: 9,
+            fontSize: "var(--text-2xs)",
             letterSpacing: "0.25em",
             color: "var(--evt-text-muted)",
             fontWeight: 600,
@@ -224,7 +224,7 @@ function VariantCircle({ r }: { r: Remaining }) {
             </div>
             <div style={{
               fontFamily: "var(--evt-font-body)",
-              fontSize: 12,
+              fontSize: "var(--text-xs)",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
               color: "var(--evt-text-muted)",

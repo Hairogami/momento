@@ -174,16 +174,16 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
         <div>
-          <h3 style={{ fontSize: 15, fontWeight: 700, margin: 0, color: T.text, display: "flex", alignItems: "center", gap: 8 }}>
+          <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, margin: 0, color: T.text, display: "flex", alignItems: "center", gap: 8 }}>
             Agenda · {MONTHS_FULL[month]} {year}
             {isAdminMode && (
               <span style={{
-                fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 4,
+                fontSize: "var(--text-2xs)", fontWeight: 700, padding: "2px 6px", borderRadius: 4,
                 background: "#fef3c7", color: "#92400e", letterSpacing: "0.04em",
               }}>ADMIN</span>
             )}
           </h3>
-          <p style={{ fontSize: 12, color: T.textMuted, margin: "2px 0 0" }}>
+          <p style={{ fontSize: "var(--text-xs)", color: T.textMuted, margin: "2px 0 0" }}>
             {loading
               ? "Chargement…"
               : `${bookedCount} prise${bookedCount > 1 ? "s" : ""} · ${pendingCount} en négo · ${blockedCount} bloquée${blockedCount > 1 ? "s" : ""}`}
@@ -194,7 +194,7 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
           <button
             onClick={goToday}
             style={{
-              padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+              padding: "6px 12px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
               background: T.panel, color: T.textBody,
               border: "1px solid rgba(183,191,217,0.3)",
               cursor: "pointer", fontFamily: "inherit",
@@ -216,7 +216,7 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginBottom: 6 }}>
             {WEEKDAYS.map((w, i) => (
               <div key={i} style={{
-                fontSize: 10, fontWeight: 700, color: T.textDim,
+                fontSize: "var(--text-2xs)", fontWeight: 700, color: T.textDim,
                 textAlign: "center", textTransform: "uppercase",
               }}>{w}</div>
             ))}
@@ -254,7 +254,7 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
                     borderRadius: 8, border,
                     background: bg, color: isPast ? T.pastText : fg,
                     cursor: clickable ? "pointer" : "default",
-                    fontSize: 13, fontWeight: (isBooked || isPending || isBlocked) ? 700 : 500,
+                    fontSize: "var(--text-sm)", fontWeight: (isBooked || isPending || isBlocked) ? 700 : 500,
                     fontFamily: "inherit",
                     display: "flex", flexDirection: "column",
                     alignItems: "center", justifyContent: "center",
@@ -274,14 +274,14 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
                     </div>
                   )}
                   {isBlocked && !isBooked && !isPending && (
-                    <span style={{ fontSize: 9, marginTop: 1, opacity: 0.85 }}>bloqué</span>
+                    <span style={{ fontSize: "var(--text-2xs)", marginTop: 1, opacity: 0.85 }}>bloqué</span>
                   )}
                 </button>
               )
             })}
           </div>
 
-          <div style={{ display: "flex", gap: 14, marginTop: 12, fontSize: 11, color: T.textMuted, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 14, marginTop: 12, fontSize: "var(--text-xs)", color: T.textMuted, flexWrap: "wrap" }}>
             <LegendDot color="#E11D48" label="Date prise (gagnée)" />
             <LegendDot color="rgba(245,158,11,0.6)" label="En négociation" />
             <LegendDot color="#374151" label="Bloquée manuellement" />
@@ -295,21 +295,21 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
             background: T.panel2, borderRadius: 10, padding: 14,
             border: `1px solid ${T.border}`,
           }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: T.text, marginBottom: 2 }}>
+            <div style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: T.text, marginBottom: 2 }}>
               {new Date(`${selected}T00:00:00.000Z`).toLocaleDateString("fr-MA", {
                 weekday: "long", day: "numeric", month: "long", year: "numeric",
               })}
             </div>
 
             {selectedIsPast && (
-              <div style={{ fontSize: 11, color: T.textDim, marginTop: 6 }}>
+              <div style={{ fontSize: "var(--text-xs)", color: T.textDim, marginTop: 6 }}>
                 Date passée — lecture seule.
               </div>
             )}
 
             {!selectedIsPast && (
               <>
-                <div style={{ fontSize: 11, color: T.textMuted, marginBottom: 12 }}>
+                <div style={{ fontSize: "var(--text-xs)", color: T.textMuted, marginBottom: 12 }}>
                   {((selectedData?.booked.length ?? 0) + (selectedData?.pending.length ?? 0))} demande
                   {((selectedData?.booked.length ?? 0) + (selectedData?.pending.length ?? 0)) > 1 ? "s" : ""}
                 </div>
@@ -339,14 +339,14 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
                 )}
 
                 {error && (
-                  <div style={{ marginTop: 10, fontSize: 11, color: "#b91c1c" }}>{error}</div>
+                  <div style={{ marginTop: 10, fontSize: "var(--text-xs)", color: "#b91c1c" }}>{error}</div>
                 )}
 
                 {(selectedData?.booked.length ?? 0) + (selectedData?.pending.length ?? 0) > 0 && (
                   <Link
                     href="/vendor/dashboard/inbox"
                     style={{
-                      display: "block", marginTop: 12, fontSize: 12,
+                      display: "block", marginTop: 12, fontSize: "var(--text-xs)",
                       color: "#E11D48", textDecoration: "none", fontWeight: 600,
                     }}
                   >
@@ -368,18 +368,18 @@ function BlockedBanner({ reason, mutating, onUnblock, T }: { reason: string | nu
       marginTop: 8, padding: 10, borderRadius: 8,
       background: T.blockBg, border: `1px solid ${T.blockBorder}`,
     }}>
-      <div style={{ fontSize: 11, fontWeight: 700, color: T.blockText, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>
+      <div style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: T.blockText, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>
         ⛔ Bloquée manuellement
       </div>
       {reason && (
-        <div style={{ fontSize: 12, color: T.textBody, marginBottom: 8 }}>{reason}</div>
+        <div style={{ fontSize: "var(--text-xs)", color: T.textBody, marginBottom: 8 }}>{reason}</div>
       )}
       <button
         type="button"
         disabled={mutating}
         onClick={onUnblock}
         style={{
-          padding: "6px 10px", borderRadius: 6, fontSize: 11, fontWeight: 600,
+          padding: "6px 10px", borderRadius: 6, fontSize: "var(--text-xs)", fontWeight: 600,
           background: T.panel, color: T.blockText,
           border: `1px solid ${T.borderInput}`, cursor: mutating ? "wait" : "pointer",
           fontFamily: "inherit",
@@ -402,7 +402,7 @@ function BlockAction({ mutating, onBlock, T }: { mutating: boolean; onBlock: (re
         onClick={() => setOpen(true)}
         style={{
           marginTop: 4, width: "100%",
-          padding: "8px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+          padding: "8px 12px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
           background: T.panel, color: T.blockText,
           border: "1px dashed #9ca3af", cursor: "pointer",
           fontFamily: "inherit",
@@ -418,7 +418,7 @@ function BlockAction({ mutating, onBlock, T }: { mutating: boolean; onBlock: (re
       marginTop: 4, padding: 10, borderRadius: 8,
       background: T.panel, border: `1px solid ${T.borderStrong}`,
     }}>
-      <label style={{ fontSize: 11, fontWeight: 600, color: T.blockText, display: "block", marginBottom: 4 }}>
+      <label style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: T.blockText, display: "block", marginBottom: 4 }}>
         Raison (optionnel)
       </label>
       <input
@@ -428,7 +428,7 @@ function BlockAction({ mutating, onBlock, T }: { mutating: boolean; onBlock: (re
         placeholder="ex: congés, autre event…"
         maxLength={200}
         style={{
-          width: "100%", padding: "6px 8px", fontSize: 12,
+          width: "100%", padding: "6px 8px", fontSize: "var(--text-xs)",
           border: `1px solid ${T.borderInput}`, borderRadius: 6,
           fontFamily: "inherit", marginBottom: 8, boxSizing: "border-box",
         }}
@@ -439,7 +439,7 @@ function BlockAction({ mutating, onBlock, T }: { mutating: boolean; onBlock: (re
           disabled={mutating}
           onClick={() => { onBlock(reason.trim() || undefined); setOpen(false); setReason("") }}
           style={{
-            flex: 1, padding: "6px 10px", borderRadius: 6, fontSize: 11, fontWeight: 600,
+            flex: 1, padding: "6px 10px", borderRadius: 6, fontSize: "var(--text-xs)", fontWeight: 600,
             background: "#374151", color: "#fff",
             border: "none", cursor: mutating ? "wait" : "pointer",
             fontFamily: "inherit",
@@ -452,7 +452,7 @@ function BlockAction({ mutating, onBlock, T }: { mutating: boolean; onBlock: (re
           disabled={mutating}
           onClick={() => { setOpen(false); setReason("") }}
           style={{
-            padding: "6px 10px", borderRadius: 6, fontSize: 11, fontWeight: 600,
+            padding: "6px 10px", borderRadius: 6, fontSize: "var(--text-xs)", fontWeight: 600,
             background: T.panel, color: T.textMuted,
             border: `1px solid ${T.borderStrong}`, cursor: "pointer",
             fontFamily: "inherit",
@@ -474,7 +474,7 @@ function NavBtn({ onClick, label, T }: { onClick: () => void; label: string; T: 
         background: T.panel, color: T.textBody,
         border: "1px solid rgba(183,191,217,0.3)",
         cursor: "pointer", fontFamily: "inherit",
-        fontSize: 18, fontWeight: 600,
+        fontSize: "var(--text-md)", fontWeight: 600,
       }}
     >
       {label}
@@ -498,17 +498,17 @@ function LegendDot({ color, label, outline }: { color: string; label: string; ou
 function PanelSection({ title, color, items, T }: { title: string; color: string; items: Entry[]; T: typeof T_LIGHT }) {
   return (
     <div style={{ marginBottom: 10 }}>
-      <div style={{ fontSize: 10, fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+      <div style={{ fontSize: "var(--text-2xs)", fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
         {title}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {items.map(it => (
           <div key={it.id} style={{
-            fontSize: 12, padding: "6px 8px", borderRadius: 6,
+            fontSize: "var(--text-xs)", padding: "6px 8px", borderRadius: 6,
             background: T.panel, border: `1px solid ${T.border}`,
           }}>
             <div style={{ fontWeight: 600, color: T.text }}>{it.clientName}</div>
-            {it.eventType && <div style={{ fontSize: 11, color: T.textMuted }}>{it.eventType}</div>}
+            {it.eventType && <div style={{ fontSize: "var(--text-xs)", color: T.textMuted }}>{it.eventType}</div>}
           </div>
         ))}
       </div>

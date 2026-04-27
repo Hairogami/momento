@@ -34,7 +34,7 @@ export default function VendorDeleteButton({ slug, name }: { slug: string; name:
       style={{
         padding: "8px 16px", borderRadius: 10,
         background: "transparent", color: "#ef4444",
-        border: "1px solid #ef444466", fontSize: 12, fontWeight: 600,
+        border: "1px solid #ef444466", fontSize: "var(--text-xs)", fontWeight: 600,
         cursor: loading ? "wait" : "pointer", fontFamily: "inherit",
         opacity: loading ? 0.6 : 1,
       }}

@@ -319,8 +319,8 @@ export default function ConfidentialitePage() {
       </Section>
 
       <div style={contactBlockStyle}>
-        <p style={{ fontSize: 14, fontWeight: 600, margin: "0 0 8px" }}>Questions sur vos données :</p>
-        <p style={{ margin: 0, fontSize: 14 }}>
+        <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, margin: "0 0 8px" }}>Questions sur vos données :</p>
+        <p style={{ margin: 0, fontSize: "var(--text-sm)" }}>
           <a href="mailto:contact@momentoevents.app" style={linkStyle}>contact@momentoevents.app</a>
         </p>
       </div>
@@ -341,26 +341,26 @@ const articleStyle: React.CSSProperties = {
   background: "#fff", borderRadius: 20, padding: "56px 48px",
   border: "1px solid rgba(183,191,217,0.22)",
   boxShadow: "0 4px 32px rgba(12,14,30,0.04)",
-  lineHeight: 1.65, fontSize: 15, color: "#2a2b30",
+  lineHeight: 1.65, fontSize: "var(--text-base)", color: "#2a2b30",
 }
-const kickerStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#E11D48", margin: "0 0 10px" }
-const h1Style: React.CSSProperties = { fontSize: 34, fontWeight: 700, color: "#121317", letterSpacing: "-0.025em", lineHeight: 1.15, margin: "0 0 10px" }
-const subtitleStyle: React.CSSProperties = { fontSize: 15, color: "#6a6a71", margin: "0 0 14px", lineHeight: 1.55 }
-const metaStyle: React.CSSProperties = { fontSize: 12, color: "#9a9aaa", margin: 0 }
-const noticeStyle: React.CSSProperties = { padding: "16px 18px", background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)", borderRadius: 12, fontSize: 13, color: "#715311", lineHeight: 1.55, marginBottom: 32 }
+const kickerStyle: React.CSSProperties = { fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#E11D48", margin: "0 0 10px" }
+const h1Style: React.CSSProperties = { fontSize: "var(--text-2xl)", fontWeight: 700, color: "#121317", letterSpacing: "-0.025em", lineHeight: 1.15, margin: "0 0 10px" }
+const subtitleStyle: React.CSSProperties = { fontSize: "var(--text-base)", color: "#6a6a71", margin: "0 0 14px", lineHeight: 1.55 }
+const metaStyle: React.CSSProperties = { fontSize: "var(--text-xs)", color: "#9a9aaa", margin: 0 }
+const noticeStyle: React.CSSProperties = { padding: "16px 18px", background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)", borderRadius: 12, fontSize: "var(--text-sm)", color: "#715311", lineHeight: 1.55, marginBottom: 32 }
 const tocStyle: React.CSSProperties = { padding: "20px 24px", background: "#fafafa", border: "1px solid rgba(183,191,217,0.22)", borderRadius: 14, marginBottom: 40 }
-const tocTitleStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9a9aaa", margin: "0 0 10px" }
-const tocListStyle: React.CSSProperties = { margin: 0, paddingLeft: 22, fontSize: 13, columns: 2 as unknown as number, columnGap: 28 }
+const tocTitleStyle: React.CSSProperties = { fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9a9aaa", margin: "0 0 10px" }
+const tocListStyle: React.CSSProperties = { margin: 0, paddingLeft: 22, fontSize: "var(--text-sm)", columns: 2 as unknown as number, columnGap: 28 }
 const tocLinkStyle: React.CSSProperties = { color: "#2a2b30", textDecoration: "none" }
 const sectionStyle: React.CSSProperties = { marginBottom: 28, scrollMarginTop: 80 }
-const h2Style: React.CSSProperties = { fontSize: 20, fontWeight: 700, color: "#121317", letterSpacing: "-0.015em", margin: "0 0 10px" }
-const h3Style: React.CSSProperties = { fontSize: 15, fontWeight: 700, color: "#121317", margin: "16px 0 6px" }
+const h2Style: React.CSSProperties = { fontSize: "var(--text-md)", fontWeight: 700, color: "#121317", letterSpacing: "-0.015em", margin: "0 0 10px" }
+const h3Style: React.CSSProperties = { fontSize: "var(--text-base)", fontWeight: 700, color: "#121317", margin: "16px 0 6px" }
 const sectionNumberStyle: React.CSSProperties = { color: "#E11D48", marginRight: 6, fontWeight: 700 }
-const sectionBodyStyle: React.CSSProperties = { fontSize: 15, color: "#2a2b30", lineHeight: 1.7 }
+const sectionBodyStyle: React.CSSProperties = { fontSize: "var(--text-base)", color: "#2a2b30", lineHeight: 1.7 }
 const strongNoticeStyle: React.CSSProperties = { padding: "12px 14px", background: "rgba(225,29,72,0.04)", borderLeft: "3px solid #E11D48", borderRadius: 6, fontWeight: 500, color: "#121317", margin: "0 0 14px" }
 const listStyle: React.CSSProperties = { margin: "0 0 12px", paddingLeft: 22 }
 const linkStyle: React.CSSProperties = { color: "#E11D48", textDecoration: "underline", textUnderlineOffset: 2 }
 const contactBlockStyle: React.CSSProperties = { marginTop: 40, padding: "18px 22px", background: "#fafafa", borderRadius: 12, border: "1px solid rgba(183,191,217,0.22)" }
-const tableStyle: React.CSSProperties = { width: "100%", borderCollapse: "collapse", margin: "14px 0", fontSize: 14 }
-const thStyle: React.CSSProperties = { textAlign: "left", padding: "8px 10px", background: "#fafafa", border: "1px solid rgba(183,191,217,0.22)", fontWeight: 600, fontSize: 13 }
-const tdStyle: React.CSSProperties = { padding: "8px 10px", border: "1px solid rgba(183,191,217,0.22)", fontSize: 13 }
+const tableStyle: React.CSSProperties = { width: "100%", borderCollapse: "collapse", margin: "14px 0", fontSize: "var(--text-sm)" }
+const thStyle: React.CSSProperties = { textAlign: "left", padding: "8px 10px", background: "#fafafa", border: "1px solid rgba(183,191,217,0.22)", fontWeight: 600, fontSize: "var(--text-sm)" }
+const tdStyle: React.CSSProperties = { padding: "8px 10px", border: "1px solid rgba(183,191,217,0.22)", fontSize: "var(--text-sm)" }

@@ -205,7 +205,7 @@ function EmptyState({ firstName, hasExistingEvents, planners }: { firstName: str
 
           <div className="flex items-center gap-4 mb-8">
             <div className="h-px w-16" style={{ backgroundColor: C.anthracite }} />
-            <span style={{ color: C.steel, fontSize: 10 }}>✦</span>
+            <span style={{ color: C.steel, fontSize: "var(--text-2xs)" }}>✦</span>
             <div className="h-px w-16" style={{ backgroundColor: C.anthracite }} />
           </div>
 

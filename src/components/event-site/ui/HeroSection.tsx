@@ -124,7 +124,7 @@ export default function HeroSection({
         {date && (
           <div style={{
             fontFamily: "var(--evt-font-body)",
-            fontSize: 11,
+            fontSize: "var(--text-xs)",
             letterSpacing: "0.3em",
             textTransform: "uppercase",
             color: mutedColor,
@@ -189,7 +189,7 @@ export default function HeroSection({
         alignItems: "center",
         gap: 6,
         color: mutedColor,
-        fontSize: 10,
+        fontSize: "var(--text-2xs)",
         letterSpacing: "0.2em",
         textTransform: "uppercase",
         fontFamily: "var(--evt-font-body)",

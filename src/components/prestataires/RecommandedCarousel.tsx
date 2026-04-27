@@ -153,10 +153,10 @@ function RecoSlot({
   if (!vendor) {
     return (
       <div style={emptySlotStyle}>
-        <div style={{ fontSize: 24, marginBottom: 6 }}>🌱</div>
-        <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4, color: "var(--dash-text-2, #b0b0cc)" }}>{category}</div>
-        <div style={{ fontSize: 11, marginBottom: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Aucun dans votre fourchette</div>
-        <Link href={`/explore?cat=${encodeURIComponent(category)}`} style={{ fontSize: 11, color: "var(--g1,#E11D48)", textDecoration: "underline", fontWeight: 600 }}>
+        <div style={{ fontSize: "var(--text-lg)", marginBottom: 6 }}>🌱</div>
+        <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, marginBottom: 4, color: "var(--dash-text-2, #b0b0cc)" }}>{category}</div>
+        <div style={{ fontSize: "var(--text-xs)", marginBottom: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Aucun dans votre fourchette</div>
+        <Link href={`/explore?cat=${encodeURIComponent(category)}`} style={{ fontSize: "var(--text-xs)", color: "var(--g1,#E11D48)", textDecoration: "underline", fontWeight: 600 }}>
           Élargir la recherche →
         </Link>
       </div>
@@ -178,7 +178,7 @@ function RecoSlot({
       {/* Badge recommandé — superposé en haut-droite de la carte, même style partout */}
       <div style={{
         position: "absolute", top: 12, right: 12, zIndex: 3,
-        padding: "4px 10px", fontSize: 10, color: "#fff",
+        padding: "4px 10px", fontSize: "var(--text-2xs)", color: "#fff",
         background: G, borderRadius: 99, fontWeight: 800,
         letterSpacing: "0.06em", textTransform: "uppercase",
         boxShadow: "0 3px 10px color-mix(in srgb, var(--g1,#E11D48) 40%, transparent)",
@@ -201,7 +201,7 @@ function RecoSlot({
           style={{
             flex: 1, padding: "8px 12px", borderRadius: 10, border: "none",
             background: G, color: "#fff",
-            fontSize: 12, fontWeight: 700, fontFamily: "inherit",
+            fontSize: "var(--text-xs)", fontWeight: 700, fontFamily: "inherit",
             cursor: (selecting || changing) ? "wait" : "pointer",
             opacity: (selecting || changing) ? 0.6 : 1,
             boxShadow: "0 3px 10px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)",
@@ -219,7 +219,7 @@ function RecoSlot({
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-faint,rgba(183,191,217,0.06))",
             color: "var(--dash-text,#121317)",
-            fontSize: 12, fontWeight: 600, fontFamily: "inherit",
+            fontSize: "var(--text-xs)", fontWeight: 600, fontFamily: "inherit",
             cursor: (selecting || changing) ? "wait" : "pointer",
             opacity: (selecting || changing) ? 0.5 : 1,
             display: "inline-flex", alignItems: "center", gap: 6,
@@ -237,7 +237,7 @@ const navBtn: React.CSSProperties = {
   width: 34, height: 34, borderRadius: 99,
   background: "var(--dash-faint, rgba(255,255,255,0.04))",
   border: "1px solid var(--dash-border, rgba(255,255,255,0.07))",
-  color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", fontSize: 14,
+  color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", fontSize: "var(--text-sm)",
   display: "flex", alignItems: "center", justifyContent: "center",
   fontFamily: "inherit", fontWeight: 600,
 }

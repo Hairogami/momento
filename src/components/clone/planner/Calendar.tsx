@@ -108,16 +108,16 @@ export function CalendarHeader({
       {/* left: title + subtitle */}
       <div style={{ flex: "1 1 240px", minWidth: 0 }}>
         <h1 style={{
-          margin: 0, fontSize: 15, fontWeight: 700,
+          margin: 0, fontSize: "var(--text-base)", fontWeight: 700,
           color: "var(--dash-text,#121317)", lineHeight: 1.2,
         }}>
           Planning{coupleLabel ? <span style={{ color: "var(--dash-text-3,#9a9aaa)", fontWeight: 500 }}> · {coupleLabel}</span> : null}
         </h1>
         <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 4 }}>
-          <span style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", fontWeight: 500 }}>{title}</span>
+          <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", fontWeight: 500 }}>{title}</span>
           {typeof jMinus === "number" && jMinus >= 0 && (
             <span style={{
-              fontSize: 10, fontWeight: 800, padding: "3px 9px", borderRadius: 999,
+              fontSize: "var(--text-2xs)", fontWeight: 800, padding: "3px 9px", borderRadius: 999,
               background: G, color: "#fff", letterSpacing: "0.04em",
             }}>J-{jMinus}</span>
           )}
@@ -142,7 +142,7 @@ export function CalendarHeader({
               padding: "7px 14px", border: "none", borderRadius: 999,
               background: view === v ? "var(--dash-surface,#fff)" : "transparent",
               color: view === v ? "var(--dash-text,#121317)" : "var(--dash-text-2,#6a6a71)",
-              fontSize: 12, fontWeight: 600, cursor: "pointer",
+              fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer",
               boxShadow: view === v ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
               fontFamily: "inherit",
             }}>
@@ -152,7 +152,7 @@ export function CalendarHeader({
         </div>
         <button onClick={onNew} style={{
           padding: "9px 16px", borderRadius: 999, border: "none",
-          background: G, color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer",
+          background: G, color: "#fff", fontSize: "var(--text-xs)", fontWeight: 700, cursor: "pointer",
           display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "inherit",
         }}>
           <span style={iconStyle(15)}>add</span>Nouveau
@@ -177,7 +177,7 @@ function navBtnStyle(): React.CSSProperties {
     height: 34, padding: "0 14px", borderRadius: 999,
     border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
     background: "var(--dash-surface,#fff)", cursor: "pointer",
-    color: "var(--dash-text,#121317)", fontSize: 12, fontWeight: 600, fontFamily: "inherit",
+    color: "var(--dash-text,#121317)", fontSize: "var(--text-xs)", fontWeight: 600, fontFamily: "inherit",
   }
 }
 function iconStyle(size = 16, color = "currentColor"): React.CSSProperties {
@@ -215,7 +215,7 @@ export function CalendarMonth({
       }} className="clone-surface">
         {["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(d => (
           <div key={d} style={{
-            padding: "10px 12px", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+            padding: "10px 12px", fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.08em",
             color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase",
           }}>{d}</div>
         ))}
@@ -254,7 +254,7 @@ export function CalendarMonth({
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span style={{
-                  fontSize: 13, fontWeight: isToday ? 800 : 500,
+                  fontSize: "var(--text-sm)", fontWeight: isToday ? 800 : 500,
                   color: isToday ? "#fff" : "var(--dash-text,#121317)",
                   width: 24, height: 24, borderRadius: "50%",
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
@@ -267,7 +267,7 @@ export function CalendarMonth({
 
               {isWedding && (
                 <span style={{
-                  fontSize: 9, fontWeight: 800, letterSpacing: "0.08em",
+                  fontSize: "var(--text-2xs)", fontWeight: 800, letterSpacing: "0.08em",
                   padding: "2px 6px", borderRadius: 999,
                   background: G, color: "#fff", alignSelf: "flex-start",
                 }}>JOUR J</span>
@@ -275,7 +275,7 @@ export function CalendarMonth({
 
               {visible.map(it => (
                 <span key={it.kind + it.id} onClick={(e) => { e.stopPropagation(); onItemClick(it) }} style={{
-                  fontSize: 10, fontWeight: 600, padding: "2px 6px",
+                  fontSize: "var(--text-2xs)", fontWeight: 600, padding: "2px 6px",
                   borderRadius: 4, display: "inline-flex", alignItems: "center", gap: 5,
                   color: "var(--dash-text,#121317)", background: "var(--dash-faint,rgba(183,191,217,0.1))",
                   whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
@@ -285,7 +285,7 @@ export function CalendarMonth({
                 </span>
               ))}
               {more > 0 && (
-                <span style={{ fontSize: 10, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)" }}>
+                <span style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)" }}>
                   +{more} autre{more > 1 ? "s" : ""}
                 </span>
               )}
@@ -329,14 +329,14 @@ export function CalendarWeek({
               textAlign: "left", fontFamily: "inherit",
               borderLeft: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>
+              <div style={{ fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.08em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>
                 {DAYS_LONG[(d.getDay()+6)%7].slice(0,3)}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
                 <span style={{
                   width: 26, height: 26, borderRadius: "50%",
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 14, fontWeight: isToday ? 800 : 600,
+                  fontSize: "var(--text-sm)", fontWeight: isToday ? 800 : 600,
                   background: isToday ? G : "transparent",
                   color: isToday ? "#fff" : "var(--dash-text,#121317)",
                 }}>{d.getDate()}</span>
@@ -353,7 +353,7 @@ export function CalendarWeek({
         borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
         minHeight: 48, background: "var(--dash-surface,#fff)",
       }} className="clone-surface">
-        <div style={{ padding: "8px 8px", fontSize: 9, fontWeight: 700, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.08em" }}>TTE JOUR</div>
+        <div style={{ padding: "8px 8px", fontSize: "var(--text-2xs)", fontWeight: 700, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.08em" }}>TTE JOUR</div>
         {days.map((d, i) => {
           const list = byDay.get(fmtDayKey(d)) ?? []
           return (
@@ -363,7 +363,7 @@ export function CalendarWeek({
             }}>
               {list.map(it => (
                 <button key={it.kind + it.id} onClick={() => onItemClick(it)} style={{
-                  fontSize: 10, fontWeight: 600, padding: "3px 7px", borderRadius: 4,
+                  fontSize: "var(--text-2xs)", fontWeight: 600, padding: "3px 7px", borderRadius: 4,
                   border: "none", borderLeft: `3px solid ${it.color}`,
                   background: "var(--dash-faint,rgba(183,191,217,0.1))",
                   color: "var(--dash-text,#121317)", cursor: "pointer",
@@ -381,7 +381,7 @@ export function CalendarWeek({
         {HOURS.map(h => (
           <div key={`label-${h}`} style={{
             gridColumn: 1, borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.08))",
-            padding: "4px 8px", fontSize: 10, color: "var(--dash-text-3,#9a9aaa)",
+            padding: "4px 8px", fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)",
             height: 40, background: "var(--dash-bg,#f7f7fb)",
           }}>{String(h).padStart(2,"0")}:00</div>
         ))}
@@ -424,8 +424,8 @@ export function CalendarDay({
           }}>
             <span style={iconStyle(28, "#fff")}>favorite</span>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", opacity: 0.9 }}>JOUR J</div>
-              <div style={{ fontSize: 18, fontWeight: 800 }}>Le grand jour</div>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.1em", opacity: 0.9 }}>JOUR J</div>
+              <div style={{ fontSize: "var(--text-md)", fontWeight: 800 }}>Le grand jour</div>
             </div>
           </div>
         )}
@@ -443,7 +443,7 @@ export function CalendarDay({
         <button onClick={() => onNewForDay(cursor)} style={{
           padding: "14px 18px", borderRadius: 12, border: "1px dashed var(--dash-border,rgba(183,191,217,0.4))",
           background: "transparent", color: "var(--dash-text-2,#6a6a71)", cursor: "pointer",
-          fontSize: 13, fontWeight: 600, fontFamily: "inherit",
+          fontSize: "var(--text-sm)", fontWeight: 600, fontFamily: "inherit",
           display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
         }}>
           <span style={iconStyle(16)}>add</span>Ajouter à ce jour
@@ -456,15 +456,15 @@ function Section({ title, count, children }: { title: string; count: number; chi
   return (
     <div>
       <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 8 }}>
-        <h3 style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-2,#6a6a71)", textTransform: "uppercase", margin: 0 }}>{title}</h3>
-        <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>{count}</span>
+        <h3 style={{ fontSize: "var(--text-xs)", fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-2,#6a6a71)", textTransform: "uppercase", margin: 0 }}>{title}</h3>
+        <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{count}</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{children}</div>
     </div>
   )
 }
 function Empty({ label }: { label: string }) {
-  return <div style={{ padding: 14, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", fontStyle: "italic" }}>{label}</div>
+  return <div style={{ padding: 14, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", fontStyle: "italic" }}>{label}</div>
 }
 /* =========================================================
  * SKELETON (shown while planner loads)
@@ -518,7 +518,7 @@ export function CalendarSkeleton({ view }: { view: View }) {
       }} className="clone-surface">
         {["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(d => (
           <div key={d} style={{
-            padding: "10px 12px", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+            padding: "10px 12px", fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.08em",
             color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase",
           }}>{d}</div>
         ))}
@@ -571,14 +571,14 @@ function DayListRow({ item, onClick }: { item: CalItem; onClick: () => void }) {
     }} className="clone-surface">
       <span style={{ width: 8, height: 40, borderRadius: 4, background: item.color, flexShrink: 0 }} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)" }}>{item.title}</div>
+        <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>{item.title}</div>
         {item.kind === "step" && (item.ref.vendors?.length ?? 0) > 0 && (
-          <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 2 }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 2 }}>
             {item.ref.vendors.length} prestataire{item.ref.vendors.length > 1 ? "s" : ""} lié{item.ref.vendors.length > 1 ? "s" : ""}
           </div>
         )}
         {item.kind === "event" && (
-          <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 2 }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 2 }}>
             {item.ref.type === "appointment" ? "Rendez-vous" : item.ref.type === "reminder" ? "Rappel" : "Tâche"}
           </div>
         )}

@@ -49,7 +49,7 @@ export default async function AdminVendorEditPage(
   return (
     <main style={{ maxWidth: 960, margin: "0 auto", padding: "28px 24px 80px", color: C.text, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       {/* Breadcrumb */}
-      <div style={{ fontSize: 12, color: C.textDim, marginBottom: 12 }}>
+      <div style={{ fontSize: "var(--text-xs)", color: C.textDim, marginBottom: 12 }}>
         <Link href="/admin/vendors" style={{ color: C.textDim, textDecoration: "none" }}>
           ← Prestataires
         </Link>
@@ -59,10 +59,10 @@ export default async function AdminVendorEditPage(
 
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: C.text, margin: 0, letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: C.text, margin: 0, letterSpacing: "-0.02em" }}>
             {vendor.name}
           </h1>
-          <p style={{ fontSize: 13, color: C.textMuted, marginTop: 4 }}>
+          <p style={{ fontSize: "var(--text-sm)", color: C.textMuted, marginTop: 4 }}>
             {vendor.category}{vendor.city ? ` · ${vendor.city}` : ""}
           </p>
         </div>
@@ -73,7 +73,7 @@ export default async function AdminVendorEditPage(
             style={{
               padding: "8px 16px", borderRadius: 10,
               background: C.panel, border: `1px solid ${C.border}`,
-              color: C.text, fontSize: 12, fontWeight: 500, textDecoration: "none",
+              color: C.text, fontSize: "var(--text-xs)", fontWeight: 500, textDecoration: "none",
             }}
           >
             Voir fiche publique ↗
@@ -91,10 +91,10 @@ export default async function AdminVendorEditPage(
 
       {/* Calendrier — édition admin (bloque/débloque pour le compte du prestataire) */}
       <section style={{ marginTop: 32 }}>
-        <h2 style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 10 }}>
+        <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: C.text, marginBottom: 10 }}>
           Calendrier du prestataire
         </h2>
-        <p style={{ fontSize: 12, color: C.textMuted, marginBottom: 12 }}>
+        <p style={{ fontSize: "var(--text-xs)", color: C.textMuted, marginBottom: 12 }}>
           Toute modification est auditée (AdminAuditLog). Utilise ceci quand le prestataire
           t&apos;appelle pour ajouter/retirer une date.
         </p>
@@ -103,25 +103,25 @@ export default async function AdminVendorEditPage(
 
       {/* Audit log */}
       <section style={{ marginTop: 32 }}>
-        <h2 style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 10 }}>
+        <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: C.text, marginBottom: 10 }}>
           Historique des modifications
         </h2>
         {recentLogs.length === 0 ? (
-          <p style={{ fontSize: 12, color: C.textDim }}>Aucune action enregistrée.</p>
+          <p style={{ fontSize: "var(--text-xs)", color: C.textDim }}>Aucune action enregistrée.</p>
         ) : (
           <div style={{ background: C.panel, borderRadius: 12, border: `1px solid ${C.border}` }}>
             {recentLogs.map(log => (
               <div key={log.id} style={{ padding: "12px 16px", borderBottom: `1px solid ${C.borderSoft}` }}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}>
                   <span style={{ color: C.text, fontWeight: 600 }}>{log.action}</span>
                   <span style={{ color: C.textDim }}>
                     {new Date(log.createdAt).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}
                   </span>
                 </div>
-                <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2 }}>{log.adminEmail}</div>
+                <div style={{ fontSize: "var(--text-xs)", color: C.textMuted, marginTop: 2 }}>{log.adminEmail}</div>
                 {log.changes && typeof log.changes === "object" && (
                   <pre style={{
-                    fontSize: 11, color: C.textMuted,
+                    fontSize: "var(--text-xs)", color: C.textMuted,
                     background: C.bg, padding: 8, borderRadius: 6,
                     marginTop: 6, overflow: "auto", maxHeight: 120,
                     fontFamily: "ui-monospace, monospace",

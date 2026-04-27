@@ -16,7 +16,7 @@ export function AntLoginGreeting() {
   if (returning === null) return null // évite le flash
 
   return (
-    <h2 style={{ fontSize: 24, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+    <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
       {returning ? "Bon retour 👋" : "Bienvenue 👋"}
     </h2>
   )
@@ -25,7 +25,7 @@ export function AntLoginGreeting() {
 const inputStyle: React.CSSProperties = {
   width: "100%", height: 46, padding: "0 14px",
   borderRadius: 12, border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
-  background: "var(--dash-input-bg,#fafafa)", fontSize: 14, color: "var(--dash-text,#121317)",
+  background: "var(--dash-input-bg,#fafafa)", fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)",
   outline: "none", boxSizing: "border-box", fontFamily: "inherit",
   transition: "border-color 0.15s",
 }
@@ -44,7 +44,7 @@ function PasswordRequirements({ value }: { value: string }) {
       {checks.map((c, i) => {
         const color = !value ? "var(--dash-text-3,#9a9aaa)" : c.ok ? "#16a34a" : "#dc2626"
         return (
-          <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color }}>
+          <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-xs)", color }}>
             <span aria-hidden="true" style={{ width: 14, display: "inline-block", textAlign: "center", fontWeight: 700 }}>{c.ok ? "✓" : "·"}</span>
             <span>{c.label}</span>
           </li>
@@ -112,7 +112,7 @@ export default function AntLoginForm() {
           <button key={m} onClick={() => { setMode(m); setError("") }}
             style={{
               flex: 1, height: 36, borderRadius: 9, border: "none", cursor: "pointer",
-              fontSize: 13, fontWeight: mode === m ? 600 : 400, fontFamily: "inherit",
+              fontSize: "var(--text-sm)", fontWeight: mode === m ? 600 : 400, fontFamily: "inherit",
               background: mode === m ? "var(--dash-surface,#fff)" : "transparent",
               color: mode === m ? "var(--dash-text,#121317)" : "var(--dash-text-2,#6a6a71)",
               boxShadow: mode === m ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
@@ -148,14 +148,14 @@ export default function AntLoginForm() {
               onFocus={e => (e.target.style.borderColor = "#E11D48")}
               onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
             {confirm && password !== confirm && (
-              <p style={{ fontSize: 12, color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
+              <p style={{ fontSize: "var(--text-xs)", color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
             )}
           </>
         )}
 
         {mode === "login" && (
           <div style={{ textAlign: "right" }}>
-            <Link href="/forgot-password" style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", textDecoration: "none" }}>
+            <Link href="/forgot-password" style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", textDecoration: "none" }}>
               Mot de passe oublié ?
             </Link>
           </div>
@@ -163,14 +163,14 @@ export default function AntLoginForm() {
 
         {mode === "register" && (
           <div style={{ marginTop: 2 }}>
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "var(--dash-text-2,#45474D)", cursor: "pointer", lineHeight: 1.5 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#45474D)", cursor: "pointer", lineHeight: 1.5 }}>
               <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2, accentColor: "#E11D48" }} />
               <span>
                 J&apos;accepte les <a href="/cgu" target="_blank" rel="noopener noreferrer" style={{ color: "#E11D48", fontWeight: 500, textDecoration: "underline" }}>conditions générales</a> et
                 la <a href="/confidentialite" target="_blank" rel="noopener noreferrer" style={{ color: "#E11D48", fontWeight: 500, textDecoration: "underline" }}>politique de confidentialité</a>.
               </span>
             </label>
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 6, fontSize: 12, color: "var(--dash-text-3,#6a6a71)", cursor: "pointer", lineHeight: 1.5 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 6, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#6a6a71)", cursor: "pointer", lineHeight: 1.5 }}>
               <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 2, accentColor: "#9333EA" }} />
               <span>Je souhaite recevoir les conseils &amp; offres Momento (facultatif).</span>
             </label>
@@ -183,7 +183,7 @@ export default function AntLoginForm() {
 
         {error && (
           <p style={{
-            fontSize: 13, padding: "10px 14px", borderRadius: 10,
+            fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10,
             background: "rgba(225,29,72,0.07)", color: "#E11D48",
           }}>{error}</p>
         )}
@@ -197,7 +197,7 @@ export default function AntLoginForm() {
             ? "rgba(183,191,217,0.3)"
             : "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
           color: (mode === "register" && !tos) ? "#9a9aaa" : "#fff",
-          fontSize: 14, fontWeight: 600, fontFamily: "inherit",
+          fontSize: "var(--text-sm)", fontWeight: 600, fontFamily: "inherit",
           opacity: loading ? 0.7 : 1, transition: "opacity 0.15s, background 0.15s, color 0.15s",
         }}>
           {loading ? "Chargement…" : mode === "login" ? "Se connecter" : (tos ? "Créer mon compte" : "Acceptez les conditions pour continuer")}

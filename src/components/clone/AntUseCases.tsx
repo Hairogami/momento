@@ -52,7 +52,7 @@ export default function AntUseCases() {
             Comment ça<br />
             <span style={{ color: "var(--dash-text-2,#6a6a71)", fontWeight: 400, fontStyle: "italic" }}>marche ?</span>
           </h2>
-          <p style={{ fontSize: 16, lineHeight: 1.7, color: "var(--dash-text-2,#45474D)", paddingTop: 8 }}>
+          <p style={{ fontSize: "var(--text-base)", lineHeight: 1.7, color: "var(--dash-text-2,#45474D)", paddingTop: 8 }}>
             En trois étapes simples, trouvez et réservez le prestataire parfait pour votre événement au Maroc —
             sans frais cachés, sans intermédiaire, sans stress.
           </p>
@@ -78,7 +78,7 @@ export default function AntUseCases() {
                   <span
                     style={{
                       fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                      fontSize: 18, color: "#fff",
+                      fontSize: "var(--text-md)", color: "#fff",
                       fontWeight: "normal", fontStyle: "normal",
                       lineHeight: 1, userSelect: "none",
                     }}
@@ -114,10 +114,10 @@ export default function AntUseCases() {
                 )}
               </div>
 
-              <h3 style={{ fontSize: 22, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{step.title}</h3>
-              <p style={{ fontSize: 14, lineHeight: 1.75, color: "var(--dash-text-2,#6a6a71)" }}>{step.desc}</p>
+              <h3 style={{ fontSize: "var(--text-lg)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{step.title}</h3>
+              <p style={{ fontSize: "var(--text-sm)", lineHeight: 1.75, color: "var(--dash-text-2,#6a6a71)" }}>{step.desc}</p>
               <span style={{
-                fontSize: 12, fontWeight: 600,
+                fontSize: "var(--text-xs)", fontWeight: 600,
                 padding: "3px 10px", borderRadius: 99,
                 background: "rgba(225,29,72,0.08)",
                 border: "1px solid rgba(225,29,72,0.15)",

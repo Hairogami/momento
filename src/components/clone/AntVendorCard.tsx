@@ -171,7 +171,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
               WebkitBackdropFilter: "blur(8px)",
               border: "none", cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 15, transition: "transform 0.15s",
+              fontSize: "var(--text-base)", transition: "transform 0.15s",
               zIndex: 2,
             }}
             onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.12)")}
@@ -194,7 +194,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
               border: "1px solid rgba(255,255,255,0.25)",
               borderRadius: 20,
               padding: "3px 10px",
-              fontSize: 11, fontWeight: 500, color: "#fff",
+              fontSize: "var(--text-xs)", fontWeight: 500, color: "#fff",
               maxWidth: "calc(100% - 28px)",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
@@ -207,7 +207,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
         <div style={{ padding: "13px 16px 16px" }}>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
             <p className="clone-heading" style={{
-              fontWeight: 600, fontSize: 14, color: "#121317",
+              fontWeight: 600, fontSize: "var(--text-sm)", color: "#121317",
               margin: 0, lineHeight: 1.35,
               overflow: "hidden", textOverflow: "ellipsis",
               display: "-webkit-box",
@@ -221,14 +221,14 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
               display: "flex", alignItems: "center", gap: 3,
               flexShrink: 0, marginTop: 1,
             }}>
-              <span style={{ color: "#F59E0B", fontSize: 13, lineHeight: 1 }}>★</span>
-              <span className="clone-heading" style={{ fontSize: 12, fontWeight: 600, color: "#121317" }}>
+              <span style={{ color: "#F59E0B", fontSize: "var(--text-sm)", lineHeight: 1 }}>★</span>
+              <span className="clone-heading" style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#121317" }}>
                 {rating.toFixed(1)}
               </span>
             </div>
           </div>
           <p className="clone-muted" style={{
-            fontSize: 12, color: "#6a6a71", margin: "5px 0 0",
+            fontSize: "var(--text-xs)", color: "#6a6a71", margin: "5px 0 0",
             display: "flex", alignItems: "center", gap: 3,
           }}>
             <span>📍</span>{city}

@@ -387,8 +387,8 @@ export default function CguPage() {
 
       {/* Contact */}
       <div style={contactBlockStyle}>
-        <p style={{ fontSize: 14, fontWeight: 600, margin: "0 0 8px" }}>Pour toute question sur ces CGU :</p>
-        <p style={{ margin: 0, fontSize: 14 }}>
+        <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, margin: "0 0 8px" }}>Pour toute question sur ces CGU :</p>
+        <p style={{ margin: 0, fontSize: "var(--text-sm)" }}>
           <a href="mailto:contact@momentoevents.app" style={linkStyle}>contact@momentoevents.app</a>
         </p>
       </div>
@@ -412,26 +412,26 @@ const articleStyle: React.CSSProperties = {
   border: "1px solid rgba(183,191,217,0.22)",
   boxShadow: "0 4px 32px rgba(12,14,30,0.04)",
   lineHeight: 1.65,
-  fontSize: 15,
+  fontSize: "var(--text-base)",
   color: "#2a2b30",
 }
 
 const kickerStyle: React.CSSProperties = {
-  fontSize: 11, fontWeight: 700, letterSpacing: "0.14em",
+  fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.14em",
   textTransform: "uppercase", color: "#E11D48", margin: "0 0 10px",
 }
 
 const h1Style: React.CSSProperties = {
-  fontSize: 34, fontWeight: 700, color: "#121317",
+  fontSize: "var(--text-2xl)", fontWeight: 700, color: "#121317",
   letterSpacing: "-0.025em", lineHeight: 1.15, margin: "0 0 10px",
 }
 
 const subtitleStyle: React.CSSProperties = {
-  fontSize: 15, color: "#6a6a71", margin: "0 0 14px", lineHeight: 1.55,
+  fontSize: "var(--text-base)", color: "#6a6a71", margin: "0 0 14px", lineHeight: 1.55,
 }
 
 const metaStyle: React.CSSProperties = {
-  fontSize: 12, color: "#9a9aaa", margin: 0,
+  fontSize: "var(--text-xs)", color: "#9a9aaa", margin: 0,
 }
 
 const noticeStyle: React.CSSProperties = {
@@ -439,7 +439,7 @@ const noticeStyle: React.CSSProperties = {
   background: "rgba(234,179,8,0.07)",
   border: "1px solid rgba(234,179,8,0.22)",
   borderRadius: 12,
-  fontSize: 13, color: "#715311", lineHeight: 1.55,
+  fontSize: "var(--text-sm)", color: "#715311", lineHeight: 1.55,
   marginBottom: 32,
 }
 
@@ -452,13 +452,13 @@ const tocStyle: React.CSSProperties = {
 }
 
 const tocTitleStyle: React.CSSProperties = {
-  fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
+  fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.1em",
   textTransform: "uppercase", color: "#9a9aaa",
   margin: "0 0 10px",
 }
 
 const tocListStyle: React.CSSProperties = {
-  margin: 0, paddingLeft: 22, fontSize: 13, columns: 2 as unknown as number, columnGap: 28,
+  margin: 0, paddingLeft: 22, fontSize: "var(--text-sm)", columns: 2 as unknown as number, columnGap: 28,
 }
 
 const tocLinkStyle: React.CSSProperties = {
@@ -470,12 +470,12 @@ const sectionStyle: React.CSSProperties = {
 }
 
 const h2Style: React.CSSProperties = {
-  fontSize: 20, fontWeight: 700, color: "#121317",
+  fontSize: "var(--text-md)", fontWeight: 700, color: "#121317",
   letterSpacing: "-0.015em", margin: "0 0 10px",
 }
 
 const h3Style: React.CSSProperties = {
-  fontSize: 15, fontWeight: 700, color: "#121317",
+  fontSize: "var(--text-base)", fontWeight: 700, color: "#121317",
   margin: "16px 0 6px",
 }
 
@@ -484,7 +484,7 @@ const sectionNumberStyle: React.CSSProperties = {
 }
 
 const sectionBodyStyle: React.CSSProperties = {
-  fontSize: 15, color: "#2a2b30", lineHeight: 1.7,
+  fontSize: "var(--text-base)", color: "#2a2b30", lineHeight: 1.7,
 }
 
 const strongNoticeStyle: React.CSSProperties = {

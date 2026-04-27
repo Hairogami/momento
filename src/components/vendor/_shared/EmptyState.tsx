@@ -30,9 +30,9 @@ export default function EmptyState({ icon, title, subtitle, cta, compact }: Prop
       {icon && (
         <div style={{ fontSize: compact ? 28 : 40, opacity: 0.55, marginBottom: 4 }}>{icon}</div>
       )}
-      <div style={{ fontSize: 14, fontWeight: 600, color: "#121317" }}>{title}</div>
+      <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317" }}>{title}</div>
       {subtitle && (
-        <div style={{ fontSize: 13, color: "#6b7280", maxWidth: 420, lineHeight: 1.5 }}>{subtitle}</div>
+        <div style={{ fontSize: "var(--text-sm)", color: "#6b7280", maxWidth: 420, lineHeight: 1.5 }}>{subtitle}</div>
       )}
       {cta && (
         cta.href ? (
@@ -53,7 +53,7 @@ const ctaStyle: CSSProperties = {
   borderRadius: 8,
   background: "linear-gradient(135deg,#E11D48,#9333EA)",
   color: "#fff",
-  fontSize: 12,
+  fontSize: "var(--text-xs)",
   fontWeight: 600,
   textDecoration: "none",
   whiteSpace: "nowrap",

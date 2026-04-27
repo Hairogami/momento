@@ -81,7 +81,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
                   style={{
                     display: "flex", alignItems: "center", gap: 10,
                     padding: "8px 12px", borderRadius: 8,
-                    fontSize: 13, fontWeight: active ? 600 : 500,
+                    fontSize: "var(--text-sm)", fontWeight: active ? 600 : 500,
                     color: active ? "#fff" : "#2b2d33",
                     background: active
                       ? "linear-gradient(135deg,#E11D48,#9333EA)"
@@ -94,7 +94,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
                   <span style={{ flex: 1 }}>{item.label}</span>
                   {typeof item.badge === "number" && item.badge > 0 && (
                     <span style={{
-                      fontSize: 10, fontWeight: 700,
+                      fontSize: "var(--text-2xs)", fontWeight: 700,
                       padding: "2px 7px", borderRadius: 999,
                       background: active ? "rgba(255,255,255,0.25)" : "#E11D48",
                       color: "#fff",
@@ -121,7 +121,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
               padding: "10px 12px", borderRadius: 8,
               background: "#f4f5f9",
               textDecoration: "none",
-              fontSize: 12, color: "#2b2d33",
+              fontSize: "var(--text-xs)", color: "#2b2d33",
             }}
           >
             <Icon name="open_in_new" size={16} color="#6a6a71" />

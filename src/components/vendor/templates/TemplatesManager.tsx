@@ -246,21 +246,21 @@ export default function TemplatesManager() {
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
       <header style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#121317", margin: 0 }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>
             Templates de réponse
           </h1>
-          <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0 0" }}>
+          <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "4px 0 0" }}>
             Répondez en 1 clic depuis votre inbox. Variables disponibles :
-            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: 12, margin: "0 3px" }}>{"{{name}}"}</code>
-            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: 12, margin: "0 3px" }}>{"{{eventType}}"}</code>
-            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: 12, margin: "0 3px" }}>{"{{eventDate}}"}</code>
+            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{name}}"}</code>
+            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{eventType}}"}</code>
+            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{eventDate}}"}</code>
           </p>
         </div>
         {templates && templates.length < 20 && (
           <button
             onClick={() => setDraft({ ...EMPTY })}
             style={{
-              padding: "9px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700,
+              padding: "9px 18px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 700,
               background: "linear-gradient(135deg,#E11D48,#9333EA)",
               color: "#fff", border: "none", cursor: "pointer", fontFamily: "inherit",
             }}
@@ -279,7 +279,7 @@ export default function TemplatesManager() {
               key={t.id}
               onClick={() => setFilter(t.id)}
               style={{
-                padding: "7px 14px", borderRadius: 999, fontSize: 13, fontWeight: 600,
+                padding: "7px 14px", borderRadius: 999, fontSize: "var(--text-sm)", fontWeight: 600,
                 border: active ? "none" : "1px solid rgba(183,191,217,0.25)",
                 background: active ? "linear-gradient(135deg,#E11D48,#9333EA)" : "#fff",
                 color: active ? "#fff" : "#45474D",
@@ -289,7 +289,7 @@ export default function TemplatesManager() {
             >
               {t.label}
               <span style={{
-                fontSize: 11, padding: "1px 7px", borderRadius: 99,
+                fontSize: "var(--text-xs)", padding: "1px 7px", borderRadius: 99,
                 background: active ? "rgba(255,255,255,0.22)" : "rgba(183,191,217,0.2)",
                 color: active ? "#fff" : "#6b7280", fontWeight: 700,
               }}>{t.count}</span>
@@ -302,12 +302,12 @@ export default function TemplatesManager() {
         <div style={{
           padding: "10px 14px", borderRadius: 10, marginBottom: 12,
           background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)",
-          color: "#991B1B", fontSize: 13,
+          color: "#991B1B", fontSize: "var(--text-sm)",
         }}>{error}</div>
       )}
 
       {loading && (
-        <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: 13 }}>
+        <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-sm)" }}>
           Chargement…
         </div>
       )}
@@ -318,10 +318,10 @@ export default function TemplatesManager() {
           background: "#fff", borderRadius: 14, padding: 24,
           border: "1px solid rgba(183,191,217,0.18)", textAlign: "center",
         }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: "#121317", marginBottom: 6 }}>
+          <div style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "#121317", marginBottom: 6 }}>
             Démarrez avec un starter pack
           </div>
-          <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 16px", maxWidth: 540, marginInline: "auto" }}>
+          <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "0 0 16px", maxWidth: 540, marginInline: "auto" }}>
             3 templates prêts à l&apos;emploi par langue (disponible / indisponible / demande d&apos;infos).
             Modifiables ensuite à volonté.
           </p>
@@ -332,7 +332,7 @@ export default function TemplatesManager() {
                 disabled={bootLang !== null}
                 onClick={() => bootstrap(l)}
                 style={{
-                  padding: "9px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                  padding: "9px 16px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 600,
                   background: "#fafbfd", color: "#121317",
                   border: "1px solid rgba(183,191,217,0.3)",
                   cursor: bootLang !== null ? "not-allowed" : "pointer", fontFamily: "inherit",
@@ -360,9 +360,9 @@ export default function TemplatesManager() {
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#121317" }}>{t.title}</div>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317" }}>{t.title}</div>
                   <span style={{
-                    fontSize: 10, fontWeight: 700, color: "#6b7280",
+                    fontSize: "var(--text-2xs)", fontWeight: 700, color: "#6b7280",
                     background: "#f0f1f6", padding: "2px 7px", borderRadius: 99,
                     textTransform: "uppercase", letterSpacing: "0.05em",
                   }}>
@@ -372,7 +372,7 @@ export default function TemplatesManager() {
                 <p
                   dir={rtl ? "rtl" : "ltr"}
                   style={{
-                    fontSize: 12, color: "#45474D", lineHeight: 1.6,
+                    fontSize: "var(--text-xs)", color: "#45474D", lineHeight: 1.6,
                     whiteSpace: "pre-line", margin: 0, flex: 1,
                     maxHeight: 180, overflow: "hidden", textOverflow: "ellipsis",
                   }}
@@ -383,7 +383,7 @@ export default function TemplatesManager() {
                   <button
                     onClick={() => startEdit(t)}
                     style={{
-                      flex: 1, padding: "7px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                      flex: 1, padding: "7px 10px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
                       background: "#fff", color: "#45474D",
                       border: "1px solid rgba(183,191,217,0.3)",
                       cursor: "pointer", fontFamily: "inherit",
@@ -394,7 +394,7 @@ export default function TemplatesManager() {
                   <button
                     onClick={() => remove(t.id)}
                     style={{
-                      padding: "7px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                      padding: "7px 10px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
                       background: "rgba(239,68,68,0.06)", color: "#991B1B",
                       border: "1px solid rgba(239,68,68,0.2)",
                       cursor: "pointer", fontFamily: "inherit",
@@ -468,18 +468,18 @@ function DraftEditor({
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#121317" }}>
+          <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: 0, color: "#121317" }}>
             {isNew ? "Nouveau template" : "Modifier le template"}
           </h2>
           <button onClick={onCancel} style={{
-            background: "none", border: "none", fontSize: 24, cursor: "pointer",
+            background: "none", border: "none", fontSize: "var(--text-lg)", cursor: "pointer",
             color: "#9a9aaa", padding: 0, lineHeight: 1,
           }}>×</button>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 140px", gap: 10, marginBottom: 12 }}>
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
               Titre
             </label>
             <input
@@ -490,7 +490,7 @@ function DraftEditor({
             />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
               Langue
             </label>
             <select
@@ -507,14 +507,14 @@ function DraftEditor({
 
         {/* Variables insertables */}
         <div style={{ marginBottom: 8, display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
-          <span style={{ fontSize: 11, color: "#6b7280" }}>Insérer :</span>
+          <span style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>Insérer :</span>
           {VARIABLES.map(v => (
             <button
               key={v.code}
               onClick={() => onInsertVar(v.code)}
               title={v.label}
               style={{
-                padding: "3px 8px", borderRadius: 6, fontSize: 11, fontWeight: 600,
+                padding: "3px 8px", borderRadius: 6, fontSize: "var(--text-xs)", fontWeight: 600,
                 background: "#f0f1f6", color: "#45474D",
                 border: "1px solid rgba(183,191,217,0.2)",
                 cursor: "pointer", fontFamily: "ui-monospace, monospace",
@@ -525,7 +525,7 @@ function DraftEditor({
           ))}
         </div>
 
-        <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+        <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
           Corps du message
         </label>
         <textarea
@@ -542,7 +542,7 @@ function DraftEditor({
             onClick={onCancel}
             disabled={saving}
             style={{
-              padding: "9px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+              padding: "9px 16px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 600,
               background: "#fff", color: "#45474D",
               border: "1px solid rgba(183,191,217,0.3)",
               cursor: "pointer", fontFamily: "inherit",
@@ -554,7 +554,7 @@ function DraftEditor({
             onClick={onSave}
             disabled={saving}
             style={{
-              padding: "9px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700,
+              padding: "9px 18px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 700,
               background: saving ? "#d1d5db" : "linear-gradient(135deg,#E11D48,#9333EA)",
               color: "#fff", border: "none",
               cursor: saving ? "not-allowed" : "pointer", fontFamily: "inherit",
@@ -571,5 +571,5 @@ function DraftEditor({
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "9px 12px", borderRadius: 8,
   border: "1px solid rgba(183,191,217,0.3)",
-  fontSize: 13, fontFamily: "inherit", background: "#fff", color: "#121317",
+  fontSize: "var(--text-sm)", fontFamily: "inherit", background: "#fff", color: "#121317",
 }

@@ -136,7 +136,7 @@ export default function CloneMessagesPage() {
           background: "var(--dash-surface,#fff)", display: "flex", flexDirection: "column",
         }} className="clone-surface hidden sm:flex">
           <div style={{ padding: "20px 20px 12px", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.1))" }}>
-            <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Messages</h2>
+            <h2 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Messages</h2>
           </div>
           <div style={{ flex: 1, overflowY: "auto", scrollbarWidth: "none" }}>
             {loadC ? (
@@ -151,8 +151,8 @@ export default function CloneMessagesPage() {
               ))
             ) : convs.length === 0 ? (
               <div style={{ padding: "48px 20px", textAlign: "center" }}>
-                <p style={{ fontSize: 32, margin: "0 0 12px" }}>💬</p>
-                <p style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Aucune conversation</p>
+                <p style={{ fontSize: "var(--text-xl)", margin: "0 0 12px" }}>💬</p>
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Aucune conversation</p>
               </div>
             ) : convs.map(c => {
               const unread = getUnread(c)
@@ -171,14 +171,14 @@ export default function CloneMessagesPage() {
                     width: 38, height: 38, borderRadius: "50%", flexShrink: 0,
                     background: unread > 0 ? G : "var(--dash-faint-2,rgba(183,191,217,0.15))",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 12, fontWeight: 700, color: unread > 0 ? "#fff" : "var(--dash-text-2,#6a6a71)",
+                    fontSize: "var(--text-xs)", fontWeight: 700, color: unread > 0 ? "#fff" : "var(--dash-text-2,#6a6a71)",
                   }}>{initials(label)}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ fontSize: 13, fontWeight: unread > 0 ? 700 : 500, color: "var(--dash-text,#121317)" }}>{label}</span>
-                      <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>{fmtTime(c.updatedAt)}</span>
+                      <span style={{ fontSize: "var(--text-sm)", fontWeight: unread > 0 ? 700 : 500, color: "var(--dash-text,#121317)" }}>{label}</span>
+                      <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{fmtTime(c.updatedAt)}</span>
                     </div>
-                    <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 2 }}>
+                    <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 2 }}>
                       {c.messages[0]?.content ?? "Nouvelle conversation"}
                     </div>
                   </div>
@@ -186,7 +186,7 @@ export default function CloneMessagesPage() {
                     <div style={{
                       width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
                       background: G, display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 9, fontWeight: 800, color: "#fff",
+                      fontSize: "var(--text-2xs)", fontWeight: 800, color: "#fff",
                     }}>{unread}</div>
                   )}
                 </button>
@@ -208,15 +208,15 @@ export default function CloneMessagesPage() {
                 <div style={{
                   width: 36, height: 36, borderRadius: "50%",
                   background: G, display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0,
+                  fontSize: "var(--text-xs)", fontWeight: 700, color: "#fff", flexShrink: 0,
                 }}>{initials(getLabel(conv))}</div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)" }}>{getLabel(conv)}</div>
-                  {conv.vendor?.category && <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>{conv.vendor.category}</div>}
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>{getLabel(conv)}</div>
+                  {conv.vendor?.category && <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{conv.vendor.category}</div>}
                 </div>
                 {conv.vendor?.slug && (
                   <Link href={`/vendor/${conv.vendor.slug}`} style={{
-                    marginLeft: "auto", fontSize: 11, fontWeight: 600,
+                    marginLeft: "auto", fontSize: "var(--text-xs)", fontWeight: 600,
                     padding: "6px 14px", borderRadius: 999,
                     border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
                     color: "var(--dash-text-2,#6a6a71)", textDecoration: "none",
@@ -232,7 +232,7 @@ export default function CloneMessagesPage() {
                   <PageSkeleton variant="list" />
                 ) : msgs.length === 0 ? (
                   <div style={{ textAlign: "center", padding: "40px 0" }}>
-                    <p style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)" }}>Aucun message. Envoyez le premier !</p>
+                    <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)" }}>Aucun message. Envoyez le premier !</p>
                   </div>
                 ) : msgs.map(msg => {
                   const isMe = msg.senderId === myId
@@ -242,10 +242,10 @@ export default function CloneMessagesPage() {
                         maxWidth: "70%", padding: "10px 14px", borderRadius: 14,
                         background: isMe ? G : "var(--dash-faint-2,rgba(183,191,217,0.15))",
                         color: isMe ? "#fff" : "var(--dash-text,#121317)",
-                        fontSize: 13, lineHeight: 1.5,
+                        fontSize: "var(--text-sm)", lineHeight: 1.5,
                       }}>
                         {msg.content}
-                        <div style={{ fontSize: 9, opacity: 0.6, marginTop: 4, textAlign: "right" }}>
+                        <div style={{ fontSize: "var(--text-2xs)", opacity: 0.6, marginTop: 4, textAlign: "right" }}>
                           {new Date(msg.createdAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
@@ -271,7 +271,7 @@ export default function CloneMessagesPage() {
                     flex: 1, height: 40, padding: "0 16px",
                     border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
                     borderRadius: 999, background: "var(--dash-bg,#f7f7fb)",
-                    fontSize: 13, color: "var(--dash-text,#121317)", fontFamily: "inherit",
+                    fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", fontFamily: "inherit",
                     outline: "none",
                   }}
                 />
@@ -285,7 +285,7 @@ export default function CloneMessagesPage() {
                     opacity: sending || !input.trim() ? 0.5 : 1,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                    fontSize: 18, fontWeight: "normal",
+                    fontSize: "var(--text-md)", fontWeight: "normal",
                   }}
                 >send</button>
               </div>
@@ -293,8 +293,8 @@ export default function CloneMessagesPage() {
           ) : (
             <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
-                <p style={{ fontSize: 14, color: "var(--dash-text-3,#9a9aaa)" }}>Sélectionnez une conversation</p>
+                <div style={{ fontSize: "var(--text-2xl)", marginBottom: 12 }}>💬</div>
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)" }}>Sélectionnez une conversation</p>
               </div>
             </div>
           )}

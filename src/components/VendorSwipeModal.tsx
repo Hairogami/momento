@@ -882,14 +882,14 @@ export default function VendorSwipeModal({ workspaceId, plannerId, categories, i
               className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
               style={{ backgroundColor: current && favoritedIds.has(current.slug) ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.07)", border: current && favoritedIds.has(current.slug) ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.15)" }}
               title={current && favoritedIds.has(current.slug) ? "Retirer des favoris" : "Ajouter aux favoris"}>
-              <span style={{ fontSize: 18, color: current && favoritedIds.has(current.slug) ? "#ef4444" : "rgba(255,255,255,0.7)" }}>♥</span>
+              <span style={{ fontSize: "var(--text-md)", color: current && favoritedIds.has(current.slug) ? "#ef4444" : "rgba(255,255,255,0.7)" }}>♥</span>
             </button>
             {/* 🎉 Sélectionner */}
             <button
               onClick={() => triggerSwipe("right")}
               className="w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
               style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "2px solid rgba(34,197,94,0.3)" }}>
-              <span style={{ fontSize: 26 }}>🎉</span>
+              <span style={{ fontSize: "var(--text-xl)" }}>🎉</span>
             </button>
           </div>
         )}

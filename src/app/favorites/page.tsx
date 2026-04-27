@@ -50,7 +50,7 @@ export default function CloneFavoritesPage() {
             <h1 style={{ fontSize: "clamp(1.3rem,2vw,1.7rem)", fontWeight: 800, color: "var(--dash-text,#121317)", letterSpacing: "-0.03em", margin: "0 0 4px" }}>
               Favoris
             </h1>
-            <p style={{ fontSize: 13, color: "#6a6a71", margin: 0 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: "#6a6a71", margin: 0 }}>
               {favs.length} prestataire{favs.length !== 1 ? "s" : ""} sauvegardé{favs.length !== 1 ? "s" : ""}
             </p>
           </div>
@@ -58,24 +58,24 @@ export default function CloneFavoritesPage() {
             display: "inline-flex", alignItems: "center", gap: 6,
             padding: "8px 16px", borderRadius: 999,
             background: G, color: "#fff",
-            fontSize: 12, fontWeight: 600, textDecoration: "none",
+            fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none",
           }}>
-            <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: 14 }}>search</span>
+            <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: "var(--text-sm)" }}>search</span>
             Explorer
           </Link>
         </div>
 
         {favs.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 20px" }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>💔</div>
-            <h2 style={{ fontSize: 18, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>Aucun favori</h2>
-            <p style={{ fontSize: 13, color: "#9a9aaa", marginBottom: 24 }}>
+            <div style={{ fontSize: "var(--text-3xl)", marginBottom: 16 }}>💔</div>
+            <h2 style={{ fontSize: "var(--text-md)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>Aucun favori</h2>
+            <p style={{ fontSize: "var(--text-sm)", color: "#9a9aaa", marginBottom: 24 }}>
               Explorez l&apos;annuaire et cliquez ♥ pour sauvegarder des prestataires
             </p>
             <Link href="/explore" style={{
               padding: "10px 24px", borderRadius: 999,
               background: G, color: "#fff",
-              fontSize: 13, fontWeight: 600, textDecoration: "none",
+              fontSize: "var(--text-sm)", fontWeight: 600, textDecoration: "none",
               display: "inline-block",
             }}>Explorer l&apos;annuaire</Link>
           </div>
@@ -105,27 +105,27 @@ export default function CloneFavoritesPage() {
                         background: `${color}20`,
                         border: `1.5px solid ${color}30`,
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 14, fontWeight: 700, color, flexShrink: 0,
+                        fontSize: "var(--text-sm)", fontWeight: 700, color, flexShrink: 0,
                       }}>
                         {fav.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {fav.name}
                         </div>
-                        <div style={{ fontSize: 11, color: "#9a9aaa" }}>{fav.category} · {fav.city}</div>
+                        <div style={{ fontSize: "var(--text-xs)", color: "#9a9aaa" }}>{fav.category} · {fav.city}</div>
                       </div>
                     </div>
 
                     {/* Rating + price */}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                       <span style={{
-                        fontSize: 11, fontWeight: 700,
+                        fontSize: "var(--text-xs)", fontWeight: 700,
                         background: "rgba(245,158,11,0.1)", color: "#f59e0b",
                         padding: "3px 8px", borderRadius: 99,
                       }}>★ {fav.rating.toFixed(1)}</span>
                       {fav.priceMin && (
-                        <span style={{ fontSize: 11, color: "#9a9aaa" }}>
+                        <span style={{ fontSize: "var(--text-xs)", color: "#9a9aaa" }}>
                           dès {fav.priceMin.toLocaleString("fr-MA")} Dhs
                         </span>
                       )}
@@ -136,7 +136,7 @@ export default function CloneFavoritesPage() {
                       <Link href={`/vendor/${fav.id}`} style={{
                         flex: 1, padding: "8px", borderRadius: 99, textAlign: "center",
                         background: G, color: "#fff",
-                        fontSize: 11, fontWeight: 600, textDecoration: "none",
+                        fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none",
                       }}>Voir le profil</Link>
                       <button
                         onClick={() => remove(fav.id)}
@@ -147,7 +147,7 @@ export default function CloneFavoritesPage() {
                           color: "#ef4444", cursor: "pointer",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                          fontSize: 16, fontWeight: "normal",
+                          fontSize: "var(--text-base)", fontWeight: "normal",
                         }}
                         title="Retirer des favoris"
                       >favorite</button>

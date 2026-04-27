@@ -123,7 +123,7 @@ export default function AntHero() {
           <img src="/logo-icon.png" alt="Momento" width={24} height={24} className="clone-logo-light" style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-light.png" alt="Momento" width={24} height={24} className="clone-logo-dark" style={{ objectFit: "contain", display: "none" }} />
-          <span className="clone-body" style={{ fontSize: 14, fontWeight: 400, color: "var(--dash-text-2,#45474D)" }}>Momento Events</span>
+          <span className="clone-body" style={{ fontSize: "var(--text-sm)", fontWeight: 400, color: "var(--dash-text-2,#45474D)" }}>Momento Events</span>
         </div>
 
         <h1
@@ -209,11 +209,11 @@ export default function AntHero() {
           }}
         >
           <div className="flex items-center gap-1.5">
-            <span style={{ color: "#F59E0B", fontSize: 14 }}>★★★★★</span>
-            <span className="clone-body" style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)" }}>4.8/5 · 2 300+ événements organisés</span>
+            <span style={{ color: "#F59E0B", fontSize: "var(--text-sm)" }}>★★★★★</span>
+            <span className="clone-body" style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#45474D)" }}>4.8/5 · 2 300+ événements organisés</span>
           </div>
           <span className="hidden sm:block" style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(183,191,217,0.6)" }} />
-          <span className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)" }}>1 000+ prestataires vérifiés · 41 villes</span>
+          <span className="clone-muted" style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)" }}>1 000+ prestataires vérifiés · 41 villes</span>
         </div>
       </div>
 

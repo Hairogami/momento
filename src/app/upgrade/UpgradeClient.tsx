@@ -67,7 +67,7 @@ export default function UpgradeClient({
           <h1 style={h1Style}>
             Choisissez le plan qui vous va.
           </h1>
-          <p style={{ fontSize: 15, color: "var(--dash-text-2,#6a6a71)", margin: "0 auto", maxWidth: 560, lineHeight: 1.6 }}>
+          <p style={{ fontSize: "var(--text-base)", color: "var(--dash-text-2,#6a6a71)", margin: "0 auto", maxWidth: 560, lineHeight: 1.6 }}>
             Résiliable à tout moment. Droit de rétractation 7 jours (loi 31-08).
             {currentPlan === "pro" && " Vous êtes actuellement en Pro."}
             {currentPlan === "max" && " Vous êtes actuellement en Max."}
@@ -76,7 +76,7 @@ export default function UpgradeClient({
           {reason === "pro-required" && (
             <div style={noticeStyle}>
               Cette fonctionnalité est réservée aux abonnés Pro. Choisissez Pro pour la débloquer immédiatement.
-              {from && <span style={{ opacity: 0.7 }}> (depuis <code style={{ fontSize: 12 }}>{from}</code>)</span>}
+              {from && <span style={{ opacity: 0.7 }}> (depuis <code style={{ fontSize: "var(--text-xs)" }}>{from}</code>)</span>}
             </div>
           )}
         </div>
@@ -134,7 +134,7 @@ export default function UpgradeClient({
               >
                 <div style={{
                   padding: "14px 20px",
-                  fontSize: 14,
+                  fontSize: "var(--text-sm)",
                   fontWeight: 500,
                   color: "var(--dash-text,#121317)",
                 }}>
@@ -190,15 +190,15 @@ export default function UpgradeClient({
             <div key={b.title} style={infoCardStyle}>
               <span style={{
                 fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                fontSize: 22, color: "#E11D48", lineHeight: 1, display: "inline-block", marginBottom: 8,
+                fontSize: "var(--text-lg)", color: "#E11D48", lineHeight: 1, display: "inline-block", marginBottom: 8,
               }}>{b.icon}</span>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 4 }}>{b.title}</div>
-              <div style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.55 }}>{b.desc}</div>
+              <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 4 }}>{b.title}</div>
+              <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.55 }}>{b.desc}</div>
             </div>
           ))}
         </div>
 
-        <p style={{ textAlign: "center", fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", marginTop: 28 }}>
+        <p style={{ textAlign: "center", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 28 }}>
           Questions ? <a href="mailto:contact@momentoevents.app" style={{ color: "#E11D48" }}>contact@momentoevents.app</a>
           {" · "}
           <Link href="/cgu" style={{ color: "var(--dash-text-2,#6a6a71)" }}>CGU</Link>
@@ -242,7 +242,7 @@ function PlanHeaderCell({
       {highlighted && (
         <span style={{
           position: "absolute", top: 10, right: 10,
-          fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+          fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
           padding: "3px 7px", borderRadius: 99,
           background: "linear-gradient(135deg, #E11D48, #9333EA)", color: "#fff",
         }}>Populaire</span>
@@ -250,18 +250,18 @@ function PlanHeaderCell({
       {current && (
         <span style={{
           position: "absolute", top: 10, left: 10,
-          fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+          fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
           padding: "3px 7px", borderRadius: 99,
           background: "rgba(22,101,52,0.1)", color: "#15803d",
           border: "1px solid rgba(22,101,52,0.2)",
         }}>Actuel</span>
       )}
-      <div style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)", marginTop: highlighted || current ? 14 : 0, marginBottom: 6 }}>{name}</div>
-      <div style={{ fontSize: 22, fontWeight: 800, color: "var(--dash-text,#121317)", lineHeight: 1 }}>
+      <div style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", marginTop: highlighted || current ? 14 : 0, marginBottom: 6 }}>{name}</div>
+      <div style={{ fontSize: "var(--text-lg)", fontWeight: 800, color: "var(--dash-text,#121317)", lineHeight: 1 }}>
         {price}
-        {priceSuffix && <span style={{ fontSize: 12, fontWeight: 500, color: "var(--dash-text-2,#6a6a71)", marginLeft: 4 }}>{priceSuffix}</span>}
+        {priceSuffix && <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--dash-text-2,#6a6a71)", marginLeft: 4 }}>{priceSuffix}</span>}
       </div>
-      <div style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", marginTop: 6 }}>{tagline}</div>
+      <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", marginTop: 6 }}>{tagline}</div>
     </button>
   )
 }
@@ -274,7 +274,7 @@ function Cell({ value, highlighted = false }: { value: boolean | string; highlig
     <div style={{
       padding: "14px 20px",
       textAlign: "center",
-      fontSize: 14,
+      fontSize: "var(--text-sm)",
       background: highlighted ? "rgba(225,29,72,0.03)" : "transparent",
       borderLeft: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
     }}>
@@ -315,7 +315,7 @@ function FooterCell({
           display: "inline-block",
           padding: "10px 20px",
           borderRadius: 10,
-          fontSize: 13, fontWeight: 600,
+          fontSize: "var(--text-sm)", fontWeight: 600,
           color: "var(--dash-text-2,#6a6a71)",
           background: "transparent",
           border: "1px dashed var(--dash-border,rgba(183,191,217,0.3))",
@@ -328,7 +328,7 @@ function FooterCell({
   const styles: Record<typeof variant, React.CSSProperties> = {
     ghost: {
       display: "inline-block", padding: "10px 20px", borderRadius: 10,
-      fontSize: 13, fontWeight: 600,
+      fontSize: "var(--text-sm)", fontWeight: 600,
       color: "var(--dash-text,#121317)",
       background: "transparent",
       border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
@@ -336,7 +336,7 @@ function FooterCell({
     },
     primary: {
       display: "inline-block", padding: "10px 22px", borderRadius: 10,
-      fontSize: 13, fontWeight: 700,
+      fontSize: "var(--text-sm)", fontWeight: 700,
       color: "#fff",
       background: "linear-gradient(135deg, #E11D48, #9333EA)",
       boxShadow: "0 6px 20px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
@@ -344,7 +344,7 @@ function FooterCell({
     },
     outline: {
       display: "inline-block", padding: "10px 20px", borderRadius: 10,
-      fontSize: 13, fontWeight: 600,
+      fontSize: "var(--text-sm)", fontWeight: 600,
       color: "var(--dash-text,#121317)",
       background: "transparent",
       border: "1.5px solid var(--dash-text,#121317)",
@@ -364,7 +364,7 @@ function FooterCell({
 // ─── Styles ─────────────────────────────────────────────────────────────────
 
 const kickerStyle: React.CSSProperties = {
-  fontSize: 11, fontWeight: 700, letterSpacing: "0.14em",
+  fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.14em",
   textTransform: "uppercase", color: "#E11D48", margin: "0 0 10px",
 }
 
@@ -383,7 +383,7 @@ const noticeStyle: React.CSSProperties = {
   background: "rgba(234,179,8,0.08)",
   border: "1px solid rgba(234,179,8,0.2)",
   borderRadius: 12,
-  fontSize: 13,
+  fontSize: "var(--text-sm)",
   color: "var(--dash-text,#121317)",
   display: "inline-block",
 }

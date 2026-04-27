@@ -134,31 +134,31 @@ export default function CloneBudgetPage() {
         <div style={{ marginBottom: 28, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div>
             <h1 style={{ fontSize: "clamp(1.3rem,2vw,1.7rem)", fontWeight: 800, color: "var(--dash-text,#121317)", letterSpacing: "-0.03em", margin: "0 0 4px" }}>Budget</h1>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: activeEvent.color, display: "inline-block" }} />
               {activeEvent.name}
             </p>
           </div>
           <button
             onClick={() => setShowAdd(v => !v)}
-            style={{ padding: "10px 20px", borderRadius: 99, background: G, color: "#fff", border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
+            style={{ padding: "10px 20px", borderRadius: 99, background: G, color: "#fff", border: "none", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
           >+ Ajouter une dépense</button>
         </div>
 
         {/* Add form */}
         {showAdd && (
           <div style={{ marginBottom: 24, padding: "20px 24px", background: "var(--dash-surface,#fff)", borderRadius: 16, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 16px" }}>Nouvelle dépense</p>
+            <p style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 16px" }}>Nouvelle dépense</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
-              <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé…" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
-              <select value={newCat} onChange={e => setNewCat(e.target.value)} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }}>
+              <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé…" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)", fontFamily: "inherit", outline: "none" }} />
+              <select value={newCat} onChange={e => setNewCat(e.target.value)} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)", fontFamily: "inherit", outline: "none" }}>
                 {Object.keys(CAT_COLORS).map(c => <option key={c}>{c}</option>)}
               </select>
-              <input type="number" value={newAmount} onChange={e => setNewAmount(e.target.value)} placeholder="Montant Dhs" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
+              <input type="number" value={newAmount} onChange={e => setNewAmount(e.target.value)} placeholder="Montant Dhs" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)", fontFamily: "inherit", outline: "none" }} />
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
-              <button onClick={addExpense} style={{ padding: "9px 20px", borderRadius: 10, background: G, color: "#fff", border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Ajouter</button>
-              <button onClick={() => setShowAdd(false)} style={{ padding: "9px 16px", borderRadius: 10, background: "var(--dash-faint,rgba(183,191,217,0.07))", color: "var(--dash-text-2,#6a6a71)", border: "none", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>Annuler</button>
+              <button onClick={addExpense} style={{ padding: "9px 20px", borderRadius: 10, background: G, color: "#fff", border: "none", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Ajouter</button>
+              <button onClick={() => setShowAdd(false)} style={{ padding: "9px 16px", borderRadius: 10, background: "var(--dash-faint,rgba(183,191,217,0.07))", color: "var(--dash-text-2,#6a6a71)", border: "none", fontSize: "var(--text-sm)", cursor: "pointer", fontFamily: "inherit" }}>Annuler</button>
             </div>
           </div>
         )}
@@ -172,8 +172,8 @@ export default function CloneBudgetPage() {
             { label: "Restant",       value: fmt(data.total - spent), accent: "#818cf8" },
           ].map(c => (
             <div key={c.label} style={{ background: "var(--dash-surface,#fff)", borderRadius: 16, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", padding: "18px 20px" }}>
-              <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 6px" }}>{c.label}</p>
-              <p style={{ fontSize: 20, fontWeight: 800, color: c.accent, margin: 0, letterSpacing: "-0.03em" }}>{c.value}</p>
+              <p style={{ fontSize: "var(--text-2xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 6px" }}>{c.label}</p>
+              <p style={{ fontSize: "var(--text-md)", fontWeight: 800, color: c.accent, margin: 0, letterSpacing: "-0.03em" }}>{c.value}</p>
             </div>
           ))}
         </div>
@@ -181,28 +181,28 @@ export default function CloneBudgetPage() {
         {/* Budget bar */}
         <div style={{ marginBottom: 32, background: "var(--dash-surface,#fff)", borderRadius: 16, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", padding: "20px 24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)" }}>Consommation budgétaire</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: pct > 80 ? "#E11D48" : "var(--dash-text,#121317)" }}>{pct}%</span>
+            <span style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>Consommation budgétaire</span>
+            <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: pct > 80 ? "#E11D48" : "var(--dash-text,#121317)" }}>{pct}%</span>
           </div>
           <div style={{ height: 8, background: "var(--dash-faint-2,rgba(183,191,217,0.12))", borderRadius: 99, overflow: "hidden" }}>
             <div style={{ height: "100%", width: `${pct}%`, background: pct > 80 ? "linear-gradient(90deg,#f59e0b,#E11D48)" : G, borderRadius: 99, transition: "width 0.5s" }} />
           </div>
-          {pct > 80 && <p style={{ fontSize: 11, color: "#f59e0b", margin: "8px 0 0", fontWeight: 600 }}>⚠ Attention — budget presque épuisé</p>}
+          {pct > 80 && <p style={{ fontSize: "var(--text-xs)", color: "#f59e0b", margin: "8px 0 0", fontWeight: 600 }}>⚠ Attention — budget presque épuisé</p>}
         </div>
 
         {/* Two columns: donut + expense list */}
         <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
           {/* Donut */}
           <div style={{ background: "var(--dash-surface,#fff)", borderRadius: 18, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)", padding: "20px 24px", minWidth: 240 }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 16px" }}>Répartition</p>
+            <p style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 16px" }}>Répartition</p>
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
               <DonutChart segments={segments} size={120} />
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {categories.map(([cat, amt]) => (
                   <div key={cat} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ width: 9, height: 9, borderRadius: "50%", background: CAT_COLORS[cat] ?? "#9a9aaa", flexShrink: 0 }} />
-                    <span style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)" }}>{cat}</span>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)", marginLeft: "auto" }}>{Math.round((amt / data.total) * 100)}%</span>
+                    <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)" }}>{cat}</span>
+                    <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)", marginLeft: "auto" }}>{Math.round((amt / data.total) * 100)}%</span>
                   </div>
                 ))}
               </div>
@@ -212,10 +212,10 @@ export default function CloneBudgetPage() {
           {/* Expense list */}
           <div style={{ flex: 1, minWidth: 0, background: "var(--dash-surface,#fff)", borderRadius: 18, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)", overflow: "hidden" }}>
             <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.10))" }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Détail des dépenses</p>
+              <p style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Détail des dépenses</p>
             </div>
             {expenses.length === 0 && (
-              <p style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "32px 0" }}>Aucune dépense enregistrée</p>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "32px 0" }}>Aucune dépense enregistrée</p>
             )}
             {expenses.map((exp, i) => (
               <div key={exp.id} style={{
@@ -226,14 +226,14 @@ export default function CloneBudgetPage() {
                   <div style={{ width: 8, height: 8, borderRadius: "50%", background: CAT_COLORS[exp.category] ?? "#9a9aaa" }} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{exp.label}</p>
-                  <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{exp.category} · {exp.date}</p>
+                  <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{exp.label}</p>
+                  <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{exp.category} · {exp.date}</p>
                 </div>
-                <span style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", flexShrink: 0 }}>{exp.amount.toLocaleString("fr-MA")} Dhs</span>
+                <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", flexShrink: 0 }}>{exp.amount.toLocaleString("fr-MA")} Dhs</span>
                 <button
                   onClick={() => togglePaid(exp.id)}
                   style={{
-                    padding: "4px 10px", borderRadius: 99, border: "none", cursor: "pointer", fontSize: 10, fontWeight: 600, fontFamily: "inherit",
+                    padding: "4px 10px", borderRadius: 99, border: "none", cursor: "pointer", fontSize: "var(--text-2xs)", fontWeight: 600, fontFamily: "inherit",
                     background: exp.paid ? "rgba(34,197,94,0.12)" : "var(--dash-faint,rgba(183,191,217,0.07))",
                     color: exp.paid ? "#22c55e" : "var(--dash-text-3,#9a9aaa)",
                     flexShrink: 0,

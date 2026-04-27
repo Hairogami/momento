@@ -131,21 +131,21 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
       }}>
         <header style={{ padding: "18px 20px", borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.15))" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <Link href="/dashboard/event-site" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textDecoration: "none" }}>← Tous mes sites</Link>
+            <Link href="/dashboard/event-site" style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", textDecoration: "none" }}>← Tous mes sites</Link>
             {saveState === "saving" && (
-              <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Sauvegarde…</span>
+              <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Sauvegarde…</span>
             )}
             {saveState === "saved" && (
-              <span style={{ fontSize: 11, color: "#16a34a" }}>✓ Enregistré</span>
+              <span style={{ fontSize: "var(--text-xs)", color: "#16a34a" }}>✓ Enregistré</span>
             )}
             {saveState === "error" && (
-              <span style={{ fontSize: 11, color: "#dc2626" }}>⚠ Erreur de sauvegarde</span>
+              <span style={{ fontSize: "var(--text-xs)", color: "#dc2626" }}>⚠ Erreur de sauvegarde</span>
             )}
           </div>
-          <h1 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+          <h1 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
             Site événement
           </h1>
-          <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", margin: "3px 0 12px" }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", margin: "3px 0 12px" }}>
             {site.published ? (
               <>🟢 Publié · <a href={publicUrl} target="_blank" rel="noopener" style={{ color: "var(--g1,#E11D48)" }}>{publicUrl}</a></>
             ) : (
@@ -162,7 +162,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
                 ? "var(--dash-faint-2,rgba(183,191,217,0.15))"
                 : "linear-gradient(135deg,#E11D48,#9333EA)",
               color: site.published ? "var(--dash-text,#121317)" : "#fff",
-              fontSize: 13, fontWeight: 600, cursor: publishing ? "wait" : "pointer",
+              fontSize: "var(--text-sm)", fontWeight: 600, cursor: publishing ? "wait" : "pointer",
               fontFamily: "inherit",
             }}
           >
@@ -184,7 +184,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
                 flex: 1, padding: "9px 8px", borderRadius: "9px 9px 0 0", border: "none",
                 background: tab === t ? "var(--dash-faint,rgba(183,191,217,0.08))" : "transparent",
                 color: tab === t ? "var(--g1,#E11D48)" : "var(--dash-text-2,#6a6a71)",
-                fontSize: 12, fontWeight: tab === t ? 700 : 500, cursor: "pointer", fontFamily: "inherit",
+                fontSize: "var(--text-xs)", fontWeight: tab === t ? 700 : 500, cursor: "pointer", fontFamily: "inherit",
                 borderBottom: tab === t ? "2px solid var(--g1,#E11D48)" : "2px solid transparent",
                 marginBottom: -1,
               }}
@@ -215,7 +215,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
         }}>
           <div style={{
             padding: "6px 12px", borderRadius: 99, background: "rgba(0,0,0,0.7)",
-            color: "#fff", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase",
+            color: "#fff", fontSize: "var(--text-xs)", letterSpacing: "0.1em", textTransform: "uppercase",
           }}>Aperçu live</div>
           <div style={{
             display: "flex", gap: 2, padding: 3, borderRadius: 99,
@@ -318,7 +318,7 @@ function ContentTab({
             onUpdate("mainEvent.wazeUrl", "")
           }}
         />
-        <div style={{ padding: "10px 12px", background: "rgba(225,29,72,0.06)", border: "1px solid rgba(225,29,72,0.2)", borderRadius: 9, fontSize: 11, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5, marginTop: 10 }}>
+        <div style={{ padding: "10px 12px", background: "rgba(225,29,72,0.06)", border: "1px solid rgba(225,29,72,0.2)", borderRadius: 9, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5, marginTop: 10 }}>
           🔒 L&apos;adresse exacte n&apos;est jamais affichée en toutes lettres aux invités. Ils voient une carte + boutons Google Maps / Waze.
         </div>
       </FieldGroup>
@@ -352,7 +352,7 @@ function ContentTab({
       </FieldGroup>
 
       {template === "mariage" && (
-        <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "var(--dash-text,#121317)", cursor: "pointer" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", cursor: "pointer" }}>
           <input
             type="checkbox"
             checked={rsvp.allowPlusOne !== false}
@@ -396,7 +396,7 @@ function CountdownEditor({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "var(--dash-text,#121317)", cursor: "pointer" }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", cursor: "pointer" }}>
         <input
           type="checkbox"
           checked={countdown.enabled === true}
@@ -408,7 +408,7 @@ function CountdownEditor({
       {countdown.enabled && (
         <>
           <div>
-            <div style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", marginBottom: 5, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>Date & heure cible</div>
+            <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", marginBottom: 5, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>Date & heure cible</div>
             <input
               type="datetime-local"
               value={inputValue}
@@ -424,7 +424,7 @@ function CountdownEditor({
                 border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
                 background: "var(--dash-surface,#fff)",
                 color: "var(--dash-text,#121317)",
-                fontSize: 13,
+                fontSize: "var(--text-sm)",
                 fontFamily: "inherit",
                 outline: "none",
                 boxSizing: "border-box",
@@ -433,7 +433,7 @@ function CountdownEditor({
           </div>
 
           <div>
-            <div style={{ fontSize: 11, color: "var(--dash-text-2,#6a6a71)", marginBottom: 6, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>Style</div>
+            <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", marginBottom: 6, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>Style</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
               {variants.map(v => (
                 <button
@@ -496,7 +496,7 @@ function ProgramEditor({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {steps.length === 0 && (
-        <div style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", padding: "8px 2px" }}>
+        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", padding: "8px 2px" }}>
           Aucune étape pour l&apos;instant. Ajoutez la première ci-dessous.
         </div>
       )}
@@ -575,7 +575,7 @@ function ProgramEditor({
           borderRadius: 9,
           background: "transparent",
           color: "var(--dash-text,#121317)",
-          fontSize: 13,
+          fontSize: "var(--text-sm)",
           cursor: "pointer",
         }}
       >
@@ -595,7 +595,7 @@ function miniBtn(disabled: boolean): React.CSSProperties {
     color: "var(--dash-text,#121317)",
     cursor: disabled ? "not-allowed" : "pointer",
     opacity: disabled ? 0.4 : 1,
-    fontSize: 13,
+    fontSize: "var(--text-sm)",
     lineHeight: 1,
     display: "inline-flex",
     alignItems: "center",
@@ -633,11 +633,11 @@ function TemplateSection({ site, onPatch }: { site: EventSite; onPatch: (p: Part
         padding: "10px 12px", borderRadius: 9,
         border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
         background: "var(--dash-faint,rgba(183,191,217,0.05))",
-        fontSize: 13, color: "var(--dash-text,#121317)",
+        fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)",
         display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
       }}>
         <span>{TEMPLATES.find(t => t.id === site.template)?.emoji ?? "✨"} {currentLabel}</span>
-        <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>lié au type d&apos;événement</span>
+        <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>lié au type d&apos;événement</span>
       </div>
     </FieldGroup>
   )
@@ -722,7 +722,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
           onPick={id => onUpdateContent("style.pattern", id)}
           accent={currentPalette?.main}
         />
-        <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "var(--dash-text,#121317)", cursor: "pointer", marginTop: 10 }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", cursor: "pointer", marginTop: 10 }}>
           <input
             type="checkbox"
             checked={(style as { patternFullPage?: boolean }).patternFullPage === true}
@@ -732,7 +732,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
         </label>
 
         <div style={{ marginTop: 12 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--dash-text-2,#6a6a71)", marginBottom: 6 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", marginBottom: 6 }}>
             <span>Opacité du motif</span>
             <span style={{ fontFamily: "monospace", fontWeight: 600 }}>
               {typeof (style as { patternOpacity?: number }).patternOpacity === "number"
@@ -762,7 +762,7 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
                 border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
                 background: "transparent",
                 color: "var(--dash-text-2,#6a6a71)",
-                fontSize: 11,
+                fontSize: "var(--text-xs)",
                 cursor: "pointer",
                 fontFamily: "inherit",
               }}
@@ -950,7 +950,7 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
               style={{
                 position: "absolute", top: 8, right: 8,
                 padding: "5px 10px", background: "rgba(0,0,0,0.7)", color: "#fff",
-                borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11,
+                borderRadius: 6, border: "none", cursor: "pointer", fontSize: "var(--text-xs)",
               }}
             >Retirer</button>
           </div>
@@ -967,16 +967,16 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
               disabled={uploading}
               onChange={e => { const f = e.target.files?.[0]; if (f) uploadHero(f) }}
             />
-            <div style={{ fontSize: 24, marginBottom: 6 }}>📷</div>
-            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>
+            <div style={{ fontSize: "var(--text-lg)", marginBottom: 6 }}>📷</div>
+            <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>
               {uploading ? "Upload en cours…" : "Cliquez pour uploader"}
             </div>
-            <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 3 }}>JPG, PNG, WebP · 5MB max</div>
+            <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 3 }}>JPG, PNG, WebP · 5MB max</div>
           </label>
         )}
       </FieldGroup>
 
-      <div style={{ padding: "12px", background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 9, fontSize: 11, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.55 }}>
+      <div style={{ padding: "12px", background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 9, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.55 }}>
         💡 Pas de photo ? Pas de problème — un fond unique est généré automatiquement pour votre site, basé sur votre mood et palette.
       </div>
 
@@ -996,7 +996,7 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
                       position: "absolute", top: 4, right: 4,
                       width: 24, height: 24, borderRadius: "50%",
                       background: "rgba(0,0,0,0.75)", color: "#fff",
-                      border: "none", cursor: "pointer", fontSize: 12,
+                      border: "none", cursor: "pointer", fontSize: "var(--text-xs)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}
                   >✕</button>
@@ -1021,20 +1021,20 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
                 disabled={galleryUploading}
                 onChange={e => { if (e.target.files) uploadGallery(e.target.files); e.target.value = "" }}
               />
-              <div style={{ fontSize: 18, marginBottom: 4 }}>🖼️</div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>
+              <div style={{ fontSize: "var(--text-md)", marginBottom: 4 }}>🖼️</div>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>
                 {galleryUploading ? "Upload en cours…" : `Ajouter des photos (jusqu'à ${remaining} restante${remaining > 1 ? "s" : ""})`}
               </div>
-              <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 3 }}>JPG, PNG, WebP · 5MB max chacune · multi-sélection</div>
+              <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 3 }}>JPG, PNG, WebP · 5MB max chacune · multi-sélection</div>
             </label>
           ) : (
-            <div style={{ padding: "12px", background: "rgba(234,179,8,0.08)", border: "1px solid rgba(234,179,8,0.25)", borderRadius: 9, fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textAlign: "center" }}>
+            <div style={{ padding: "12px", background: "rgba(234,179,8,0.08)", border: "1px solid rgba(234,179,8,0.25)", borderRadius: 9, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", textAlign: "center" }}>
               Limite atteinte ({GALLERY_MAX} photos max). Supprimez-en pour en ajouter d&apos;autres.
             </div>
           )}
 
           {galleryError && (
-            <div style={{ padding: "10px 12px", background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)", borderRadius: 9, fontSize: 12, color: "#dc2626" }}>
+            <div style={{ padding: "10px 12px", background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)", borderRadius: 9, fontSize: "var(--text-xs)", color: "#dc2626" }}>
               {galleryError}
             </div>
           )}
@@ -1082,7 +1082,7 @@ function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: 
       background: "var(--dash-surface,rgba(255,255,255,0.02))",
       display: "flex", flexDirection: "column", gap: 10,
     }}>
-      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--dash-text-2,#6a6a71)" }}>
+      <div style={{ fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--dash-text-2,#6a6a71)" }}>
         Partager avec les invités
       </div>
 
@@ -1094,7 +1094,7 @@ function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: 
           border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
           background: "var(--dash-surface,#fff)",
           color: "var(--dash-text,#121317)",
-          fontSize: 11,
+          fontSize: "var(--text-xs)",
           fontFamily: "monospace",
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -1111,7 +1111,7 @@ function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: 
             border: "none",
             background: copied ? "#16a34a" : "linear-gradient(135deg,#E11D48,#9333EA)",
             color: "#fff",
-            fontSize: 11,
+            fontSize: "var(--text-xs)",
             fontWeight: 600,
             cursor: "pointer",
             fontFamily: "inherit",
@@ -1134,7 +1134,7 @@ function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: 
             border: "1px solid rgba(37,211,102,0.4)",
             background: "rgba(37,211,102,0.08)",
             color: "#25D366",
-            fontSize: 12,
+            fontSize: "var(--text-xs)",
             fontWeight: 600,
             textAlign: "center",
             textDecoration: "none",
@@ -1152,7 +1152,7 @@ function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: 
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)",
             color: "var(--dash-text,#121317)",
-            fontSize: 12,
+            fontSize: "var(--text-xs)",
             fontWeight: 600,
             textAlign: "center",
             textDecoration: "none",
@@ -1172,7 +1172,7 @@ function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: 
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)",
             color: "var(--dash-text,#121317)",
-            fontSize: 12,
+            fontSize: "var(--text-xs)",
             fontWeight: 600,
             textAlign: "center",
             textDecoration: "none",
@@ -1183,7 +1183,7 @@ function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: 
         </a>
       </div>
 
-      <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", lineHeight: 1.5 }}>
+      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", lineHeight: 1.5 }}>
         Lien public — pas besoin de compte pour consulter ou RSVP.
       </div>
     </div>
@@ -1220,7 +1220,7 @@ function AnimationIntensityPicker({
                 border: "none",
                 background: active ? `color-mix(in srgb, ${accent} 16%, transparent)` : "transparent",
                 color: active ? "var(--dash-text,#121317)" : "var(--dash-text-2,#6a6a71)",
-                fontSize: 12,
+                fontSize: "var(--text-xs)",
                 fontWeight: active ? 600 : 500,
                 cursor: "pointer",
                 fontFamily: "inherit",
@@ -1232,7 +1232,7 @@ function AnimationIntensityPicker({
           )
         })}
       </div>
-      <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
+      <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
         {options.find(o => o.id === current)?.hint}
       </div>
     </div>
@@ -1255,8 +1255,8 @@ function FontSelector({ current, onChange, preview }: { current: string; onChang
               fontFamily: f.stack,
             }}
           >
-            <span style={{ fontSize: 15 }}>{preview}</span>
-            <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{f.label}</span>
+            <span style={{ fontSize: "var(--text-base)" }}>{preview}</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{f.label}</span>
           </button>
         )
       })}
@@ -1299,14 +1299,14 @@ function FieldGroup({
               aria-hidden
               style={{
                 display: "inline-block",
-                fontSize: 9,
+                fontSize: "var(--text-2xs)",
                 color: "var(--dash-text-3,#9a9aaa)",
                 transform: collapsed ? "rotate(-90deg)" : "rotate(0deg)",
                 transition: "transform 150ms ease",
               }}
             >▼</span>
           )}
-          <label style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.05em", textTransform: "uppercase", cursor: collapsible ? "pointer" : "default" }}>{label}</label>
+          <label style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.05em", textTransform: "uppercase", cursor: collapsible ? "pointer" : "default" }}>{label}</label>
         </div>
         {isHideable && (
           <button
@@ -1360,7 +1360,7 @@ function Input({ value, onChange, placeholder }: { value: string; onChange: (v: 
         border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
         background: "var(--dash-surface,#fff)",
         color: "var(--dash-text,#121317)",
-        fontSize: 13, fontFamily: "inherit", outline: "none",
+        fontSize: "var(--text-sm)", fontFamily: "inherit", outline: "none",
       }}
     />
   )
@@ -1386,7 +1386,7 @@ function Textarea({ value, onChange, placeholder, rows = 3 }: { value: string; o
         border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
         background: "var(--dash-surface,#fff)",
         color: "var(--dash-text,#121317)",
-        fontSize: 13, fontFamily: "inherit", outline: "none", resize: "vertical",
+        fontSize: "var(--text-sm)", fontFamily: "inherit", outline: "none", resize: "vertical",
       }}
     />
   )
@@ -1455,7 +1455,7 @@ function LocationField({
             flexShrink: 0,
             padding: "0 14px", borderRadius: 9, border: "none",
             background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff",
-            fontSize: 12, fontWeight: 600, cursor: loading ? "wait" : "pointer",
+            fontSize: "var(--text-xs)", fontWeight: 600, cursor: loading ? "wait" : "pointer",
             whiteSpace: "nowrap", fontFamily: "inherit",
             opacity: (loading || !input.trim()) ? 0.6 : 1,
           }}
@@ -1465,7 +1465,7 @@ function LocationField({
       </div>
 
       {error && (
-        <div style={{ marginTop: 6, fontSize: 11, color: "#dc2626" }}>{error}</div>
+        <div style={{ marginTop: 6, fontSize: "var(--text-xs)", color: "#dc2626" }}>{error}</div>
       )}
 
       {resolved && (
@@ -1475,11 +1475,11 @@ function LocationField({
           display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
         }}>
           <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ fontSize: 11, color: "#15803d", fontWeight: 600, marginBottom: 2 }}>
+            <div style={{ fontSize: "var(--text-xs)", color: "#15803d", fontWeight: 600, marginBottom: 2 }}>
               ✓ Localisé · {resolved.lat.toFixed(4)}, {resolved.lng.toFixed(4)}
             </div>
             <div style={{
-              fontSize: 11, color: "var(--dash-text-2,#6a6a71)",
+              fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
               {resolved.displayName ?? ""}
@@ -1489,7 +1489,7 @@ function LocationField({
             onClick={onClear}
             style={{
               background: "transparent", border: "none", cursor: "pointer",
-              fontSize: 16, color: "var(--dash-text-3,#9a9aaa)", padding: 2,
+              fontSize: "var(--text-base)", color: "var(--dash-text-3,#9a9aaa)", padding: 2,
             }}
             aria-label="Retirer la localisation"
             title="Retirer"
@@ -1527,7 +1527,7 @@ function chipStyle(active: boolean): React.CSSProperties {
     border: active ? "1.5px solid var(--g1,#E11D48)" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
     background: active ? "rgba(225,29,72,0.06)" : "var(--dash-surface,#fff)",
     color: "var(--dash-text,#121317)",
-    fontSize: 13, fontWeight: active ? 600 : 500,
+    fontSize: "var(--text-sm)", fontWeight: active ? 600 : 500,
     cursor: "pointer", fontFamily: "inherit", textAlign: "left",
   }
 }

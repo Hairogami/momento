@@ -61,7 +61,7 @@ export default function AntFooter() {
                     display: "flex", alignItems: "center", justifyContent: "center",
                     background: "rgba(183,191,217,0.1)",
                     border: "1px solid rgba(183,191,217,0.22)",
-                    fontSize: 10, fontWeight: 700, color: "var(--dash-text-2,#6a6a71)",
+                    fontSize: "var(--text-2xs)", fontWeight: 700, color: "var(--dash-text-2,#6a6a71)",
                     textDecoration: "none",
                   }}
                 >
@@ -74,7 +74,7 @@ export default function AntFooter() {
           <div className="flex gap-16">
             {Object.entries(LINKS).map(([col, links]) => (
               <div key={col} className="flex flex-col gap-3">
-                <div className="clone-heading" style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 4 }}>
+                <div className="clone-heading" style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 4 }}>
                   {col}
                 </div>
                 {links.map(link => (
@@ -105,10 +105,10 @@ export default function AntFooter() {
         >
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", justifyContent: "space-between" }}>
             <div>
-              <div className="clone-heading" style={{ fontSize: 15, fontWeight: 600, color: "var(--dash-text,#121317)", marginBottom: 4 }}>
+              <div className="clone-heading" style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "var(--dash-text,#121317)", marginBottom: 4 }}>
                 10 conseils pour organiser votre événement au Maroc
               </div>
-              <p className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)" }}>
+              <p className="clone-muted" style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)" }}>
                 Guides, check-lists et prestataires du mois — dans votre boîte mail.
               </p>
             </div>
@@ -119,14 +119,14 @@ export default function AntFooter() {
                 style={{
                   padding: "9px 16px", borderRadius: 99,
                   border: "1px solid rgba(183,191,217,0.3)",
-                  fontSize: 13, outline: "none",
+                  fontSize: "var(--text-sm)", outline: "none",
                   minWidth: 200, background: "transparent", color: "var(--dash-text,#121317)",
                 }}
               />
               <button style={{
                 padding: "9px 20px", borderRadius: 99,
                 background: "#121317", color: "#fff",
-                fontSize: 13, fontWeight: 500,
+                fontSize: "var(--text-sm)", fontWeight: 500,
                 cursor: "pointer", border: "none", whiteSpace: "nowrap",
               }}>
                 S&apos;inscrire
@@ -144,11 +144,11 @@ export default function AntFooter() {
             <img src="/logo-icon.png" alt="Momento" width={16} height={16} className="clone-logo-light" style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-light.png" alt="Momento" width={16} height={16} className="clone-logo-dark" style={{ objectFit: "contain", display: "none" }} />
-            <span className="clone-muted" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>© 2025 Momento Events · Maroc</span>
+            <span className="clone-muted" style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)" }}>© 2025 Momento Events · Maroc</span>
           </div>
           <div className="flex gap-5">
             {LEGAL_LINKS.map(link => (
-              <a key={link.label} href={link.href} className="clone-body transition-colors hover:text-black" style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>
+              <a key={link.label} href={link.href} className="clone-body transition-colors hover:text-black" style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)" }}>
                 {link.label}
               </a>
             ))}

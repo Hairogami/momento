@@ -75,7 +75,7 @@ export default function MentionsLegalesPage() {
           Commission Nationale de contrôle de la protection des Données à caractère Personnel —
           <a href="https://www.cndp.ma" target="_blank" rel="noopener noreferrer" style={linkStyle}> www.cndp.ma</a>
         </Field>
-        <p style={{ fontSize: 14, color: "#6a6a71", marginTop: 12 }}>
+        <p style={{ fontSize: "var(--text-sm)", color: "#6a6a71", marginTop: 12 }}>
           Pour plus de détails sur les finalités, les données collectées, les destinataires et vos droits,
           veuillez consulter la <a href="/confidentialite" style={linkStyle}>Politique de confidentialité</a>.
         </p>
@@ -110,8 +110,8 @@ export default function MentionsLegalesPage() {
       </Section>
 
       <div style={contactBlockStyle}>
-        <p style={{ fontSize: 14, fontWeight: 600, margin: "0 0 8px" }}>Questions sur ces mentions :</p>
-        <p style={{ margin: 0, fontSize: 14 }}>
+        <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, margin: "0 0 8px" }}>Questions sur ces mentions :</p>
+        <p style={{ margin: 0, fontSize: "var(--text-sm)" }}>
           <a href="mailto:contact@momentoevents.app" style={linkStyle}>contact@momentoevents.app</a>
         </p>
       </div>
@@ -141,18 +141,18 @@ const articleStyle: React.CSSProperties = {
   background: "#fff", borderRadius: 20, padding: "56px 48px",
   border: "1px solid rgba(183,191,217,0.22)",
   boxShadow: "0 4px 32px rgba(12,14,30,0.04)",
-  lineHeight: 1.65, fontSize: 15, color: "#2a2b30",
+  lineHeight: 1.65, fontSize: "var(--text-base)", color: "#2a2b30",
 }
-const kickerStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#E11D48", margin: "0 0 10px" }
-const h1Style: React.CSSProperties = { fontSize: 34, fontWeight: 700, color: "#121317", letterSpacing: "-0.025em", lineHeight: 1.15, margin: "0 0 10px" }
-const subtitleStyle: React.CSSProperties = { fontSize: 15, color: "#6a6a71", margin: "0 0 14px", lineHeight: 1.55 }
-const metaStyle: React.CSSProperties = { fontSize: 12, color: "#9a9aaa", margin: 0 }
-const noticeStyle: React.CSSProperties = { padding: "16px 18px", background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)", borderRadius: 12, fontSize: 13, color: "#715311", lineHeight: 1.55, marginBottom: 32 }
+const kickerStyle: React.CSSProperties = { fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#E11D48", margin: "0 0 10px" }
+const h1Style: React.CSSProperties = { fontSize: "var(--text-2xl)", fontWeight: 700, color: "#121317", letterSpacing: "-0.025em", lineHeight: 1.15, margin: "0 0 10px" }
+const subtitleStyle: React.CSSProperties = { fontSize: "var(--text-base)", color: "#6a6a71", margin: "0 0 14px", lineHeight: 1.55 }
+const metaStyle: React.CSSProperties = { fontSize: "var(--text-xs)", color: "#9a9aaa", margin: 0 }
+const noticeStyle: React.CSSProperties = { padding: "16px 18px", background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)", borderRadius: 12, fontSize: "var(--text-sm)", color: "#715311", lineHeight: 1.55, marginBottom: 32 }
 const sectionStyle: React.CSSProperties = { marginBottom: 32 }
-const h2Style: React.CSSProperties = { fontSize: 18, fontWeight: 700, color: "#121317", letterSpacing: "-0.015em", margin: "0 0 14px", paddingBottom: 8, borderBottom: "1px solid rgba(183,191,217,0.22)" }
-const sectionBodyStyle: React.CSSProperties = { fontSize: 15, color: "#2a2b30", lineHeight: 1.7 }
+const h2Style: React.CSSProperties = { fontSize: "var(--text-md)", fontWeight: 700, color: "#121317", letterSpacing: "-0.015em", margin: "0 0 14px", paddingBottom: 8, borderBottom: "1px solid rgba(183,191,217,0.22)" }
+const sectionBodyStyle: React.CSSProperties = { fontSize: "var(--text-base)", color: "#2a2b30", lineHeight: 1.7 }
 const fieldStyle: React.CSSProperties = { display: "grid", gridTemplateColumns: "220px 1fr", gap: 16, padding: "6px 0", borderBottom: "1px dashed rgba(183,191,217,0.2)" }
-const fieldLabelStyle: React.CSSProperties = { fontSize: 13, fontWeight: 600, color: "#6a6a71" }
-const fieldValueStyle: React.CSSProperties = { fontSize: 14, color: "#121317" }
+const fieldLabelStyle: React.CSSProperties = { fontSize: "var(--text-sm)", fontWeight: 600, color: "#6a6a71" }
+const fieldValueStyle: React.CSSProperties = { fontSize: "var(--text-sm)", color: "#121317" }
 const linkStyle: React.CSSProperties = { color: "#E11D48", textDecoration: "underline", textUnderlineOffset: 2 }
 const contactBlockStyle: React.CSSProperties = { marginTop: 40, padding: "18px 22px", background: "#fafafa", borderRadius: 12, border: "1px solid rgba(183,191,217,0.22)" }

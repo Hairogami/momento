@@ -83,7 +83,7 @@ export default function AProposPage() {
         <span
           style={{
             display: "inline-block",
-            fontSize: 11,
+            fontSize: "var(--text-xs)",
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -149,13 +149,13 @@ export default function AProposPage() {
               transition: "opacity 0.8s ease, transform 0.8s ease",
             }}
           >
-            <p className="clone-label" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--g1,#E11D48)", marginBottom: 12 }}>
+            <p className="clone-label" style={{ fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--g1,#E11D48)", marginBottom: 12 }}>
               Chapitre 1 — Le constat
             </p>
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 18 }}>
               Aucune infrastructure n&apos;existait.
             </h2>
-            <p className="clone-body" style={{ fontSize: 17, lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
+            <p className="clone-body" style={{ fontSize: "var(--text-md)", lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
               Au Maroc, l&apos;événementiel pèse des milliards de dirhams — mariages, henné, fiançailles,
               anniversaires, galas, séminaires d&apos;entreprise. Et pourtant, aucun annuaire sérieux,
               aucun outil de planification, aucun moyen simple de comparer trois photographes avant de
@@ -173,13 +173,13 @@ export default function AProposPage() {
               transition: "opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s",
             }}
           >
-            <p className="clone-label" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--g2,#9333EA)", marginBottom: 12 }}>
+            <p className="clone-label" style={{ fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--g2,#9333EA)", marginBottom: 12 }}>
               Chapitre 2 — Le déclic
             </p>
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 18 }}>
               On a ouvert un tableur. Un soir d&apos;été 2024.
             </h2>
-            <p className="clone-body" style={{ fontSize: 17, lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
+            <p className="clone-body" style={{ fontSize: "var(--text-md)", lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
               Quatre amis, quatre villes, un Google Sheet vide. On a listé tous les prestataires
               événementiels qu&apos;on connaissait — photographes, DJ, traiteurs, décorateurs,
               fleuristes, vidéastes. On est arrivés à 200 noms en une nuit. Deux semaines plus tard,
@@ -197,13 +197,13 @@ export default function AProposPage() {
               transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
             }}
           >
-            <p className="clone-label" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#EC4899", marginBottom: 12 }}>
+            <p className="clone-label" style={{ fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#EC4899", marginBottom: 12 }}>
               Chapitre 3 — La construction
             </p>
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 18 }}>
               1&nbsp;000&nbsp;+ prestataires. 41 villes. Contact direct.
             </h2>
-            <p className="clone-body" style={{ fontSize: 17, lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
+            <p className="clone-body" style={{ fontSize: "var(--text-md)", lineHeight: 1.7, color: "var(--dash-text-2,#45474D)" }}>
               On a refusé le modèle classique — capter 15 à 30 % sur chaque contrat comme les
               plateformes occidentales. Ce n&apos;est pas soutenable au Maroc, et ce n&apos;est pas
               juste. On s&apos;est financés autrement : abonnement Pro optionnel pour les prestataires
@@ -226,7 +226,7 @@ export default function AProposPage() {
       >
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <p className="clone-label" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--dash-text-2,#6a6a71)", marginBottom: 12 }}>
+            <p className="clone-label" style={{ fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--dash-text-2,#6a6a71)", marginBottom: 12 }}>
               L&apos;équipe fondatrice
             </p>
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.02em" }}>
@@ -266,16 +266,16 @@ export default function AProposPage() {
                     justifyContent: "center",
                     color: "#fff",
                     fontWeight: 800,
-                    fontSize: 24,
+                    fontSize: "var(--text-lg)",
                     letterSpacing: "0.02em",
                     background: `linear-gradient(135deg, ${f.color}, var(--g2,#9333EA))`,
                   }}
                 >
                   {f.initials}
                 </div>
-                <h3 style={{ fontSize: 17, fontWeight: 700, margin: "0 0 4px", color: "var(--dash-text,#121317)" }}>{f.name}</h3>
-                <p className="clone-body" style={{ fontSize: 13, margin: "0 0 8px", color: "var(--dash-text-2,#45474D)" }}>{f.role}</p>
-                <p className="clone-muted" style={{ fontSize: 12, margin: 0, color: "var(--dash-text-2,#6a6a71)" }}>{f.city}</p>
+                <h3 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: "0 0 4px", color: "var(--dash-text,#121317)" }}>{f.name}</h3>
+                <p className="clone-body" style={{ fontSize: "var(--text-sm)", margin: "0 0 8px", color: "var(--dash-text-2,#45474D)" }}>{f.role}</p>
+                <p className="clone-muted" style={{ fontSize: "var(--text-xs)", margin: 0, color: "var(--dash-text-2,#6a6a71)" }}>{f.city}</p>
               </div>
             ))}
           </div>
@@ -322,7 +322,7 @@ export default function AProposPage() {
                   <span
                     style={{
                       fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                      fontSize: 22,
+                      fontSize: "var(--text-lg)",
                       background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -331,8 +331,8 @@ export default function AProposPage() {
                     {v.icon}
                   </span>
                 </div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 8px", color: "var(--dash-text,#121317)" }}>{v.title}</h3>
-                <p className="clone-body" style={{ fontSize: 14, lineHeight: 1.55, color: "var(--dash-text-2,#45474D)", margin: 0 }}>
+                <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, margin: "0 0 8px", color: "var(--dash-text,#121317)" }}>{v.title}</h3>
+                <p className="clone-body" style={{ fontSize: "var(--text-sm)", lineHeight: 1.55, color: "var(--dash-text-2,#45474D)", margin: 0 }}>
                   {v.body}
                 </p>
               </div>
@@ -347,7 +347,7 @@ export default function AProposPage() {
           <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, letterSpacing: "-0.02em" }}>
             On construit ça avec vous.
           </h2>
-          <p className="clone-body" style={{ fontSize: 17, color: "var(--dash-text-2,#45474D)", marginTop: 16, lineHeight: 1.55 }}>
+          <p className="clone-body" style={{ fontSize: "var(--text-md)", color: "var(--dash-text-2,#45474D)", marginTop: 16, lineHeight: 1.55 }}>
             Client, prestataire, ou juste curieux — rejoignez l&apos;aventure.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">

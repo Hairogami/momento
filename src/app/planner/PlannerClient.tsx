@@ -143,11 +143,11 @@ export default function PlannerClient({ initialDetail }: { initialDetail: Planne
         ) : !detail ? (
           <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 40 }}>
             <div style={{ textAlign: "center", maxWidth: 360 }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>🗓️</div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 6 }}>
+              <div style={{ fontSize: "var(--text-2xl)", marginBottom: 12 }}>🗓️</div>
+              <div style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 6 }}>
                 Aucun événement
               </div>
-              <div style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>
+              <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
                 Crée un événement pour voir ton calendrier ici.
               </div>
             </div>

@@ -53,7 +53,7 @@ export default function MobileVendorNav() {
               justifyContent: "center", gap: 3, textDecoration: "none", position: "relative",
             }}>
               <GIcon name={item.icon} size={22} color={active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)"} />
-              <span style={{ fontSize: 10, fontWeight: active ? 600 : 400, color: active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)" }}>{item.label}</span>
+              <span style={{ fontSize: "var(--text-2xs)", fontWeight: active ? 600 : 400, color: active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)" }}>{item.label}</span>
               {active && <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 24, height: 2, borderRadius: 99, background: G }} />}
             </Link>
           )
@@ -64,7 +64,7 @@ export default function MobileVendorNav() {
           cursor: "pointer", fontFamily: "inherit",
         }}>
           <GIcon name="menu" size={22} color="var(--dash-text-3,#9a9aaa)" />
-          <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Menu</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Menu</span>
         </button>
       </nav>
 
@@ -87,7 +87,7 @@ export default function MobileVendorNav() {
                   background: active ? "linear-gradient(135deg,rgba(225,29,72,0.07),rgba(147,51,234,0.05))" : "transparent",
                 }}>
                   <GIcon name={item.icon} size={20} color={active ? "var(--g1,#E11D48)" : "var(--dash-text-2,#6a6a71)"} />
-                  <span style={{ fontSize: 15, fontWeight: active ? 600 : 400, color: active ? "var(--dash-text,#121317)" : "var(--dash-text-2,#45474D)" }}>{item.label}</span>
+                  <span style={{ fontSize: "var(--text-base)", fontWeight: active ? 600 : 400, color: active ? "var(--dash-text,#121317)" : "var(--dash-text-2,#45474D)" }}>{item.label}</span>
                 </Link>
               )
             })}

@@ -50,14 +50,14 @@ function SiteMockup() {
         <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#f59e0b" }} />
         <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
         <div style={{ flex: 1, height: 20, borderRadius: 6, background: "#f3f4f6", display: "flex", alignItems: "center", paddingLeft: 8 }}>
-          <span style={{ fontSize: 9, color: "#9ca3af", fontFamily: "monospace" }}>yazid-sarah.momentoevents.app</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "#9ca3af", fontFamily: "monospace" }}>yazid-sarah.momentoevents.app</span>
         </div>
       </div>
       <div style={{ height: 6, borderRadius: 99, background: "linear-gradient(90deg,#E11D48,#9333EA)", width: "70%", marginBottom: 6 }} />
       <div style={{ height: 4, borderRadius: 99, background: "#e5e7eb", width: "50%", marginBottom: 4 }} />
       <div style={{ height: 4, borderRadius: 99, background: "#e5e7eb", width: "80%", marginBottom: 10 }} />
       <div style={{ height: 28, borderRadius: 8, background: "linear-gradient(90deg,#E11D48,#9333EA)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <span style={{ fontSize: 10, color: "#fff", fontWeight: 600 }}>RSVP →</span>
+        <span style={{ fontSize: "var(--text-2xs)", color: "#fff", fontWeight: 600 }}>RSVP →</span>
       </div>
     </div>
   )
@@ -71,11 +71,11 @@ function VendorMockup() {
         <div style={{ flex: 1 }}>
           <div style={{ height: 8, borderRadius: 99, background: "#111", width: "60%", marginBottom: 4 }} />
           <div style={{ display: "flex", gap: 2 }}>
-            {"★★★★★".split("").map((s, i) => <span key={i} style={{ fontSize: 9, color: "#f59e0b" }}>{s}</span>)}
+            {"★★★★★".split("").map((s, i) => <span key={i} style={{ fontSize: "var(--text-2xs)", color: "#f59e0b" }}>{s}</span>)}
           </div>
         </div>
         <div style={{ background: "rgba(225,29,72,0.1)", borderRadius: 6, padding: "2px 6px" }}>
-          <span style={{ fontSize: 9, color: "#E11D48", fontWeight: 600 }}>Pro</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "#E11D48", fontWeight: 600 }}>Pro</span>
         </div>
       </div>
       <div style={{ height: 4, borderRadius: 99, background: "#e5e7eb", width: "90%", marginBottom: 4 }} />
@@ -101,7 +101,7 @@ function RsvpMockup() {
       <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
         {["Confirmé ✓", "En attente", "Décliné"].map((s, i) => (
           <div key={i} style={{ flex: 1, padding: "3px 0", borderRadius: 6, background: i === 0 ? "rgba(34,197,94,0.12)" : "#f3f4f6", textAlign: "center" }}>
-            <span style={{ fontSize: 8, color: i === 0 ? "#16a34a" : "#6b7280" }}>{s}</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: i === 0 ? "#16a34a" : "#6b7280" }}>{s}</span>
           </div>
         ))}
       </div>
@@ -119,14 +119,14 @@ function GuestMockup() {
     <div style={{ background: "#fff", borderRadius: 14, padding: "12px 14px", boxShadow: "0 2px 16px rgba(0,0,0,0.10)" }}>
       <div style={{ display: "flex", marginBottom: 10 }}>
         {guests.map((g, i) => (
-          <div key={i} style={{ width: 28, height: 28, borderRadius: "50%", background: colors[i], border: "2px solid #fff", marginLeft: i === 0 ? 0 : -8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#fff" }}>{g}</div>
+          <div key={i} style={{ width: 28, height: 28, borderRadius: "50%", background: colors[i], border: "2px solid #fff", marginLeft: i === 0 ? 0 : -8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-2xs)", fontWeight: 700, color: "#fff" }}>{g}</div>
         ))}
-        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#f3f4f6", border: "2px solid #fff", marginLeft: -8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: "#6b7280", fontWeight: 600 }}>+42</div>
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#f3f4f6", border: "2px solid #fff", marginLeft: -8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-2xs)", color: "#6b7280", fontWeight: 600 }}>+42</div>
       </div>
       <div style={{ height: 4, borderRadius: 99, background: "#e5e7eb", width: "90%", marginBottom: 4 }} />
       <div style={{ height: 4, borderRadius: 99, background: "#e5e7eb", width: "70%", marginBottom: 8 }} />
       <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "rgba(225,29,72,0.08)", borderRadius: 6, padding: "3px 8px" }}>
-        <span style={{ fontSize: 9, color: "#E11D48", fontWeight: 600 }}>🔔 3 réponses en attente</span>
+        <span style={{ fontSize: "var(--text-2xs)", color: "#E11D48", fontWeight: 600 }}>🔔 3 réponses en attente</span>
       </div>
     </div>
   )
@@ -141,14 +141,14 @@ function BudgetMockup() {
   return (
     <div style={{ background: "#fff", borderRadius: 14, padding: "12px 14px", boxShadow: "0 2px 16px rgba(0,0,0,0.10)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
-        <span style={{ fontSize: 9, color: "#6b7280" }}>Budget total</span>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>120 000 Dhs</span>
+        <span style={{ fontSize: "var(--text-2xs)", color: "#6b7280" }}>Budget total</span>
+        <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#111" }}>120 000 Dhs</span>
       </div>
       {items.map((item, i) => (
         <div key={i} style={{ marginBottom: 6 }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-            <span style={{ fontSize: 8, color: "#374151" }}>{item.label}</span>
-            <span style={{ fontSize: 8, color: "#6b7280" }}>{item.pct}%</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "#374151" }}>{item.label}</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "#6b7280" }}>{item.pct}%</span>
           </div>
           <div style={{ height: 4, borderRadius: 99, background: "#f3f4f6", overflow: "hidden" }}>
             <div style={{ height: "100%", width: `${item.pct}%`, background: item.color, borderRadius: 99 }} />
@@ -171,9 +171,9 @@ function ChecklistMockup() {
       {tasks.map((t, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: i < tasks.length - 1 ? 6 : 0, marginBottom: i < tasks.length - 1 ? 6 : 0, borderBottom: i < tasks.length - 1 ? "1px solid #f3f4f6" : "none" }}>
           <div style={{ width: 14, height: 14, borderRadius: 4, flexShrink: 0, border: t.done ? "none" : "1.5px solid #d1d5db", background: t.done ? "#22c55e" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {t.done && <span style={{ fontSize: 8, color: "#fff" }}>✓</span>}
+            {t.done && <span style={{ fontSize: "var(--text-2xs)", color: "#fff" }}>✓</span>}
           </div>
-          <span style={{ fontSize: 9, color: t.done ? "#9ca3af" : "#111", textDecoration: t.done ? "line-through" : "none" }}>{t.label}</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: t.done ? "#9ca3af" : "#111", textDecoration: t.done ? "line-through" : "none" }}>{t.label}</span>
         </div>
       ))}
     </div>
@@ -288,7 +288,7 @@ export default function AntFeatureBento() {
                   >
                     {f.title}
                   </span>
-                  <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 14 }}>→</span>
+                  <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "var(--text-sm)" }}>→</span>
                 </div>
 
                 {/* Description */}

@@ -65,7 +65,7 @@ export default function ProgramTimeline({ steps, title = "Programme" }: Props) {
 
             <div style={{
               fontFamily: "var(--evt-font-body)",
-              fontSize: 11,
+              fontSize: "var(--text-xs)",
               letterSpacing: "0.3em",
               textTransform: "uppercase",
               color: "var(--evt-main)",
@@ -86,7 +86,7 @@ export default function ProgramTimeline({ steps, title = "Programme" }: Props) {
               <p style={{
                 fontFamily: "var(--evt-font-heading)",
                 fontStyle: "italic",
-                fontSize: 15,
+                fontSize: "var(--text-base)",
                 color: "var(--evt-text-muted)",
                 margin: "0 0 12px",
               }}>{step.venueName}</p>
@@ -95,7 +95,7 @@ export default function ProgramTimeline({ steps, title = "Programme" }: Props) {
             {step.description && (
               <p style={{
                 fontFamily: "var(--evt-font-body)",
-                fontSize: 14,
+                fontSize: "var(--text-sm)",
                 color: "var(--evt-text-muted)",
                 margin: "0 0 14px",
                 lineHeight: 1.65,

@@ -141,7 +141,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
         <>
           <SectionDivider variant="leaf" />
           <Reveal as="section" id="ceremonie" style={sectionCentered}>
-          <div style={{ fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--evt-main)", fontWeight: 600, marginBottom: 12 }}>
+          <div style={{ fontSize: "var(--text-xs)", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--evt-main)", fontWeight: 600, marginBottom: 12 }}>
             {content.mainEvent.time ? `· ${content.mainEvent.time} ·` : "· Cérémonie ·"}
           </div>
           <h2 style={h2Style}>{content.mainEvent.venueName || "Notre lieu"}</h2>
@@ -180,7 +180,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       {/* Day-after */}
       {hasDayAfter && content.dayAfter && (
         <section style={{ ...sectionCentered, background: "var(--evt-secondary)", margin: "40px -24px", padding: "60px 24px" }}>
-          <div style={{ fontSize: 11, letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--evt-main)", fontWeight: 600, marginBottom: 12 }}>
+          <div style={{ fontSize: "var(--text-xs)", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--evt-main)", fontWeight: 600, marginBottom: 12 }}>
             · Day-after ·
           </div>
           <h2 style={h2Style}>{content.dayAfter.date} {content.dayAfter.time ? `— ${content.dayAfter.time}` : ""}</h2>
@@ -198,7 +198,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
         <Reveal as="section" style={{ ...sectionCentered, paddingTop: 56, paddingBottom: 56, maxWidth: 580 }}>
           <div style={{
             fontFamily: "var(--evt-font-body)",
-            fontSize: 11,
+            fontSize: "var(--text-xs)",
             letterSpacing: "0.3em",
             textTransform: "uppercase",
             color: "var(--evt-main)",
@@ -223,10 +223,10 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
                 border: "1px solid color-mix(in srgb, var(--evt-main) 30%, transparent)",
                 background: "var(--evt-bg)",
               }}>
-                <div style={{ fontFamily: "var(--evt-font-heading)", fontSize: 18, fontWeight: 500, color: "var(--evt-text)", marginBottom: 8 }}>{h.name}</div>
-                {h.priceRange && <div style={{ fontSize: 12, color: "var(--evt-text-muted)", marginBottom: 4 }}>{h.priceRange}</div>}
+                <div style={{ fontFamily: "var(--evt-font-heading)", fontSize: "var(--text-md)", fontWeight: 500, color: "var(--evt-text)", marginBottom: 8 }}>{h.name}</div>
+                {h.priceRange && <div style={{ fontSize: "var(--text-xs)", color: "var(--evt-text-muted)", marginBottom: 4 }}>{h.priceRange}</div>}
                 {h.promoCode && (
-                  <div style={{ fontSize: 12, color: "var(--evt-main)", marginBottom: 10 }}>
+                  <div style={{ fontSize: "var(--text-xs)", color: "var(--evt-main)", marginBottom: 10 }}>
                     Code: <strong>{h.promoCode}</strong>
                   </div>
                 )}
@@ -254,7 +254,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
                   borderRadius: 999,
                   border: "1px solid var(--evt-main)",
                   color: "var(--evt-main)",
-                  fontSize: 13,
+                  fontSize: "var(--text-sm)",
                   fontWeight: 500,
                   textDecoration: "none",
                   fontFamily: "var(--evt-font-body)",
@@ -292,7 +292,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       )}
 
       {/* Footer minimal */}
-      <footer style={{ padding: "32px 24px", textAlign: "center", fontSize: 11, color: "var(--evt-text-muted)", fontFamily: "var(--evt-font-body)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+      <footer style={{ padding: "32px 24px", textAlign: "center", fontSize: "var(--text-xs)", color: "var(--evt-text-muted)", fontFamily: "var(--evt-font-body)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
         · créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Layali</a> ·
       </footer>
     </main>

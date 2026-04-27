@@ -166,7 +166,7 @@ export default function ProfileEditor() {
   const set = <K extends keyof Vendor>(k: K, v: Vendor[K]) => setVendor(s => ({ ...s, [k]: v }))
 
   if (loading) {
-    return <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: 13 }}>Chargement…</div>
+    return <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-sm)" }}>Chargement…</div>
   }
 
   return (
@@ -174,8 +174,8 @@ export default function ProfileEditor() {
       {/* Header */}
       <header style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#121317", margin: 0 }}>Mon profil</h1>
-          <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0 0" }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>Mon profil</h1>
+          <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "4px 0 0" }}>
             Les informations visibles publiquement sur{" "}
             <Link href={`/vendor/${vendor.slug}`} target="_blank" style={{ color: "#E11D48", textDecoration: "none", fontWeight: 600 }}>
               /vendor/{vendor.slug} ↗
@@ -203,7 +203,7 @@ export default function ProfileEditor() {
           background: success ? "rgba(34,197,94,0.08)" : "rgba(245,158,11,0.08)",
           border: `1px solid ${success ? "rgba(34,197,94,0.25)" : "rgba(245,158,11,0.25)"}`,
         }}>
-          <span style={{ fontSize: 13, color: success ? "#166534" : "#B45309", fontWeight: 600 }}>
+          <span style={{ fontSize: "var(--text-sm)", color: success ? "#166534" : "#B45309", fontWeight: 600 }}>
             {success ?? "Modifications non sauvegardées"}
           </span>
           {dirty && !success && (
@@ -212,7 +212,7 @@ export default function ProfileEditor() {
                 onClick={discard}
                 disabled={saving}
                 style={{
-                  padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                  padding: "7px 14px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
                   background: "#fff", color: "#45474D",
                   border: "1px solid rgba(183,191,217,0.3)",
                   cursor: "pointer", fontFamily: "inherit",
@@ -224,7 +224,7 @@ export default function ProfileEditor() {
                 onClick={save}
                 disabled={saving}
                 style={{
-                  padding: "7px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700,
+                  padding: "7px 16px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 700,
                   background: saving ? "#d1d5db" : "linear-gradient(135deg,#E11D48,#9333EA)",
                   color: "#fff", border: "none",
                   cursor: saving ? "not-allowed" : "pointer", fontFamily: "inherit",
@@ -241,7 +241,7 @@ export default function ProfileEditor() {
         <div style={{
           padding: "10px 14px", borderRadius: 10, marginBottom: 12,
           background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)",
-          color: "#991B1B", fontSize: 13,
+          color: "#991B1B", fontSize: "var(--text-sm)",
         }}>{error}</div>
       )}
 
@@ -267,7 +267,7 @@ export default function ProfileEditor() {
             placeholder="Décris ton activité, ton style, ton expérience… (100 caractères min pour valider le score)"
             style={{ ...inp, resize: "vertical", lineHeight: 1.5 }}
           />
-          <div style={{ fontSize: 11, color: "#9a9aaa", marginTop: 4, textAlign: "right" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", marginTop: 4, textAlign: "right" }}>
             {(vendor.description ?? "").length} caractères
             {(vendor.description ?? "").length < 100 && " (min. 100)"}
           </div>
@@ -336,7 +336,7 @@ export default function ProfileEditor() {
             </select>
           </Field>
         </Row>
-        <p style={{ fontSize: 11, color: "#9a9aaa", marginTop: -4 }}>
+        <p style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", marginTop: -4 }}>
           Renseignez au moins la gamme OU une fourchette pour valider le score.
         </p>
       </Section>
@@ -359,10 +359,10 @@ export default function ProfileEditor() {
           padding: 14, borderRadius: 10,
           background: "linear-gradient(135deg,#fdf2f8,#faf5ff)",
           border: "1px solid rgba(233,213,255,0.5)",
-          fontSize: 13, color: "#45474D",
+          fontSize: "var(--text-sm)", color: "#45474D",
           display: "flex", gap: 12, alignItems: "flex-start",
         }}>
-          <span style={{ fontSize: 22, lineHeight: 1 }}>📸</span>
+          <span style={{ fontSize: "var(--text-lg)", lineHeight: 1 }}>📸</span>
           <div>
             <div style={{ fontWeight: 600, color: "#121317", marginBottom: 4 }}>Upload de photos : bientôt</div>
             <div>
@@ -380,7 +380,7 @@ export default function ProfileEditor() {
           padding: 12, borderRadius: 10,
           background: vendor.verified ? "rgba(34,197,94,0.08)" : "#fafbfd",
           border: `1px solid ${vendor.verified ? "rgba(34,197,94,0.25)" : "rgba(183,191,217,0.18)"}`,
-          fontSize: 13,
+          fontSize: "var(--text-sm)",
           color: vendor.verified ? "#166534" : "#45474D",
         }}>
           {vendor.verified
@@ -404,13 +404,13 @@ export default function ProfileEditor() {
                   width: 22, height: 22, borderRadius: "50%",
                   background: item.done ? "#166534" : "#d1d5db",
                   color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 13, fontWeight: 800, flexShrink: 0,
+                  fontSize: "var(--text-sm)", fontWeight: 800, flexShrink: 0,
                 }}>
                   {item.done ? "✓" : ""}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#121317" }}>{item.label}</div>
-                  <div style={{ fontSize: 11, color: "#6b7280" }}>+{item.weight} pts</div>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317" }}>{item.label}</div>
+                  <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>+{item.weight} pts</div>
                 </div>
               </div>
             ))}
@@ -449,14 +449,14 @@ function ScoreHeader({ completion }: { completion: Completion }) {
         <div style={{
           position: "absolute", inset: 0, display: "flex",
           alignItems: "center", justifyContent: "center",
-          fontSize: 13, fontWeight: 800, color,
+          fontSize: "var(--text-sm)", fontWeight: 800, color,
         }}>{pct}</div>
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#121317" }}>
+        <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317" }}>
           Complétude du profil
         </div>
-        <div style={{ fontSize: 12, color: "#6b7280" }}>
+        <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>
           {completion.itemsDone}/{completion.itemsTotal} éléments validés · {completion.score}/{completion.maxScore} points
         </div>
       </div>
@@ -483,10 +483,10 @@ function Section({ id, title, icon, children }: {
         {icon && (
           <span style={{
             fontFamily: "'Google Symbols','Material Symbols Outlined'",
-            fontSize: 18, color: "#9333EA",
+            fontSize: "var(--text-md)", color: "#9333EA",
           }}>{icon}</span>
         )}
-        <h2 style={{ fontSize: 14, fontWeight: 700, color: "#121317", margin: 0 }}>{title}</h2>
+        <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317", margin: 0 }}>{title}</h2>
       </div>
       {children}
     </section>
@@ -508,7 +508,7 @@ function Field({ label, children, col }: {
 }) {
   return (
     <div style={{ gridColumn: col ? `span ${col}` : undefined, marginBottom: 10 }}>
-      <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+      <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
         {label}
       </label>
       {children}
@@ -519,5 +519,5 @@ function Field({ label, children, col }: {
 const inp: React.CSSProperties = {
   width: "100%", padding: "9px 12px", borderRadius: 8,
   border: "1px solid rgba(183,191,217,0.3)",
-  fontSize: 13, fontFamily: "inherit", background: "#fff", color: "#121317",
+  fontSize: "var(--text-sm)", fontFamily: "inherit", background: "#fff", color: "#121317",
 }

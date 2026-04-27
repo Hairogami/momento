@@ -125,12 +125,12 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
           <div>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "var(--text-xl)", fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
               {title ?? <>Créez votre compte <em style={{ fontStyle: "italic", backgroundImage: G, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>gratuit</em></>}
             </h2>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2, #b0b0cc)", marginTop: 6 }}>{subtitle ?? "30 secondes. Pas de carte bancaire."}</p>
+            <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2, #b0b0cc)", marginTop: 6 }}>{subtitle ?? "30 secondes. Pas de carte bancaire."}</p>
           </div>
-          <button onClick={onClose} style={{ background: "transparent", border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: 22, cursor: "pointer", marginLeft: 10 }}>✕</button>
+          <button onClick={onClose} style={{ background: "transparent", border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: "var(--text-lg)", cursor: "pointer", marginLeft: 10 }}>✕</button>
         </div>
 
         {/* Value props */}
@@ -141,8 +141,8 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
                 <GIcon name={v.icon} size={18} color="var(--g1, #E11D48)" />
               </div>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700 }}>{v.title}</div>
-                <div style={{ fontSize: 11, color: "var(--dash-text-3, #8888aa)" }}>{v.desc}</div>
+                <div style={{ fontSize: "var(--text-sm)", fontWeight: 700 }}>{v.title}</div>
+                <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)" }}>{v.desc}</div>
               </div>
             </div>
           ))}
@@ -159,7 +159,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
               width: "100%", padding: "13px",
               background: tos ? "#fff" : "rgba(255,255,255,0.35)",
               color: tos ? "#121317" : "rgba(18,19,23,0.4)",
-              border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700,
+              border: "none", borderRadius: 12, fontSize: "var(--text-sm)", fontWeight: 700,
               cursor: tos ? "pointer" : "not-allowed",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
               fontFamily: "inherit",
@@ -179,7 +179,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
               width: "100%", padding: "13px",
               background: tos ? "#1877F2" : "rgba(24,119,242,0.35)",
               color: tos ? "#fff" : "rgba(255,255,255,0.5)",
-              border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700,
+              border: "none", borderRadius: 12, fontSize: "var(--text-sm)", fontWeight: 700,
               cursor: tos ? "pointer" : "not-allowed",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
               fontFamily: "inherit",
@@ -193,7 +193,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0" }}>
           <div style={{ flex: 1, height: 1, background: "var(--dash-border, rgba(255,255,255,0.07))" }} />
-          <span style={{ fontSize: 10, color: "var(--dash-text-3, #8888aa)", letterSpacing: 1.2, fontWeight: 600 }}>OU EMAIL</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #8888aa)", letterSpacing: 1.2, fontWeight: 600 }}>OU EMAIL</span>
           <div style={{ flex: 1, height: 1, background: "var(--dash-border, rgba(255,255,255,0.07))" }} />
         </div>
 
@@ -205,16 +205,16 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
           <input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} style={{ ...inputStyle, marginBottom: 8 }} />
           <input type="password" required placeholder="Mot de passe" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle} />
 
-          <label style={{ display: "flex", gap: 10, marginTop: 14, fontSize: 12, color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", lineHeight: 1.5 }}>
+          <label style={{ display: "flex", gap: 10, marginTop: 14, fontSize: "var(--text-xs)", color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", lineHeight: 1.5 }}>
             <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2 }} />
             <span>J'accepte les <a href="/cgu" style={{ color: "var(--g1, #E11D48)", textDecoration: "underline" }}>conditions générales</a> et la <a href="/confidentialite" style={{ color: "var(--g1, #E11D48)", textDecoration: "underline" }}>politique de confidentialité</a>.</span>
           </label>
-          <label style={{ display: "flex", gap: 10, marginTop: 8, fontSize: 12, color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", lineHeight: 1.5 }}>
+          <label style={{ display: "flex", gap: 10, marginTop: 8, fontSize: "var(--text-xs)", color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", lineHeight: 1.5 }}>
             <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 2 }} />
             <span>Je souhaite recevoir les conseils & offres Momento (facultatif).</span>
           </label>
 
-          {err && <div style={{ marginTop: 12, padding: "10px 12px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", fontSize: 12, borderRadius: 10 }}>{err}</div>}
+          {err && <div style={{ marginTop: 12, padding: "10px 12px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", fontSize: "var(--text-xs)", borderRadius: 10 }}>{err}</div>}
 
           <button
             type="submit"
@@ -225,7 +225,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
               width: "100%", marginTop: 16, padding: "14px",
               background: tos ? G : "var(--dash-faint-2, rgba(255,255,255,0.08))",
               color: tos ? "#fff" : "var(--dash-text-3, #8888aa)",
-              border: "none", borderRadius: 12, fontSize: 14, fontWeight: 800,
+              border: "none", borderRadius: 12, fontSize: "var(--text-sm)", fontWeight: 800,
               cursor: (loading || !tos) ? "not-allowed" : "pointer",
               opacity: loading ? 0.6 : 1,
               boxShadow: tos ? "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)" : "none",
@@ -236,7 +236,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
             {loading ? "Création…" : tos ? "Créer mon compte" : "Acceptez les conditions pour continuer"}
           </button>
 
-          <p style={{ marginTop: 14, textAlign: "center", fontSize: 12, color: "var(--dash-text-3, #8888aa)" }}>
+          <p style={{ marginTop: 14, textAlign: "center", fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)" }}>
             Déjà inscrit ? <a href="/login" style={{ color: "var(--g1, #E11D48)", fontWeight: 600 }}>Se connecter</a>
           </p>
         </form>
@@ -249,6 +249,6 @@ const inputStyle: React.CSSProperties = {
   width: "100%", padding: "12px 14px",
   background: "var(--dash-input-bg, #1c1d25)",
   border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))",
-  borderRadius: 12, fontSize: 14, color: "var(--dash-text, #eeeef5)",
+  borderRadius: 12, fontSize: "var(--text-sm)", color: "var(--dash-text, #eeeef5)",
   outline: "none", fontFamily: "inherit", boxSizing: "border-box",
 }

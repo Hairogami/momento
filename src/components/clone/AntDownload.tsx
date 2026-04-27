@@ -23,7 +23,7 @@ export default function AntDownload() {
           Créez l&apos;événement<br />de vos rêves, gratuitement
         </h2>
 
-        <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginTop: 20, maxWidth: 480, lineHeight: 1.7 }}>
+        <p style={{ fontSize: "var(--text-base)", color: "rgba(255,255,255,0.6)", marginTop: 20, maxWidth: 480, lineHeight: 1.7 }}>
           Plus de 1 000 prestataires vérifiés. 41 villes au Maroc. Rejoignez Momento aujourd&apos;hui.
         </p>
 
@@ -46,14 +46,14 @@ export default function AntDownload() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
           <span style={{
-            fontSize: 11, padding: "4px 12px", borderRadius: 99,
+            fontSize: "var(--text-xs)", padding: "4px 12px", borderRadius: 99,
             background: "rgba(255,255,255,0.08)",
             color: "rgba(255,255,255,0.6)",
             border: "1px solid rgba(255,255,255,0.15)",
           }}>
             📱 Application mobile
           </span>
-          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+          <span style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.4)" }}>
             En cours de développement · Soyez parmi les premiers
           </span>
         </div>

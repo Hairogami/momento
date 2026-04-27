@@ -153,7 +153,7 @@ export default function CloneAccueilPage() {
           <h1 style={{ fontSize: "clamp(1.8rem,3.5vw,2.6rem)", fontWeight: 700, color: "var(--dash-text,#121317)", letterSpacing: "-0.02em", margin: "0 0 6px" }}>
             Bonjour {loaded ? firstName : "…"} 👋
           </h1>
-          <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
             Bienvenue sur Momento. Retrouvez tous vos événements en un coup d&apos;œil.
           </p>
         </div>
@@ -168,20 +168,20 @@ export default function CloneAccueilPage() {
               textDecoration: "none", transition: "box-shadow 0.15s",
               boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
             }}>
-              <span style={{ fontSize: 20 }}>{q.emoji}</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{q.label}</span>
+              <span style={{ fontSize: "var(--text-md)" }}>{q.emoji}</span>
+              <span style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{q.label}</span>
             </Link>
           ))}
         </div>
 
         {/* Events section */}
         <div style={{ marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Mes événements</h2>
+          <h2 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Mes événements</h2>
           <button onClick={() => setShowCreateModal(true)} style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             padding: "8px 16px", borderRadius: 999,
             background: G, color: "#fff", border: "none",
-            fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+            fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
           }}>+ Nouvel événement</button>
         </div>
 
@@ -202,32 +202,32 @@ export default function CloneAccueilPage() {
                   }}>
                     <div style={{ height: 6, background: color }} />
                     <div style={{ padding: "20px 20px 18px" }}>
-                      <p style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 4px", paddingRight: 28 }}>{name}</p>
+                      <p style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 4px", paddingRight: 28 }}>{name}</p>
                       {date && (
-                        <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 14px" }}>{formatDate(date)}</p>
+                        <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 14px" }}>{formatDate(date)}</p>
                       )}
                       <div style={{ display: "flex", gap: 16 }}>
                         {days !== null && (
                           <div>
-                            <p style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0,
+                            <p style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0,
                               backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                               {days}
                             </p>
-                            <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>jours</p>
+                            <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>jours</p>
                           </div>
                         )}
                         {p.budget && (
                           <div>
-                            <p style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+                            <p style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                               {p.budget.toLocaleString("fr-MA")}
                             </p>
-                            <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>budget Dhs</p>
+                            <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>budget Dhs</p>
                           </div>
                         )}
                         {p.guestCount && (
                           <div>
-                            <p style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>{p.guestCount}</p>
-                            <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>invités</p>
+                            <p style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>{p.guestCount}</p>
+                            <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>invités</p>
                           </div>
                         )}
                       </div>
@@ -239,7 +239,7 @@ export default function CloneAccueilPage() {
                   <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMenuOpen(menuOpen === p.id ? null : p.id) }} style={{
                     width: 28, height: 28, borderRadius: "50%", border: "none", cursor: "pointer",
                     background: "var(--dash-surface,#fff)", display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 16, color: "var(--dash-text-2,#6a6a71)", boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                    fontSize: "var(--text-base)", color: "var(--dash-text-2,#6a6a71)", boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                     fontFamily: "inherit",
                   }}>⋮</button>
                   {menuOpen === p.id && (
@@ -251,7 +251,7 @@ export default function CloneAccueilPage() {
                       <button onClick={() => { setMenuOpen(null); setDeleteTarget(p) }} style={{
                         display: "flex", alignItems: "center", gap: 8, width: "100%",
                         padding: "8px 12px", border: "none", borderRadius: 8, cursor: "pointer",
-                        background: "transparent", fontSize: 13, fontWeight: 500, color: "#E11D48",
+                        background: "transparent", fontSize: "var(--text-sm)", fontWeight: 500, color: "#E11D48",
                         fontFamily: "inherit", textAlign: "left",
                       }}>
                         🗑️ Supprimer
@@ -276,10 +276,10 @@ export default function CloneAccueilPage() {
                 width: 40, height: 40, borderRadius: "50%", marginBottom: 10,
                 background: "linear-gradient(140deg, rgba(225,29,72,0.08), rgba(147,51,234,0.08))",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 20,
+                fontSize: "var(--text-md)",
               }}>+</div>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 4px" }}>Créer un événement</p>
-              <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Mariage, anniversaire, corporate…</p>
+              <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 4px" }}>Créer un événement</p>
+              <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Mariage, anniversaire, corporate…</p>
             </div>
           </button>
         </div>
@@ -288,8 +288,8 @@ export default function CloneAccueilPage() {
         {trashed.length > 0 && (
           <div id="corbeille" style={{ marginBottom: 36, scrollMarginTop: 80 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-              <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>🗑️ Corbeille</h2>
-              <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
+              <h2 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>🗑️ Corbeille</h2>
+              <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
                 Suppression définitive automatique après 15 jours
               </span>
             </div>
@@ -306,8 +306,8 @@ export default function CloneAccueilPage() {
                   }}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                       <div style={{ minWidth: 0, flex: 1 }}>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 4px", textDecoration: "line-through", opacity: 0.7 }}>{name}</p>
-                        <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>
+                        <p style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 4px", textDecoration: "line-through", opacity: 0.7 }}>{name}</p>
+                        <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>
                           Supprimé {trashedAt ? trashedAt.toLocaleDateString("fr-MA") : "—"} · Reste <strong>{daysLeft} j</strong>
                         </p>
                       </div>
@@ -315,11 +315,11 @@ export default function CloneAccueilPage() {
                     <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
                       <button onClick={() => handleRestore(p.id)} style={{
                         flex: 1, padding: "7px 10px", borderRadius: 99, border: "1px solid var(--dash-border,rgba(183,191,217,0.35))",
-                        background: "transparent", color: "var(--dash-text,#121317)", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                        background: "transparent", color: "var(--dash-text,#121317)", fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
                       }}>↺ Restaurer</button>
                       <button onClick={() => handlePurge(p.id)} style={{
                         padding: "7px 12px", borderRadius: 99, border: "none",
-                        background: "rgba(225,29,72,0.1)", color: "#E11D48", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                        background: "rgba(225,29,72,0.1)", color: "#E11D48", fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
                       }}>Supprimer définitivement</button>
                     </div>
                   </div>
@@ -336,10 +336,10 @@ export default function CloneAccueilPage() {
           gap: 24, flexWrap: "wrap",
         }}>
           <div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: "0 0 6px" }}>
+            <h3 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "#fff", margin: "0 0 6px" }}>
               Trouvez les meilleurs prestataires
             </h3>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: 0 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: "rgba(255,255,255,0.5)", margin: 0 }}>
               1 000+ prestataires vérifiés · 41 villes · Contact direct
             </p>
           </div>
@@ -347,7 +347,7 @@ export default function CloneAccueilPage() {
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "12px 24px", borderRadius: 999,
             background: G, color: "#fff",
-            fontSize: 13, fontWeight: 600, textDecoration: "none", flexShrink: 0,
+            fontSize: "var(--text-sm)", fontWeight: 600, textDecoration: "none", flexShrink: 0,
           }}>
             Explorer l&apos;annuaire →
           </Link>
@@ -364,21 +364,21 @@ export default function CloneAccueilPage() {
             background: "var(--dash-surface,#fff)", borderRadius: 20, padding: "28px 28px 20px",
             maxWidth: 380, width: "90%", boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
           }}>
-            <p style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>
+            <p style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>
               Mettre cet événement à la corbeille ?
             </p>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 20px", lineHeight: 1.5 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 20px", lineHeight: 1.5 }}>
               L&apos;événement <strong>{deleteTarget.coupleNames || deleteTarget.title || "Mon événement"}</strong> sera déplacé dans la corbeille. Vous pourrez le restaurer pendant <strong>15 jours</strong> avant suppression définitive.
             </p>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <button onClick={() => setDeleteTarget(null)} disabled={deleting} style={{
                 padding: "8px 18px", borderRadius: 999, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
-                background: "transparent", fontSize: 13, fontWeight: 600, cursor: "pointer",
+                background: "transparent", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer",
                 color: "var(--dash-text,#121317)", fontFamily: "inherit",
               }}>Annuler</button>
               <button onClick={handleDelete} disabled={deleting} style={{
                 padding: "8px 18px", borderRadius: 999, border: "none",
-                background: "#E11D48", color: "#fff", fontSize: 13, fontWeight: 600,
+                background: "#E11D48", color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600,
                 cursor: deleting ? "wait" : "pointer", opacity: deleting ? 0.6 : 1, fontFamily: "inherit",
               }}>{deleting ? "Suppression…" : "Mettre à la corbeille"}</button>
             </div>

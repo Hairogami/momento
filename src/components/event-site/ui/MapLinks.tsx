@@ -59,7 +59,7 @@ const btnStyle: React.CSSProperties = {
   border: "1px solid var(--evt-main, #C1713A)",
   background: "transparent",
   color: "var(--evt-main, #C1713A)",
-  fontSize: 13,
+  fontSize: "var(--text-sm)",
   fontWeight: 500,
   textDecoration: "none",
   fontFamily: "var(--evt-font-body, inherit)",

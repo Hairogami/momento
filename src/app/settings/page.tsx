@@ -64,23 +64,23 @@ const inputStyle: React.CSSProperties = {
   height: 42, padding: "0 12px", borderRadius: 10,
   border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
   background: "var(--dash-input-bg,#fafafa)",
-  fontSize: 13, color: "var(--dash-text,#121317)",
+  fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)",
   outline: "none", fontFamily: "inherit", boxSizing: "border-box", width: "100%",
 }
 const labelStyle: React.CSSProperties = {
-  fontSize: 11, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)",
+  fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2,#6a6a71)",
   textTransform: "uppercase", letterSpacing: "0.05em",
 }
 const btnPrimary: React.CSSProperties = {
   height: 42, padding: "0 22px", borderRadius: 10, border: "none",
   background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-  color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+  color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
 }
 const btnSecondary: React.CSSProperties = {
   height: 42, padding: "0 18px", borderRadius: 10,
   background: "var(--dash-surface,#fff)",
   border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
-  color: "var(--dash-text,#121317)", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+  color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
 }
 
 function Toggle({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
@@ -274,15 +274,15 @@ export default function SettingsPage() {
       <div className="lg:hidden"><AntNav /></div>
 
       <main style={{ flex: 1, padding: "32px 24px 80px", maxWidth: 720, margin: "0 auto", width: "100%" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+        <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
           Paramètres
         </h1>
-        <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 24px" }}>
+        <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 24px" }}>
           Gère tes préférences, ta sécurité et tes données.
         </p>
 
         {savedFlash && (
-          <div style={{ position: "fixed", top: 80, right: 24, zIndex: 100, padding: "10px 16px", borderRadius: 12, background: "rgba(34,197,94,0.95)", color: "#fff", fontSize: 13, fontWeight: 600, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }}>
+          <div style={{ position: "fixed", top: 80, right: 24, zIndex: 100, padding: "10px 16px", borderRadius: 12, background: "rgba(34,197,94,0.95)", color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600, boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }}>
             {savedFlash}
           </div>
         )}
@@ -293,7 +293,7 @@ export default function SettingsPage() {
           <>
             {/* ── 1. Apparence ── */}
             <div style={cardStyle}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
+              <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
                 <GsIcon icon="palette" size={18} color="var(--g1)" /> Apparence
               </h2>
 
@@ -303,7 +303,7 @@ export default function SettingsPage() {
                   {(["light","dark","auto"] as const).map(t => (
                     <button key={t} onClick={() => patchSettings({ theme: t })}
                       style={{
-                        flex: 1, height: 42, borderRadius: 10, fontFamily: "inherit", fontSize: 13, fontWeight: 600, cursor: "pointer",
+                        flex: 1, height: 42, borderRadius: 10, fontFamily: "inherit", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer",
                         border: s.theme === t ? "2px solid var(--g1,#E11D48)" : "1px solid var(--dash-border,rgba(183,191,217,0.4))",
                         background: s.theme === t ? "rgba(225,29,72,0.06)" : "var(--dash-surface,#fff)",
                         color: "var(--dash-text,#121317)",
@@ -322,7 +322,7 @@ export default function SettingsPage() {
                       style={{
                         display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, cursor: "pointer",
                         border: s.palette === p.id ? "2px solid var(--dash-text,#121317)" : "1px solid var(--dash-border,rgba(183,191,217,0.4))",
-                        background: "var(--dash-surface,#fff)", fontFamily: "inherit", fontSize: 12, fontWeight: 500, color: "var(--dash-text,#121317)",
+                        background: "var(--dash-surface,#fff)", fontFamily: "inherit", fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--dash-text,#121317)",
                       }}>
                       <span style={{ width: 22, height: 22, borderRadius: "50%", background: `linear-gradient(135deg, ${p.g1}, ${p.g2})`, flexShrink: 0 }} />
                       {p.label}
@@ -344,16 +344,16 @@ export default function SettingsPage() {
 
             {/* ── 2. Notifications ── */}
             <div style={cardStyle}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
+              <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
                 <GsIcon icon="notifications" size={18} color="var(--g1)" /> Notifications
               </h2>
               <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: "10px 16px", alignItems: "center" }}>
                 <span />
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.05em" }}>Email</span>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.05em" }}>Push</span>
+                <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.05em" }}>Email</span>
+                <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", textTransform: "uppercase", letterSpacing: "0.05em" }}>Push</span>
                 {NOTIF_TYPES.map(n => (
                   <React.Fragment key={n.key}>
-                    <span style={{ fontSize: 13, color: "var(--dash-text,#121317)" }}>{n.label}</span>
+                    <span style={{ fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)" }}>{n.label}</span>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                       <Toggle on={s.notifEmail[n.key]} onChange={v => patchSettings({ notifEmail: { ...s.notifEmail, [n.key]: v } })} />
                     </div>
@@ -367,13 +367,13 @@ export default function SettingsPage() {
 
             {/* ── 3. Sécurité ── */}
             <div style={cardStyle}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
+              <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
                 <GsIcon icon="shield" size={18} color="var(--g1)" /> Sécurité
               </h2>
 
               {/* Change password collapsible */}
               <button onClick={() => setPwOpen(v => !v)}
-                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "12px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", cursor: "pointer", fontFamily: "inherit", fontSize: 13, color: "var(--dash-text,#121317)", marginBottom: 10 }}>
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "12px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", cursor: "pointer", fontFamily: "inherit", fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", marginBottom: 10 }}>
                 <span style={{ fontWeight: 500 }}>Changer le mot de passe</span>
                 <GsIcon icon={pwOpen ? "expand_less" : "expand_more"} size={18} />
               </button>
@@ -384,7 +384,7 @@ export default function SettingsPage() {
                     <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Nouveau (min 8)" required minLength={8} style={inputStyle} />
                     <input type="password" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} placeholder="Confirmer" required style={inputStyle} />
                   </div>
-                  {pwErr && <p style={{ fontSize: 12, color: "#ef4444", margin: 0 }}>{pwErr}</p>}
+                  {pwErr && <p style={{ fontSize: "var(--text-xs)", color: "#ef4444", margin: 0 }}>{pwErr}</p>}
                   <button type="submit" disabled={pwSaving} style={{ ...btnPrimary, opacity: pwSaving ? 0.7 : 1 }}>
                     {pwSaving ? "Modification…" : "Modifier"}
                   </button>
@@ -394,13 +394,13 @@ export default function SettingsPage() {
               {/* 2FA toggle */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", marginBottom: 10 }}>
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 500, margin: 0, color: "var(--dash-text,#121317)" }}>Authentification à 2 facteurs</p>
-                  <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: "2px 0 0" }}>Bientôt disponible</p>
+                  <p style={{ fontSize: "var(--text-sm)", fontWeight: 500, margin: 0, color: "var(--dash-text,#121317)" }}>Authentification à 2 facteurs</p>
+                  <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: "2px 0 0" }}>Bientôt disponible</p>
                 </div>
                 <Toggle on={s.twoFactorEnabled} onChange={v => patchSettings({ twoFactorEnabled: v })} />
               </div>
 
-              <Link href="/forgot-password" style={{ display: "block", padding: "10px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", textDecoration: "none", color: "var(--dash-text,#121317)", fontSize: 13 }}>
+              <Link href="/forgot-password" style={{ display: "block", padding: "10px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", textDecoration: "none", color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)" }}>
                 Mot de passe oublié ?
               </Link>
             </div>
@@ -408,7 +408,7 @@ export default function SettingsPage() {
             {/* ── 4. Vendor only ── */}
             {isVendor && (
               <div style={cardStyle}>
-                <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
+                <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
                   <GsIcon icon="storefront" size={18} color="var(--g1)" /> Espace prestataire
                 </h2>
 
@@ -416,8 +416,8 @@ export default function SettingsPage() {
                 <div style={{ padding: "14px", borderRadius: 12, background: s.isOnVacation ? "rgba(245,158,11,0.08)" : "var(--dash-faint-2,#f4f4f8)", border: `1px solid ${s.isOnVacation ? "rgba(245,158,11,0.35)" : "var(--dash-border,rgba(183,191,217,0.2))"}`, marginBottom: 14 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: s.isOnVacation ? 12 : 0 }}>
                     <div>
-                      <p style={{ fontSize: 13, fontWeight: 600, margin: 0, color: "var(--dash-text,#121317)" }}>🌴 Mode vacances</p>
-                      <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: "2px 0 0" }}>Masque ton profil et bloque les nouvelles demandes</p>
+                      <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, margin: 0, color: "var(--dash-text,#121317)" }}>🌴 Mode vacances</p>
+                      <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: "2px 0 0" }}>Masque ton profil et bloque les nouvelles demandes</p>
                     </div>
                     <Toggle on={s.isOnVacation} onChange={v => patchSettings({ isOnVacation: v })} />
                   </div>
@@ -440,9 +440,9 @@ export default function SettingsPage() {
                   {s.unavailableDates.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {s.unavailableDates.map(d => (
-                        <span key={d} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "rgba(225,29,72,0.08)", color: "var(--g1,#E11D48)", fontSize: 12 }}>
+                        <span key={d} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "rgba(225,29,72,0.08)", color: "var(--g1,#E11D48)", fontSize: "var(--text-xs)" }}>
                           {new Date(d).toLocaleDateString("fr-MA", { day: "numeric", month: "short", year: "numeric" })}
-                          <button onClick={() => removeDate(d)} style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", padding: 0, fontSize: 14, lineHeight: 1 }}>×</button>
+                          <button onClick={() => removeDate(d)} style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", padding: 0, fontSize: "var(--text-sm)", lineHeight: 1 }}>×</button>
                         </span>
                       ))}
                     </div>
@@ -457,7 +457,7 @@ export default function SettingsPage() {
                     {cityMatches.length > 0 && (
                       <div style={{ position: "absolute", top: "100%", left: 0, right: 0, marginTop: 4, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 10, overflow: "hidden", zIndex: 10, boxShadow: "0 8px 20px rgba(0,0,0,0.08)" }}>
                         {cityMatches.map(c => (
-                          <button key={c} onClick={() => addCity(c)} style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: 13, color: "var(--dash-text,#121317)" }}>
+                          <button key={c} onClick={() => addCity(c)} style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)" }}>
                             + {c}
                           </button>
                         ))}
@@ -467,9 +467,9 @@ export default function SettingsPage() {
                   {s.serviceCities.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
                       {s.serviceCities.map(c => (
-                        <span key={c} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "linear-gradient(135deg, rgba(225,29,72,0.08), rgba(147,51,234,0.08))", color: "var(--dash-text,#121317)", fontSize: 12, fontWeight: 500 }}>
+                        <span key={c} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 99, background: "linear-gradient(135deg, rgba(225,29,72,0.08), rgba(147,51,234,0.08))", color: "var(--dash-text,#121317)", fontSize: "var(--text-xs)", fontWeight: 500 }}>
                           📍 {c}
-                          <button onClick={() => removeCity(c)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--dash-text-3,#9a9aaa)", padding: 0, fontSize: 14, lineHeight: 1 }}>×</button>
+                          <button onClick={() => removeCity(c)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--dash-text-3,#9a9aaa)", padding: 0, fontSize: "var(--text-sm)", lineHeight: 1 }}>×</button>
                         </span>
                       ))}
                     </div>
@@ -480,7 +480,7 @@ export default function SettingsPage() {
 
             {/* ── 5. Données & RGPD ── */}
             <div style={cardStyle}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
+              <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, margin: "0 0 18px", color: "var(--dash-text,#121317)", display: "flex", alignItems: "center", gap: 8 }}>
                 <GsIcon icon="lock" size={18} color="var(--g1)" /> Mes données
               </h2>
 
@@ -495,8 +495,8 @@ export default function SettingsPage() {
               {delOpen && (
                 <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={() => setDelOpen(false)}>
                   <div onClick={e => e.stopPropagation()} style={{ background: "var(--dash-surface,#fff)", borderRadius: 20, padding: 28, maxWidth: 440, width: "100%" }}>
-                    <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px", color: "var(--dash-text,#121317)" }}>Supprimer ton compte ?</h3>
-                    <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 18px" }}>
+                    <h3 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: "0 0 8px", color: "var(--dash-text,#121317)" }}>Supprimer ton compte ?</h3>
+                    <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 18px" }}>
                       Cette action est <strong>irréversible</strong>. Tous tes événements, conversations et favoris seront supprimés.
                     </p>
                     <form onSubmit={deleteAccount} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -508,7 +508,7 @@ export default function SettingsPage() {
                         <label style={labelStyle}>Mot de passe (si applicable)</label>
                         <input type="password" value={delPassword} onChange={e => setDelPassword(e.target.value)} style={{ ...inputStyle, marginTop: 6 }} />
                       </div>
-                      {delErr && <p style={{ fontSize: 12, color: "#ef4444", margin: 0 }}>{delErr}</p>}
+                      {delErr && <p style={{ fontSize: "var(--text-xs)", color: "#ef4444", margin: 0 }}>{delErr}</p>}
                       <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
                         <button type="button" onClick={() => setDelOpen(false)} style={{ ...btnSecondary, flex: 1 }}>Annuler</button>
                         <button type="submit" disabled={delSaving || delConfirm !== "SUPPRIMER"} style={{ ...btnPrimary, flex: 1, background: "#ef4444", opacity: (delSaving || delConfirm !== "SUPPRIMER") ? 0.5 : 1 }}>
@@ -523,14 +523,14 @@ export default function SettingsPage() {
 
             {/* ── Légal ── */}
             <div style={cardStyle}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 14px", color: "var(--dash-text,#121317)" }}>Légal</h2>
+              <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, margin: "0 0 14px", color: "var(--dash-text,#121317)" }}>Légal</h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {[
                   { label: "Conditions d'utilisation", href: "/cgu" },
                   { label: "Mentions légales",         href: "/mentions-legales" },
                   { label: "Politique de confidentialité", href: "/confidentialite" },
                 ].map(l => (
-                  <Link key={l.href} href={l.href} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", textDecoration: "none", color: "var(--dash-text,#121317)", fontSize: 13 }}>
+                  <Link key={l.href} href={l.href} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", borderRadius: 10, background: "var(--dash-faint-2,#f4f4f8)", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", textDecoration: "none", color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)" }}>
                     <span>{l.label}</span>
                     <span style={{ color: "var(--dash-text-3,#9a9aaa)" }}>→</span>
                   </Link>

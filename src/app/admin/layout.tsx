@@ -43,7 +43,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-          <Link href="/admin" style={{ fontSize: 14, fontWeight: 700, color: C.text, textDecoration: "none", letterSpacing: "-0.01em" }}>
+          <Link href="/admin" style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: C.text, textDecoration: "none", letterSpacing: "-0.01em" }}>
             Momento <span style={{ color: C.accent }}>·</span> Admin
           </Link>
           <nav style={{ display: "flex", gap: 18 }}>
@@ -53,8 +53,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </nav>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <span style={{ fontSize: 12, color: C.textDim }}>{user.email}</span>
-          <Link href="/dashboard" style={{ fontSize: 12, color: C.textMuted, textDecoration: "none" }}>
+          <span style={{ fontSize: "var(--text-xs)", color: C.textDim }}>{user.email}</span>
+          <Link href="/dashboard" style={{ fontSize: "var(--text-xs)", color: C.textMuted, textDecoration: "none" }}>
             ← Retour app
           </Link>
         </div>
@@ -65,6 +65,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 }
 
 const navLink: React.CSSProperties = {
-  fontSize: 13, color: "#cfd3dc", textDecoration: "none",
+  fontSize: "var(--text-sm)", color: "#cfd3dc", textDecoration: "none",
   fontWeight: 500, letterSpacing: "-0.005em",
 }

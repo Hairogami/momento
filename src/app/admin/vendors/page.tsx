@@ -141,10 +141,10 @@ export default function AdminVendorsPage() {
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+            <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, margin: "0 0 4px", letterSpacing: "-0.02em" }}>
               Prestataires
             </h1>
-            <p style={{ fontSize: 13, color: C.textMuted, margin: 0 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: C.textMuted, margin: 0 }}>
               {total} résultat{total > 1 ? "s" : ""} · page {page}/{totalPages}
             </p>
           </div>
@@ -155,14 +155,14 @@ export default function AdminVendorsPage() {
               style={{
                 padding: "10px 18px", borderRadius: 10,
                 background: `linear-gradient(135deg, ${C.accent2}, ${C.accent})`,
-                color: "#fff", fontSize: 13, fontWeight: 700,
+                color: "#fff", fontSize: "var(--text-sm)", fontWeight: 700,
                 border: "none", cursor: creating ? "wait" : "pointer",
                 fontFamily: "inherit", opacity: creating ? 0.7 : 1,
               }}
             >
               {creating ? "Création…" : "+ Nouveau prestataire"}
             </button>
-            <Link href="/admin/users" style={{ fontSize: 13, color: C.textMuted, textDecoration: "none" }}>
+            <Link href="/admin/users" style={{ fontSize: "var(--text-sm)", color: C.textMuted, textDecoration: "none" }}>
               Users →
             </Link>
           </div>
@@ -171,11 +171,11 @@ export default function AdminVendorsPage() {
         {actionMsg && (
           <div style={{
             background: C.panel, border: `1px solid ${C.border}`,
-            padding: "10px 14px", borderRadius: 10, fontSize: 13,
+            padding: "10px 14px", borderRadius: 10, fontSize: "var(--text-sm)",
             marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between",
           }}>
             <span>{actionMsg}</span>
-            <button onClick={() => setActionMsg(null)} style={{ background: "transparent", border: "none", color: C.textMuted, cursor: "pointer", fontSize: 16 }}>×</button>
+            <button onClick={() => setActionMsg(null)} style={{ background: "transparent", border: "none", color: C.textMuted, cursor: "pointer", fontSize: "var(--text-base)" }}>×</button>
           </div>
         )}
 
@@ -187,7 +187,7 @@ export default function AdminVendorsPage() {
             placeholder="Rechercher nom, slug, ville…"
             style={{
               flex: 1, minWidth: 220, padding: "11px 14px", borderRadius: 10,
-              background: C.panel, color: C.text, fontSize: 14,
+              background: C.panel, color: C.text, fontSize: "var(--text-sm)",
               border: `1px solid ${C.border}`, outline: "none",
               fontFamily: "inherit",
             }}
@@ -197,7 +197,7 @@ export default function AdminVendorsPage() {
             onChange={e => { setCat(e.target.value); setPage(1) }}
             style={{
               minWidth: 200, padding: "11px 14px", borderRadius: 10,
-              background: C.panel, color: C.text, fontSize: 14,
+              background: C.panel, color: C.text, fontSize: "var(--text-sm)",
               border: `1px solid ${C.border}`, outline: "none",
               fontFamily: "inherit", cursor: "pointer",
             }}
@@ -213,7 +213,7 @@ export default function AdminVendorsPage() {
               style={{
                 padding: "11px 16px", borderRadius: 10,
                 background: "transparent", color: C.accent2,
-                border: `1px solid ${C.accent2}40`, fontSize: 13,
+                border: `1px solid ${C.accent2}40`, fontSize: "var(--text-sm)",
                 cursor: "pointer", fontFamily: "inherit",
               }}
             >
@@ -228,14 +228,14 @@ export default function AdminVendorsPage() {
           border: `1px solid ${C.border}`, overflow: "hidden",
         }}>
           {loading ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: 14 }}>Chargement…</div>
+            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: "var(--text-sm)" }}>Chargement…</div>
           ) : err ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.err, fontSize: 14 }}>{err}</div>
+            <div style={{ padding: 60, textAlign: "center", color: C.err, fontSize: "var(--text-sm)" }}>{err}</div>
           ) : vendors.length === 0 ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: 14 }}>Aucun prestataire.</div>
+            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: "var(--text-sm)" }}>Aucun prestataire.</div>
           ) : (
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--text-sm)" }}>
                 <thead>
                   <tr style={{ background: C.panelHover, borderBottom: `1px solid ${C.border}` }}>
                     {["Prestataire", "Catégorie", "Ville", "Note", "Prix", "Médias", "Avis", "Contact", "Statut", ""].map(h => (
@@ -255,7 +255,7 @@ export default function AdminVendorsPage() {
         {totalPages > 1 && (
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 20 }}>
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={pagBtn(page === 1)}>← Préc</button>
-            <span style={{ padding: "8px 14px", fontSize: 13, color: C.textMuted }}>{page} / {totalPages}</span>
+            <span style={{ padding: "8px 14px", fontSize: "var(--text-sm)", color: C.textMuted }}>{page} / {totalPages}</span>
             <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} style={pagBtn(page === totalPages)}>Suiv →</button>
           </div>
         )}
@@ -275,7 +275,7 @@ function VendorRow({ v, onDelete }: { v: AdminVendor; onDelete: (v: AdminVendor)
       <td style={td}>
         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <span style={{ fontWeight: 600 }}>{v.name}</span>
-          <span style={{ color: C.textDim, fontSize: 11 }}>{v.slug}</span>
+          <span style={{ color: C.textDim, fontSize: "var(--text-xs)" }}>{v.slug}</span>
         </div>
       </td>
       <td style={{ ...td, color: C.textMuted }}>{v.category}</td>
@@ -285,21 +285,21 @@ function VendorRow({ v, onDelete }: { v: AdminVendor; onDelete: (v: AdminVendor)
           <span style={{ color: C.star, fontWeight: 600 }}>★ {v.rating.toFixed(1)}</span>
         ) : <span style={{ color: C.textDim }}>—</span>}
       </td>
-      <td style={{ ...td, color: C.textMuted, whiteSpace: "nowrap", fontSize: 12 }}>{price}</td>
+      <td style={{ ...td, color: C.textMuted, whiteSpace: "nowrap", fontSize: "var(--text-xs)" }}>{price}</td>
       <td style={{ ...td, color: C.textMuted, textAlign: "center" }}>{v._count.media}</td>
       <td style={{ ...td, color: C.textMuted, textAlign: "center" }}>{v._count.reviews}</td>
       <td style={td}>
         <div style={{ display: "flex", gap: 6 }}>
-          <span style={{ color: v.phone     ? C.ok : C.textDim, fontSize: 14 }} title={v.phone     ?? "Pas de téléphone"}>☎</span>
-          <span style={{ color: v.email     ? C.ok : C.textDim, fontSize: 14 }} title={v.email     ?? "Pas d'email"}>✉</span>
-          <span style={{ color: v.instagram ? C.ok : C.textDim, fontSize: 14 }} title={v.instagram ?? "Pas d'Instagram"}>📸</span>
+          <span style={{ color: v.phone     ? C.ok : C.textDim, fontSize: "var(--text-sm)" }} title={v.phone     ?? "Pas de téléphone"}>☎</span>
+          <span style={{ color: v.email     ? C.ok : C.textDim, fontSize: "var(--text-sm)" }} title={v.email     ?? "Pas d'email"}>✉</span>
+          <span style={{ color: v.instagram ? C.ok : C.textDim, fontSize: "var(--text-sm)" }} title={v.instagram ?? "Pas d'Instagram"}>📸</span>
         </div>
       </td>
       <td style={td}>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {v.verified && <span style={badge("ok")}>✓ vérifié</span>}
           {v.featured && <span style={badge("accent")}>★ partenaire</span>}
-          {!v.verified && !v.featured && <span style={{ color: C.textDim, fontSize: 11 }}>—</span>}
+          {!v.verified && !v.featured && <span style={{ color: C.textDim, fontSize: "var(--text-xs)" }}>—</span>}
         </div>
       </td>
       <td style={{ ...td, textAlign: "right" }}>
@@ -317,31 +317,31 @@ function VendorRow({ v, onDelete }: { v: AdminVendor; onDelete: (v: AdminVendor)
 const delBtn: React.CSSProperties = {
   background: "transparent", color: C.err,
   border: `1px solid ${C.err}40`, padding: "5px 9px",
-  borderRadius: 8, fontSize: 13, cursor: "pointer",
+  borderRadius: 8, fontSize: "var(--text-sm)", cursor: "pointer",
   fontFamily: "inherit", lineHeight: 1,
 }
 
 const th: React.CSSProperties = {
   textAlign: "left", padding: "12px 16px", fontWeight: 600, color: C.textMuted,
-  fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em",
+  fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.05em",
 }
 const td: React.CSSProperties = { padding: "12px 16px", verticalAlign: "middle" }
 const pagBtn = (disabled: boolean): React.CSSProperties => ({
   background: C.panel, color: disabled ? C.textDim : C.text,
   border: `1px solid ${C.border}`, padding: "8px 14px", borderRadius: 8,
-  fontSize: 13, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.5 : 1,
+  fontSize: "var(--text-sm)", cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.5 : 1,
   fontFamily: "inherit",
 })
 const editBtn: React.CSSProperties = {
   display: "inline-block", padding: "6px 12px", borderRadius: 8,
   background: `linear-gradient(135deg, ${C.accent2}, ${C.accent})`,
-  color: "#fff", fontSize: 12, fontWeight: 600, textDecoration: "none",
+  color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none",
   whiteSpace: "nowrap",
 }
 const badge = (variant: "ok" | "accent"): React.CSSProperties => {
   const color = variant === "ok" ? C.ok : C.star
   return {
-    background: `${color}15`, color, fontSize: 10, fontWeight: 700,
+    background: `${color}15`, color, fontSize: "var(--text-2xs)", fontWeight: 700,
     padding: "3px 8px", borderRadius: 99, whiteSpace: "nowrap",
     border: `1px solid ${color}30`,
   }

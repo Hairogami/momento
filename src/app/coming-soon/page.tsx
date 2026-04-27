@@ -129,13 +129,13 @@ function ComingSoonInner() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-light.png" alt="Momento" width={32} height={32} style={{ objectFit: "contain" }} />
-            <span style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>Momento</span>
+            <span style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "#fff" }}>Momento</span>
           </div>
 
           {/* Middle — tagline */}
           <div>
             <p style={{
-              fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase",
+              fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase",
               color: "rgba(255,255,255,0.7)", margin: "0 0 16px",
             }}>
               ✦ Bientôt disponible
@@ -146,7 +146,7 @@ function ComingSoonInner() {
             }}>
               L&apos;événement parfait<br />commence ici.
             </h1>
-            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.72)", lineHeight: 1.65, margin: 0 }}>
+            <p style={{ fontSize: "var(--text-base)", color: "rgba(255,255,255,0.72)", lineHeight: 1.65, margin: 0 }}>
               La marketplace des prestataires événementiels au Maroc — lancement le 1ᵉʳ juin 2026.
             </p>
 
@@ -162,14 +162,14 @@ function ComingSoonInner() {
                   borderRadius: 16, padding: "16px 20px",
                   border: "1px solid rgba(255,255,255,0.18)",
                 }}>
-                  <p style={{ fontSize: 13, color: "#fff", margin: "0 0 8px", lineHeight: 1.5 }}>{t.quote}</p>
-                  <p style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", margin: 0 }}>{t.author}</p>
+                  <p style={{ fontSize: "var(--text-sm)", color: "#fff", margin: "0 0 8px", lineHeight: 1.5 }}>{t.quote}</p>
+                  <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.6)", margin: 0 }}>{t.author}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", margin: 0 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.45)", margin: 0 }}>
             © 2026 Momento Events
           </p>
         </div>
@@ -190,21 +190,21 @@ function ComingSoonInner() {
               width: 32, height: 32, borderRadius: 8,
               background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", fontWeight: 700, fontSize: 14,
+              color: "#fff", fontWeight: 700, fontSize: "var(--text-sm)",
             }}>
               M
             </div>
-            <span style={{ fontSize: 15, fontWeight: 600, color: "var(--dash-text,#121317)" }}>Momento</span>
+            <span style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>Momento</span>
           </div>
 
           {/* Headline */}
           <h2 style={{
-            fontSize: 28, fontWeight: 700, color: "var(--dash-text,#121317)",
+            fontSize: "var(--text-xl)", fontWeight: 700, color: "var(--dash-text,#121317)",
             letterSpacing: "-0.02em", margin: "0 0 8px", lineHeight: 1.2,
           }}>
             {launched ? "Nous sommes en ligne !" : "Le compte à rebours est lancé"}
           </h2>
-          <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 28px", lineHeight: 1.5 }}>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 28px", lineHeight: 1.5 }}>
             Inscris-toi pour être prévenu au lancement, ou utilise ton code d&apos;accès privé.
           </p>
 
@@ -221,7 +221,7 @@ function ComingSoonInner() {
                   borderRadius: 14, padding: "14px 4px", textAlign: "center",
                 }}>
                   <p style={{
-                    fontSize: 24, fontWeight: 700, margin: 0,
+                    fontSize: "var(--text-lg)", fontWeight: 700, margin: 0,
                     fontVariantNumeric: "tabular-nums",
                     background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
                     WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -230,7 +230,7 @@ function ComingSoonInner() {
                     {String(value).padStart(2, "0")}
                   </p>
                   <p style={{
-                    fontSize: 10, color: "var(--dash-text-3,#9a9aaa)",
+                    fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)",
                     textTransform: "uppercase", letterSpacing: "0.08em", margin: "4px 0 0",
                     fontWeight: 600,
                   }}>
@@ -248,12 +248,12 @@ function ComingSoonInner() {
             borderRadius: 16, padding: "20px 22px", marginBottom: 12,
           }}>
             <p style={{
-              fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
+              fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
               color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 6px",
             }}>
               Rejoins la liste d&apos;attente
             </p>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 14px", lineHeight: 1.5 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 14px", lineHeight: 1.5 }}>
               Sois notifié dès l&apos;ouverture et reçois un accès anticipé.
             </p>
 
@@ -261,7 +261,7 @@ function ComingSoonInner() {
               <div style={{
                 display: "flex", alignItems: "center", gap: 8,
                 padding: "12px 14px", borderRadius: 10,
-                background: "rgba(34,197,94,0.08)", color: "#16a34a", fontSize: 13, fontWeight: 500,
+                background: "rgba(34,197,94,0.08)", color: "#16a34a", fontSize: "var(--text-sm)", fontWeight: 500,
               }}>
                 ✓ Tu es sur la liste — à très vite !
               </div>
@@ -277,7 +277,7 @@ function ComingSoonInner() {
                     flex: 1, height: 44, padding: "0 14px", borderRadius: 12,
                     border: `1px solid ${emailStatus === "error" ? "var(--g1,#E11D48)" : "var(--dash-border,rgba(183,191,217,0.4))"}`,
                     background: "var(--dash-input-bg,#fafafa)",
-                    fontSize: 14, color: "var(--dash-text,#121317)", outline: "none",
+                    fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", outline: "none",
                     fontFamily: "inherit", boxSizing: "border-box",
                   }}
                 />
@@ -287,7 +287,7 @@ function ComingSoonInner() {
                   style={{
                     height: 44, padding: "0 20px", borderRadius: 12, border: "none",
                     background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-                    color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer",
+                    color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer",
                     opacity: emailStatus === "loading" ? 0.6 : 1,
                     fontFamily: "inherit", flexShrink: 0,
                   }}
@@ -297,7 +297,7 @@ function ComingSoonInner() {
               </div>
             )}
             {emailStatus === "error" && (
-              <p style={{ fontSize: 12, color: "var(--g1,#E11D48)", margin: "8px 0 0" }}>
+              <p style={{ fontSize: "var(--text-xs)", color: "var(--g1,#E11D48)", margin: "8px 0 0" }}>
                 Une erreur est survenue. Réessaie.
               </p>
             )}
@@ -306,7 +306,7 @@ function ComingSoonInner() {
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
             <div style={{ flex: 1, height: 1, background: "var(--dash-border,rgba(183,191,217,0.3))" }} />
-            <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
               accès privé
             </span>
             <div style={{ flex: 1, height: 1, background: "var(--dash-border,rgba(183,191,217,0.3))" }} />
@@ -326,7 +326,7 @@ function ComingSoonInner() {
                   flex: 1, height: 46, padding: "0 14px", borderRadius: 12,
                   border: `1px solid ${codeError ? "var(--g1,#E11D48)" : "var(--dash-border,rgba(183,191,217,0.4))"}`,
                   background: "var(--dash-input-bg,#fafafa)",
-                  fontSize: 14, color: "var(--dash-text,#121317)", outline: "none",
+                  fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", outline: "none",
                   fontFamily: "inherit", boxSizing: "border-box",
                 }}
               />
@@ -335,7 +335,7 @@ function ComingSoonInner() {
                 style={{
                   height: 46, width: 56, borderRadius: 12, border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
                   background: "var(--dash-surface,#fff)",
-                  color: "var(--dash-text,#121317)", fontSize: 18, fontWeight: 600, cursor: "pointer",
+                  color: "var(--dash-text,#121317)", fontSize: "var(--text-md)", fontWeight: 600, cursor: "pointer",
                   fontFamily: "inherit", flexShrink: 0,
                 }}
               >
@@ -343,14 +343,14 @@ function ComingSoonInner() {
               </button>
             </div>
             {codeError && (
-              <p style={{ fontSize: 12, color: "var(--g1,#E11D48)", margin: "8px 0 0" }}>
+              <p style={{ fontSize: "var(--text-xs)", color: "var(--g1,#E11D48)", margin: "8px 0 0" }}>
                 Code incorrect. Réessaie.
               </p>
             )}
           </div>
 
           <p style={{
-            fontSize: 12, color: "var(--dash-text-3,#9a9aaa)",
+            fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)",
             textAlign: "center", marginTop: 32,
           }}>
             © 2026 Momento · Tous droits réservés
@@ -368,7 +368,7 @@ function ComingSoonInner() {
           display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12,
           boxShadow: "0 -4px 20px rgba(0,0,0,0.04)",
         }}>
-          <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", margin: 0, flex: 1, minWidth: 240 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", margin: 0, flex: 1, minWidth: 240 }}>
             Nous utilisons des cookies pour analyser notre audience et améliorer ton expérience.{" "}
             <a href="/confidentialite" style={{ color: "var(--dash-text,#121317)", textDecoration: "underline" }}>
               En savoir plus
@@ -378,7 +378,7 @@ function ComingSoonInner() {
             <button
               onClick={refuseCookies}
               style={{
-                padding: "8px 16px", borderRadius: 10, fontSize: 12, fontWeight: 600,
+                padding: "8px 16px", borderRadius: 10, fontSize: "var(--text-xs)", fontWeight: 600,
                 border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
                 background: "transparent", color: "var(--dash-text-2,#6a6a71)",
                 cursor: "pointer", fontFamily: "inherit",
@@ -389,7 +389,7 @@ function ComingSoonInner() {
             <button
               onClick={acceptCookies}
               style={{
-                padding: "8px 16px", borderRadius: 10, fontSize: 12, fontWeight: 600,
+                padding: "8px 16px", borderRadius: 10, fontSize: "var(--text-xs)", fontWeight: 600,
                 border: "none",
                 background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
                 color: "#fff", cursor: "pointer", fontFamily: "inherit",

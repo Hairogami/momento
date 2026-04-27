@@ -60,7 +60,7 @@ export default function EmailVerificationBanner() {
     <div role="status" style={{
       position: "sticky", top: 0, zIndex: 1000,
       background: "#FFF7ED", borderBottom: "1px solid #FED7AA",
-      color: "#9A3412", fontSize: 13, padding: "10px 16px",
+      color: "#9A3412", fontSize: "var(--text-sm)", padding: "10px 16px",
       display: "flex", flexWrap: "wrap", alignItems: "center",
       justifyContent: "center", gap: 12, fontFamily: "inherit",
     }}>
@@ -74,7 +74,7 @@ export default function EmailVerificationBanner() {
         <button onClick={resend} disabled={loading}
           style={{
             background: "#C4532A", color: "#fff", border: "none",
-            padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+            padding: "6px 14px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
             cursor: loading ? "wait" : "pointer", opacity: loading ? 0.7 : 1,
             fontFamily: "inherit",
           }}>
@@ -85,7 +85,7 @@ export default function EmailVerificationBanner() {
         style={{
           background: "transparent", color: "#9A3412",
           border: "1px solid #FED7AA",
-          padding: "6px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+          padding: "6px 12px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
           cursor: checking ? "wait" : "pointer", opacity: checking ? 0.6 : 1,
           fontFamily: "inherit",
         }}>
@@ -94,7 +94,7 @@ export default function EmailVerificationBanner() {
       <button onClick={() => setDismissed(true)} aria-label="Fermer"
         style={{
           background: "transparent", border: "none", color: "#9A3412",
-          fontSize: 18, lineHeight: 1, cursor: "pointer", padding: "0 4px",
+          fontSize: "var(--text-md)", lineHeight: 1, cursor: "pointer", padding: "0 4px",
         }}>×</button>
     </div>
   )

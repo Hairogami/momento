@@ -259,7 +259,7 @@ export default function AntNav({
             onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
           >
             <GsIcon icon={it.icon} size={16} color="#ef4444" />
-            <span style={{ fontSize: 13 }}>{it.label}</span>
+            <span style={{ fontSize: "var(--text-sm)" }}>{it.label}</span>
           </button>
         )
       }
@@ -270,7 +270,7 @@ export default function AntNav({
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent" }}
         >
           <GsIcon icon={it.icon} size={16} color={text} />
-          <span style={{ fontSize: 13 }}>{it.label}</span>
+          <span style={{ fontSize: "var(--text-sm)" }}>{it.label}</span>
         </Link>
       )
     })
@@ -288,7 +288,7 @@ export default function AntNav({
           <div className={hideLinks ? "flex-shrink-0 flex items-center min-w-0" : "flex-1 flex items-center min-w-0"}>
             <Link href="/" className="flex items-center gap-2">
               <MomentoLogo size={28} dark={dark} />
-              <span className={hideLinks ? "hidden md:inline" : ""} style={{ fontSize: 14, fontWeight: 500, color: heading, letterSpacing: "-0.01em" }}>Momento</span>
+              <span className={hideLinks ? "hidden md:inline" : ""} style={{ fontSize: "var(--text-sm)", fontWeight: 500, color: heading, letterSpacing: "-0.01em" }}>Momento</span>
             </Link>
           </div>
 
@@ -365,13 +365,13 @@ export default function AntNav({
               </button>
               {paletteOpen && (
                 <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: surf, border: surfBorder, borderRadius: 12, padding: 12, backdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.14)", zIndex: 100, minWidth: 164 }}>
-                  <p style={{ fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10, color: dark ? "rgba(255,255,255,0.4)" : "#6a6a71" }}>Palette</p>
+                  <p style={{ fontSize: "var(--text-2xs)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10, color: dark ? "rgba(255,255,255,0.4)" : "#6a6a71" }}>Palette</p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     {PALETTES.map((p, i) => (
                       <button key={p.name} onClick={() => { setPaletteIdx(i); setPaletteOpen(false) }}
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 8px", borderRadius: 8, width: "100%", background: i === paletteIdx ? (dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)") : "transparent", border: "none", cursor: "pointer", textAlign: "left" }}>
                         <div style={{ width: 20, height: 20, borderRadius: "50%", flexShrink: 0, background: `linear-gradient(135deg, ${p.g1}, ${p.g2})` }} />
-                        <span style={{ fontSize: 13, fontWeight: i === paletteIdx ? 600 : 400, color: text }}>{p.name}</span>
+                        <span style={{ fontSize: "var(--text-sm)", fontWeight: i === paletteIdx ? 600 : 400, color: text }}>{p.name}</span>
                       </button>
                     ))}
                   </div>
@@ -393,7 +393,7 @@ export default function AntNav({
                 style={{
                   gap: 6, padding: "6px 14px", borderRadius: 999,
                   background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-                  color: "#fff", fontSize: 12, fontWeight: 600,
+                  color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600,
                   textDecoration: "none", whiteSpace: "nowrap",
                   boxShadow: "0 4px 14px color-mix(in srgb, var(--g1,#E11D48) 28%, transparent)",
                   transition: "transform 0.15s, box-shadow 0.15s",
@@ -412,7 +412,7 @@ export default function AntNav({
                 <button onClick={() => setProfileOpen(o => !o)}
                   style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 10px 4px 4px", borderRadius: 999, background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)", cursor: "pointer" }}>
                   <Avatar name={session.user?.name} image={session.user?.image} size={24} />
-                  <span style={{ fontSize: 12, fontWeight: 500, color: text, maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: text, maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {session.user?.name?.split(" ")[0] ?? "Compte"}
                   </span>
                   <GsIcon icon="keyboard_arrow_down" size={14} color={text} />
@@ -427,7 +427,7 @@ export default function AntNav({
                         <div>
                           {/* Badge au-dessus du nom */}
                           {isVendor ? (
-                            <span style={{ display: "inline-block", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", padding: "2px 7px", borderRadius: 99, marginBottom: 3 }}>
+                            <span style={{ display: "inline-block", fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", padding: "2px 7px", borderRadius: 99, marginBottom: 3 }}>
                               Prestataire
                             </span>
                           ) : (
@@ -435,7 +435,7 @@ export default function AntNav({
                               title={`Plan ${planLabel}`}
                               style={{
                                 display: "inline-block",
-                                fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                                fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
                                 color: planColor, background: planBg,
                                 padding: "2px 7px", borderRadius: 99,
                                 border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
@@ -445,7 +445,7 @@ export default function AntNav({
                               {planLabel}
                             </span>
                           )}
-                          <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0] ?? "Mon compte"}</p>
+                          <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0] ?? "Mon compte"}</p>
                         </div>
                       </div>
                     </div>
@@ -481,7 +481,7 @@ export default function AntNav({
                       <span
                         style={{
                           display: "inline-block",
-                          fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                          fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
                           color: planColor, background: planBg,
                           padding: "2px 7px", borderRadius: 99,
                           border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
@@ -491,7 +491,7 @@ export default function AntNav({
                         {planLabel}
                       </span>
                     )}
-                    <p style={{ fontSize: 13, fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0]}</p>
+                    <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0]}</p>
                   </div>
                 </div>
               )}
@@ -499,7 +499,7 @@ export default function AntNav({
                 ? renderDropdownItems(dropdown, () => setMenuOpen(false))
                 : NAV_LINKS_PUBLIC.map(link => (
                     <Link key={link.label} href={link.href} onClick={() => setMenuOpen(false)}
-                      style={{ display: "flex", alignItems: "center", padding: "10px 12px", borderRadius: 10, textDecoration: "none", color: text, fontSize: 13 }}>
+                      style={{ display: "flex", alignItems: "center", padding: "10px 12px", borderRadius: 10, textDecoration: "none", color: text, fontSize: "var(--text-sm)" }}>
                       {link.label}
                     </Link>
                   ))

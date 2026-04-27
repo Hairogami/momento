@@ -61,21 +61,21 @@ export default function LoginActions() {
     <>
       {/* Consent obligatoire — commun aux 3 méthodes */}
       <div style={{ marginBottom: 14 }}>
-        <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "var(--dash-text-2,#45474D)", cursor: "pointer", lineHeight: 1.5 }}>
+        <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#45474D)", cursor: "pointer", lineHeight: 1.5 }}>
           <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2, accentColor: "#E11D48" }} />
           <span>
             J&apos;accepte les <a href="/cgu" target="_blank" rel="noopener noreferrer" style={legalLinkStyle}>conditions générales</a> et
             la <a href="/confidentialite" target="_blank" rel="noopener noreferrer" style={legalLinkStyle}>politique de confidentialité</a>.
           </span>
         </label>
-        <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 6, fontSize: 12, color: "var(--dash-text-3,#6a6a71)", cursor: "pointer", lineHeight: 1.5 }}>
+        <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 6, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#6a6a71)", cursor: "pointer", lineHeight: 1.5 }}>
           <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 2, accentColor: "#9333EA" }} />
           <span>Je souhaite recevoir les conseils &amp; offres Momento (facultatif).</span>
         </label>
       </div>
 
       {err && (
-        <p style={{ fontSize: 12, padding: "9px 12px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", marginBottom: 10 }}>
+        <p style={{ fontSize: "var(--text-xs)", padding: "9px 12px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", marginBottom: 10 }}>
           {err}
         </p>
       )}
@@ -94,7 +94,7 @@ export default function LoginActions() {
             background: disabled ? "rgba(255,255,255,0.5)" : "var(--dash-surface,#fff)",
             opacity: disabled ? 0.55 : 1,
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-            fontSize: 14, fontWeight: 500, color: "var(--dash-text,#121317)", fontFamily: "inherit",
+            fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--dash-text,#121317)", fontFamily: "inherit",
             transition: "opacity 0.15s, background 0.15s",
           }}
         >
@@ -119,7 +119,7 @@ export default function LoginActions() {
             background: disabled ? "rgba(255,255,255,0.5)" : "var(--dash-surface,#fff)",
             opacity: disabled ? 0.55 : 1,
             display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-            fontSize: 14, fontWeight: 500, color: "var(--dash-text,#121317)", fontFamily: "inherit",
+            fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--dash-text,#121317)", fontFamily: "inherit",
             transition: "opacity 0.15s, background 0.15s",
           }}
         >
@@ -133,7 +133,7 @@ export default function LoginActions() {
       {/* Divider magic link */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
         <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
-        <span style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>lien magique</span>
+        <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>lien magique</span>
         <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
       </div>
 
@@ -148,7 +148,7 @@ export default function LoginActions() {
             width: "100%", height: 46, padding: "0 14px", borderRadius: 12,
             border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
             background: "var(--dash-input-bg,#fafafa)",
-            fontSize: 14, color: "var(--dash-text,#121317)", outline: "none",
+            fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", outline: "none",
             boxSizing: "border-box", fontFamily: "inherit",
           }}
         />
@@ -161,7 +161,7 @@ export default function LoginActions() {
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "transparent",
             color: disabled ? "var(--dash-text-3,#9a9aaa)" : "var(--dash-text-2,#6a6a71)",
-            fontSize: 13,
+            fontSize: "var(--text-sm)",
             cursor: disabled ? "not-allowed" : "pointer",
             fontFamily: "inherit",
             opacity: disabled ? 0.6 : 1,

@@ -77,7 +77,7 @@ export default function SiteNav({ title, items }: Props) {
               onClick={() => goTo(it.id)}
               style={{
                 background: "transparent", border: "none", cursor: "pointer",
-                fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase",
+                fontSize: "var(--text-xs)", letterSpacing: "0.18em", textTransform: "uppercase",
                 color: "var(--evt-text-muted)",
                 padding: "4px 2px",
                 fontFamily: "inherit",
@@ -148,7 +148,7 @@ export default function SiteNav({ title, items }: Props) {
                 style={{
                   background: "transparent", border: "none", cursor: "pointer",
                   fontFamily: "var(--evt-font-heading)",
-                  fontSize: 26, fontWeight: 500, letterSpacing: "-0.01em",
+                  fontSize: "var(--text-xl)", fontWeight: 500, letterSpacing: "-0.01em",
                   color: "var(--evt-text)",
                   padding: "6px 14px",
                 }}

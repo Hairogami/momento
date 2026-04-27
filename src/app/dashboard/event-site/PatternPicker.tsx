@@ -47,7 +47,7 @@ export default function PatternPicker({ current, onPick, accent = "#8B3A3A" }: P
         if (items.length === 0) return null
         return (
           <div key={cat} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
               {CATEGORY_LABEL[cat]}
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
@@ -74,7 +74,7 @@ export default function PatternPicker({ current, onPick, accent = "#8B3A3A" }: P
                       style={{ background: "color-mix(in srgb, " + accent + " 8%, #faf7f0)", borderRadius: 6 }}>
                       <PatternPreview id={p.id} main={accent} accent={accent} />
                     </svg>
-                    <span style={{ fontSize: 10, color: "var(--dash-text-2,#6a6a71)", fontWeight: active ? 600 : 500 }}>
+                    <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-2,#6a6a71)", fontWeight: active ? 600 : 500 }}>
                       {p.label}
                     </span>
                   </button>

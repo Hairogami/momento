@@ -98,9 +98,9 @@ export default function CorporateTemplate({ slug, mood, palette, content, heroIm
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={s.photoUrl} alt={s.name} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", marginBottom: 14 }} />
                 )}
-                <div style={{ fontFamily: "var(--evt-font-heading)", fontSize: 18, fontWeight: 500, color: "var(--evt-text)" }}>{s.name}</div>
-                {s.role && <div style={{ fontSize: 12, color: "var(--evt-main)", marginTop: 4, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>{s.role}</div>}
-                {s.bio && <p style={{ fontSize: 13, color: "var(--evt-text-muted)", marginTop: 10, lineHeight: 1.6 }}>{s.bio}</p>}
+                <div style={{ fontFamily: "var(--evt-font-heading)", fontSize: "var(--text-md)", fontWeight: 500, color: "var(--evt-text)" }}>{s.name}</div>
+                {s.role && <div style={{ fontSize: "var(--text-xs)", color: "var(--evt-main)", marginTop: 4, letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>{s.role}</div>}
+                {s.bio && <p style={{ fontSize: "var(--text-sm)", color: "var(--evt-text-muted)", marginTop: 10, lineHeight: 1.6 }}>{s.bio}</p>}
               </div>
             ))}
           </div>
@@ -144,7 +144,7 @@ export default function CorporateTemplate({ slug, mood, palette, content, heroIm
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.logoUrl} alt={p.name} style={{ maxHeight: 48, maxWidth: 140, objectFit: "contain" }} />
                 ) : (
-                  <span style={{ fontFamily: "var(--evt-font-heading)", fontSize: 18, color: "var(--evt-text-muted)" }}>{p.name}</span>
+                  <span style={{ fontFamily: "var(--evt-font-heading)", fontSize: "var(--text-md)", color: "var(--evt-text-muted)" }}>{p.name}</span>
                 )}
               </a>
             ))}
@@ -168,4 +168,4 @@ const sectionCentered: React.CSSProperties = { padding: "80px 24px", maxWidth: 7
 const h2Style: React.CSSProperties = { fontFamily: "var(--evt-font-heading)", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", fontWeight: 600, letterSpacing: "-0.02em", margin: "0 0 20px", color: "var(--evt-main)" }
 const bodyStyle: React.CSSProperties = { fontFamily: "var(--evt-font-body)", fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)", lineHeight: 1.75, color: "var(--evt-text-muted)", margin: "0 auto", maxWidth: 560 }
 const welcomeStyle: React.CSSProperties = { fontFamily: "var(--evt-font-heading)", fontStyle: "italic", fontSize: "clamp(1.1rem, 2vw, 1.4rem)", lineHeight: 1.6, color: "var(--evt-text)", margin: "0 auto", maxWidth: 600, textAlign: "center" }
-const footerStyle: React.CSSProperties = { padding: "32px 24px", textAlign: "center", fontSize: 11, color: "var(--evt-text-muted)", fontFamily: "var(--evt-font-body)", letterSpacing: "0.15em", textTransform: "uppercase" }
+const footerStyle: React.CSSProperties = { padding: "32px 24px", textAlign: "center", fontSize: "var(--text-xs)", color: "var(--evt-text-muted)", fontFamily: "var(--evt-font-body)", letterSpacing: "0.15em", textTransform: "uppercase" }

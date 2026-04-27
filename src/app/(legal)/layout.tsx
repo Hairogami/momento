@@ -19,9 +19,9 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
           <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-icon.png" alt="Momento" width={26} height={26} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
-            <span style={{ fontSize: 15, fontWeight: 700, color: "#121317", letterSpacing: "-0.01em" }}>Momento</span>
+            <span style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "#121317", letterSpacing: "-0.01em" }}>Momento</span>
           </Link>
-          <nav style={{ display: "flex", gap: 22, fontSize: 13, fontWeight: 500 }}>
+          <nav style={{ display: "flex", gap: 22, fontSize: "var(--text-sm)", fontWeight: 500 }}>
             <Link href="/cgu" style={navLinkStyle}>CGU</Link>
             <Link href="/confidentialite" style={navLinkStyle}>Confidentialité</Link>
             <Link href="/mentions-legales" style={navLinkStyle}>Mentions légales</Link>
@@ -35,7 +35,7 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
       </main>
 
       {/* Footer mini */}
-      <footer style={{ maxWidth: 780, margin: "0 auto", padding: "0 24px 40px", fontSize: 12, color: "#9a9aaa" }}>
+      <footer style={{ maxWidth: 780, margin: "0 auto", padding: "0 24px 40px", fontSize: "var(--text-xs)", color: "#9a9aaa" }}>
         <p style={{ margin: 0 }}>
           © {new Date().getFullYear()} Momento — Questions juridiques : <a href="mailto:contact@momentoevents.app" style={{ color: "#6a6a71" }}>contact@momentoevents.app</a>
         </p>

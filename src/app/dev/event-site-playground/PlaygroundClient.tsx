@@ -117,8 +117,8 @@ export default function PlaygroundClient() {
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#0a0a0a", color: "#eee" }}>
       <aside style={{ width: 360, flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.1)", padding: 20, overflow: "auto", maxHeight: "100vh", position: "sticky", top: 0 }}>
-        <h1 style={{ fontSize: 18, margin: "0 0 16px", fontWeight: 700 }}>🧪 Event Site Playground</h1>
-        <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", margin: "0 0 24px", lineHeight: 1.5 }}>
+        <h1 style={{ fontSize: "var(--text-md)", margin: "0 0 16px", fontWeight: 700 }}>🧪 Event Site Playground</h1>
+        <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.5)", margin: "0 0 24px", lineHeight: 1.5 }}>
           Page dev-only. Modifie le code dans src/components/event-site/** → HMR recharge.
         </p>
 
@@ -140,7 +140,7 @@ export default function PlaygroundClient() {
 
         <Section title="Motif">
           <Chips options={PATTERNS} value={(style.pattern as string) ?? ""} onChange={v => patchStyle("pattern", v)} />
-          <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, fontSize: 12 }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, fontSize: "var(--text-xs)" }}>
             <input
               type="checkbox"
               checked={style.patternFullPage === true}
@@ -150,7 +150,7 @@ export default function PlaygroundClient() {
           </label>
 
           <div style={{ marginTop: 10 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(255,255,255,0.7)", marginBottom: 4 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.7)", marginBottom: 4 }}>
               <span>Opacité du motif</span>
               <span style={{ fontFamily: "monospace" }}>
                 {typeof style.patternOpacity === "number" ? `${Math.round((style.patternOpacity as number) * 100)}%` : "auto"}
@@ -176,7 +176,7 @@ export default function PlaygroundClient() {
                   border: "1px solid rgba(255,255,255,0.15)",
                   background: "transparent",
                   color: "rgba(255,255,255,0.6)",
-                  fontSize: 10,
+                  fontSize: "var(--text-2xs)",
                   cursor: "pointer",
                   fontFamily: "inherit",
                 }}
@@ -192,7 +192,7 @@ export default function PlaygroundClient() {
         </Section>
 
         <Section title="Countdown">
-          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-xs)" }}>
             <input
               type="checkbox"
               checked={((site.content.countdown as { enabled?: boolean } | undefined)?.enabled) === true}
@@ -278,7 +278,7 @@ export default function PlaygroundClient() {
           <ShareBlockPlayground slug={site.slug} title={hero.title ?? "notre événement"} />
         </Section>
 
-        <div style={{ marginTop: 24, padding: 12, background: "rgba(59,130,246,0.1)", borderRadius: 8, fontSize: 11, lineHeight: 1.5, color: "rgba(255,255,255,0.7)" }}>
+        <div style={{ marginTop: 24, padding: 12, background: "rgba(59,130,246,0.1)", borderRadius: 8, fontSize: "var(--text-xs)", lineHeight: 1.5, color: "rgba(255,255,255,0.7)" }}>
           💡 État en mémoire seulement — rien n'est sauvegardé. Rafraîchir la page = reset.
         </div>
       </aside>
@@ -394,7 +394,7 @@ function ShareBlockPlayground({ slug, title }: { slug: string; title: string }) 
           border: "1px solid rgba(255,255,255,0.15)",
           background: "rgba(255,255,255,0.03)",
           color: "rgba(255,255,255,0.85)",
-          fontSize: 10,
+          fontSize: "var(--text-2xs)",
           fontFamily: "monospace",
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -409,7 +409,7 @@ function ShareBlockPlayground({ slug, title }: { slug: string; title: string }) 
             border: "none",
             background: copied ? "#16a34a" : "#E11D48",
             color: "#fff",
-            fontSize: 10,
+            fontSize: "var(--text-2xs)",
             fontWeight: 700,
             cursor: "pointer",
             fontFamily: "inherit",
@@ -418,15 +418,15 @@ function ShareBlockPlayground({ slug, title }: { slug: string; title: string }) 
       </div>
       <div style={{ display: "flex", gap: 4 }}>
         <a href={`https://wa.me/?text=${whatsappMsg}`} target="_blank" rel="noopener"
-          style={{ flex: 1, padding: "7px 8px", borderRadius: 6, border: "1px solid rgba(37,211,102,0.4)", background: "rgba(37,211,102,0.1)", color: "#25D366", fontSize: 10, fontWeight: 600, textAlign: "center", textDecoration: "none", fontFamily: "inherit" }}>
+          style={{ flex: 1, padding: "7px 8px", borderRadius: 6, border: "1px solid rgba(37,211,102,0.4)", background: "rgba(37,211,102,0.1)", color: "#25D366", fontSize: "var(--text-2xs)", fontWeight: 600, textAlign: "center", textDecoration: "none", fontFamily: "inherit" }}>
           WhatsApp
         </a>
         <a href={`mailto:?subject=${mailSubject}&body=${mailBody}`}
-          style={{ flex: 1, padding: "7px 8px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.85)", fontSize: 10, fontWeight: 600, textAlign: "center", textDecoration: "none", fontFamily: "inherit" }}>
+          style={{ flex: 1, padding: "7px 8px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.85)", fontSize: "var(--text-2xs)", fontWeight: 600, textAlign: "center", textDecoration: "none", fontFamily: "inherit" }}>
           Email
         </a>
       </div>
-      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", lineHeight: 1.5 }}>
+      <div style={{ fontSize: "var(--text-2xs)", color: "rgba(255,255,255,0.45)", lineHeight: 1.5 }}>
         Lien public — aucun compte requis pour les invités.
       </div>
     </div>
@@ -436,7 +436,7 @@ function ShareBlockPlayground({ slug, title }: { slug: string; title: string }) 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 18 }}>
-      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 6 }}>{title}</div>
+      <div style={{ fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 6 }}>{title}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>{children}</div>
     </div>
   )
@@ -458,7 +458,7 @@ function Chips({ options, value, onChange }: { options: string[]; value: string;
               border: active ? "1px solid #E11D48" : "1px solid rgba(255,255,255,0.15)",
               background: active ? "rgba(225,29,72,0.15)" : "transparent",
               color: active ? "#fff" : "rgba(255,255,255,0.7)",
-              fontSize: 11,
+              fontSize: "var(--text-xs)",
               fontFamily: "inherit",
               cursor: "pointer",
               fontWeight: active ? 600 : 400,
@@ -479,7 +479,7 @@ const inputStyle: React.CSSProperties = {
   border: "1px solid rgba(255,255,255,0.15)",
   background: "rgba(255,255,255,0.03)",
   color: "#eee",
-  fontSize: 12,
+  fontSize: "var(--text-xs)",
   fontFamily: "inherit",
   outline: "none",
   boxSizing: "border-box",

@@ -10,7 +10,7 @@ type Role = "client" | "vendor" | null
 const inputStyle: React.CSSProperties = {
   width: "100%", height: 46, padding: "0 14px", borderRadius: 12,
   border: "1px solid rgba(183,191,217,0.4)", background: "#fafafa",
-  fontSize: 14, color: "#121317", outline: "none",
+  fontSize: "var(--text-sm)", color: "#121317", outline: "none",
   boxSizing: "border-box", fontFamily: "inherit", transition: "border-color 0.15s",
 }
 
@@ -28,7 +28,7 @@ function PasswordRequirements({ value }: { value: string }) {
       {checks.map((c, i) => {
         const color = !value ? "#9a9aaa" : c.ok ? "#16a34a" : "#dc2626"
         return (
-          <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color }}>
+          <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-xs)", color }}>
             <span aria-hidden="true" style={{ width: 14, display: "inline-block", textAlign: "center", fontWeight: 700 }}>{c.ok ? "✓" : "·"}</span>
             <span>{c.label}</span>
           </li>
@@ -128,7 +128,7 @@ export default function CloneSignupPage() {
           <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-icon.png" alt="Momento" width={28} height={28} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
-            <span style={{ fontSize: 16, fontWeight: 700, color: "#121317" }}>Momento</span>
+            <span style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "#121317" }}>Momento</span>
           </Link>
         </div>
 
@@ -145,7 +145,7 @@ export default function CloneSignupPage() {
                 <div style={{
                   width: 28, height: 28, borderRadius: "50%",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 12, fontWeight: 700,
+                  fontSize: "var(--text-xs)", fontWeight: 700,
                   background: s <= step ? GRADIENT : "rgba(183,191,217,0.2)",
                   color: s <= step ? "#fff" : "#9a9aaa",
                   transition: "all 0.3s",
@@ -159,7 +159,7 @@ export default function CloneSignupPage() {
                 )}
               </div>
             ))}
-            <span style={{ fontSize: 12, color: "#6a6a71", marginLeft: 4 }}>
+            <span style={{ fontSize: "var(--text-xs)", color: "#6a6a71", marginLeft: 4 }}>
               {step === 1 ? "Type de compte" : "Informations"}
             </span>
           </div>
@@ -167,10 +167,10 @@ export default function CloneSignupPage() {
           {/* Step 1 — Role selection */}
           {step === 1 && (
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
                 Créer un compte
               </h2>
-              <p style={{ fontSize: 14, color: "#6a6a71", margin: "0 0 28px" }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "#6a6a71", margin: "0 0 28px" }}>
                 Tu es ici pour…
               </p>
 
@@ -192,10 +192,10 @@ export default function CloneSignupPage() {
                       cursor: "pointer", transition: "all 0.15s", fontFamily: "inherit",
                     }}
                   >
-                    <span style={{ fontSize: 28, flexShrink: 0 }}>{opt.emoji}</span>
+                    <span style={{ fontSize: "var(--text-xl)", flexShrink: 0 }}>{opt.emoji}</span>
                     <div>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: "#121317", margin: "0 0 4px" }}>{opt.title}</p>
-                      <p style={{ fontSize: 12, color: "#6a6a71", margin: 0, lineHeight: 1.5 }}>{opt.desc}</p>
+                      <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317", margin: "0 0 4px" }}>{opt.title}</p>
+                      <p style={{ fontSize: "var(--text-xs)", color: "#6a6a71", margin: 0, lineHeight: 1.5 }}>{opt.desc}</p>
                     </div>
                   </button>
                 ))}
@@ -208,7 +208,7 @@ export default function CloneSignupPage() {
                   width: "100%", height: 46, borderRadius: 12, border: "none",
                   background: role ? GRADIENT : "rgba(183,191,217,0.3)",
                   color: role ? "#fff" : "#9a9aaa",
-                  fontSize: 14, fontWeight: 600, cursor: role ? "pointer" : "not-allowed",
+                  fontSize: "var(--text-sm)", fontWeight: 600, cursor: role ? "pointer" : "not-allowed",
                   marginTop: 24, fontFamily: "inherit", transition: "all 0.2s",
                 }}
               >
@@ -222,16 +222,16 @@ export default function CloneSignupPage() {
             <div>
               <button onClick={() => setStep(1)} style={{
                 display: "flex", alignItems: "center", gap: 6,
-                fontSize: 13, color: "#6a6a71", background: "none",
+                fontSize: "var(--text-sm)", color: "#6a6a71", background: "none",
                 border: "none", cursor: "pointer", marginBottom: 20, fontFamily: "inherit",
               }}>
                 ← Retour
               </button>
 
-              <h2 style={{ fontSize: 22, fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
                 {role === "client" ? "Mon compte" : "Mon profil prestataire"}
               </h2>
-              <p style={{ fontSize: 14, color: "#6a6a71", margin: "0 0 20px" }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "#6a6a71", margin: "0 0 20px" }}>
                 {role === "client" ? "Quelques infos pour commencer." : "Quelques infos sur ton activité."}
               </p>
 
@@ -256,7 +256,7 @@ export default function CloneSignupPage() {
                         background: tos ? "#fff" : "rgba(255,255,255,0.55)",
                         opacity: tos ? 1 : 0.55,
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                        fontSize: 14, fontWeight: 500, color: "#121317",
+                        fontSize: "var(--text-sm)", fontWeight: 500, color: "#121317",
                         cursor: tos ? "pointer" : "not-allowed", fontFamily: "inherit",
                         transition: "opacity 0.15s, background 0.15s",
                       }}
@@ -285,7 +285,7 @@ export default function CloneSignupPage() {
                         background: tos ? "#1877F2" : "rgba(24,119,242,0.35)",
                         color: tos ? "#fff" : "rgba(255,255,255,0.5)",
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                        fontSize: 14, fontWeight: 500, cursor: tos ? "pointer" : "not-allowed",
+                        fontSize: "var(--text-sm)", fontWeight: 500, cursor: tos ? "pointer" : "not-allowed",
                         fontFamily: "inherit", transition: "background 0.15s, color 0.15s",
                       }}
                     >
@@ -297,7 +297,7 @@ export default function CloneSignupPage() {
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "8px 0 12px" }}>
                     <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
-                    <span style={{ fontSize: 11, color: "#9a9aaa", letterSpacing: "0.06em", fontWeight: 600 }}>OU AVEC EMAIL</span>
+                    <span style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", letterSpacing: "0.06em", fontWeight: 600 }}>OU AVEC EMAIL</span>
                     <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
                   </div>
                 </>
@@ -320,7 +320,7 @@ export default function CloneSignupPage() {
                     <input type="password" placeholder="Confirmer le mot de passe *" value={confirm} onChange={e => setConfirm(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     {confirm && password !== confirm && (
-                      <p style={{ fontSize: 12, color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
+                      <p style={{ fontSize: "var(--text-xs)", color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
                     )}
                   </>
                 ) : (
@@ -339,14 +339,14 @@ export default function CloneSignupPage() {
                     <input type="password" placeholder="Confirmer le mot de passe *" value={vConfirm} onChange={e => setVConfirm(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     {vConfirm && vPassword !== vConfirm && (
-                      <p style={{ fontSize: 12, color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
+                      <p style={{ fontSize: "var(--text-xs)", color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
                     )}
                   </>
                 )}
 
                 {error && (
                   <p style={{
-                    fontSize: 13, padding: "10px 14px", borderRadius: 10,
+                    fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10,
                     background: "rgba(225,29,72,0.07)", color: "#E11D48",
                   }}>{error}</p>
                 )}
@@ -354,11 +354,11 @@ export default function CloneSignupPage() {
                 <Turnstile onToken={setTurnstileToken} onError={() => setTurnstileToken("")} />
 
                 {/* CGU + marketing */}
-                <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "#45474D", cursor: "pointer", lineHeight: 1.5, marginTop: 4 }}>
+                <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "var(--text-xs)", color: "#45474D", cursor: "pointer", lineHeight: 1.5, marginTop: 4 }}>
                   <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2 }} />
                   <span>J&apos;accepte les <a href="/cgu" target="_blank" style={{ color: "#E11D48", textDecoration: "underline" }}>conditions générales</a> et la <a href="/confidentialite" target="_blank" style={{ color: "#E11D48", textDecoration: "underline" }}>politique de confidentialité</a>.</span>
                 </label>
-                <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 12, color: "#6a6a71", cursor: "pointer", lineHeight: 1.5 }}>
+                <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "var(--text-xs)", color: "#6a6a71", cursor: "pointer", lineHeight: 1.5 }}>
                   <input type="checkbox" checked={marketing} onChange={e => setMarketing(e.target.checked)} style={{ marginTop: 2 }} />
                   <span>Je souhaite recevoir les conseils &amp; offres Momento (facultatif).</span>
                 </label>
@@ -369,7 +369,7 @@ export default function CloneSignupPage() {
                     height: 46, borderRadius: 12, border: "none",
                     background: tos ? GRADIENT : "rgba(183,191,217,0.25)",
                     color: tos ? "#fff" : "#9a9aaa",
-                    fontSize: 14, fontWeight: 600,
+                    fontSize: "var(--text-sm)", fontWeight: 600,
                     cursor: (loading || !tos) ? "not-allowed" : "pointer",
                     fontFamily: "inherit",
                     opacity: loading ? 0.7 : 1, marginTop: 4,
@@ -381,7 +381,7 @@ export default function CloneSignupPage() {
             </div>
           )}
 
-          <p style={{ fontSize: 12, color: "#9a9aaa", textAlign: "center", marginTop: 20 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", textAlign: "center", marginTop: 20 }}>
             Déjà un compte ?{" "}
             <Link href="/login" style={{ color: "#E11D48", fontWeight: 600, textDecoration: "none" }}>
               Se connecter

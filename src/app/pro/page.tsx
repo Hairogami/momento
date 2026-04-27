@@ -76,7 +76,7 @@ export default function ProPage() {
         <span
           style={{
             display: "inline-block",
-            fontSize: 11,
+            fontSize: "var(--text-xs)",
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -143,7 +143,7 @@ export default function ProPage() {
       {/* ── STATS ── */}
       <section style={{ padding: "80px 24px", borderTop: "1px solid rgba(183,191,217,0.15)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <p className="clone-label" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--dash-text-2,#6a6a71)", textAlign: "center", marginBottom: 40 }}>
+          <p className="clone-label" style={{ fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--dash-text-2,#6a6a71)", textAlign: "center", marginBottom: 40 }}>
             Momento en chiffres
           </p>
           <div
@@ -167,7 +167,7 @@ export default function ProPage() {
                 >
                   <Counter to={s.value} suffix={s.suffix} />
                 </div>
-                <p className="clone-body" style={{ fontSize: 14, marginTop: 10, color: "var(--dash-text-2,#45474D)" }}>
+                <p className="clone-body" style={{ fontSize: "var(--text-sm)", marginTop: 10, color: "var(--dash-text-2,#45474D)" }}>
                   {s.label}
                 </p>
               </div>
@@ -183,7 +183,7 @@ export default function ProPage() {
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.02em", color: "var(--dash-text,#121317)" }}>
               Pourquoi les prestataires nous choisissent
             </h2>
-            <p className="clone-body" style={{ fontSize: 16, color: "var(--dash-text-2,#45474D)", marginTop: 14, maxWidth: 580, marginInline: "auto" }}>
+            <p className="clone-body" style={{ fontSize: "var(--text-base)", color: "var(--dash-text-2,#45474D)", marginTop: 14, maxWidth: 580, marginInline: "auto" }}>
               Pas de frais cachés, pas d&apos;intermédiaire sur votre contrat. Juste de la visibilité et des outils.
             </p>
           </div>
@@ -209,7 +209,7 @@ export default function ProPage() {
                   <span
                     style={{
                       fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                      fontSize: 22,
+                      fontSize: "var(--text-lg)",
                       background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -218,8 +218,8 @@ export default function ProPage() {
                     {b.icon}
                   </span>
                 </div>
-                <h3 style={{ fontSize: 17, fontWeight: 700, margin: "0 0 8px", color: "var(--dash-text,#121317)" }}>{b.title}</h3>
-                <p className="clone-body" style={{ fontSize: 14, lineHeight: 1.55, color: "var(--dash-text-2,#45474D)", margin: 0 }}>
+                <h3 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: "0 0 8px", color: "var(--dash-text,#121317)" }}>{b.title}</h3>
+                <p className="clone-body" style={{ fontSize: "var(--text-sm)", lineHeight: 1.55, color: "var(--dash-text-2,#45474D)", margin: 0 }}>
                   {b.body}
                 </p>
               </div>
@@ -235,7 +235,7 @@ export default function ProPage() {
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", fontWeight: 700, letterSpacing: "-0.02em" }}>
               4 étapes, 15 minutes
             </h2>
-            <p className="clone-body" style={{ fontSize: 16, color: "var(--dash-text-2,#45474D)", marginTop: 14 }}>
+            <p className="clone-body" style={{ fontSize: "var(--text-base)", color: "var(--dash-text-2,#45474D)", marginTop: 14 }}>
               Votre fiche peut être en ligne et recevoir ses premières demandes aujourd&apos;hui.
             </p>
           </div>
@@ -262,7 +262,7 @@ export default function ProPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 16,
+                    fontSize: "var(--text-base)",
                     fontWeight: 800,
                     color: "#fff",
                     background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
@@ -271,8 +271,8 @@ export default function ProPage() {
                   {s.n}
                 </div>
                 <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, margin: "4px 0 6px", color: "var(--dash-text,#121317)" }}>{s.title}</h3>
-                  <p className="clone-body" style={{ fontSize: 14, lineHeight: 1.55, color: "var(--dash-text-2,#45474D)", margin: 0 }}>{s.body}</p>
+                  <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, margin: "4px 0 6px", color: "var(--dash-text,#121317)" }}>{s.title}</h3>
+                  <p className="clone-body" style={{ fontSize: "var(--text-sm)", lineHeight: 1.55, color: "var(--dash-text-2,#45474D)", margin: 0 }}>{s.body}</p>
                 </div>
               </li>
             ))}
@@ -286,7 +286,7 @@ export default function ProPage() {
           <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, letterSpacing: "-0.02em" }}>
             Prêt à rejoindre les 1 000&nbsp;+ ?
           </h2>
-          <p className="clone-body" style={{ fontSize: 17, color: "var(--dash-text-2,#45474D)", marginTop: 16, lineHeight: 1.55 }}>
+          <p className="clone-body" style={{ fontSize: "var(--text-md)", color: "var(--dash-text-2,#45474D)", marginTop: 16, lineHeight: 1.55 }}>
             Profil gratuit à vie. Paiement direct, pour toujours.
           </p>
           <Link

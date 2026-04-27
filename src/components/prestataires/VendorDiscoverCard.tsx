@@ -99,7 +99,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
             )}
           </>
         ) : (
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48, background: "linear-gradient(135deg,#1a0533,#3d0b6e)" }}>
+          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-3xl)", background: "linear-gradient(135deg,#1a0533,#3d0b6e)" }}>
             📷
           </div>
         )}
@@ -108,7 +108,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
           <div style={{
             position: "absolute", top: 10, left: 10,
             background: "linear-gradient(135deg,#E11D48,#9333EA)",
-            color: "#fff", fontSize: 10, fontWeight: 700,
+            color: "#fff", fontSize: "var(--text-2xs)", fontWeight: 700,
             padding: "3px 9px", borderRadius: 99,
             letterSpacing: "0.05em",
           }}>⭐ Partenaire</div>
@@ -119,12 +119,12 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
       <div style={{ padding: "14px 16px 16px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 6 }}>
           <div>
-            <p style={{ fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>{vendor.name}</p>
-            <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{vendor.category}{vendor.city ? ` · ${vendor.city}` : ""}</p>
+            <p style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>{vendor.name}</p>
+            <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{vendor.category}{vendor.city ? ` · ${vendor.city}` : ""}</p>
           </div>
           {vendor.rating && (
             <span style={{
-              fontSize: 11, fontWeight: 700, color: "#E11D48",
+              fontSize: "var(--text-xs)", fontWeight: 700, color: "#E11D48",
               background: "rgba(225,29,72,0.08)", padding: "2px 8px", borderRadius: 99,
               whiteSpace: "nowrap",
             }}>★ {vendor.rating.toFixed(1)}{vendor.reviewCount ? ` (${vendor.reviewCount})` : ""}</span>
@@ -161,7 +161,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
                   key={l.value}
                   onClick={() => setLang(l.value)}
                   style={{
-                    padding: "5px 9px", borderRadius: 7, fontSize: 10, fontWeight: 600,
+                    padding: "5px 9px", borderRadius: 7, fontSize: "var(--text-2xs)", fontWeight: 600,
                     border: "1px solid",
                     borderColor: lang === l.value ? "#9333EA" : "rgba(183,191,217,0.35)",
                     background: lang === l.value ? "rgba(147,51,234,0.07)" : "transparent",
@@ -183,7 +183,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
                   ? "rgba(34,197,94,0.12)"
                   : "linear-gradient(135deg,#E11D48,#9333EA)",
                 color: done ? "#22c55e" : "#fff",
-                fontSize: 12, fontWeight: 700, cursor: done ? "default" : "pointer",
+                fontSize: "var(--text-xs)", fontWeight: 700, cursor: done ? "default" : "pointer",
                 fontFamily: "inherit", transition: "all 0.2s",
               }}
             >
@@ -202,7 +202,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
               width: 36, height: 36, borderRadius: 10,
               border: "1px solid rgba(183,191,217,0.3)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              textDecoration: "none", fontSize: 14, color: "var(--dash-text-3,#9a9aaa)",
+              textDecoration: "none", fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)",
               flexShrink: 0,
             }}
           >↗</Link>
@@ -218,7 +218,7 @@ function navBtnStyle(side: "left" | "right"): React.CSSProperties {
     [side]: 6,
     width: 28, height: 28, borderRadius: "50%",
     background: "rgba(0,0,0,0.45)", border: "none",
-    color: "#fff", fontSize: 18, cursor: "pointer",
+    color: "#fff", fontSize: "var(--text-md)", cursor: "pointer",
     display: "flex", alignItems: "center", justifyContent: "center",
     lineHeight: 1,
   }
@@ -226,7 +226,7 @@ function navBtnStyle(side: "left" | "right"): React.CSSProperties {
 
 function socialBadge(color: string): React.CSSProperties {
   return {
-    fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 99,
+    fontSize: "var(--text-2xs)", fontWeight: 600, padding: "3px 8px", borderRadius: 99,
     background: `${color}14`, color, textDecoration: "none",
     border: `1px solid ${color}30`, whiteSpace: "nowrap",
   }

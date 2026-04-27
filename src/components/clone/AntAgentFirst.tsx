@@ -90,7 +90,7 @@ export default function AntAgentFirst() {
             </h2>
 
             <p className="clone-body" style={{
-              fontSize: 15, lineHeight: 1.7, color: "var(--dash-text-2,#6a6a71)",
+              fontSize: "var(--text-base)", lineHeight: 1.7, color: "var(--dash-text-2,#6a6a71)",
               marginTop: 16, maxWidth: 380,
               opacity: typed.length >= TEXT.length ? 1 : 0,
               transition: "opacity 0.6s ease",
@@ -124,7 +124,7 @@ export default function AntAgentFirst() {
                   ))}
                 </div>
                 <div style={{
-                  flex: 1, textAlign: "center", fontSize: 10, color: "var(--dash-text-2,#6a6a71)",
+                  flex: 1, textAlign: "center", fontSize: "var(--text-2xs)", color: "var(--dash-text-2,#6a6a71)",
                   background: "rgba(183,191,217,0.15)", borderRadius: 99, padding: "2px 8px",
                 }}>
                   momentoevents.app/explore
@@ -139,16 +139,16 @@ export default function AntAgentFirst() {
                   background: "var(--dash-surface,#fff)", border: "1px solid rgba(183,191,217,0.3)",
                   borderRadius: 99, padding: "7px 14px", marginBottom: 10,
                 }}>
-                  <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: 14, color: "var(--dash-text-2,#6a6a71)" }}>search</span>
-                  <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", flex: 1 }}>Photographe · Casablanca...</span>
-                  <span className="clone-filter-badge" style={{ fontSize: 10, color: "#fff", background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", padding: "2px 8px", borderRadius: 99 }}>Filtrer</span>
+                  <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)" }}>search</span>
+                  <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", flex: 1 }}>Photographe · Casablanca...</span>
+                  <span className="clone-filter-badge" style={{ fontSize: "var(--text-2xs)", color: "#fff", background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", padding: "2px 8px", borderRadius: 99 }}>Filtrer</span>
                 </div>
 
                 {/* Category chips */}
                 <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
                   {["Photographie","DJ","Traiteur","Décoration","Fleuriste"].map((cat, i) => (
                     <span key={cat} className={i === 0 ? "clone-pill-active" : ""} style={{
-                      fontSize: 10, padding: "3px 10px", borderRadius: 99,
+                      fontSize: "var(--text-2xs)", padding: "3px 10px", borderRadius: 99,
                       background: i === 0 ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))" : "rgba(183,191,217,0.18)",
                       color: i === 0 ? "#fff" : "#45474D",
                       border: i === 0 ? "none" : "1px solid rgba(183,191,217,0.3)",
@@ -171,15 +171,15 @@ export default function AntAgentFirst() {
                       width: 32, height: 32, borderRadius: "50%",
                       background: "linear-gradient(135deg,#E11D48,#9333EA)",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0,
+                      color: "#fff", fontSize: "var(--text-xs)", fontWeight: 700, flexShrink: 0,
                     }}>{v.name[0]}</div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{v.name}</div>
-                      <div style={{ fontSize: 10, color: "var(--dash-text-2,#6a6a71)" }}>Photographe · {v.city}</div>
+                      <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{v.name}</div>
+                      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-2,#6a6a71)" }}>Photographe · {v.city}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: "#F59E0B" }}>★ {v.r}</div>
-                      <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>{v.price}</div>
+                      <div style={{ fontSize: "var(--text-2xs)", fontWeight: 700, color: "#F59E0B" }}>★ {v.r}</div>
+                      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{v.price}</div>
                     </div>
                   </div>
                 ))}
@@ -188,8 +188,8 @@ export default function AntAgentFirst() {
                 <div style={{ display: "flex", gap: 12, marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(183,191,217,0.15)" }}>
                   {[["1 000+","prestataires"],["41","villes"],["31","catégories"]].map(([val, lbl]) => (
                     <div key={lbl} style={{ flex: 1, textAlign: "center" }}>
-                      <div className="clone-stat-num" style={{ fontSize: 12, fontWeight: 700, backgroundImage: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{val}</div>
-                      <div style={{ fontSize: 9, color: "var(--dash-text-2,#6a6a71)" }}>{lbl}</div>
+                      <div className="clone-stat-num" style={{ fontSize: "var(--text-xs)", fontWeight: 700, backgroundImage: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{val}</div>
+                      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-2,#6a6a71)" }}>{lbl}</div>
                     </div>
                   ))}
                 </div>

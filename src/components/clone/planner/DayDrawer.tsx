@@ -85,8 +85,8 @@ export function DayDrawer({
             <span style={gicon(18, "var(--dash-text-2,#6a6a71)")}>close</span>
           </button>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>Journée</div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <div style={{ fontSize: "var(--text-2xs)", fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>Journée</div>
+            <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {dayLabel}
             </div>
           </div>
@@ -101,13 +101,13 @@ export function DayDrawer({
             }}>
               <span style={gicon(20, "#fff")}>favorite</span>
               <div>
-                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", opacity: 0.9 }}>JOUR J</div>
-                <div style={{ fontSize: 14, fontWeight: 700 }}>Le grand jour</div>
+                <div style={{ fontSize: "var(--text-2xs)", fontWeight: 800, letterSpacing: "0.1em", opacity: 0.9 }}>JOUR J</div>
+                <div style={{ fontSize: "var(--text-sm)", fontWeight: 700 }}>Le grand jour</div>
               </div>
             </div>
           )}
 
-          <div style={{ display: "flex", gap: 6, fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>
+          <div style={{ display: "flex", gap: 6, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)" }}>
             <span>{steps.length} étape{steps.length !== 1 ? "s" : ""}</span>
             <span>·</span>
             <span>{events.length} rendez-vous</span>
@@ -131,8 +131,8 @@ export function DayDrawer({
 
           {steps.length === 0 && events.length === 0 && !wedding && (
             <div style={{ padding: "40px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: 28, marginBottom: 8 }}>🗓️</div>
-              <div style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)" }}>Rien de prévu ce jour</div>
+              <div style={{ fontSize: "var(--text-xl)", marginBottom: 8 }}>🗓️</div>
+              <div style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)" }}>Rien de prévu ce jour</div>
             </div>
           )}
         </div>
@@ -145,7 +145,7 @@ export function DayDrawer({
           <button onClick={() => setShowForm("step")} style={{
             flex: 1, height: 40, borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
             background: "var(--dash-surface,#fff)", cursor: "pointer",
-            fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)", fontFamily: "inherit",
+            fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)", fontFamily: "inherit",
             display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
           }}>
             <span style={gicon(15)}>task_alt</span>Étape
@@ -153,7 +153,7 @@ export function DayDrawer({
           <button onClick={() => setShowForm("event")} style={{
             flex: 1, height: 40, borderRadius: 10, border: "none",
             background: G, cursor: "pointer",
-            fontSize: 12, fontWeight: 700, color: "#fff", fontFamily: "inherit",
+            fontSize: "var(--text-xs)", fontWeight: 700, color: "#fff", fontFamily: "inherit",
             display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
           }}>
             <span style={gicon(15, "#fff")}>event</span>Rendez-vous
@@ -189,8 +189,8 @@ function EventCard({ item }: { item: Extract<CalItem,{kind:"event"}> }) {
       }}>
         <span style={{ width: 6, height: 34, borderRadius: 3, background: color, flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)" }}>{e.title}</div>
-          <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2 }}>
+          <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>{e.title}</div>
+          <div style={{ fontSize: "var(--text-2xs)", fontWeight: 700, color, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2 }}>
             {e.type === "appointment" ? "Rendez-vous" : e.type === "reminder" ? "Rappel" : "Tâche"}
           </div>
         </div>
@@ -245,11 +245,11 @@ function StepCard({ item, expanded, onToggle, onRefresh }: {
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
-            fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)",
+            fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)",
             textDecoration: s.status === "done" ? "line-through" : "none",
             opacity: s.status === "done" ? 0.6 : 1,
           }}>{s.title}</div>
-          <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2 }}>
+          <div style={{ fontSize: "var(--text-2xs)", fontWeight: 700, color, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2 }}>
             {(CAT_OPTIONS.find(o => o.value === s.category)?.label) ?? s.category}
             {vendors.length > 0 && <span style={{ color: "var(--dash-text-3,#9a9aaa)", textTransform: "none", letterSpacing: 0, fontWeight: 500, marginLeft: 8 }}>
               · {vendors.length} prestataire{vendors.length > 1 ? "s" : ""}{confirmedCount > 0 && ` · ${confirmedCount} confirmé${confirmedCount > 1 ? "s" : ""}`}
@@ -261,7 +261,7 @@ function StepCard({ item, expanded, onToggle, onRefresh }: {
       {expanded && (
         <div style={{ padding: "0 14px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
           {s.description && (
-            <div style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5 }}>{s.description}</div>
+            <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5 }}>{s.description}</div>
           )}
           <StepVendorsBlock step={s} onRefresh={onRefresh} />
         </div>
@@ -297,11 +297,11 @@ function StepVendorsBlock({ step, onRefresh }: { step: Step; onRefresh: () => vo
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>
+      <div style={{ fontSize: "var(--text-2xs)", fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>
         Prestataires
       </div>
       {vendors.length === 0 ? (
-        <div style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", fontStyle: "italic" }}>Aucun prestataire lié</div>
+        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", fontStyle: "italic" }}>Aucun prestataire lié</div>
       ) : vendors.map(v => (
         <div key={v.vendor.id} style={{
           padding: "8px 10px", borderRadius: 10,
@@ -312,15 +312,15 @@ function StepVendorsBlock({ step, onRefresh }: { step: Step; onRefresh: () => vo
             width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
             background: v.confirmed ? G : "var(--dash-faint-2,rgba(183,191,217,0.2))",
             display: "inline-flex", alignItems: "center", justifyContent: "center",
-            fontSize: 10, fontWeight: 800, color: v.confirmed ? "#fff" : "var(--dash-text-2,#6a6a71)",
+            fontSize: "var(--text-2xs)", fontWeight: 800, color: v.confirmed ? "#fff" : "var(--dash-text-2,#6a6a71)",
           }}>{v.vendor.name.slice(0,2).toUpperCase()}</div>
           <Link href={`/vendor/${v.vendor.slug}`} style={{
             flex: 1, minWidth: 0, textDecoration: "none", cursor: "pointer",
           }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <div style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {v.vendor.name}
             </div>
-            <div style={{ fontSize: 10, fontWeight: 600, color: v.confirmed ? "#22c55e" : "#f59e0b" }}>
+            <div style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: v.confirmed ? "#22c55e" : "#f59e0b" }}>
               {v.confirmed ? "● Confirmé" : "○ En contact"}
             </div>
           </Link>
@@ -339,7 +339,7 @@ function StepVendorsBlock({ step, onRefresh }: { step: Step; onRefresh: () => vo
         marginTop: 4, padding: "8px 12px", borderRadius: 10,
         border: "1px dashed var(--dash-border,rgba(183,191,217,0.35))",
         background: "transparent", color: "var(--dash-text-2,#6a6a71)",
-        fontSize: 12, fontWeight: 600, textDecoration: "none",
+        fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none",
         display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6,
       }}>
         <span style={gicon(14)}>search</span>
@@ -401,7 +401,7 @@ function QuickForm({ mode, date, plannerId, onClose, onCreated }: {
         padding: 22, display: "flex", flexDirection: "column", gap: 14,
       }} className="clone-surface">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "var(--dash-text,#121317)" }}>
+          <h3 style={{ margin: 0, fontSize: "var(--text-base)", fontWeight: 800, color: "var(--dash-text,#121317)" }}>
             Nouvelle {mode === "step" ? "étape" : "date"}
           </h3>
           <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", border: "none", background: "var(--dash-faint-2,rgba(183,191,217,0.15))", cursor: "pointer" }}>
@@ -409,7 +409,7 @@ function QuickForm({ mode, date, plannerId, onClose, onCreated }: {
           </button>
         </div>
 
-        <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
+        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
           {DAYS_LONG[(date.getDay()+6)%7]} {date.getDate()} {MONTHS_LONG[date.getMonth()]} {date.getFullYear()}
         </div>
 
@@ -433,20 +433,20 @@ function QuickForm({ mode, date, plannerId, onClose, onCreated }: {
           </Field>
         )}
 
-        {err && <div style={{ fontSize: 12, color: "#ef4444" }}>{err}</div>}
+        {err && <div style={{ fontSize: "var(--text-xs)", color: "#ef4444" }}>{err}</div>}
 
         <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
           <button onClick={onClose} style={{
             flex: 1, height: 42, borderRadius: 10,
             border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
             background: "var(--dash-surface,#fff)", cursor: "pointer",
-            fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", fontFamily: "inherit",
+            fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", fontFamily: "inherit",
           }}>Annuler</button>
           <button onClick={submit} disabled={submitting || !title.trim()} style={{
             flex: 1, height: 42, borderRadius: 10, border: "none", background: G, color: "#fff",
             cursor: submitting || !title.trim() ? "default" : "pointer",
             opacity: submitting || !title.trim() ? 0.5 : 1,
-            fontSize: 13, fontWeight: 700, fontFamily: "inherit",
+            fontSize: "var(--text-sm)", fontWeight: 700, fontFamily: "inherit",
           }}>{submitting ? "Création…" : "Créer"}</button>
         </div>
       </div>
@@ -456,7 +456,7 @@ function QuickForm({ mode, date, plannerId, onClose, onCreated }: {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-      <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>{label}</span>
+      <span style={{ fontSize: "var(--text-2xs)", fontWeight: 800, letterSpacing: "0.1em", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase" }}>{label}</span>
       {children}
     </label>
   )
@@ -466,7 +466,7 @@ function inputStyle(): React.CSSProperties {
     height: 40, padding: "0 12px",
     border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
     borderRadius: 10, background: "var(--dash-bg,#f7f7fb)",
-    fontSize: 13, color: "var(--dash-text,#121317)", fontFamily: "inherit", outline: "none", width: "100%",
+    fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", fontFamily: "inherit", outline: "none", width: "100%",
   }
 }
 

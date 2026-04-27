@@ -189,7 +189,7 @@ export default function GuestsPage() {
             { label: "+1 attendus",       value: rsvpData?.stats.plusOnes ?? 0,  color: "#9333EA" },
           ].map(s => (
             <div key={s.label} style={{ ...cardStyle, padding: "16px 20px" }}>
-              <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 6px" }}>{s.label}</p>
+              <p style={{ fontSize: "var(--text-2xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 6px" }}>{s.label}</p>
               <p style={{ fontSize: "clamp(20px,2.2vw,28px)", fontWeight: 800, color: s.color, margin: 0, letterSpacing: "-0.04em" }}>{s.value}</p>
             </div>
           ))}
@@ -235,22 +235,22 @@ export default function GuestsPage() {
               {guests.map(g => (
                 <div key={g.id} style={cardStyle}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: `${activeEvent.color}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: activeEvent.color, flexShrink: 0 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: `${activeEvent.color}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-sm)", fontWeight: 700, color: activeEvent.color, flexShrink: 0 }}>
                       {g.name.charAt(0).toUpperCase()}
                     </div>
                     <span style={{ flex: 1, fontSize: "clamp(13px,0.95vw,14px)", fontWeight: 600, color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.name}</span>
                     <button type="button" onClick={() => cycleStatus(g)} className="no-print" style={{
                       padding: "4px 10px", borderRadius: 99, border: "none", cursor: "pointer",
-                      fontSize: 11, fontWeight: 600, fontFamily: "inherit",
+                      fontSize: "var(--text-xs)", fontWeight: 600, fontFamily: "inherit",
                       background: `${GUEST_COLORS[g.rsvp] ?? "#9a9aaa"}18`,
                       color: GUEST_COLORS[g.rsvp] ?? "#9a9aaa",
                     }}>{GUEST_LABELS[g.rsvp] ?? g.rsvp}</button>
                   </div>
-                  {g.notes && <p style={{ marginTop: 8, marginBottom: 0, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>{g.notes}</p>}
-                  {g.linkedRsvpId && <p style={{ marginTop: 6, marginBottom: 0, fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>→ Lié à une réponse site</p>}
+                  {g.notes && <p style={{ marginTop: 8, marginBottom: 0, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{g.notes}</p>}
+                  {g.linkedRsvpId && <p style={{ marginTop: 6, marginBottom: 0, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>→ Lié à une réponse site</p>}
                   <button type="button" onClick={() => deleteGuest(g.id)} className="no-print" style={{
                     marginTop: 6, alignSelf: "flex-start", background: "transparent", border: "none",
-                    color: "var(--dash-text-3,#9a9aaa)", fontSize: 11, cursor: "pointer", padding: 0,
+                    color: "var(--dash-text-3,#9a9aaa)", fontSize: "var(--text-xs)", cursor: "pointer", padding: 0,
                   }}>Supprimer</button>
                 </div>
               ))}
@@ -273,7 +273,7 @@ export default function GuestsPage() {
                         <td style={td}>
                           <button type="button" onClick={() => cycleStatus(g)} className="no-print" style={{
                             padding: "3px 8px", borderRadius: 99, border: "none", cursor: "pointer",
-                            fontSize: 11, fontWeight: 600,
+                            fontSize: "var(--text-xs)", fontWeight: 600,
                             background: `${GUEST_COLORS[g.rsvp] ?? "#9a9aaa"}18`,
                             color: GUEST_COLORS[g.rsvp] ?? "#9a9aaa",
                           }}>{GUEST_LABELS[g.rsvp] ?? g.rsvp}</button>
@@ -299,7 +299,7 @@ export default function GuestsPage() {
               Réponses du site <span style={{ color: "var(--dash-text-3,#9a9aaa)", fontWeight: 500 }}>· {dedupedRsvps.length}</span>
             </h2>
             {rsvpData && rsvpData.rsvps.length > dedupedRsvps.length && (
-              <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
+              <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
                 {rsvpData.rsvps.length - dedupedRsvps.length} doublons masqués
               </span>
             )}
@@ -320,7 +320,7 @@ export default function GuestsPage() {
                       background: r.attendingMain ? "#22c55e18" : "#ef444418",
                       color: r.attendingMain ? "#22c55e" : "#ef4444",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 13, fontWeight: 700, flexShrink: 0,
+                      fontSize: "var(--text-sm)", fontWeight: 700, flexShrink: 0,
                     }}>{r.attendingMain ? "✓" : "✗"}</span>
                   </div>
                   {r.plusOneName?.trim() && <Detail icon="👥" text={`+1 : ${r.plusOneName}`} />}
@@ -329,11 +329,11 @@ export default function GuestsPage() {
                   <div className="no-print" style={{ display: "flex", gap: 10, marginTop: 10 }}>
                     <button type="button" onClick={() => setLinkingRsvpId(r.id)} style={{
                       background: "transparent", border: "none", color: "var(--dash-text-2,#6a6a71)",
-                      fontSize: 11, cursor: "pointer", padding: 0, textDecoration: "underline",
+                      fontSize: "var(--text-xs)", cursor: "pointer", padding: 0, textDecoration: "underline",
                     }}>Lier</button>
                     <button type="button" onClick={() => deleteRsvp(r.id)} style={{
                       background: "transparent", border: "none", color: "var(--dash-text-3,#9a9aaa)",
-                      fontSize: 11, cursor: "pointer", padding: 0, marginLeft: "auto",
+                      fontSize: "var(--text-xs)", cursor: "pointer", padding: 0, marginLeft: "auto",
                     }}>Supprimer</button>
                   </div>
                 </div>
@@ -400,5 +400,5 @@ function truncate(s: string | null, n: number): string {
   return s.length <= n ? s : s.slice(0, n) + "…"
 }
 
-const th: CSSProperties = { textAlign: "left", padding: "10px 14px", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }
+const th: CSSProperties = { textAlign: "left", padding: "10px 14px", fontSize: "var(--text-xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }
 const td: CSSProperties = { padding: "11px 14px", color: "var(--dash-text,#121317)" }

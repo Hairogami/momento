@@ -34,7 +34,7 @@ export default function CloneForgotPasswordPage() {
 
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <Link href="/" style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", textDecoration: "none", letterSpacing: "-0.03em" }}>
+          <Link href="/" style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", textDecoration: "none", letterSpacing: "-0.03em" }}>
             Momento
           </Link>
         </div>
@@ -47,10 +47,10 @@ export default function CloneForgotPasswordPage() {
         }}>
           {!submitted ? (
             <>
-              <h1 style={{ fontSize: 22, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+              <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
                 Mot de passe oublié
               </h1>
-              <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 24px", lineHeight: 1.5 }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 24px", lineHeight: 1.5 }}>
                 Saisis ton e-mail et nous t&apos;enverrons un lien de réinitialisation.
               </p>
 
@@ -62,7 +62,7 @@ export default function CloneForgotPasswordPage() {
                     height: 46, padding: "0 14px", borderRadius: 12,
                     border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
                     background: "var(--dash-input-bg,#fafafa)",
-                    fontSize: 14, color: "var(--dash-text,#121317)",
+                    fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)",
                     outline: "none", fontFamily: "inherit", boxSizing: "border-box", width: "100%",
                   }}
                   onFocus={e => (e.target.style.borderColor = "#E11D48")}
@@ -72,7 +72,7 @@ export default function CloneForgotPasswordPage() {
                 <Turnstile onToken={setTurnstileToken} onError={() => setTurnstileToken("")} />
 
                 {error && (
-                  <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>
+                  <p style={{ fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>
                     {error}
                   </p>
                 )}
@@ -80,7 +80,7 @@ export default function CloneForgotPasswordPage() {
                 <button type="submit" disabled={loading} style={{
                   height: 46, borderRadius: 12, border: "none",
                   background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-                  color: "#fff", fontSize: 14, fontWeight: 600,
+                  color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600,
                   cursor: loading ? "wait" : "pointer", fontFamily: "inherit",
                   opacity: loading ? 0.7 : 1,
                 }}>
@@ -88,7 +88,7 @@ export default function CloneForgotPasswordPage() {
                 </button>
               </form>
 
-              <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "var(--dash-text-2,#6a6a71)" }}>
+              <p style={{ textAlign: "center", marginTop: 20, fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)" }}>
                 <Link href="/login" style={{ color: "var(--dash-text-2,#6a6a71)" }}>← Retour à la connexion</Link>
               </p>
             </>
@@ -104,15 +104,15 @@ export default function CloneForgotPasswordPage() {
                   <path d="M4 12l5 5L20 7" stroke="#E11D48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 10px" }}>E-mail envoyé !</h2>
-              <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.6, margin: "0 0 20px" }}>
+              <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 10px" }}>E-mail envoyé !</h2>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.6, margin: "0 0 20px" }}>
                 Si un compte existe pour <strong style={{ color: "var(--dash-text,#121317)" }}>{email}</strong>, tu recevras un lien de réinitialisation.
               </p>
-              <p style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", marginBottom: 24 }}>Vérifie également tes spams.</p>
+              <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginBottom: 24 }}>Vérifie également tes spams.</p>
               <Link href="/login" style={{
                 display: "inline-block", padding: "12px 28px", borderRadius: 12,
                 background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-                color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none",
+                color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600, textDecoration: "none",
               }}>
                 Retour à la connexion
               </Link>
@@ -120,7 +120,7 @@ export default function CloneForgotPasswordPage() {
           )}
         </div>
 
-        <p style={{ textAlign: "center", marginTop: 24, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>
+        <p style={{ textAlign: "center", marginTop: 24, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
           © 2026 Momento Events
         </p>
       </div>

@@ -30,11 +30,11 @@ const inputStyle: React.CSSProperties = {
   height: 46, padding: "0 14px", borderRadius: 12,
   border: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
   background: "var(--dash-input-bg,#fafafa)",
-  fontSize: 14, color: "var(--dash-text,#121317)",
+  fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)",
   outline: "none", fontFamily: "inherit", boxSizing: "border-box", width: "100%",
 }
 const labelStyle: React.CSSProperties = {
-  fontSize: 12, fontWeight: 600, color: "var(--dash-text-2,#6a6a71)",
+  fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2,#6a6a71)",
   textTransform: "uppercase", letterSpacing: "0.05em",
 }
 const cardStyle: React.CSSProperties = {
@@ -170,10 +170,10 @@ export default function ProfilePage() {
       <div className="lg:hidden"><AntNav /></div>
 
       <main style={{ flex: 1, padding: "32px 24px", maxWidth: 620, margin: "0 auto", width: "100%" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+        <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
           Mon profil
         </h1>
-        <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 28px" }}>
+        <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 28px" }}>
           Gérer tes informations personnelles et ta sécurité.
         </p>
 
@@ -183,7 +183,7 @@ export default function ProfilePage() {
           <>
             {/* ── Avatar ── */}
             <div style={cardStyle}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 20px" }}>
+              <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 20px" }}>
                 Photo de profil
               </h2>
               <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
@@ -195,7 +195,7 @@ export default function ProfilePage() {
                       style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", border: "3px solid var(--dash-border,rgba(183,191,217,0.3))" }}
                     />
                   ) : (
-                    <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, color: "#fff", fontWeight: 700 }}>
+                    <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-xl)", color: "#fff", fontWeight: 700 }}>
                       {initials}
                     </div>
                   )}
@@ -209,14 +209,14 @@ export default function ProfilePage() {
                   <button
                     onClick={() => fileRef.current?.click()}
                     disabled={uploading}
-                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 18px", borderRadius: 999, border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", background: "var(--dash-surface,#fff)", color: "var(--dash-text,#121317)", fontSize: 13, fontWeight: 600, cursor: uploading ? "wait" : "pointer", fontFamily: "inherit" }}
+                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 18px", borderRadius: 999, border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", background: "var(--dash-surface,#fff)", color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)", fontWeight: 600, cursor: uploading ? "wait" : "pointer", fontFamily: "inherit" }}
                   >
                     <GsIcon icon="upload" size={15} /> {uploading ? "Upload…" : "Changer la photo"}
                   </button>
-                  <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: "6px 0 0" }}>
+                  <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: "6px 0 0" }}>
                     JPG, PNG, WebP — max 5 Mo
                   </p>
-                  {uploadErr && <p style={{ fontSize: 12, color: "#ef4444", margin: "4px 0 0" }}>{uploadErr}</p>}
+                  {uploadErr && <p style={{ fontSize: "var(--text-xs)", color: "#ef4444", margin: "4px 0 0" }}>{uploadErr}</p>}
                 </div>
                 <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleAvatarChange} />
               </div>
@@ -224,7 +224,7 @@ export default function ProfilePage() {
 
             {/* ── Infos perso ── */}
             <div style={cardStyle}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 20px" }}>
+              <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 20px" }}>
                 Informations personnelles
               </h2>
               <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -275,13 +275,13 @@ export default function ProfilePage() {
                 )}
 
                 {profileErr && (
-                  <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>{profileErr}</p>
+                  <p style={{ fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>{profileErr}</p>
                 )}
                 {saved && (
-                  <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(34,197,94,0.07)", color: "#16a34a", margin: 0 }}>✓ Profil mis à jour</p>
+                  <p style={{ fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10, background: "rgba(34,197,94,0.07)", color: "#16a34a", margin: 0 }}>✓ Profil mis à jour</p>
                 )}
 
-                <button type="submit" disabled={saving} style={{ height: 46, borderRadius: 12, border: "none", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", color: "#fff", fontSize: 14, fontWeight: 600, cursor: saving ? "wait" : "pointer", fontFamily: "inherit", opacity: saving ? 0.7 : 1, marginTop: 4 }}>
+                <button type="submit" disabled={saving} style={{ height: 46, borderRadius: 12, border: "none", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600, cursor: saving ? "wait" : "pointer", fontFamily: "inherit", opacity: saving ? 0.7 : 1, marginTop: 4 }}>
                   {saving ? "Sauvegarde…" : "Enregistrer"}
                 </button>
               </form>
@@ -293,7 +293,7 @@ export default function ProfilePage() {
                 onClick={() => setPwSection(v => !v)}
                 style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }}
               >
-                <h2 style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+                <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                   Changer le mot de passe
                 </h2>
                 <GsIcon icon={pwSection ? "expand_less" : "expand_more"} size={20} color="var(--dash-text-3,#9a9aaa)" />
@@ -322,10 +322,10 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  {pwErr && <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>{pwErr}</p>}
-                  {pwSaved && <p style={{ fontSize: 13, padding: "10px 14px", borderRadius: 10, background: "rgba(34,197,94,0.07)", color: "#16a34a", margin: 0 }}>✓ Mot de passe modifié</p>}
+                  {pwErr && <p style={{ fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", margin: 0 }}>{pwErr}</p>}
+                  {pwSaved && <p style={{ fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10, background: "rgba(34,197,94,0.07)", color: "#16a34a", margin: 0 }}>✓ Mot de passe modifié</p>}
 
-                  <button type="submit" disabled={pwSaving} style={{ height: 46, borderRadius: 12, border: "none", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", color: "#fff", fontSize: 14, fontWeight: 600, cursor: pwSaving ? "wait" : "pointer", fontFamily: "inherit", opacity: pwSaving ? 0.7 : 1 }}>
+                  <button type="submit" disabled={pwSaving} style={{ height: 46, borderRadius: 12, border: "none", background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600, cursor: pwSaving ? "wait" : "pointer", fontFamily: "inherit", opacity: pwSaving ? 0.7 : 1 }}>
                     {pwSaving ? "Modification…" : "Modifier le mot de passe"}
                   </button>
                 </form>

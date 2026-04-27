@@ -172,8 +172,8 @@ export default function PackagesEditor() {
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
       <header style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#121317", margin: 0 }}>Packages & tarifs</h1>
-          <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0 0" }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>Packages & tarifs</h1>
+          <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "4px 0 0" }}>
             Proposez 2 à 3 formules claires — les clients choisissent plus vite et mieux.
           </p>
         </div>
@@ -181,7 +181,7 @@ export default function PackagesEditor() {
           <button
             onClick={() => startCreate()}
             style={{
-              padding: "9px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700,
+              padding: "9px 18px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 700,
               background: "linear-gradient(135deg,#E11D48,#9333EA)",
               color: "#fff", border: "none", cursor: "pointer", fontFamily: "inherit",
             }}
@@ -197,10 +197,10 @@ export default function PackagesEditor() {
           background: "#fff", borderRadius: 14, padding: 20, marginBottom: 16,
           border: "1px solid rgba(183,191,217,0.18)",
         }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: "#121317", marginBottom: 4 }}>
+          <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317", marginBottom: 4 }}>
             Démarrer avec un modèle
           </div>
-          <p style={{ fontSize: 12, color: "#6b7280", margin: "0 0 14px" }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "#6b7280", margin: "0 0 14px" }}>
             Les prestataires avec 3 formules (Essentiel / Premium / Signature) reçoivent 2× plus de demandes qualifiées.
             Adaptez ensuite les prix à votre marché.
           </p>
@@ -215,8 +215,8 @@ export default function PackagesEditor() {
                   cursor: "pointer", fontFamily: "inherit",
                 }}
               >
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#121317" }}>{t.tier}</div>
-                <div style={{ fontSize: 12, color: "#6b7280", marginTop: 3 }}>
+                <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317" }}>{t.tier}</div>
+                <div style={{ fontSize: "var(--text-xs)", color: "#6b7280", marginTop: 3 }}>
                   {t.draft.price} Dhs · {t.draft.duration}
                 </div>
               </button>
@@ -229,14 +229,14 @@ export default function PackagesEditor() {
         <div style={{
           padding: "10px 14px", borderRadius: 10, marginBottom: 12,
           background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)",
-          color: "#991B1B", fontSize: 13,
+          color: "#991B1B", fontSize: "var(--text-sm)",
         }}>
           {error}
         </div>
       )}
 
       {/* Loading */}
-      {loading && <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: 13 }}>Chargement…</div>}
+      {loading && <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-sm)" }}>Chargement…</div>}
 
       {/* Liste des packages */}
       {packages && packages.length > 0 && (
@@ -254,16 +254,16 @@ export default function PackagesEditor() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "#121317" }}>{p.name}</div>
+                  <div style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "#121317" }}>{p.name}</div>
                   {p.duration && (
-                    <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>{p.duration}</div>
+                    <div style={{ fontSize: "var(--text-xs)", color: "#6b7280", marginTop: 2 }}>{p.duration}</div>
                   )}
                 </div>
                 <button
                   onClick={() => toggleAvailable(p)}
                   title={p.available ? "Désactiver" : "Activer"}
                   style={{
-                    padding: "3px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700,
+                    padding: "3px 8px", borderRadius: 99, fontSize: "var(--text-2xs)", fontWeight: 700,
                     background: p.available ? "rgba(34,197,94,0.12)" : "rgba(107,114,128,0.12)",
                     color: p.available ? "#166534" : "#6b7280",
                     border: "none", cursor: "pointer", fontFamily: "inherit",
@@ -274,19 +274,19 @@ export default function PackagesEditor() {
                 </button>
               </div>
 
-              <div style={{ fontSize: 22, fontWeight: 800, color: "#121317", margin: "10px 0 6px" }}>
-                {p.price.toLocaleString("fr-MA")} <span style={{ fontSize: 12, color: "#6b7280", fontWeight: 500 }}>Dhs</span>
+              <div style={{ fontSize: "var(--text-lg)", fontWeight: 800, color: "#121317", margin: "10px 0 6px" }}>
+                {p.price.toLocaleString("fr-MA")} <span style={{ fontSize: "var(--text-xs)", color: "#6b7280", fontWeight: 500 }}>Dhs</span>
               </div>
 
               {p.description && (
-                <p style={{ fontSize: 13, color: "#45474D", margin: "0 0 10px", lineHeight: 1.5 }}>
+                <p style={{ fontSize: "var(--text-sm)", color: "#45474D", margin: "0 0 10px", lineHeight: 1.5 }}>
                   {p.description}
                 </p>
               )}
 
               {p.includes && (
                 <div style={{
-                  fontSize: 12, color: "#45474D", whiteSpace: "pre-line", lineHeight: 1.6,
+                  fontSize: "var(--text-xs)", color: "#45474D", whiteSpace: "pre-line", lineHeight: 1.6,
                   marginBottom: 10,
                 }}>
                   {p.includes}
@@ -294,7 +294,7 @@ export default function PackagesEditor() {
               )}
 
               {p.maxGuests != null && (
-                <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 10 }}>
+                <div style={{ fontSize: "var(--text-xs)", color: "#6b7280", marginBottom: 10 }}>
                   Jusqu&apos;à {p.maxGuests} invités
                 </div>
               )}
@@ -303,7 +303,7 @@ export default function PackagesEditor() {
                 <button
                   onClick={() => startEdit(p)}
                   style={{
-                    flex: 1, padding: "7px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                    flex: 1, padding: "7px 10px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
                     background: "#fff", color: "#45474D",
                     border: "1px solid rgba(183,191,217,0.3)",
                     cursor: "pointer", fontFamily: "inherit",
@@ -314,7 +314,7 @@ export default function PackagesEditor() {
                 <button
                   onClick={() => remove(p.id)}
                   style={{
-                    padding: "7px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                    padding: "7px 10px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
                     background: "rgba(239,68,68,0.06)", color: "#991B1B",
                     border: "1px solid rgba(239,68,68,0.2)",
                     cursor: "pointer", fontFamily: "inherit",
@@ -372,11 +372,11 @@ function DraftEditor({
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#121317" }}>
+          <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: 0, color: "#121317" }}>
             {isNew ? "Nouveau package" : "Modifier le package"}
           </h2>
           <button onClick={onCancel} style={{
-            background: "none", border: "none", fontSize: 24, cursor: "pointer",
+            background: "none", border: "none", fontSize: "var(--text-lg)", cursor: "pointer",
             color: "#9a9aaa", padding: 0, lineHeight: 1,
           }}>×</button>
         </div>
@@ -440,7 +440,7 @@ function DraftEditor({
               style={inputStyle}
             />
           </Field>
-          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#45474D", marginTop: 20 }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)", color: "#45474D", marginTop: 20 }}>
             <input
               type="checkbox"
               checked={draft.available}
@@ -455,7 +455,7 @@ function DraftEditor({
             onClick={onCancel}
             disabled={saving}
             style={{
-              padding: "9px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+              padding: "9px 16px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 600,
               background: "#fff", color: "#45474D",
               border: "1px solid rgba(183,191,217,0.3)",
               cursor: "pointer", fontFamily: "inherit",
@@ -467,7 +467,7 @@ function DraftEditor({
             onClick={onSave}
             disabled={saving}
             style={{
-              padding: "9px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700,
+              padding: "9px 18px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 700,
               background: saving ? "#d1d5db" : "linear-gradient(135deg,#E11D48,#9333EA)",
               color: "#fff", border: "none",
               cursor: saving ? "not-allowed" : "pointer", fontFamily: "inherit",
@@ -484,13 +484,13 @@ function DraftEditor({
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "9px 12px", borderRadius: 8,
   border: "1px solid rgba(183,191,217,0.3)",
-  fontSize: 13, fontFamily: "inherit", background: "#fff", color: "#121317",
+  fontSize: "var(--text-sm)", fontFamily: "inherit", background: "#fff", color: "#121317",
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 12 }}>
-      <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+      <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
         {label}
       </label>
       {children}

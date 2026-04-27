@@ -85,10 +85,10 @@ export default function VendorMediaManager({ slug, initial }: { slug: string; in
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h3 style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 2, marginTop: 0, letterSpacing: "0.02em", textTransform: "uppercase" }}>
+          <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: C.text, marginBottom: 2, marginTop: 0, letterSpacing: "0.02em", textTransform: "uppercase" }}>
             Photos · {items.length}
           </h3>
-          <p style={{ fontSize: 11, color: C.textMuted, margin: 0 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: C.textMuted, margin: 0 }}>
             JPG / PNG / WebP · max 5 MB · 30 photos max. Reflété sur la fiche publique en quelques secondes.
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function VendorMediaManager({ slug, initial }: { slug: string; in
             style={{
               padding: "8px 16px", borderRadius: 10,
               background: busy ? C.textDim : `linear-gradient(135deg, ${C.accent2}, ${C.accent})`,
-              color: "#fff", border: "none", fontSize: 12, fontWeight: 700,
+              color: "#fff", border: "none", fontSize: "var(--text-xs)", fontWeight: 700,
               cursor: busy ? "wait" : "pointer", fontFamily: "inherit",
             }}
           >
@@ -120,17 +120,17 @@ export default function VendorMediaManager({ slug, initial }: { slug: string; in
       {msg && (
         <div style={{
           background: C.panel2, border: `1px solid ${C.border}`,
-          padding: "8px 12px", borderRadius: 8, fontSize: 12,
+          padding: "8px 12px", borderRadius: 8, fontSize: "var(--text-xs)",
           marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
           <span>{msg}</span>
-          <button onClick={() => setMsg(null)} style={{ background: "transparent", border: "none", color: C.textMuted, cursor: "pointer", fontSize: 14 }}>×</button>
+          <button onClick={() => setMsg(null)} style={{ background: "transparent", border: "none", color: C.textMuted, cursor: "pointer", fontSize: "var(--text-sm)" }}>×</button>
         </div>
       )}
 
       {items.length === 0 ? (
         <div style={{
-          padding: 32, textAlign: "center", color: C.textDim, fontSize: 12,
+          padding: 32, textAlign: "center", color: C.textDim, fontSize: "var(--text-xs)",
           border: `1px dashed ${C.border}`, borderRadius: 10,
         }}>
           Aucune photo. Clique sur &quot;+ Ajouter des photos&quot;.
@@ -161,7 +161,7 @@ export default function VendorMediaManager({ slug, initial }: { slug: string; in
                   position: "absolute", top: 6, right: 6,
                   background: "rgba(0,0,0,0.7)", color: C.err,
                   border: `1px solid ${C.err}40`, padding: "4px 7px",
-                  borderRadius: 6, fontSize: 12, cursor: "pointer",
+                  borderRadius: 6, fontSize: "var(--text-xs)", cursor: "pointer",
                   fontFamily: "inherit", lineHeight: 1,
                 }}
               >🗑</button>

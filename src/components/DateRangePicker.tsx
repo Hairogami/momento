@@ -191,7 +191,7 @@ export default function DateRangePicker({ startDate, endDate, onSelect, onClear,
               {startDate ? formatDate(startDate) : "—"}
             </span>
           </div>
-          <span style={{ color: C.steel, fontSize: 18 }}>→</span>
+          <span style={{ color: C.steel, fontSize: "var(--text-md)" }}>→</span>
           {/* End chip */}
           <div className="flex flex-col items-center">
             <span className="text-[10px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: C.mist }}>Départ</span>

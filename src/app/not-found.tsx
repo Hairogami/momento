@@ -38,7 +38,7 @@ export default function NotFound() {
           Page introuvable
         </h1>
         <p style={{
-          fontSize: 14,
+          fontSize: "var(--text-sm)",
           color: "var(--dash-text-2,#6a6a71)",
           margin: "0 0 32px",
           lineHeight: 1.6,
@@ -52,7 +52,7 @@ export default function NotFound() {
             borderRadius: 999,
             background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
             color: "#fff",
-            fontSize: 13,
+            fontSize: "var(--text-sm)",
             fontWeight: 600,
             textDecoration: "none",
           }}>
@@ -63,7 +63,7 @@ export default function NotFound() {
             borderRadius: 999,
             border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
             color: "var(--dash-text,#121317)",
-            fontSize: 13,
+            fontSize: "var(--text-sm)",
             fontWeight: 500,
             textDecoration: "none",
             background: "var(--dash-surface,#fff)",

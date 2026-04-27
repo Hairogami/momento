@@ -22,11 +22,11 @@ export function ViewToggle({ value, onChange }: Props) {
       }}
     >
       <button type="button" onClick={() => onChange("cards")} style={btnStyle(value === "cards")}>
-        <span style={{ fontSize: 14 }}>◧</span>
+        <span style={{ fontSize: "var(--text-sm)" }}>◧</span>
         <span>Cards</span>
       </button>
       <button type="button" onClick={() => onChange("list")} style={btnStyle(value === "list")}>
-        <span style={{ fontSize: 14 }}>☰</span>
+        <span style={{ fontSize: "var(--text-sm)" }}>☰</span>
         <span>Liste</span>
       </button>
     </div>

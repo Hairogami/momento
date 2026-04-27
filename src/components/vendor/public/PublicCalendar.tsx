@@ -64,7 +64,7 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
       border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+        <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
           Disponibilités
         </h3>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -76,7 +76,7 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
               background: offset === 0 ? "var(--dash-faint,#f7f7fb)" : "var(--dash-surface,#fff)",
               color: offset === 0 ? "#c7c9d2" : "var(--dash-text,#121317)",
               cursor: offset === 0 ? "default" : "pointer",
-              fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "var(--text-sm)", display: "flex", alignItems: "center", justifyContent: "center",
               fontFamily: "inherit",
             }}
           >‹</button>
@@ -88,7 +88,7 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
               background: offset === 11 ? "var(--dash-faint,#f7f7fb)" : "var(--dash-surface,#fff)",
               color: offset === 11 ? "#c7c9d2" : "var(--dash-text,#121317)",
               cursor: offset === 11 ? "default" : "pointer",
-              fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "var(--text-sm)", display: "flex", alignItems: "center", justifyContent: "center",
               fontFamily: "inherit",
             }}
           >›</button>
@@ -96,9 +96,9 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
       </div>
 
       {loading ? (
-        <div style={{ padding: 24, textAlign: "center", color: "#9a9aaa", fontSize: 12 }}>Chargement…</div>
+        <div style={{ padding: 24, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-xs)" }}>Chargement…</div>
       ) : error ? (
-        <div style={{ padding: 24, textAlign: "center", color: "#9a9aaa", fontSize: 12 }}>
+        <div style={{ padding: 24, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-xs)" }}>
           Calendrier indisponible pour le moment.
         </div>
       ) : (
@@ -111,7 +111,7 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
         />
       )}
 
-      <div style={{ display: "flex", gap: 14, marginTop: 14, fontSize: 11, color: "var(--dash-text-3,#6b7280)", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 14, marginTop: 14, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#6b7280)", flexWrap: "wrap" }}>
         <LegendDot color="#E11D48" label="Pris" />
         <LegendDot color="#16a34a" label="Libre" outline />
         <LegendDot color="#d1d5db" label="Passé" />
@@ -135,7 +135,7 @@ function MonthGrid({
   return (
     <div>
       <div style={{
-        fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)",
+        fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)",
         marginBottom: 8, textTransform: "capitalize", textAlign: "center",
       }}>
         {MONTHS_FULL[month]} {year}
@@ -143,7 +143,7 @@ function MonthGrid({
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginBottom: 3 }}>
         {WEEKDAYS.map((w, i) => (
-          <div key={i} style={{ fontSize: 10, fontWeight: 700, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center" }}>{w}</div>
+          <div key={i} style={{ fontSize: "var(--text-2xs)", fontWeight: 700, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center" }}>{w}</div>
         ))}
       </div>
 
@@ -182,7 +182,7 @@ function MonthGrid({
               style={{
                 aspectRatio: "1", padding: 0, border,
                 borderRadius: 6, background: bg, color,
-                fontSize: 11, fontWeight: isToday ? 700 : 500,
+                fontSize: "var(--text-xs)", fontWeight: isToday ? 700 : 500,
                 cursor: clickable ? "pointer" : "default",
                 fontFamily: "inherit",
                 transition: "transform 80ms ease",

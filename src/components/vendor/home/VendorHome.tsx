@@ -83,8 +83,8 @@ export default function VendorHome({ publicSlug, vendorName }: { publicSlug: str
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700, color: "#121317", margin: 0 }}>Bonjour, {vendorName}</h1>
-          <p style={{ fontSize: 13, color: "#6a6a71", margin: "4px 0 0" }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>Bonjour, {vendorName}</h1>
+          <p style={{ fontSize: "var(--text-sm)", color: "#6a6a71", margin: "4px 0 0" }}>
             Voici l&apos;activité de votre fiche prestataire
           </p>
         </div>
@@ -161,7 +161,7 @@ function PeriodSelector(props: {
               onClick={() => props.setPeriod(t.id)}
               style={{
                 padding: "6px 12px", borderRadius: 7,
-                fontSize: 12, fontWeight: active ? 600 : 500,
+                fontSize: "var(--text-xs)", fontWeight: active ? 600 : 500,
                 color: active ? "#fff" : "#45474D",
                 background: active ? "#121317" : "transparent",
                 border: "none", cursor: "pointer",
@@ -177,7 +177,7 @@ function PeriodSelector(props: {
       {props.period === "custom" && (
         <div style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
           <input type="date" value={props.from} onChange={e => props.setFrom(e.target.value)} style={dateInputStyle} />
-          <span style={{ color: "#8a8f9c", fontSize: 12 }}>→</span>
+          <span style={{ color: "#8a8f9c", fontSize: "var(--text-xs)" }}>→</span>
           <input type="date" value={props.to} onChange={e => props.setTo(e.target.value)} style={dateInputStyle} />
         </div>
       )}
@@ -188,7 +188,7 @@ function PeriodSelector(props: {
 const dateInputStyle: React.CSSProperties = {
   height: 32, padding: "0 8px", borderRadius: 8,
   border: "1px solid rgba(183,191,217,0.35)", background: "#fff",
-  fontSize: 12, color: "#121317", fontFamily: "inherit", outline: "none",
+  fontSize: "var(--text-xs)", color: "#121317", fontFamily: "inherit", outline: "none",
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -209,13 +209,13 @@ function KPIStrip({ stats, loading, period }: { stats: StatsPayload | null; load
         const k = stats?.kpis[it.key]
         return (
           <div key={it.key} style={cardStyle(16)}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: "#8a8f9c", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+            <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#8a8f9c", textTransform: "uppercase", letterSpacing: "0.04em" }}>
               {it.label}
             </div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: "#121317", marginTop: 8, fontVariantNumeric: "tabular-nums" }}>
+            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", marginTop: 8, fontVariantNumeric: "tabular-nums" }}>
               {loading ? "—" : k ? it.format(k.current) : "0"}
             </div>
-            <div style={{ fontSize: 11, color: "#6a6a71", marginTop: 4 }}>
+            <div style={{ fontSize: "var(--text-xs)", color: "#6a6a71", marginTop: 4 }}>
               {loading || !k ? "\u00A0" : <DeltaBadge delta={k.deltaPct} />} <span style={{ color: "#8a8f9c" }}>vs {prevPeriodLabel(period)}</span>
             </div>
           </div>
@@ -330,8 +330,8 @@ function Funnel({ funnel }: { funnel?: StatsPayload["funnel"] }) {
         return (
           <div key={s.label}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-              <span style={{ fontSize: 12, fontWeight: 500, color: "#45474D" }}>{s.label}</span>
-              <span style={{ fontSize: 12, fontVariantNumeric: "tabular-nums", color: "#121317", fontWeight: 600 }}>
+              <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "#45474D" }}>{s.label}</span>
+              <span style={{ fontSize: "var(--text-xs)", fontVariantNumeric: "tabular-nums", color: "#121317", fontWeight: 600 }}>
                 {s.value.toLocaleString("fr-FR")}
                 {i > 0 && <span style={{ color: "#8a8f9c", fontWeight: 400, marginLeft: 6 }}>
                   ({pct.toFixed(1)}%)
@@ -406,7 +406,7 @@ function Donut({ donut }: { donut?: StatsPayload["donut"] }) {
       </svg>
       <ul style={{ listStyle: "none", padding: 0, margin: 0, flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
         {items.map(it => (
-          <li key={it.key} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
+          <li key={it.key} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-xs)" }}>
             <span style={{ width: 8, height: 8, borderRadius: 2, background: it.color, flexShrink: 0 }} />
             <span style={{ color: "#45474D", flex: 1 }}>{it.label}</span>
             <span style={{ color: "#121317", fontVariantNumeric: "tabular-nums", fontWeight: 600 }}>{it.value}</span>
@@ -430,8 +430,8 @@ function ScoreCard({ completion }: { completion: CompletionPayload | null }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <span style={{ fontSize: 28, fontWeight: 700, color: "#121317", fontVariantNumeric: "tabular-nums" }}>{pct}%</span>
-          <span style={{ fontSize: 12, color: "#6a6a71" }}>{completion.itemsDone} / {completion.itemsTotal} complétés</span>
+          <span style={{ fontSize: "var(--text-xl)", fontWeight: 700, color: "#121317", fontVariantNumeric: "tabular-nums" }}>{pct}%</span>
+          <span style={{ fontSize: "var(--text-xs)", color: "#6a6a71" }}>{completion.itemsDone} / {completion.itemsTotal} complétés</span>
         </div>
         <div style={{ height: 8, background: "#f0f1f6", borderRadius: 4, overflow: "hidden", marginTop: 8 }}>
           <div style={{ width: `${pct}%`, height: "100%", background: color, transition: "width 280ms ease" }} />
@@ -439,7 +439,7 @@ function ScoreCard({ completion }: { completion: CompletionPayload | null }) {
       </div>
       {completion.nextSteps.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "#8a8f9c", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#8a8f9c", textTransform: "uppercase", letterSpacing: "0.04em" }}>
             À faire maintenant
           </div>
           {completion.nextSteps.map(s => (
@@ -450,11 +450,11 @@ function ScoreCard({ completion }: { completion: CompletionPayload | null }) {
                 display: "flex", alignItems: "center", gap: 8,
                 padding: "8px 10px", borderRadius: 8,
                 background: "#fafbfe", border: "1px solid rgba(183,191,217,0.22)",
-                textDecoration: "none", fontSize: 12, color: "#121317",
+                textDecoration: "none", fontSize: "var(--text-xs)", color: "#121317",
               }}
             >
               <span style={{ flex: 1 }}>{s.label}</span>
-              <span style={{ fontSize: 10, color: "#8a8f9c" }}>+{s.weight} pts</span>
+              <span style={{ fontSize: "var(--text-2xs)", color: "#8a8f9c" }}>+{s.weight} pts</span>
               <span style={{ color: "#8a8f9c" }}>→</span>
             </Link>
           ))}
@@ -475,15 +475,15 @@ function PreviewCard({ publicSlug }: { publicSlug: string }) {
         width: 56, height: 56, borderRadius: 12,
         background: "linear-gradient(135deg,#fde4eb,#e9d5ff)",
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 24, flexShrink: 0,
+        fontSize: "var(--text-lg)", flexShrink: 0,
       }}>
         🎉
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 13, color: "#45474D" }}>
+        <div style={{ fontSize: "var(--text-sm)", color: "#45474D" }}>
           Votre fiche est visible publiquement à tous les organisateurs qui recherchent un prestataire.
         </div>
-        <div style={{ fontSize: 12, color: "#8a8f9c", marginTop: 4 }}>
+        <div style={{ fontSize: "var(--text-xs)", color: "#8a8f9c", marginTop: 4 }}>
           Chaque modification est reflétée en temps réel sur la page publique.
         </div>
       </div>
@@ -494,7 +494,7 @@ function PreviewCard({ publicSlug }: { publicSlug: string }) {
         style={{
           padding: "10px 16px", borderRadius: 10,
           background: "linear-gradient(135deg,#E11D48,#9333EA)",
-          color: "#fff", fontSize: 12, fontWeight: 600,
+          color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600,
           textDecoration: "none", whiteSpace: "nowrap",
         }}
       >
@@ -512,8 +512,8 @@ function Card({ title, subtitle, children }: { title: string; subtitle?: string;
   return (
     <section style={cardStyle(20)}>
       <header style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14 }}>
-        <h3 style={{ fontSize: 13, fontWeight: 600, color: "#121317", margin: 0 }}>{title}</h3>
-        {subtitle && <span style={{ fontSize: 11, color: "#8a8f9c" }}>{subtitle}</span>}
+        <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317", margin: 0 }}>{title}</h3>
+        {subtitle && <span style={{ fontSize: "var(--text-xs)", color: "#8a8f9c" }}>{subtitle}</span>}
       </header>
       {children}
     </section>
@@ -530,7 +530,7 @@ function Banner({ variant, children }: { variant: "error" | "info"; children: Re
     <div style={{
       padding: "10px 14px", borderRadius: 10,
       background: c.bg, color: c.color, border: `1px solid ${c.border}`,
-      fontSize: 12,
+      fontSize: "var(--text-xs)",
     }}>
       {children}
     </div>
@@ -541,7 +541,7 @@ function EmptyBlock({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
       padding: "32px 12px", textAlign: "center",
-      color: "#8a8f9c", fontSize: 12,
+      color: "#8a8f9c", fontSize: "var(--text-xs)",
     }}>
       {children}
     </div>

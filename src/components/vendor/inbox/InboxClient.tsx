@@ -169,10 +169,10 @@ export default function InboxClient() {
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
       <header style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: "#121317", margin: 0 }}>
+        <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>
           Inbox
         </h1>
-        <p style={{ fontSize: 13, color: "#6b7280", margin: "4px 0 0" }}>
+        <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "4px 0 0" }}>
           Gérez vos demandes clients — du premier contact à la réservation.
         </p>
       </header>
@@ -187,7 +187,7 @@ export default function InboxClient() {
               key={t.key}
               onClick={() => setFilter(t.key)}
               style={{
-                padding: "7px 14px", borderRadius: 999, fontSize: 13, fontWeight: 600,
+                padding: "7px 14px", borderRadius: 999, fontSize: "var(--text-sm)", fontWeight: 600,
                 border: active ? "none" : "1px solid rgba(183,191,217,0.25)",
                 background: active ? "linear-gradient(135deg,#E11D48,#9333EA)" : "#fff",
                 color: active ? "#fff" : "#45474D",
@@ -197,7 +197,7 @@ export default function InboxClient() {
             >
               {t.label}
               <span style={{
-                fontSize: 11, padding: "1px 7px", borderRadius: 99,
+                fontSize: "var(--text-xs)", padding: "1px 7px", borderRadius: 99,
                 background: active ? "rgba(255,255,255,0.22)" : "rgba(183,191,217,0.2)",
                 color: active ? "#fff" : "#6b7280", fontWeight: 700,
               }}>{count}</span>
@@ -216,7 +216,7 @@ export default function InboxClient() {
             width: "100%", maxWidth: 420,
             padding: "10px 14px", borderRadius: 10,
             border: "1px solid rgba(183,191,217,0.3)",
-            fontSize: 13, fontFamily: "inherit",
+            fontSize: "var(--text-sm)", fontFamily: "inherit",
             background: "#fff", color: "#121317",
           }}
         />
@@ -227,7 +227,7 @@ export default function InboxClient() {
         <div style={{
           padding: "10px 14px", borderRadius: 10, marginBottom: 12,
           background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)",
-          color: "#991B1B", fontSize: 13,
+          color: "#991B1B", fontSize: "var(--text-sm)",
         }}>
           {error}
         </div>
@@ -241,7 +241,7 @@ export default function InboxClient() {
         overflowX: "auto",
       }}>
         {loading ? (
-          <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: 13 }}>
+          <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-sm)" }}>
             Chargement…
           </div>
         ) : requests.length === 0 ? (
@@ -260,7 +260,7 @@ export default function InboxClient() {
             />
           )
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--text-sm)" }}>
             <thead>
               <tr style={{ background: "#fafbfd", textAlign: "left" }}>
                 <Th>Client</Th>
@@ -284,27 +284,27 @@ export default function InboxClient() {
                       <div style={{ fontWeight: isNew ? 700 : 600, color: "#121317" }}>
                         {r.clientName}
                       </div>
-                      <div style={{ fontSize: 12, color: "#6b7280" }}>
+                      <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>
                         {r.clientEmail}{r.clientPhone ? ` · ${r.clientPhone}` : ""}
                       </div>
                     </Td>
                     <Td>
                       <div>{r.eventType ?? "—"}</div>
                       {r.eventDate && (
-                        <div style={{ fontSize: 12, color: "#6b7280" }}>
+                        <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>
                           📅 {new Date(r.eventDate).toLocaleDateString("fr-MA", { day: "numeric", month: "long", year: "numeric" })}
                         </div>
                       )}
                     </Td>
                     <Td>
-                      <div style={{ fontSize: 12, color: "#45474D" }}>{fmtDate(r.createdAt)}</div>
+                      <div style={{ fontSize: "var(--text-xs)", color: "#45474D" }}>{fmtDate(r.createdAt)}</div>
                       {r.readAt && (
-                        <div style={{ fontSize: 11, color: "#9a9aaa" }}>Vue {fmtDate(r.readAt)}</div>
+                        <div style={{ fontSize: "var(--text-xs)", color: "#9a9aaa" }}>Vue {fmtDate(r.readAt)}</div>
                       )}
                     </Td>
                     <Td>
                       <span style={{
-                        fontSize: 11, fontWeight: 700, padding: "3px 9px",
+                        fontSize: "var(--text-xs)", fontWeight: 700, padding: "3px 9px",
                         borderRadius: 99, background: col.bg,
                         color: col.fg, border: `1px solid ${col.border}`,
                       }}>
@@ -351,7 +351,7 @@ export default function InboxClient() {
 function Th({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
     <th style={{
-      padding: "12px 16px", fontSize: 11, fontWeight: 700,
+      padding: "12px 16px", fontSize: "var(--text-xs)", fontWeight: 700,
       textTransform: "uppercase", letterSpacing: "0.05em",
       color: "#6b7280", ...style,
     }}>{children}</th>
@@ -377,7 +377,7 @@ function ActionMenu({
     <button
       onClick={onClick}
       style={{
-        padding: "6px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+        padding: "6px 10px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
         background: "transparent", border: `1px solid ${color}33`,
         color, cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
       }}
@@ -392,7 +392,7 @@ function ActionMenu({
       {!terminal && btn("Répondre", onReply, "#E11D48")}
       {!terminal && btn("Gagnée", onWon, "#166534")}
       {!terminal && btn("Perdue", onLost, "#991B1B")}
-      {terminal && <span style={{ fontSize: 12, color: "#9a9aaa" }}>—</span>}
+      {terminal && <span style={{ fontSize: "var(--text-xs)", color: "#9a9aaa" }}>—</span>}
     </div>
   )
 }
@@ -458,13 +458,13 @@ function ReplyModal({
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "#121317" }}>
+            <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: 0, color: "#121317" }}>
               Répondre à {request.clientName}
             </h2>
-            <p style={{ fontSize: 12, color: "#6b7280", margin: "2px 0 0" }}>{request.clientEmail}</p>
+            <p style={{ fontSize: "var(--text-xs)", color: "#6b7280", margin: "2px 0 0" }}>{request.clientEmail}</p>
           </div>
           <button onClick={onClose} style={{
-            background: "none", border: "none", fontSize: 24, cursor: "pointer",
+            background: "none", border: "none", fontSize: "var(--text-lg)", cursor: "pointer",
             color: "#9a9aaa", padding: 0, lineHeight: 1,
           }}>×</button>
         </div>
@@ -472,7 +472,7 @@ function ReplyModal({
         {/* Message original */}
         <div style={{
           background: "#fafbfd", borderRadius: 10, padding: 12, marginBottom: 16,
-          border: "1px solid rgba(183,191,217,0.14)", fontSize: 13,
+          border: "1px solid rgba(183,191,217,0.14)", fontSize: "var(--text-sm)",
           color: "#45474D", lineHeight: 1.5, maxHeight: 120, overflow: "auto",
         }}>
           {request.message}
@@ -482,7 +482,7 @@ function ReplyModal({
         {templates.length > 0 && (
           <>
             <div style={{ marginBottom: 10 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
                 Langue
               </div>
               <div style={{ display: "flex", gap: 6 }}>
@@ -491,7 +491,7 @@ function ReplyModal({
                     key={l}
                     onClick={() => setLang(l)}
                     style={{
-                      padding: "5px 11px", borderRadius: 99, fontSize: 12, fontWeight: 600,
+                      padding: "5px 11px", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 600,
                       background: lang === l ? "#121317" : "#fff",
                       color: lang === l ? "#fff" : "#45474D",
                       border: "1px solid rgba(183,191,217,0.3)",
@@ -506,7 +506,7 @@ function ReplyModal({
 
             {/* Templates pour la langue courante */}
             <div style={{ marginBottom: 14 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
                 Templates
               </div>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -515,7 +515,7 @@ function ReplyModal({
                     key={t.id}
                     onClick={() => applyTemplate(t)}
                     style={{
-                      padding: "6px 12px", borderRadius: 8, fontSize: 12,
+                      padding: "6px 12px", borderRadius: 8, fontSize: "var(--text-xs)",
                       background: templateId === t.id ? "rgba(225,29,72,0.1)" : "#fff",
                       color: templateId === t.id ? "#E11D48" : "#45474D",
                       border: `1px solid ${templateId === t.id ? "#E11D48" : "rgba(183,191,217,0.3)"}`,
@@ -526,7 +526,7 @@ function ReplyModal({
                   </button>
                 ))}
                 {(byLang[lang] ?? []).length === 0 && (
-                  <span style={{ fontSize: 12, color: "#9a9aaa", fontStyle: "italic" }}>
+                  <span style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", fontStyle: "italic" }}>
                     Aucun template dans cette langue. Créez-en dans Templates.
                   </span>
                 )}
@@ -539,7 +539,7 @@ function ReplyModal({
           <div style={{
             padding: 12, borderRadius: 10, marginBottom: 14,
             background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)",
-            color: "#B45309", fontSize: 12,
+            color: "#B45309", fontSize: "var(--text-xs)",
           }}>
             Aucun template créé. Gagnez du temps en préparant vos réponses types dans l&apos;onglet Templates.
           </div>
@@ -547,7 +547,7 @@ function ReplyModal({
 
         {/* Sujet + corps */}
         <div style={{ marginBottom: 10 }}>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+          <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
             Sujet
           </label>
           <input
@@ -556,13 +556,13 @@ function ReplyModal({
             style={{
               width: "100%", padding: "9px 12px", borderRadius: 8,
               border: "1px solid rgba(183,191,217,0.3)",
-              fontSize: 13, fontFamily: "inherit",
+              fontSize: "var(--text-sm)", fontFamily: "inherit",
             }}
           />
         </div>
 
         <div style={{ marginBottom: 16 }}>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+          <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
             Message
           </label>
           <textarea
@@ -574,7 +574,7 @@ function ReplyModal({
             style={{
               width: "100%", padding: "10px 12px", borderRadius: 8,
               border: "1px solid rgba(183,191,217,0.3)",
-              fontSize: 13, fontFamily: "inherit", lineHeight: 1.5,
+              fontSize: "var(--text-sm)", fontFamily: "inherit", lineHeight: 1.5,
               resize: "vertical",
             }}
           />
@@ -584,7 +584,7 @@ function ReplyModal({
           <button
             onClick={onClose}
             style={{
-              padding: "9px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+              padding: "9px 16px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 600,
               background: "#fff", color: "#45474D",
               border: "1px solid rgba(183,191,217,0.3)",
               cursor: "pointer", fontFamily: "inherit",
@@ -596,7 +596,7 @@ function ReplyModal({
             onClick={sendEmail}
             disabled={!body.trim()}
             style={{
-              padding: "9px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700,
+              padding: "9px 18px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 700,
               background: body.trim() ? "linear-gradient(135deg,#E11D48,#9333EA)" : "#d1d5db",
               color: "#fff", border: "none",
               cursor: body.trim() ? "pointer" : "not-allowed", fontFamily: "inherit",

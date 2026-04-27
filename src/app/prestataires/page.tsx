@@ -56,7 +56,7 @@ export default function ClonePrestatairesPage() {
       {/* ── Hero ── */}
       <section style={{ paddingTop: 100, paddingBottom: 80, textAlign: "center", background: "#fff" }}>
         <div style={{ maxWidth: 760, margin: "0 auto", padding: "0 24px" }}>
-          <p className="clone-label" style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6a6a71", marginBottom: 16 }}>
+          <p className="clone-label" style={{ fontSize: "var(--text-xs)", letterSpacing: "0.1em", textTransform: "uppercase", color: "#6a6a71", marginBottom: 16 }}>
             Pour les prestataires événementiels
           </p>
           <h1 className="clone-heading" style={{
@@ -68,7 +68,7 @@ export default function ClonePrestatairesPage() {
               au Maroc
             </span>
           </h1>
-          <p className="clone-body" style={{ fontSize: 16, color: "#6a6a71", lineHeight: 1.7, margin: "0 0 36px" }}>
+          <p className="clone-body" style={{ fontSize: "var(--text-base)", color: "#6a6a71", lineHeight: 1.7, margin: "0 0 36px" }}>
             Rejoins 1 000+ prestataires vérifiés sur Momento et reçois des demandes qualifiées directement dans ton tableau de bord.
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
@@ -76,7 +76,7 @@ export default function ClonePrestatairesPage() {
               display: "inline-flex", alignItems: "center", gap: 8,
               padding: "14px 32px", borderRadius: 999,
               background: G, color: "#fff",
-              fontSize: 15, fontWeight: 600, textDecoration: "none",
+              fontSize: "var(--text-base)", fontWeight: 600, textDecoration: "none",
               boxShadow: "0 4px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
             }}>
               Créer mon profil gratuitement →
@@ -86,7 +86,7 @@ export default function ClonePrestatairesPage() {
               padding: "14px 28px", borderRadius: 999,
               background: "rgba(183,191,217,0.1)",
               border: "1px solid rgba(183,191,217,0.3)",
-              color: "#45474D", fontSize: 15, textDecoration: "none",
+              color: "#45474D", fontSize: "var(--text-base)", textDecoration: "none",
             }}>
               Voir l&apos;annuaire
             </Link>
@@ -103,7 +103,7 @@ export default function ClonePrestatairesPage() {
                 backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 {s.n}
               </p>
-              <p className="clone-muted" style={{ fontSize: 12, color: "#6a6a71", margin: "4px 0 0", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              <p className="clone-muted" style={{ fontSize: "var(--text-xs)", color: "#6a6a71", margin: "4px 0 0", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {s.l}
               </p>
             </div>
@@ -118,7 +118,7 @@ export default function ClonePrestatairesPage() {
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 700, color: "#121317", letterSpacing: "-0.02em", margin: "0 0 12px" }}>
               Tout pour développer ton activité
             </h2>
-            <p className="clone-body" style={{ fontSize: 15, color: "#6a6a71" }}>Gratuit et sans engagement.</p>
+            <p className="clone-body" style={{ fontSize: "var(--text-base)", color: "#6a6a71" }}>Gratuit et sans engagement.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px,1fr))", gap: 20 }}>
             {BENEFITS.map(b => (
@@ -130,12 +130,12 @@ export default function ClonePrestatairesPage() {
                   width: 44, height: 44, borderRadius: 12, marginBottom: 16,
                   background: "linear-gradient(140deg, rgba(225,29,72,0.08), rgba(147,51,234,0.08))",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 20,
+                  fontSize: "var(--text-md)",
                 }}>
                   {b.emoji}
                 </div>
-                <h3 className="clone-heading" style={{ fontSize: 15, fontWeight: 700, color: "#121317", margin: "0 0 8px" }}>{b.title}</h3>
-                <p className="clone-body" style={{ fontSize: 13, color: "#6a6a71", margin: 0, lineHeight: 1.65 }}>{b.desc}</p>
+                <h3 className="clone-heading" style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "#121317", margin: "0 0 8px" }}>{b.title}</h3>
+                <p className="clone-body" style={{ fontSize: "var(--text-sm)", color: "#6a6a71", margin: 0, lineHeight: 1.65 }}>{b.desc}</p>
               </div>
             ))}
           </div>
@@ -149,7 +149,7 @@ export default function ClonePrestatairesPage() {
             <h2 className="clone-heading" style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 700, color: "#121317", letterSpacing: "-0.02em", margin: "0 0 12px" }}>
               Simple &amp; transparent
             </h2>
-            <p className="clone-body" style={{ fontSize: 15, color: "#6a6a71" }}>Commence gratuitement, passe Pro quand tu es prêt.</p>
+            <p className="clone-body" style={{ fontSize: "var(--text-base)", color: "#6a6a71" }}>Commence gratuitement, passe Pro quand tu es prêt.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 20 }} className="grid grid-cols-1 md:grid-cols-2">
             {PLANS.map(p => (
@@ -167,17 +167,17 @@ export default function ClonePrestatairesPage() {
                     display: "inline-flex", marginBottom: 12,
                     padding: "3px 12px", borderRadius: 999,
                     background: "rgba(225,29,72,0.15)", border: "1px solid rgba(225,29,72,0.3)",
-                    fontSize: 11, fontWeight: 600, color: "#F87171",
+                    fontSize: "var(--text-xs)", fontWeight: 600, color: "#F87171",
                   }}>{p.badge}</div>
                 )}
                 <div style={{ marginBottom: 20 }}>
-                  <p style={{ fontSize: 11, color: p.highlight ? "rgba(255,255,255,0.45)" : "#6a6a71", letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 6px" }}>{p.sub}</p>
+                  <p style={{ fontSize: "var(--text-xs)", color: p.highlight ? "rgba(255,255,255,0.45)" : "#6a6a71", letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 6px" }}>{p.sub}</p>
                   <div className="clone-heading" style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 700, color: p.highlight ? "#fff" : "#121317", lineHeight: 1 }}>{p.price}</div>
-                  <div style={{ fontSize: 13, color: p.highlight ? "rgba(255,255,255,0.5)" : "#6a6a71", marginTop: 2 }}>{p.name}</div>
+                  <div style={{ fontSize: "var(--text-sm)", color: p.highlight ? "rgba(255,255,255,0.5)" : "#6a6a71", marginTop: 2 }}>{p.name}</div>
                 </div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px", display: "flex", flexDirection: "column", gap: 10 }}>
                   {p.features.map(f => (
-                    <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: p.highlight ? "rgba(255,255,255,0.75)" : "#45474D" }}>
+                    <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)", color: p.highlight ? "rgba(255,255,255,0.75)" : "#45474D" }}>
                       <span style={{ color: p.highlight ? "#E11D48" : "#16A34A", fontWeight: 700, flexShrink: 0 }}>✓</span>
                       {f}
                     </li>
@@ -188,7 +188,7 @@ export default function ClonePrestatairesPage() {
                   padding: "12px 24px", borderRadius: 999,
                   background: p.highlight ? "#fff" : G,
                   color: p.highlight ? "#121317" : "#fff",
-                  fontSize: 14, fontWeight: 600, textDecoration: "none",
+                  fontSize: "var(--text-sm)", fontWeight: 600, textDecoration: "none",
                 }}>{p.cta}</Link>
               </div>
             ))}
@@ -209,12 +209,12 @@ export default function ClonePrestatairesPage() {
                 borderRadius: 20, padding: "24px",
               }}>
                 <div style={{ display: "flex", gap: 2, marginBottom: 14 }}>
-                  {[1,2,3,4,5].map(i => <span key={i} style={{ color: "#F59E0B", fontSize: 14 }}>★</span>)}
+                  {[1,2,3,4,5].map(i => <span key={i} style={{ color: "#F59E0B", fontSize: "var(--text-sm)" }}>★</span>)}
                 </div>
-                <p className="clone-body" style={{ fontSize: 14, color: "#45474D", margin: "0 0 16px", lineHeight: 1.65, fontStyle: "italic" }}>{t.quote}</p>
+                <p className="clone-body" style={{ fontSize: "var(--text-sm)", color: "#45474D", margin: "0 0 16px", lineHeight: 1.65, fontStyle: "italic" }}>{t.quote}</p>
                 <div>
-                  <p className="clone-heading" style={{ fontSize: 13, fontWeight: 700, color: "#121317", margin: 0 }}>{t.author}</p>
-                  <p className="clone-muted" style={{ fontSize: 11, color: "#6a6a71", margin: "2px 0 0" }}>{t.cat}</p>
+                  <p className="clone-heading" style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317", margin: 0 }}>{t.author}</p>
+                  <p className="clone-muted" style={{ fontSize: "var(--text-xs)", color: "#6a6a71", margin: "2px 0 0" }}>{t.cat}</p>
                 </div>
               </div>
             ))}
@@ -228,14 +228,14 @@ export default function ClonePrestatairesPage() {
           <h2 style={{ fontSize: "clamp(1.8rem,4vw,3rem)", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", margin: "0 0 16px" }}>
             Prêt à développer ton activité ?
           </h2>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.55)", margin: "0 0 32px", lineHeight: 1.65 }}>
+          <p style={{ fontSize: "var(--text-base)", color: "rgba(255,255,255,0.55)", margin: "0 0 32px", lineHeight: 1.65 }}>
             Rejoins plus de 1 000 prestataires qui reçoivent déjà des clients via Momento.
           </p>
           <Link href="/signup" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "14px 36px", borderRadius: 999,
             background: G, color: "#fff",
-            fontSize: 15, fontWeight: 600, textDecoration: "none",
+            fontSize: "var(--text-base)", fontWeight: 600, textDecoration: "none",
           }}>
             Créer mon profil gratuitement →
           </Link>

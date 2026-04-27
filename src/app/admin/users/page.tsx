@@ -184,14 +184,14 @@ export default function AdminUsersPage() {
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 700, margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+            <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, margin: "0 0 4px", letterSpacing: "-0.02em" }}>
               Users
             </h1>
-            <p style={{ fontSize: 13, color: C.textMuted, margin: 0 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: C.textMuted, margin: 0 }}>
               {total} comptes · page {page}/{totalPages}
             </p>
           </div>
-          <Link href="/admin/vendors" style={{ fontSize: 13, color: C.textMuted, textDecoration: "none" }}>
+          <Link href="/admin/vendors" style={{ fontSize: "var(--text-sm)", color: C.textMuted, textDecoration: "none" }}>
             ← Vendors
           </Link>
         </div>
@@ -204,7 +204,7 @@ export default function AdminUsersPage() {
             placeholder="Rechercher par e-mail, nom, prénom, entreprise…"
             style={{
               width: "100%", padding: "11px 14px", borderRadius: 10,
-              background: C.panel, color: C.text, fontSize: 14,
+              background: C.panel, color: C.text, fontSize: "var(--text-sm)",
               border: `1px solid ${C.border}`, outline: "none",
               fontFamily: "inherit",
             }}
@@ -215,11 +215,11 @@ export default function AdminUsersPage() {
         {actionMsg && (
           <div style={{
             background: C.panel, border: `1px solid ${C.border}`,
-            padding: "10px 14px", borderRadius: 10, fontSize: 13,
+            padding: "10px 14px", borderRadius: 10, fontSize: "var(--text-sm)",
             marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between",
           }}>
             <span>{actionMsg}</span>
-            <button onClick={() => setActionMsg(null)} style={{ background: "transparent", border: "none", color: C.textMuted, cursor: "pointer", fontSize: 16 }}>×</button>
+            <button onClick={() => setActionMsg(null)} style={{ background: "transparent", border: "none", color: C.textMuted, cursor: "pointer", fontSize: "var(--text-base)" }}>×</button>
           </div>
         )}
 
@@ -229,18 +229,18 @@ export default function AdminUsersPage() {
           border: `1px solid ${C.border}`, overflow: "hidden",
         }}>
           {loading ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: 14 }}>Chargement…</div>
+            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: "var(--text-sm)" }}>Chargement…</div>
           ) : err ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.err, fontSize: 14 }}>{err}</div>
+            <div style={{ padding: 60, textAlign: "center", color: C.err, fontSize: "var(--text-sm)" }}>{err}</div>
           ) : users.length === 0 ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: 14 }}>Aucun user.</div>
+            <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: "var(--text-sm)" }}>Aucun user.</div>
           ) : (
             <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--text-sm)" }}>
                 <thead>
                   <tr style={{ background: C.panelHover, borderBottom: `1px solid ${C.border}` }}>
                     {["User", "Rôle", "Plan", "Expire", "Vérif", "Inscrit", "Actif", "Activité", "Actions"].map(h => (
-                      <th key={h} style={{ textAlign: "left", padding: "12px 16px", fontWeight: 600, color: C.textMuted, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
+                      <th key={h} style={{ textAlign: "left", padding: "12px 16px", fontWeight: 600, color: C.textMuted, fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -256,7 +256,7 @@ export default function AdminUsersPage() {
         {totalPages > 1 && (
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 20 }}>
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={pagBtn(page === 1)}>← Préc</button>
-            <span style={{ padding: "8px 14px", fontSize: 13, color: C.textMuted }}>{page} / {totalPages}</span>
+            <span style={{ padding: "8px 14px", fontSize: "var(--text-sm)", color: C.textMuted }}>{page} / {totalPages}</span>
             <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} style={pagBtn(page === totalPages)}>Suiv →</button>
           </div>
         )}
@@ -290,8 +290,8 @@ function UserRow({ u, onRole, onPlan, onSuspend, onReset, onEject, onDelete }: {
       <td style={td}>
         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <span style={{ fontWeight: 600 }}>{displayName}</span>
-          <span style={{ color: C.textDim, fontSize: 12 }}>{u.email}</span>
-          {u.vendorSlug && <span style={{ color: C.accent, fontSize: 10 }}>vendor: {u.vendorSlug}</span>}
+          <span style={{ color: C.textDim, fontSize: "var(--text-xs)" }}>{u.email}</span>
+          {u.vendorSlug && <span style={{ color: C.accent, fontSize: "var(--text-2xs)" }}>vendor: {u.vendorSlug}</span>}
         </div>
       </td>
       <td style={td}>
@@ -317,7 +317,7 @@ function UserRow({ u, onRole, onPlan, onSuspend, onReset, onEject, onDelete }: {
       <td style={{ ...td, color: C.textMuted, whiteSpace: "nowrap" }} title={`Dernier paiement approx.: ${lastPayment} · MAJ profil: ${fmtDate(u.updatedAt)}`}>
         {fmtRelative(u.updatedAt)}
       </td>
-      <td style={{ ...td, color: C.textDim, fontSize: 11 }}>
+      <td style={{ ...td, color: C.textDim, fontSize: "var(--text-xs)" }}>
         {u._count.planners}p · {u._count.sentMessages}m
       </td>
       <td style={td}>
@@ -335,13 +335,13 @@ function UserRow({ u, onRole, onPlan, onSuspend, onReset, onEject, onDelete }: {
 const td: React.CSSProperties = { padding: "12px 16px", verticalAlign: "middle" }
 const selectStyle: React.CSSProperties = {
   background: C.bg, color: C.text, border: `1px solid ${C.border}`,
-  padding: "5px 8px", borderRadius: 6, fontSize: 12, cursor: "pointer",
+  padding: "5px 8px", borderRadius: 6, fontSize: "var(--text-xs)", cursor: "pointer",
   fontFamily: "inherit",
 }
 const pagBtn = (disabled: boolean): React.CSSProperties => ({
   background: C.panel, color: disabled ? C.textDim : C.text,
   border: `1px solid ${C.border}`, padding: "8px 14px", borderRadius: 8,
-  fontSize: 13, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.5 : 1,
+  fontSize: "var(--text-sm)", cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.5 : 1,
   fontFamily: "inherit",
 })
 const actionBtn = (variant: "ok" | "warn" | "err"): React.CSSProperties => {
@@ -349,7 +349,7 @@ const actionBtn = (variant: "ok" | "warn" | "err"): React.CSSProperties => {
   return {
     background: "transparent", color: colors[variant],
     border: `1px solid ${colors[variant]}40`, padding: "5px 8px",
-    borderRadius: 6, fontSize: 13, cursor: "pointer",
+    borderRadius: 6, fontSize: "var(--text-sm)", cursor: "pointer",
     fontFamily: "inherit", lineHeight: 1, transition: "background 0.15s",
   }
 }

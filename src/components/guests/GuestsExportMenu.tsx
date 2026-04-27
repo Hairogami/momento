@@ -47,7 +47,7 @@ export function GuestsExportMenu({ plannerId }: Props) {
           boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }}
       >
-        <span style={{ fontSize: 14 }}>⬇</span>
+        <span style={{ fontSize: "var(--text-sm)" }}>⬇</span>
         <span>Exporter</span>
       </button>
       {open && (
@@ -98,7 +98,7 @@ function Item({ icon, children, onClick }: { icon: string; children: React.React
       onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint, rgba(183,191,217,0.10))" }}
       onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
     >
-      <span style={{ fontSize: 14 }}>{icon}</span>
+      <span style={{ fontSize: "var(--text-sm)" }}>{icon}</span>
       <span>{children}</span>
     </button>
   )

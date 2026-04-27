@@ -23,7 +23,7 @@ export default function CloneLoginPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-light.png" alt="Momento" width={32} height={32} style={{ objectFit: "contain" }} />
-          <span style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>Momento</span>
+          <span style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "#fff" }}>Momento</span>
         </div>
 
         {/* Middle — tagline */}
@@ -34,7 +34,7 @@ export default function CloneLoginPage() {
           }}>
             L&apos;événement parfait<br />commence ici.
           </h1>
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.72)", lineHeight: 1.65, margin: 0 }}>
+          <p style={{ fontSize: "var(--text-base)", color: "rgba(255,255,255,0.72)", lineHeight: 1.65, margin: 0 }}>
             1 000+ prestataires vérifiés · 41 villes · Contact direct.
           </p>
 
@@ -50,15 +50,15 @@ export default function CloneLoginPage() {
                 borderRadius: 16, padding: "16px 20px",
                 border: "1px solid rgba(255,255,255,0.18)",
               }}>
-                <p style={{ fontSize: 13, color: "#fff", margin: "0 0 8px", lineHeight: 1.5 }}>{t.quote}</p>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", margin: 0 }}>{t.author}</p>
+                <p style={{ fontSize: "var(--text-sm)", color: "#fff", margin: "0 0 8px", lineHeight: 1.5 }}>{t.quote}</p>
+                <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.6)", margin: 0 }}>{t.author}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Bottom */}
-        <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", margin: 0 }}>
+        <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.45)", margin: 0 }}>
           © 2025 Momento Events
         </p>
       </div>
@@ -75,13 +75,13 @@ export default function CloneLoginPage() {
           {/* Back */}
           <Link href="/" style={{
             display: "inline-flex", alignItems: "center", gap: 6,
-            fontSize: 13, color: "var(--dash-text-2,#6a6a71)", textDecoration: "none", marginBottom: 32,
+            fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", textDecoration: "none", marginBottom: 32,
           }}>
             ← Accueil
           </Link>
 
           <AntLoginGreeting />
-          <p style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 28px" }}>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 28px" }}>
             Connecte-toi pour organiser ton événement
           </p>
 
@@ -91,14 +91,14 @@ export default function CloneLoginPage() {
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
             <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
-            <span style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>ou email</span>
+            <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>ou email</span>
             <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
           </div>
 
           {/* Credentials form (login/register) — CGU embarquée dans AntLoginForm mode register */}
           <AntLoginForm />
 
-          <p style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", marginTop: 24 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", marginTop: 24 }}>
             Besoin d&apos;aide ? <Link href="/help" style={{ color: "var(--dash-text-2,#6a6a71)" }}>Centre d&apos;aide</Link>
           </p>
         </div>

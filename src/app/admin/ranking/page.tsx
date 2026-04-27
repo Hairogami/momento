@@ -63,15 +63,15 @@ export default function AdminRankingPage() {
       padding: "32px 24px",
     }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: C.text, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+        <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: C.text, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
           Smart Ranking — Poids
         </h1>
-        <p style={{ fontSize: 13, color: C.textMuted, margin: "0 0 28px" }}>
+        <p style={{ fontSize: "var(--text-sm)", color: C.textMuted, margin: "0 0 28px" }}>
           Modifie les poids des signaux de classement (0–1000). Validation immédiate.
         </p>
 
         {loading ? (
-          <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: 14 }}>Chargement…</div>
+          <div style={{ padding: 60, textAlign: "center", color: C.textMuted, fontSize: "var(--text-sm)" }}>Chargement…</div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {configs.map(c => {
@@ -85,12 +85,12 @@ export default function AdminRankingPage() {
                 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                      <span style={{ fontSize: 20 }}>{info.emoji}</span>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{c.signal}</span>
-                      <span style={{ fontSize: 12, color: C.textMuted }}>{info.desc}</span>
+                      <span style={{ fontSize: "var(--text-md)" }}>{info.emoji}</span>
+                      <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: C.text }}>{c.signal}</span>
+                      <span style={{ fontSize: "var(--text-xs)", color: C.textMuted }}>{info.desc}</span>
                     </div>
                     <span style={{
-                      fontSize: 22, fontWeight: 800, color: C.accent2,
+                      fontSize: "var(--text-lg)", fontWeight: 800, color: C.accent2,
                       minWidth: 56, textAlign: "right",
                     }}>
                       {c.weight}
@@ -113,7 +113,7 @@ export default function AdminRankingPage() {
                       style={{
                         width: 80, padding: "7px 10px", borderRadius: 8,
                         border: `1px solid ${C.border}`, background: C.bg,
-                        color: C.text, fontSize: 13, fontWeight: 700,
+                        color: C.text, fontSize: "var(--text-sm)", fontWeight: 700,
                         textAlign: "center", fontFamily: "inherit", outline: "none",
                       }}
                     />
@@ -123,7 +123,7 @@ export default function AdminRankingPage() {
                       style={{
                         padding: "8px 18px", borderRadius: 99, border: "none",
                         background: isSaved ? C.ok : `linear-gradient(135deg, ${C.accent2}, ${C.accent})`,
-                        color: "#fff", fontSize: 12, fontWeight: 700,
+                        color: "#fff", fontSize: "var(--text-xs)", fontWeight: 700,
                         cursor: isSaving ? "not-allowed" : "pointer", opacity: isSaving ? 0.6 : 1,
                         fontFamily: "inherit", transition: "background 0.2s",
                         whiteSpace: "nowrap",
@@ -133,7 +133,7 @@ export default function AdminRankingPage() {
                     </button>
                   </div>
 
-                  <p style={{ fontSize: 11, color: C.textDim, margin: "10px 0 0" }}>
+                  <p style={{ fontSize: "var(--text-xs)", color: C.textDim, margin: "10px 0 0" }}>
                     MAJ : {new Date(c.updatedAt).toLocaleString("fr-MA")}
                   </p>
                 </div>
@@ -146,7 +146,7 @@ export default function AdminRankingPage() {
           marginTop: 28, padding: "16px 20px", borderRadius: 12,
           background: C.panel2, border: `1px solid ${C.border}`,
         }}>
-          <p style={{ fontSize: 12, color: C.textMuted, margin: 0, lineHeight: 1.6 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: C.textMuted, margin: 0, lineHeight: 1.6 }}>
             <strong style={{ color: C.text }}>Comment ça marche :</strong> chaque prestataire reçoit un score
             = <code style={codeStyle}>featured×poids</code> + <code style={codeStyle}>rating×poids</code>
             + <code style={codeStyle}>log(reviewCount+1)×poids</code> + <code style={codeStyle}>log(mediaCount+1)×poids</code>.
@@ -161,5 +161,5 @@ export default function AdminRankingPage() {
 const codeStyle: React.CSSProperties = {
   fontFamily: "ui-monospace, monospace",
   background: "rgba(147,51,234,0.12)", color: "#cbb3ff",
-  padding: "1px 5px", borderRadius: 4, fontSize: 11,
+  padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)",
 }

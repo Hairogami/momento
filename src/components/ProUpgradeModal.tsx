@@ -69,14 +69,14 @@ export default function ProUpgradeModal({ open, onClose, reason = "vendor-contac
 
         <div style={{ position: "relative" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-            <span style={{ display: "inline-block", padding: "4px 12px", fontSize: 10, background: G, color: "#fff", borderRadius: 99, fontWeight: 800, letterSpacing: "1.2px", textTransform: "uppercase" }}>✨ Momento Pro</span>
-            <button onClick={onClose} style={{ background: "transparent", border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: 22, cursor: "pointer" }}>✕</button>
+            <span style={{ display: "inline-block", padding: "4px 12px", fontSize: "var(--text-2xs)", background: G, color: "#fff", borderRadius: 99, fontWeight: 800, letterSpacing: "1.2px", textTransform: "uppercase" }}>✨ Momento Pro</span>
+            <button onClick={onClose} style={{ background: "transparent", border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: "var(--text-lg)", cursor: "pointer" }}>✕</button>
           </div>
 
-          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 6 }}>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "var(--text-xl)", fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 6 }}>
             {copy.title}
           </h2>
-          <p style={{ fontSize: 13, color: "var(--dash-text-2, #b0b0cc)", lineHeight: 1.5, marginBottom: 18 }}>{copy.subtitle}</p>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2, #b0b0cc)", lineHeight: 1.5, marginBottom: 18 }}>{copy.subtitle}</p>
 
           <div style={{ background: "var(--dash-faint, rgba(255,255,255,0.04))", border: "1px solid var(--dash-border, rgba(255,255,255,0.07))", borderRadius: 14, padding: "16px 18px", marginBottom: 16 }}>
             {[
@@ -95,18 +95,18 @@ export default function ProUpgradeModal({ open, onClose, reason = "vendor-contac
           </div>
 
           <div style={{ textAlign: "center", marginBottom: 14 }}>
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 34, fontWeight: 600, letterSpacing: "-0.02em", backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>200 Dhs</span>
-            <span style={{ fontSize: 13, color: "var(--dash-text-3, #8888aa)", marginLeft: 6 }}>/ mois</span>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "var(--text-2xl)", fontWeight: 600, letterSpacing: "-0.02em", backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>200 Dhs</span>
+            <span style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3, #8888aa)", marginLeft: 6 }}>/ mois</span>
           </div>
 
-          {err && <div style={{ padding: "8px 10px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", fontSize: 12, borderRadius: 10, marginBottom: 10 }}>{err}</div>}
+          {err && <div style={{ padding: "8px 10px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", fontSize: "var(--text-xs)", borderRadius: 10, marginBottom: 10 }}>{err}</div>}
 
           <button
             onClick={upgrade}
             disabled={loading}
             style={{
               width: "100%", padding: "14px", background: G, color: "#fff",
-              border: "none", borderRadius: 14, fontSize: 14, fontWeight: 800,
+              border: "none", borderRadius: 14, fontSize: "var(--text-sm)", fontWeight: 800,
               cursor: loading ? "default" : "pointer", opacity: loading ? 0.65 : 1,
               boxShadow: "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)", fontFamily: "inherit",
             }}
@@ -117,7 +117,7 @@ export default function ProUpgradeModal({ open, onClose, reason = "vendor-contac
             onClick={onClose}
             style={{
               width: "100%", marginTop: 8, padding: "10px", background: "transparent",
-              border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: 12, cursor: "pointer", fontFamily: "inherit",
+              border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: "var(--text-xs)", cursor: "pointer", fontFamily: "inherit",
             }}
           >
             Plus tard

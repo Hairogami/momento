@@ -68,9 +68,9 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
   if (state === "success") {
     return (
       <div style={{ textAlign: "center", padding: "28px 20px" }}>
-        <div style={{ fontSize: 40, marginBottom: 10 }}>✓</div>
-        <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 6, fontFamily: "var(--evt-font-heading)" }}>Merci {name} !</div>
-        <div style={{ fontSize: 14, color: "var(--evt-text-muted)" }}>Votre réponse a bien été enregistrée.</div>
+        <div style={{ fontSize: "var(--text-2xl)", marginBottom: 10 }}>✓</div>
+        <div style={{ fontSize: "var(--text-md)", fontWeight: 600, marginBottom: 6, fontFamily: "var(--evt-font-heading)" }}>Merci {name} !</div>
+        <div style={{ fontSize: "var(--text-sm)", color: "var(--evt-text-muted)" }}>Votre réponse a bien été enregistrée.</div>
       </div>
     )
   }
@@ -82,7 +82,7 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
     {deadline && (
       <p style={{
         fontFamily: "var(--evt-font-body, inherit)",
-        fontSize: 13, color: "var(--evt-text-muted)", margin: "0 auto 22px", maxWidth: 460, textAlign: "center",
+        fontSize: "var(--text-sm)", color: "var(--evt-text-muted)", margin: "0 auto 22px", maxWidth: 460, textAlign: "center",
       }}>
         Merci de répondre avant le <strong>{deadline}</strong>
       </p>
@@ -152,7 +152,7 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
       )}
 
       {state === "error" && errorMsg && (
-        <p style={{ fontSize: 13, color: "#dc2626", margin: 0, textAlign: "center" }}>{errorMsg}</p>
+        <p style={{ fontSize: "var(--text-sm)", color: "#dc2626", margin: 0, textAlign: "center" }}>{errorMsg}</p>
       )}
 
       <button
@@ -165,7 +165,7 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
           border: "none",
           background: accent,
           color: "#fff",
-          fontSize: 14,
+          fontSize: "var(--text-sm)",
           fontWeight: 600,
           cursor: state === "sending" ? "wait" : "pointer",
           fontFamily: "var(--evt-font-body, inherit)",
@@ -187,7 +187,7 @@ function radioBtn(active: boolean, accent: string): React.CSSProperties {
     border: active ? `1.5px solid ${accent}` : "1px solid color-mix(in srgb, var(--evt-main) 25%, transparent)",
     background: active ? accent : "transparent",
     color: active ? "#fff" : "var(--evt-text)",
-    fontSize: 13,
+    fontSize: "var(--text-sm)",
     fontWeight: 600,
     cursor: "pointer",
     fontFamily: "var(--evt-font-body, inherit)",
@@ -199,14 +199,14 @@ const labelStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
   gap: 5,
-  fontSize: 12,
+  fontSize: "var(--text-xs)",
   color: "var(--evt-text-muted)",
   fontFamily: "var(--evt-font-body, inherit)",
   textAlign: "left",
 }
 
 const labelTextStyle: React.CSSProperties = {
-  fontSize: 12,
+  fontSize: "var(--text-xs)",
   color: "var(--evt-text-muted)",
   fontFamily: "var(--evt-font-body, inherit)",
 }
@@ -217,7 +217,7 @@ const inputStyle: React.CSSProperties = {
   border: "1px solid color-mix(in srgb, var(--evt-main) 25%, transparent)",
   background: "var(--evt-bg, #fff)",
   color: "var(--evt-text)",
-  fontSize: 14,
+  fontSize: "var(--text-sm)",
   fontFamily: "var(--evt-font-body, inherit)",
   outline: "none",
 }

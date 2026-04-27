@@ -166,7 +166,7 @@ export default function EventSiteList({ sites, orphans }: Props) {
               }}>
                 Sites événement
               </h1>
-              <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
                 {sites.length} site{sites.length !== 1 ? "s" : ""} {sites.length > 1 ? "créés" : "créé"}
                 {orphans.length > 0 && ` · ${orphans.length} événement${orphans.length !== 1 ? "s" : ""} sans site`}
               </p>
@@ -175,7 +175,7 @@ export default function EventSiteList({ sites, orphans }: Props) {
             <button
               onClick={handleNewSiteClick}
               style={{
-                padding: "8px 16px", borderRadius: 99, fontSize: 12, fontWeight: 600,
+                padding: "8px 16px", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 600,
                 border: "none", background: G, color: "#fff",
                 cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
               }}
@@ -186,11 +186,11 @@ export default function EventSiteList({ sites, orphans }: Props) {
           {sites.length > 0 && (
             <section style={{ marginBottom: 40 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+                <h2 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                   Vos sites
                 </h2>
                 <span style={{
-                  fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99,
+                  fontSize: "var(--text-2xs)", fontWeight: 700, padding: "2px 8px", borderRadius: 99,
                   background: "rgba(34,197,94,0.1)", color: "#22c55e",
                 }}>
                   {sites.length} {sites.length > 1 ? "sites" : "site"}
@@ -208,17 +208,17 @@ export default function EventSiteList({ sites, orphans }: Props) {
           {orphans.length > 0 && (
             <section>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+                <h2 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                   Événements sans site
                 </h2>
                 <span style={{
-                  fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99,
+                  fontSize: "var(--text-2xs)", fontWeight: 700, padding: "2px 8px", borderRadius: 99,
                   background: "rgba(225,29,72,0.08)", color: "#E11D48",
                 }}>
                   {orphans.length} en attente
                 </span>
               </div>
-              <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: "0 0 16px" }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: "0 0 16px" }}>
                 Créez un site pour partager les infos et collecter les RSVP.
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
@@ -238,7 +238,7 @@ export default function EventSiteList({ sites, orphans }: Props) {
                 <div style={{
                   marginTop: 14, padding: "10px 14px", borderRadius: 10,
                   background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)",
-                  fontSize: 12, color: "#dc2626",
+                  fontSize: "var(--text-xs)", color: "#dc2626",
                 }}>
                   {error}
                 </div>
@@ -314,12 +314,12 @@ function EmptyHero({ onCreate }: { onCreate: () => void }) {
       }}>
         <span style={{
           fontFamily: "'Google Symbols','Material Symbols Outlined'",
-          fontSize: 36, color: "#fff", lineHeight: 1,
+          fontSize: "var(--text-2xl)", color: "#fff", lineHeight: 1,
         }}>share</span>
       </div>
 
       <p style={{
-        fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
+        fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
         color: "#E11D48", margin: "0 0 12px",
       }}>
         ✦ Sites événement ✦
@@ -333,7 +333,7 @@ function EmptyHero({ onCreate }: { onCreate: () => void }) {
         Créez votre premier site
       </h1>
       <p style={{
-        fontSize: 15, color: "var(--dash-text-2,#6a6a71)",
+        fontSize: "var(--text-base)", color: "var(--dash-text-2,#6a6a71)",
         margin: "0 0 28px", lineHeight: 1.6, maxWidth: 440,
       }}>
         Partagez les infos pratiques, le programme et collectez les RSVP de vos invités — un site personnalisé par événement.
@@ -346,7 +346,7 @@ function EmptyHero({ onCreate }: { onCreate: () => void }) {
           display: "inline-flex", alignItems: "center", gap: 8,
           padding: "14px 32px", borderRadius: 14,
           background: G, color: "#fff",
-          fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer",
+          fontSize: "var(--text-base)", fontWeight: 700, border: "none", cursor: "pointer",
           fontFamily: "inherit",
           boxShadow: "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
         }}
@@ -409,7 +409,7 @@ function SiteCardItem({ planner, site }: { planner: SiteCard["planner"]; site: S
 
         <div style={{
           position: "relative", zIndex: 1,
-          fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase",
+          fontSize: "var(--text-2xs)", letterSpacing: "0.25em", textTransform: "uppercase",
           color: site.heroImageUrl ? "rgba(255,255,255,0.85)" : palette.main, fontWeight: 600,
         }}>
           · {formatDate(planner.weddingDate).toUpperCase()} ·
@@ -435,7 +435,7 @@ function SiteCardItem({ planner, site }: { planner: SiteCard["planner"]; site: S
           position: "absolute", top: 10, right: 10,
           padding: "3px 9px", borderRadius: 99,
           background: site.published ? "rgba(22,163,74,0.95)" : "rgba(0,0,0,0.65)",
-          color: "#fff", fontSize: 9, fontWeight: 700,
+          color: "#fff", fontSize: "var(--text-2xs)", fontWeight: 700,
           letterSpacing: "0.08em", textTransform: "uppercase",
         }}>
           {site.published ? "Publié" : "Brouillon"}
@@ -460,11 +460,11 @@ function SiteCardItem({ planner, site }: { planner: SiteCard["planner"]; site: S
           <span style={chipStyle}>{eventTypeLabel}</span>
         </div>
         {site.published ? (
-          <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             /evt/{site.slug}
           </p>
         ) : (
-          <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0, fontStyle: "italic" }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0, fontStyle: "italic" }}>
             Pas encore publié — cliquez pour éditer
           </p>
         )}
@@ -500,11 +500,11 @@ function OrphanCard({ orphan, onCreate, busy }: { orphan: Orphan; onCreate: () =
           width: 52, height: 52, borderRadius: 16,
           background: "rgba(255,255,255,0.9)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 26,
+          fontSize: "var(--text-xl)",
           boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
         }}>{emoji}</div>
         <div style={{
-          fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase",
+          fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase",
           color: "#E11D48",
         }}>Aucun site</div>
       </div>
@@ -513,13 +513,13 @@ function OrphanCard({ orphan, onCreate, busy }: { orphan: Orphan; onCreate: () =
       <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
         <div>
           <div style={{
-            fontSize: 15, fontWeight: 700, color: "var(--dash-text,#121317)",
+            fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)",
             letterSpacing: "-0.01em", marginBottom: 3,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
           }}>{title}</div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
             <span style={chipStyle}>{eventTypeLabel}</span>
-            <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>
+            <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
               {formatDate(orphan.weddingDate)}
             </span>
           </div>
@@ -532,7 +532,7 @@ function OrphanCard({ orphan, onCreate, busy }: { orphan: Orphan; onCreate: () =
           style={{
             padding: "10px 14px", borderRadius: 10,
             border: "none", background: G, color: "#fff",
-            fontSize: 13, fontWeight: 600, cursor: busy ? "wait" : "pointer",
+            fontSize: "var(--text-sm)", fontWeight: 600, cursor: busy ? "wait" : "pointer",
             fontFamily: "inherit",
             opacity: busy ? 0.7 : 1,
             boxShadow: "0 4px 12px color-mix(in srgb, var(--g1,#E11D48) 18%, transparent)",
@@ -582,10 +582,10 @@ function OrphanPickerModal({
       >
         <div style={{ marginBottom: 16 }}>
           <h2 style={{
-            fontSize: 18, fontWeight: 700, margin: "0 0 4px",
+            fontSize: "var(--text-md)", fontWeight: 700, margin: "0 0 4px",
             color: "var(--dash-text,#121317)", letterSpacing: "-0.02em",
           }}>Pour quel événement ?</h2>
-          <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
             Sélectionnez l&apos;événement pour lequel créer un site.
           </p>
         </div>
@@ -612,23 +612,23 @@ function OrphanPickerModal({
                   width: 38, height: 38, borderRadius: 10,
                   background: "rgba(225,29,72,0.06)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 20, flexShrink: 0,
+                  fontSize: "var(--text-md)", flexShrink: 0,
                 }}>{emoji}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
-                    fontSize: 14, fontWeight: 600, color: "var(--dash-text,#121317)",
+                    fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)",
                     overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                   }}>
                     {o.coupleNames || o.title}
                   </div>
-                  <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>
+                  <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>
                     {EVENT_TYPE_LABEL[o.eventType ?? "autre"] ?? "Événement"} · {formatDate(o.weddingDate)}
                   </div>
                 </div>
                 {selected && (
                   <span style={{
                     fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                    fontSize: 20, color: "#E11D48",
+                    fontSize: "var(--text-md)", color: "#E11D48",
                   }}>check_circle</span>
                 )}
               </button>
@@ -640,7 +640,7 @@ function OrphanPickerModal({
           <div style={{
             padding: "8px 12px", borderRadius: 8,
             background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)",
-            fontSize: 12, color: "#dc2626", marginBottom: 12,
+            fontSize: "var(--text-xs)", color: "#dc2626", marginBottom: 12,
           }}>{error}</div>
         )}
 
@@ -652,7 +652,7 @@ function OrphanPickerModal({
               padding: "10px 16px", borderRadius: 10,
               border: "1px solid rgba(183,191,217,0.3)",
               background: "transparent", color: "var(--dash-text-2,#6a6a71)",
-              fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+              fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
             }}
           >Annuler</button>
           <button
@@ -662,7 +662,7 @@ function OrphanPickerModal({
             style={{
               padding: "10px 18px", borderRadius: 10,
               border: "none", background: G, color: "#fff",
-              fontSize: 13, fontWeight: 600,
+              fontSize: "var(--text-sm)", fontWeight: 600,
               cursor: (creating || !selectedId) ? "not-allowed" : "pointer",
               opacity: (creating || !selectedId) ? 0.6 : 1,
               fontFamily: "inherit",
@@ -676,7 +676,7 @@ function OrphanPickerModal({
 }
 
 const chipStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: "var(--text-2xs)",
   fontWeight: 600,
   letterSpacing: "0.06em",
   textTransform: "uppercase",
