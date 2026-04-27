@@ -521,7 +521,52 @@ function ChecklistJXWidget({ tasks, eventDate }: { tasks: Task[]; eventDate: str
   )
 }
 
-function RSVPLiveWidget({ guests }: { guests: Guest[] }) {
+function RSVPLiveWidget({ guests, rsvpStats }: {
+  guests: Guest[]
+  rsvpStats?: { viewCount: number; confirmed: number; plusOnes: number; total: number; recent: Array<{ id: string; guestName: string; attendingMain: boolean }> }
+}) {
+  // Si stats site présentes, afficher la vraie source (réponses publiques) au lieu de la liste manuelle
+  if (rsvpStats) {
+    return (
+      <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 10, height: "100%", boxSizing: "border-box" }}>
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text-1,#121317)" }}>{rsvpStats.viewCount}</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>vues</div>
+          </div>
+          <div>
+            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#22c55e" }}>{rsvpStats.confirmed}</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>confirmés</div>
+          </div>
+          <div>
+            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text-1,#121317)" }}>{rsvpStats.plusOnes}</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>+1</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
+          {rsvpStats.recent.length === 0 ? (
+            <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Aucune réponse pour le moment.</p>
+          ) : (
+            rsvpStats.recent.map(r => (
+              <div key={r.id} style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}>
+                <span style={{ color: "var(--dash-text-1,#121317)" }}>{r.guestName}</span>
+                <span style={{ color: r.attendingMain ? "#22c55e" : "#ef4444" }}>{r.attendingMain ? "✓" : "✗"}</span>
+              </div>
+            ))
+          )}
+        </div>
+        <a href="/guests" style={{ marginTop: "auto", fontSize: "var(--text-2xs)", color: "var(--dash-text-2,#6a6a71)", textDecoration: "underline" }}>
+          Voir tout →
+        </a>
+      </div>
+    )
+  }
+
+  // Fallback : affichage Guest manuel historique
+  return _RSVPLiveWidgetLocal({ guests })
+}
+
+function _RSVPLiveWidgetLocal({ guests }: { guests: Guest[] }) {
   const confirmed = guests.filter(g => g.rsvp === "yes").length
   const declined  = guests.filter(g => g.rsvp === "no").length
   const pending   = guests.filter(g => g.rsvp === "pending").length
@@ -1252,6 +1297,13 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
     messages: Message[]
     tasks: Task[]
     edata: { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }
+    rsvpStats?: {
+      viewCount: number
+      confirmed: number
+      plusOnes: number
+      total: number
+      recent: Array<{ id: string; guestName: string; attendingMain: boolean }>
+    }
   } | null>(null)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
@@ -1617,7 +1669,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
           case "timeline":     return <TimelineWidget tasks={tasks} eventDate={event.date} />
           case "transport":    return <TransportWidget guests={guests} eventId={activeEventId} />
           case "plantable":    return <PlanTableWidget guests={guests} />
-          case "rsvplive":     return <RSVPLiveWidget guests={guests} />
+          case "rsvplive":     return <RSVPLiveWidget guests={guests} rsvpStats={dashboardData?.rsvpStats} />
           case "regimes":      return <RegimesWidget guests={guests} />
           case "depenses":     return <DepensesRecentesWidget budgetItems={recentExpenses} />
           case "epargne":      return <ObjectifEpargneWidget budget={edata.budget} budgetSpent={edata.budgetSpent} eventDate={event.date} />
