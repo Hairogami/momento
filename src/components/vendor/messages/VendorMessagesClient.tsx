@@ -251,6 +251,8 @@ export default function VendorMessagesClient() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
+                onFocus={e => { e.currentTarget.style.outline = "2px solid var(--g1,#E11D48)"; e.currentTarget.style.outlineOffset = "2px" }}
+                onBlur={e => { e.currentTarget.style.outline = "none" }}
                 placeholder="Écrire un message…"
                 disabled={sending}
                 style={{

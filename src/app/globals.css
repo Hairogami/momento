@@ -611,7 +611,8 @@ body:has(.snap-scroll-container) {
   --icon-lg: 1.5rem;     /* 24px */
 }
 
-html.dark {
+html.dark,
+.dark {
   --dash-bg:         #0d0e14;
   --dash-surface:    #16171e;
   --dash-border:     rgba(255,255,255,0.07);
@@ -629,15 +630,18 @@ html.dark {
 }
 
 /* ── Dark mode structural overrides ── */
-html.dark .clone-surface {
+html.dark .clone-surface,
+.dark .clone-surface {
   background: var(--dash-surface) !important;
   border-color: var(--dash-border) !important;
 }
-html.dark .clone-card-white {
+html.dark .clone-card-white,
+.dark .clone-card-white {
   background: var(--dash-surface) !important;
   border-color: var(--dash-border) !important;
 }
-html.dark .clone-progress-fill {
+html.dark .clone-progress-fill,
+.dark .clone-progress-fill {
   opacity: 0.9;
 }
 
