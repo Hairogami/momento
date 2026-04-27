@@ -100,7 +100,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
             pointerEvents: "none",
           }}>
             <span style={{
-              fontSize: "var(--text-base)", fontWeight: 800, lineHeight: 1,
+              fontSize: "var(--text-sm)", fontWeight: 800, lineHeight: 1,
               backgroundImage: isOverBudget
                 ? "none"
                 : "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
