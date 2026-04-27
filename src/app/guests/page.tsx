@@ -9,6 +9,7 @@ import { GuestsExportMenu } from "@/components/guests/GuestsExportMenu"
 import { LinkRsvpDialog } from "@/components/guests/LinkRsvpDialog"
 import type { Rsvp } from "@/components/guests/RsvpCard"
 import type { Guest } from "@/components/guests/GuestCard"
+import { dedupRsvps } from "@/lib/rsvpDedup"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -29,18 +30,6 @@ const GUEST_COLORS: Record<string, string> = {
   yes: "#22c55e",
   no: "#ef4444",
   invited: "#9333EA",
-}
-
-function dedupRsvps(rsvps: Rsvp[]): Rsvp[] {
-  const seen = new Map<string, Rsvp>()
-  for (const r of rsvps) {
-    const key = (r.guestEmail?.toLowerCase().trim() ||
-                 r.guestPhone?.replace(/\s+/g, "") ||
-                 r.guestName.toLowerCase().trim())
-    const prev = seen.get(key)
-    if (!prev || new Date(r.createdAt) > new Date(prev.createdAt)) seen.set(key, r)
-  }
-  return Array.from(seen.values()).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
 export default function GuestsPage() {
@@ -98,8 +87,6 @@ export default function GuestsPage() {
   }, [activeEventId])
 
   const dedupedRsvps = useMemo(() => dedupRsvps(rsvpData?.rsvps ?? []), [rsvpData])
-  const realConfirmed = dedupedRsvps.filter(r => r.attendingMain).length
-  const realPlusOnes = dedupedRsvps.filter(r => r.attendingMain && r.plusOneName?.trim()).length
 
   async function addGuest() {
     if (!newGuestName.trim() || !activeEventId) return
@@ -199,8 +186,8 @@ export default function GuestsPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 14, marginBottom: 28 }}>
           {[
             { label: "Vues du site",     value: rsvpData?.stats.viewCount ?? 0, color: "var(--dash-text,#121317)" },
-            { label: "Confirmés (site)", value: realConfirmed,                  color: "#22c55e" },
-            { label: "+1 attendus",       value: realPlusOnes,                   color: "#9333EA" },
+            { label: "Confirmés (site)", value: rsvpData?.stats.confirmed ?? 0, color: "#22c55e" },
+            { label: "+1 attendus",       value: rsvpData?.stats.plusOnes ?? 0,  color: "#9333EA" },
           ].map(s => (
             <div key={s.label} style={{ ...cardStyle, padding: "16px 20px" }}>
               <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 6px" }}>{s.label}</p>

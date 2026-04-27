@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { IS_DEV } from "@/lib/devMock"
 import { requireSession } from "@/lib/devAuth"
+import { dedupRsvps } from "@/lib/rsvpDedup"
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: plannerId } = await params
@@ -51,8 +52,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     },
   })
 
-  const confirmed = rsvps.filter(r => r.attendingMain).length
-  const plusOnes = rsvps.filter(r => r.attendingMain && r.plusOneName && r.plusOneName.trim().length > 0).length
+  // Stats calculées sur les RSVPs DÉDUPLIQUÉS (1 personne = 1 ligne).
+  // On renvoie aussi la liste brute pour que la page puisse afficher
+  // "X doublons masqués" en transparence.
+  const deduped = dedupRsvps(rsvps)
+  const confirmed = deduped.filter(r => r.attendingMain).length
+  const plusOnes = deduped.filter(r => r.attendingMain && r.plusOneName && r.plusOneName.trim().length > 0).length
 
   return NextResponse.json({
     rsvps,
@@ -60,7 +65,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       viewCount: planner.eventSite.viewCount,
       confirmed,
       plusOnes,
-      total: rsvps.length,
+      total: deduped.length,
     },
   })
 }

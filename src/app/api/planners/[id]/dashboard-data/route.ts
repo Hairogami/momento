@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 import { IS_DEV } from "@/lib/devMock"
 import { requireSession } from "@/lib/devAuth"
+import { dedupRsvps } from "@/lib/rsvpDedup"
 
 const CATEGORY_COLORS: Record<string, string> = {
   lieu: "#C4532A",
@@ -100,7 +101,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
         viewCount: true,
         rsvps: {
           select: {
-            id: true, guestName: true, attendingMain: true, plusOneName: true, createdAt: true,
+            id: true, guestName: true, guestEmail: true, guestPhone: true,
+            attendingMain: true, plusOneName: true, createdAt: true,
           },
           orderBy: { createdAt: "desc" },
         },
@@ -151,8 +153,11 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       icon: iconFor(b.category),
     }))
 
-  // Stats RSVP du site événement (page /guests + widget Invités dashboard)
-  const rsvps = eventSiteWithRsvps?.rsvps ?? []
+  // Stats RSVP du site événement — dédup par email > phone > nom (cohérence
+  // avec page /guests et exports : 1 personne = 1 ligne, peu importe le
+  // nombre de soumissions du form public).
+  const rawRsvps = eventSiteWithRsvps?.rsvps ?? []
+  const rsvps = dedupRsvps(rawRsvps)
   const rsvpConfirmed = rsvps.filter(r => r.attendingMain).length
   const rsvpPlusOnes = rsvps.filter(r => r.attendingMain && r.plusOneName && r.plusOneName.trim().length > 0).length
   const rsvpStats = {
