@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
 
 function parseDate(val: unknown): Date | undefined {
   if (typeof val !== "string" || !val) return undefined
@@ -18,15 +16,8 @@ async function getOwnedStep(id: string) {
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  let userId: string
-  if (IS_DEV) {
-    const s = await requireSession()
-    userId = s.user.id
-  } else {
-    const session = await auth()
-    if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
-    userId = session.user.id
-  }
+  const userId = await getUserId()
+  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
   const owned = await getOwnedStep(id)
@@ -63,15 +54,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  let userId: string
-  if (IS_DEV) {
-    const s = await requireSession()
-    userId = s.user.id
-  } else {
-    const session = await auth()
-    if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
-    userId = session.user.id
-  }
+  const userId = await getUserId()
+  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id } = await params
   const owned = await getOwnedStep(id)

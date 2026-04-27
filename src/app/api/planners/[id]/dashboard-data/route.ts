@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
 import { dedupRsvps } from "@/lib/rsvpDedup"
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -38,11 +36,10 @@ function iconFor(category: string): string {
 }
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = IS_DEV ? await requireSession() : await auth()
-  if (!session?.user?.id) {
+  const userId = await getUserId()
+  if (!userId) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
-  const userId = session.user.id
 
   const { id } = await params
 

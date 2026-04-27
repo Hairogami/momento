@@ -1,16 +1,14 @@
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/lib/auth"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
 import { NextRequest } from "next/server"
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = IS_DEV ? await requireSession() : await auth()
-  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+  const userId = await getUserId()
+  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 })
 
   const { id: plannerId } = await params
   const ownership = await prisma.planner.findUnique({ where: { id: plannerId }, select: { userId: true } })
-  if (!ownership || ownership.userId !== session.user.id)
+  if (!ownership || ownership.userId !== userId)
     return Response.json({ error: "Forbidden" }, { status: 403 })
 
   const body = await req.json()

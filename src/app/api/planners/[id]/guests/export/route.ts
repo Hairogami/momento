@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
 import { requireVerifiedEmail } from "@/lib/auth-guards"
 
 export const runtime = "nodejs"
@@ -19,18 +17,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const url = new URL(req.url)
   const format = url.searchParams.get("format") ?? "csv"
 
-  let userId: string
-  if (IS_DEV) {
-    const s = await requireSession()
-    userId = s.user.id
-  } else {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    userId = session.user.id
-    // Hard-gate : pas d'export de données tant que l'email n'est pas vérifié
-    const verifyGate = await requireVerifiedEmail(userId)
-    if (verifyGate) return verifyGate
-  }
+  const userId = await getUserId()
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  // Hard-gate : pas d'export de données tant que l'email n'est pas vérifié.
+  // requireVerifiedEmail bypass en IS_DEV (cf. src/lib/auth-guards.ts).
+  const verifyGate = await requireVerifiedEmail(userId)
+  if (verifyGate) return verifyGate
 
   const planner = await prisma.planner.findUnique({
     where: { id: plannerId },
