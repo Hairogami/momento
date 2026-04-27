@@ -279,7 +279,7 @@ function WidgetCard({
       <div style={{ flex: 1, minHeight: 0, overflow: "hidden", borderRadius: 20 }}>{children}</div>
 
       {dropTarget && (
-        <div style={{ position: "absolute", top: 10, right: 10, zIndex: 10, pointerEvents: "none", fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: G, color: "#fff" }}>
+        <div style={{ position: "absolute", top: 10, right: 10, zIndex: 10, pointerEvents: "none", fontSize: "var(--text-2xs)", fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: G, color: "#fff" }}>
           Déposer ici
         </div>
       )}
@@ -326,8 +326,8 @@ function WidgetPickerModal({ active, onAdd, onClose }: { active: string[]; onAdd
       <div onClick={e => e.stopPropagation()} style={{ background: "var(--dash-surface,#fff)", borderRadius: 24, width: "100%", maxWidth: 520, padding: "24px", boxShadow: "0 24px 80px rgba(0,0,0,0.15)" }} className="clone-surface">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 800, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>Ajouter un widget</h2>
-            <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Personnalisez votre espace</p>
+            <h2 style={{ fontSize: "var(--text-base)", fontWeight: 800, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>Ajouter un widget</h2>
+            <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Personnalisez votre espace</p>
           </div>
           <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--dash-faint-2,rgba(183,191,217,0.12))", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <GIcon name="close" size={14} color="var(--dash-text-2,#6a6a71)" />
@@ -344,8 +344,8 @@ function WidgetPickerModal({ active, onAdd, onClose }: { active: string[]; onAdd
             return (
               <button key={w.id} onClick={() => { if (!isActive) { onAdd(w.id); onClose() } }} disabled={isActive}
                 style={{ padding: "14px 10px", borderRadius: 14, border: isActive && !isNotes ? "1.5px solid rgba(34,197,94,0.3)" : notesCount > 0 && isNotes ? "1.5px solid rgba(225,29,72,0.3)" : "1px solid var(--dash-border,rgba(183,191,217,0.2))", background: isActive && !isNotes ? "rgba(34,197,94,0.05)" : "var(--dash-faint,rgba(183,191,217,0.04))", cursor: isActive ? "not-allowed" : "pointer", fontFamily: "inherit", textAlign: "left", opacity: isActive ? 0.6 : 1 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)", lineHeight: 1.3, marginBottom: 4 }}>{w.title}</div>
-                <div style={{ fontSize: 9, color: isActive ? "#22c55e" : notesCount > 0 ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)", fontWeight: isActive || notesCount > 0 ? 600 : 400 }}>{label}</div>
+                <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)", lineHeight: 1.3, marginBottom: 4 }}>{w.title}</div>
+                <div style={{ fontSize: "var(--text-2xs)", color: isActive ? "#22c55e" : notesCount > 0 ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)", fontWeight: isActive || notesCount > 0 ? 600 : 400 }}>{label}</div>
               </button>
             )
           })}
@@ -361,7 +361,7 @@ function PalettePickerModal({ current, onChange, onClose }: { current: { g1: str
     <div style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(18,19,23,0.45)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{ background: "var(--dash-surface,#fff)", borderRadius: 24, width: "100%", maxWidth: 400, padding: "24px", boxShadow: "0 24px 80px rgba(0,0,0,0.15)" }} className="clone-surface">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 800, color: "var(--dash-text,#121317)", margin: 0 }}>Palette de couleurs</h2>
+          <h2 style={{ fontSize: "var(--text-base)", fontWeight: 800, color: "var(--dash-text,#121317)", margin: 0 }}>Palette de couleurs</h2>
           <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--dash-faint-2,rgba(183,191,217,0.12))", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <GIcon name="close" size={14} color="var(--dash-text-2,#6a6a71)" />
           </button>
@@ -372,19 +372,19 @@ function PalettePickerModal({ current, onChange, onClose }: { current: { g1: str
             return (
               <button key={p.name} onClick={() => onChange(p)} style={{ padding: "12px 10px", borderRadius: 14, border: isActive ? `2px solid ${p.g1}` : "1px solid var(--dash-border,rgba(183,191,217,0.2))", background: isActive ? `${p.g1}12` : "var(--dash-faint,rgba(183,191,217,0.04))", cursor: "pointer", fontFamily: "inherit" }}>
                 <div style={{ width: "100%", height: 24, borderRadius: 7, background: `linear-gradient(135deg, ${p.g1}, ${p.g2})`, marginBottom: 7 }} />
-                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{p.name}</div>
-                {isActive && <div style={{ fontSize: 9, color: p.g1, fontWeight: 700, marginTop: 2 }}>✓ Actif</div>}
+                <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{p.name}</div>
+                {isActive && <div style={{ fontSize: "var(--text-2xs)", color: p.g1, fontWeight: 700, marginTop: 2 }}>✓ Actif</div>}
               </button>
             )
           })}
         </div>
         <div style={{ display: "flex", gap: 10 }}>
           <label style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-            <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Couleur 1</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Couleur 1</span>
             <input type="color" value={current.g1} onChange={e => onChange({ ...current, g1: e.target.value })} style={{ width: "100%", height: 32, borderRadius: 7, border: "1px solid var(--dash-border)", cursor: "pointer", padding: 2 }} />
           </label>
           <label style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-            <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Couleur 2</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Couleur 2</span>
             <input type="color" value={current.g2} onChange={e => onChange({ ...current, g2: e.target.value })} style={{ width: "100%", height: 32, borderRadius: 7, border: "1px solid var(--dash-border)", cursor: "pointer", padding: 2 }} />
           </label>
           <div style={{ flex: 1, height: 32, marginTop: 18, borderRadius: 7, background: `linear-gradient(135deg, ${current.g1}, ${current.g2})`, alignSelf: "flex-end" }} />
@@ -416,11 +416,11 @@ function NotesWidget({ storageKey }: { storageKey: string }) {
         style={{
           flex: 1, width: "100%", border: "none", outline: "none", resize: "none",
           background: "transparent", fontFamily: "inherit",
-          fontSize: 13, lineHeight: 1.6, color: "var(--dash-text,#121317)",
+          fontSize: "var(--text-sm)", lineHeight: 1.6, color: "var(--dash-text,#121317)",
           caretColor: "var(--g1,#E11D48)",
         }}
       />
-      <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textAlign: "right", marginTop: 4 }}>
+      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "right", marginTop: 4 }}>
         {text.length} car.
       </div>
     </div>
@@ -458,14 +458,14 @@ function ProgressionWidget({ taskPct, budgetPct, guestPct, bookingsPct }: {
               transform="rotate(-90 50 50)" style={{ transition: "stroke-dasharray 0.6s ease" }} />
           </svg>
           <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: 18, fontWeight: 800, background: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{score}%</span>
-            <span style={{ fontSize: 7, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.06em" }}>global</span>
+            <span style={{ fontSize: "var(--text-md)", fontWeight: 800, background: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{score}%</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.06em" }}>global</span>
           </div>
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 7 }}>
           {bars.map(b => (
             <div key={b.label}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "var(--dash-text-2,#45474D)", marginBottom: 2 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-2xs)", color: "var(--dash-text-2,#45474D)", marginBottom: 2 }}>
                 <span>{b.label}</span><span style={{ fontWeight: 600 }}>{Math.round(b.val * 100)}%</span>
               </div>
               <div style={{ height: 4, borderRadius: 99, background: "var(--dash-faint,rgba(183,191,217,0.18))", overflow: "hidden" }}>
@@ -495,19 +495,19 @@ function ChecklistJXWidget({ tasks, eventDate }: { tasks: Task[]; eventDate: str
 
   return (
     <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 6, boxSizing: "border-box" }}>
-      <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
+      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
         {Math.max(0, Math.ceil((jDay - now) / 86400000))} jours avant J
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 5, overflowY: "auto", maxHeight: 160 }}>
-        {upcoming.length === 0 && <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Tout est à jour 🎉</div>}
+        {upcoming.length === 0 && <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Tout est à jour 🎉</div>}
         {upcoming.map(t => {
           const days = Math.ceil((new Date(t.dueDate).getTime() - now) / 86400000)
           const color = days < 7 ? "#ef4444" : days < 30 ? "#f59e0b" : "#22c55e"
           return (
-            <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11 }}>
+            <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-xs)" }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0 }} />
               <span style={{ flex: 1, color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.label}</span>
-              <span style={{ fontSize: 10, color, fontWeight: 600, flexShrink: 0 }}>J-{Math.max(0, days)}</span>
+              <span style={{ fontSize: "var(--text-2xs)", color, fontWeight: 600, flexShrink: 0 }}>J-{Math.max(0, days)}</span>
             </div>
           )
         })}
@@ -515,7 +515,7 @@ function ChecklistJXWidget({ tasks, eventDate }: { tasks: Task[]; eventDate: str
       <div style={{ display: "flex", gap: 6, borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.2))", paddingTop: 8 }}>
         <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleAdd()}
           placeholder="+ Ajouter un item (Entrée)"
-          style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "transparent", fontSize: 11, color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
+          style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "transparent", fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
       </div>
     </div>
   )
@@ -547,39 +547,39 @@ function RSVPLiveWidget({ guests }: { guests: Guest[] }) {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
         {[{ l:"Oui ✓", v:conf2, c:"#22c55e" }, { l:"Attente", v:pend2, c:"#f59e0b" }, { l:"Non ✗", v:decl2, c:"#ef4444" }].map(x => (
           <div key={x.l} style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 18, fontWeight: 700, color: x.c }}>{x.v}</div>
-            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", fontWeight: 600 }}>{x.l}</div>
+            <div style={{ fontSize: "var(--text-md)", fontWeight: 700, color: x.c }}>{x.v}</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", fontWeight: 600 }}>{x.l}</div>
           </div>
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>{conf2}/{total} confirmés</span>
-        <button onClick={() => setShowPopup(v => !v)} style={{ fontSize: 10, padding: "3px 10px", borderRadius: 99, border: "none", background: G, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+        <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{conf2}/{total} confirmés</span>
+        <button onClick={() => setShowPopup(v => !v)} style={{ fontSize: "var(--text-2xs)", padding: "3px 10px", borderRadius: 99, border: "none", background: G, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
           Gérer
         </button>
       </div>
       {showPopup && (
         <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 30, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 14, padding: 14, boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "var(--dash-text,#121317)" }}>Gérer les RSVP</span>
-            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
+            <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Gérer les RSVP</span>
+            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
           </div>
           <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
             <input value={fpInput} onChange={e => setFpInput(e.target.value)} placeholder="Faire-parts envoyés" type="number"
-              style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: 11, outline: "none", fontFamily: "inherit" }} />
+              style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: "var(--text-xs)", outline: "none", fontFamily: "inherit" }} />
             <button onClick={() => { setFaireParts(p => p + (parseInt(fpInput)||0)); setFpInput("") }}
-              style={{ height: 28, padding: "0 10px", borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+              style={{ height: 28, padding: "0 10px", borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
               + {faireParts > 0 ? `(${faireParts})` : ""}
             </button>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 160, overflowY: "auto" }}>
             {guests.map(g => (
               <div key={g.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ flex: 1, fontSize: 11, color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.name}</span>
+                <span style={{ flex: 1, fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.name}</span>
                 <div style={{ display: "flex", gap: 3 }}>
                   {(["yes","pending","no"] as const).map(s => (
                     <button key={s} onClick={() => setRsvps(p => ({ ...p, [g.id]: s }))} style={{
-                      width: 22, height: 22, borderRadius: 6, border: "none", cursor: "pointer", fontSize: 10, fontWeight: 700,
+                      width: 22, height: 22, borderRadius: 6, border: "none", cursor: "pointer", fontSize: "var(--text-2xs)", fontWeight: 700,
                       background: rsvps[g.id] === s ? (s === "yes" ? "#22c55e" : s === "no" ? "#ef4444" : "#f59e0b") : "var(--dash-faint,rgba(183,191,217,0.18))",
                       color: rsvps[g.id] === s ? "#fff" : "var(--dash-text-3,#9a9aaa)",
                     }}>
@@ -654,11 +654,11 @@ function MoodboardWidget({ eventId }: { eventId: string }) {
                 <button onClick={e => { e.stopPropagation(); removeImage(i) }} style={{
                   position: "absolute", top: 2, right: 2, width: 16, height: 16, borderRadius: "50%",
                   background: "rgba(0,0,0,0.6)", color: "#fff", border: "none", cursor: "pointer",
-                  fontSize: 8, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "var(--text-2xs)", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center",
                 }}>✕</button>
               </>
             ) : (
-              <span style={{ fontSize: 18, opacity: 0.25 }}>+</span>
+              <span style={{ fontSize: "var(--text-md)", opacity: 0.25 }}>+</span>
             )}
           </div>
         ))}
@@ -678,10 +678,10 @@ function WeatherWidget({ eventDate }: { eventDate: string }) {
     { icon: "🌧️", temp: 14, cond: "Averses",    rain: 55 }
   return (
     <div style={{ padding: "12px 16px 16px", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, boxSizing: "border-box" }}>
-      <div style={{ fontSize: 36 }}>{forecast.icon}</div>
-      <div style={{ fontSize: 24, fontWeight: 700, color: "var(--dash-text,#121317)" }}>{forecast.temp}°</div>
-      <div style={{ fontSize: 11, color: "var(--dash-text-2,#45474D)", fontWeight: 500 }}>{forecast.cond}</div>
-      <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+      <div style={{ fontSize: "var(--text-2xl)" }}>{forecast.icon}</div>
+      <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>{forecast.temp}°</div>
+      <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#45474D)", fontWeight: 500 }}>{forecast.cond}</div>
+      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
         💧 {forecast.rain}% pluie
       </div>
     </div>
@@ -708,28 +708,28 @@ function TransportWidget({ guests, eventId }: { guests: Guest[]; eventId: string
     <div style={{ padding: "12px 16px 16px", height: "100%", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box" }} onMouseDown={e => e.stopPropagation()}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
         <div style={{ borderRadius: 10, padding: "7px 10px", background: "var(--dash-faint,rgba(183,191,217,0.08))" }}>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--g1,#E11D48)" }}>{confirmed.length}</div>
-          <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)" }}>invités confirmés</div>
+          <div style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--g1,#E11D48)" }}>{confirmed.length}</div>
+          <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>invités confirmés</div>
         </div>
         <div style={{ borderRadius: 10, padding: "7px 10px", background: "var(--dash-faint,rgba(183,191,217,0.08))" }}>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)" }}>~{estVehicles}</div>
-          <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)" }}>véhicules estimés</div>
+          <div style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>~{estVehicles}</div>
+          <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>véhicules estimés</div>
         </div>
       </div>
       <div style={{ display: "flex", gap: 6 }}>
         <input type="date" value={date} onChange={e => saveDate(e.target.value)}
-          style={{ flex: 1, fontSize: 11, padding: "5px 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,rgba(183,191,217,0.06))", color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
+          style={{ flex: 1, fontSize: "var(--text-xs)", padding: "5px 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,rgba(183,191,217,0.06))", color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
         <input type="time" value={time} onChange={e => saveTime(e.target.value)}
-          style={{ width: 76, fontSize: 11, padding: "5px 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,rgba(183,191,217,0.06))", color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
+          style={{ width: 76, fontSize: "var(--text-xs)", padding: "5px 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,rgba(183,191,217,0.06))", color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
       </div>
       <button onClick={() => setShowPicker(v => !v)}
-        style={{ alignSelf: "flex-start", fontSize: 10, padding: "3px 10px", borderRadius: 99, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", color: "var(--g1,#E11D48)", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+        style={{ alignSelf: "flex-start", fontSize: "var(--text-2xs)", padding: "3px 10px", borderRadius: 99, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", color: "var(--g1,#E11D48)", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
         {selected.length > 0 ? `${selected.length} invité(s) assigné(s)` : "+ Assigner des invités"}
       </button>
       {showPicker && (
         <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 100, overflowY: "auto", padding: "6px 8px", borderRadius: 10, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))" }}>
           {guests.slice(0, 10).map(g => (
-            <label key={g.id} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, cursor: "pointer" }}>
+            <label key={g.id} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--text-xs)", cursor: "pointer" }}>
               <input type="checkbox" checked={selected.includes(g.id)} onChange={() => toggleGuest(g.id)} style={{ accentColor: "var(--g1,#E11D48)" }} />
               <span style={{ color: "var(--dash-text,#121317)" }}>{g.name}</span>
             </label>
@@ -756,15 +756,15 @@ function ContratsWidget({ bookings }: { bookings: Booking[] }) {
   }
   return (
     <div style={{ padding: "12px 16px 16px", height: "100%", display: "flex", flexDirection: "column", gap: 6, boxSizing: "border-box", overflowY: "auto" }}>
-      {bookings.length === 0 && <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Aucun contrat</div>}
+      {bookings.length === 0 && <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Aucun contrat</div>}
       {bookings.map(b => {
         const status = overrides[b.id] ?? b.status
         const cfg = CONTRACT_CFG[status] ?? CONTRACT_CFG.PENDING
         return (
-          <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 8px", borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", fontSize: 11 }}>
+          <div key={b.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 8px", borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", fontSize: "var(--text-xs)" }}>
             <span style={{ flex: 1, color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.vendor}</span>
             <button onClick={() => cycleStatus(b.id, status)} title="Changer le statut"
-              style={{ fontSize: 9, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: cfg.bg, color: cfg.color, border: "none", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+              style={{ fontSize: "var(--text-2xs)", fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: cfg.bg, color: cfg.color, border: "none", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
               {cfg.label} ↻
             </button>
           </div>
@@ -793,11 +793,11 @@ function CitationWidget() {
   }, [])
   return (
     <div style={{ padding: "16px 18px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 10, boxSizing: "border-box" }}>
-      <div style={{ fontSize: 22 }}>✨</div>
-      <blockquote style={{ margin: 0, fontSize: 13, fontStyle: "italic", color: "var(--dash-text,#121317)", lineHeight: 1.65, textAlign: "center", fontFamily: "var(--font-cormorant,serif)" }}>
+      <div style={{ fontSize: "var(--text-lg)" }}>✨</div>
+      <blockquote style={{ margin: 0, fontSize: "var(--text-sm)", fontStyle: "italic", color: "var(--dash-text,#121317)", lineHeight: 1.65, textAlign: "center", fontFamily: "var(--font-cormorant,serif)" }}>
         &ldquo;{citation.text}&rdquo;
       </blockquote>
-      <p style={{ margin: 0, fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center" }}>— {citation.author}</p>
+      <p style={{ margin: 0, fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "center" }}>— {citation.author}</p>
       <div style={{ display: "flex", gap: 4 }}>
         {CITATIONS_LIST.map((_, idx) => (
           <button key={idx} onClick={() => setI(idx)}
@@ -825,10 +825,10 @@ function DepensesRecentesWidget({ budgetItems }: { budgetItems: BudgetItem[] }) 
 
   return (
     <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box" }}>
-      {all.length === 0 && <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Aucune dépense enregistrée</p>}
+      {all.length === 0 && <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Aucune dépense enregistrée</p>}
       {all.map((b, i) => (
         <div key={i} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}>
             <span style={{ color: "var(--dash-text,#121317)" }}>{"icon" in b ? (b as BudgetItem).icon + " " : ""}{b.label}</span>
             <span style={{ fontWeight: 600, color: "var(--g1,#E11D48)" }}>{b.spent.toLocaleString("fr-FR")} Dhs</span>
           </div>
@@ -839,12 +839,12 @@ function DepensesRecentesWidget({ budgetItems }: { budgetItems: BudgetItem[] }) 
       ))}
       <div style={{ display: "flex", gap: 4, marginTop: 4, borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.2))", paddingTop: 8 }}>
         <input value={label} onChange={e => setLabel(e.target.value)} placeholder="Label" onKeyDown={e => e.key === "Enter" && handleAdd()}
-          style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: 11, color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
+          style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit" }} />
         <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Dhs" type="number" onKeyDown={e => e.key === "Enter" && handleAdd()}
-          style={{ width: 60, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: 11, color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit", textAlign: "right" }} />
-        <button onClick={handleAdd} style={{ height: 28, width: 28, borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>+</button>
+          style={{ width: 60, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)", outline: "none", fontFamily: "inherit", textAlign: "right" }} />
+        <button onClick={handleAdd} style={{ height: 28, width: 28, borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: "var(--text-sm)", fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>+</button>
       </div>
-      <Link href="/budget" style={{ fontSize: 10, color: "var(--g1,#E11D48)", alignSelf: "flex-end", textDecoration: "none" }}>Voir le budget →</Link>
+      <Link href="/budget" style={{ fontSize: "var(--text-2xs)", color: "var(--g1,#E11D48)", alignSelf: "flex-end", textDecoration: "none" }}>Voir le budget →</Link>
     </div>
   )
 }
@@ -857,18 +857,18 @@ function ObjectifEpargneWidget({ budget, budgetSpent, eventDate }: { budget: num
     <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 10, boxSizing: "border-box" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "var(--g1,#E11D48)", margin: 0 }}>{remaining.toLocaleString("fr-FR")} Dhs</p>
-          <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>non engagé sur {budget.toLocaleString("fr-FR")} Dhs</p>
+          <p style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--g1,#E11D48)", margin: 0 }}>{remaining.toLocaleString("fr-FR")} Dhs</p>
+          <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>non engagé sur {budget.toLocaleString("fr-FR")} Dhs</p>
         </div>
         <div style={{ textAlign: "right" }}>
-          <p style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>J-{days}</p>
-          <p style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>avant l&apos;événement</p>
+          <p style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>J-{days}</p>
+          <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>avant l&apos;événement</p>
         </div>
       </div>
       <div style={{ height: 10, borderRadius: 99, background: "var(--dash-faint,rgba(183,191,217,0.18))", overflow: "hidden" }}>
         <div style={{ width: `${pct}%`, height: "100%", background: pct > 90 ? "var(--g1,#E11D48)" : G, transition: "width 0.4s" }} />
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}>
         <span style={{ color: pct > 90 ? "var(--g1,#E11D48)" : "var(--dash-text-2,#45474D)", fontWeight: 600 }}>{pct}% engagé</span>
         <span style={{ color: "var(--dash-text-3,#9a9aaa)" }}>{100 - pct}% libre</span>
       </div>
@@ -891,7 +891,7 @@ function donutPath(cx: number, cy: number, outerR: number, innerR: number, start
 function RepartitionBudgetWidget({ budgetItems }: { budgetItems: BudgetItem[] }) {
   const entries = budgetItems.map((b, i) => ({ label: b.label, val: b.spent || b.allocated, color: b.color ?? BUDGET_COLORS_LIST[i % BUDGET_COLORS_LIST.length] })).filter(b => b.val > 0).sort((a, b) => b.val - a.val).slice(0, 6)
   const total = entries.reduce((s, e) => s + e.val, 0)
-  if (entries.length === 0) return <div style={{ padding: "20px 16px", fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Aucune dépense</div>
+  if (entries.length === 0) return <div style={{ padding: "20px 16px", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Aucune dépense</div>
   let angle = 0
   const paths = entries.map(e => {
     const sweep = total > 0 ? (e.val / total) * 360 : 0
@@ -909,7 +909,7 @@ function RepartitionBudgetWidget({ budgetItems }: { budgetItems: BudgetItem[] })
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
         {paths.map(p => (
-          <div key={p.label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10 }}>
+          <div key={p.label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--text-2xs)" }}>
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: p.color, flexShrink: 0 }} />
             <span style={{ flex: 1, color: "var(--dash-text-2,#45474D)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.label}</span>
             <span style={{ fontWeight: 600, color: p.color }}>{Math.round((p.val / total) * 100)}%</span>
@@ -923,7 +923,7 @@ function RepartitionBudgetWidget({ budgetItems }: { budgetItems: BudgetItem[] })
 function TimelineWidget({ tasks, eventDate }: { tasks: Task[]; eventDate: string }) {
   void eventDate
   const sorted = [...tasks].filter(t => t.dueDate).sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()).slice(0, 7)
-  if (sorted.length === 0) return <div style={{ padding: "20px 16px", fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>Aucune tâche planifiée</div>
+  if (sorted.length === 0) return <div style={{ padding: "20px 16px", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Aucune tâche planifiée</div>
   return (
     <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
       <div style={{ position: "relative", paddingLeft: 20 }}>
@@ -935,14 +935,14 @@ function TimelineWidget({ tasks, eventDate }: { tasks: Task[]; eventDate: string
             <div key={t.id} style={{ display: "flex", alignItems: "flex-start", gap: 8, paddingBottom: 10, position: "relative" }}>
               <div style={{ width: 10, height: 10, borderRadius: "50%", background: dot, flexShrink: 0, marginTop: 2, marginLeft: -19, border: "2px solid var(--dash-surface,#fff)", zIndex: 1 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 11, fontWeight: 500, color: "var(--dash-text,#121317)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textDecoration: t.done ? "line-through" : "none", opacity: t.done ? 0.5 : 1 }}>{t.label}</p>
-                <p style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", margin: "2px 0 0" }}>{new Date(t.dueDate).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</p>
+                <p style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--dash-text,#121317)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textDecoration: t.done ? "line-through" : "none", opacity: t.done ? 0.5 : 1 }}>{t.label}</p>
+                <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: "2px 0 0" }}>{new Date(t.dueDate).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</p>
               </div>
             </div>
           )
         })}
       </div>
-      <Link href="/planner" style={{ fontSize: 10, color: "var(--g1,#E11D48)", alignSelf: "flex-end", textDecoration: "none" }}>Voir le planning →</Link>
+      <Link href="/planner" style={{ fontSize: "var(--text-2xs)", color: "var(--g1,#E11D48)", alignSelf: "flex-end", textDecoration: "none" }}>Voir le planning →</Link>
     </div>
   )
 }
@@ -974,41 +974,41 @@ function PlanTableWidget({ guests }: { guests: Guest[] }) {
     <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box", position: "relative" }}>
       {guests.length === 0 ? (
         <div style={{ textAlign: "center", padding: "16px 0" }}>
-          <div style={{ fontSize: 28 }}>🪑</div>
-          <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", margin: "8px 0 0" }}>Aucun invité</p>
+          <div style={{ fontSize: "var(--text-xl)" }}>🪑</div>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: "8px 0 0" }}>Aucun invité</p>
         </div>
       ) : (
         <>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
             {tables.map(([n, gs]) => (
               <div key={n} style={{ background: "var(--dash-faint,rgba(183,191,217,0.1))", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", borderRadius: 10, padding: "6px 10px", textAlign: "center", minWidth: 46 }}>
-                <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", fontWeight: 600, textTransform: "uppercase" }}>T{n}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)" }}>{gs.length}</div>
+                <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", fontWeight: 600, textTransform: "uppercase" }}>T{n}</div>
+                <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>{gs.length}</div>
               </div>
             ))}
-            <button onClick={() => setShowPopup(v => !v)} style={{ minWidth: 46, padding: "6px 10px", borderRadius: 10, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", cursor: "pointer", fontSize: 18, color: "var(--g1,#E11D48)", fontWeight: 700 }}>+</button>
+            <button onClick={() => setShowPopup(v => !v)} style={{ minWidth: 46, padding: "6px 10px", borderRadius: 10, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", cursor: "pointer", fontSize: "var(--text-md)", color: "var(--g1,#E11D48)", fontWeight: 700 }}>+</button>
           </div>
-          {unassigned.length > 0 && <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{unassigned.length} sans table</p>}
+          {unassigned.length > 0 && <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>{unassigned.length} sans table</p>}
         </>
       )}
       {showPopup && (
         <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 30, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 14, padding: 14, boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "var(--dash-text,#121317)" }}>Nouvelle table</span>
-            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
+            <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Nouvelle table</span>
+            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
           </div>
           <input value={tableNum} onChange={e => setTableNum(e.target.value)} placeholder="Numéro de table" type="number"
-            style={{ width: "100%", height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: 11, outline: "none", fontFamily: "inherit", boxSizing: "border-box", marginBottom: 8 }} />
+            style={{ width: "100%", height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: "var(--text-xs)", outline: "none", fontFamily: "inherit", boxSizing: "border-box", marginBottom: 8 }} />
           <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 120, overflowY: "auto", marginBottom: 8 }}>
             {unassigned.slice(0, 10).map(g => (
-              <label key={g.id} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, cursor: "pointer" }}>
+              <label key={g.id} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--text-xs)", cursor: "pointer" }}>
                 <input type="checkbox" checked={selected.includes(g.id)} onChange={e => setSelected(p => e.target.checked ? [...p, g.id] : p.filter(x => x !== g.id))} />
                 <span style={{ color: "var(--dash-text,#121317)" }}>{g.name}</span>
               </label>
             ))}
-            {unassigned.length === 0 && <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Tous les invités sont assignés</p>}
+            {unassigned.length === 0 && <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Tous les invités sont assignés</p>}
           </div>
-          <button onClick={handleCreate} style={{ width: "100%", height: 30, borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Créer</button>
+          <button onClick={handleCreate} style={{ width: "100%", height: 30, borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Créer</button>
         </div>
       )}
     </div>
@@ -1036,9 +1036,9 @@ function RegimesWidget({ guests }: { guests: Guest[] }) {
     <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box", position: "relative" }}>
       {DIET_OPTIONS_LIST.filter(d => counts[d.key] > 0).map(d => (
         <div key={d.key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 14, flexShrink: 0 }}>{d.icon}</span>
+          <span style={{ fontSize: "var(--text-sm)", flexShrink: 0 }}>{d.icon}</span>
           <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginBottom: 2 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-2xs)", marginBottom: 2 }}>
               <span style={{ color: "var(--dash-text-2,#45474D)" }}>{d.key}</span>
               <span style={{ fontWeight: 700, color: d.color }}>{counts[d.key]}</span>
             </div>
@@ -1048,25 +1048,25 @@ function RegimesWidget({ guests }: { guests: Guest[] }) {
           </div>
         </div>
       ))}
-      {total === 0 && <div style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "4px 0" }}>Aucun régime assigné</div>}
-      <button onClick={() => setShowPopup(v => !v)} style={{ alignSelf: "flex-start", fontSize: 10, padding: "3px 10px", borderRadius: 99, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", color: "var(--g1,#E11D48)", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+      {total === 0 && <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "4px 0" }}>Aucun régime assigné</div>}
+      <button onClick={() => setShowPopup(v => !v)} style={{ alignSelf: "flex-start", fontSize: "var(--text-2xs)", padding: "3px 10px", borderRadius: 99, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", color: "var(--g1,#E11D48)", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
         + Assigner régimes
       </button>
       {showPopup && (
         <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 30, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 14, padding: 14, boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "var(--dash-text,#121317)" }}>Régimes alimentaires</span>
-            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
+            <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Régimes alimentaires</span>
+            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 180, overflowY: "auto" }}>
             {shown.slice(0, 10).map(g => (
               <div key={g.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ flex: 1, fontSize: 11, color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.name}</span>
+                <span style={{ flex: 1, fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.name}</span>
                 <div style={{ display: "flex", gap: 3 }}>
                   {DIET_OPTIONS_LIST.map(d => (
                     <button key={d.key} onClick={() => setDiets(p => ({ ...p, [g.id]: p[g.id] === d.key ? "" : d.key }))}
                       title={d.key} style={{
-                        width: 22, height: 22, borderRadius: 6, cursor: "pointer", fontSize: 11,
+                        width: 22, height: 22, borderRadius: 6, cursor: "pointer", fontSize: "var(--text-xs)",
                         border: diets[g.id] === d.key ? `1.5px solid ${d.color}` : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
                         background: diets[g.id] === d.key ? `${d.color}22` : "transparent",
                         display: "flex", alignItems: "center", justifyContent: "center",
@@ -1102,8 +1102,8 @@ function AlertesWidget({ tasks, budget, budgetSpent, bookings, guestCount, guest
   return (
     <div style={{ padding: "12px 16px 16px", height: "100%", display: "flex", flexDirection: "column", gap: 6, boxSizing: "border-box" }}>
       {alerts.map((a, idx) => (
-        <div key={idx} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", borderRadius: 8, background: `${a.c}14`, fontSize: 11 }}>
-          <span style={{ fontSize: 14, flexShrink: 0 }}>{a.icon}</span>
+        <div key={idx} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", borderRadius: 8, background: `${a.c}14`, fontSize: "var(--text-xs)" }}>
+          <span style={{ fontSize: "var(--text-sm)", flexShrink: 0 }}>{a.icon}</span>
           <span style={{ flex: 1, color: a.c, fontWeight: 500 }}>{a.text}</span>
         </div>
       ))}
@@ -1119,25 +1119,25 @@ function CarteGeographiqueWidget({ guests }: { guests: Guest[] }) {
   const cities = Object.entries(byCityRaw).sort((a, b) => b[1] - a[1])
   const total = guests.length
   if (total === 0) return (
-    <div style={{ padding: "20px 16px", textAlign: "center", fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>🗺️ Aucun invité enregistré</div>
+    <div style={{ padding: "20px 16px", textAlign: "center", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>🗺️ Aucun invité enregistré</div>
   )
   const maxCount = cities[0]?.[1] ?? 1
   return (
     <div style={{ padding: "12px 16px 16px", height: "100%", display: "flex", flexDirection: "column", gap: 7, boxSizing: "border-box" }}>
-      <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
         {cities.length} ville{cities.length > 1 ? "s" : ""} · {total} invités
       </div>
       {cities.slice(0, 6).map(([city, count], idx) => (
         <div key={city} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 11, flexShrink: 0 }}>📍</span>
-          <span style={{ fontSize: 11, color: "var(--dash-text,#121317)", width: 78, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{city}</span>
+          <span style={{ fontSize: "var(--text-xs)", flexShrink: 0 }}>📍</span>
+          <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)", width: 78, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{city}</span>
           <div style={{ flex: 1, height: 6, borderRadius: 99, background: "var(--dash-faint,rgba(183,191,217,0.18))", overflow: "hidden" }}>
             <div style={{ width: `${(count / maxCount) * 100}%`, height: "100%", borderRadius: 99, background: GEO_COLORS[idx % GEO_COLORS.length], transition: "width 0.5s" }} />
           </div>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "var(--dash-text,#121317)", width: 16, textAlign: "right", flexShrink: 0 }}>{count}</span>
+          <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)", width: 16, textAlign: "right", flexShrink: 0 }}>{count}</span>
         </div>
       ))}
-      {cities.length > 6 && <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textAlign: "right" }}>+{cities.length - 6} autres villes</div>}
+      {cities.length > 6 && <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "right" }}>+{cities.length - 6} autres villes</div>}
     </div>
   )
 }
@@ -1164,7 +1164,7 @@ function EnvoiFairepartWidget({ guests, eventId }: { guests: Guest[]; eventId: s
     setShowPopup(false)
   }
   if (total === 0) return (
-    <div style={{ padding: "20px 16px", textAlign: "center", fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>💌 Aucun invité enregistré</div>
+    <div style={{ padding: "20px 16px", textAlign: "center", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>💌 Aucun invité enregistré</div>
   )
   return (
     <div style={{ padding: "12px 16px 16px", height: "100%", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box", position: "relative" }}>
@@ -1173,7 +1173,7 @@ function EnvoiFairepartWidget({ guests, eventId }: { guests: Guest[]; eventId: s
         { label: "Réponses reçues",    count: responded, pct: pctResp, color: "#22c55e", icon: "📬" },
       ].map(({ label, count, pct, color, icon }) => (
         <div key={label} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}>
             <span style={{ display: "flex", alignItems: "center", gap: 5, color: "var(--dash-text-2,#45474D)" }}><span>{icon}</span>{label}</span>
             <span style={{ fontWeight: 700, color }}>{count}/{total}</span>
           </div>
@@ -1183,25 +1183,25 @@ function EnvoiFairepartWidget({ guests, eventId }: { guests: Guest[]; eventId: s
         </div>
       ))}
       <button onClick={() => setShowPopup(v => !v)}
-        style={{ alignSelf: "flex-start", marginTop: 2, fontSize: 10, padding: "3px 10px", borderRadius: 99, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", color: "var(--g1,#E11D48)", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+        style={{ alignSelf: "flex-start", marginTop: 2, fontSize: "var(--text-2xs)", padding: "3px 10px", borderRadius: 99, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", color: "var(--g1,#E11D48)", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
         + Marquer envoyés
       </button>
       {showPopup && (
         <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 30, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 14, padding: 14, boxShadow: "0 8px 32px rgba(0,0,0,0.12)", marginTop: 4 }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "var(--dash-text,#121317)" }}>Faire-parts envoyés</span>
-            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
+            <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Faire-parts envoyés</span>
+            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
           </div>
           <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
             <input type="number" min={1} value={input} onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") handleAdd() }}
               placeholder="Combien envoyés…"
-              style={{ flex: 1, fontSize: 11, padding: "5px 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,rgba(183,191,217,0.04))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)" }} />
+              style={{ flex: 1, fontSize: "var(--text-xs)", padding: "5px 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,rgba(183,191,217,0.04))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)" }} />
             <button onClick={handleAdd}
-              style={{ padding: "5px 10px", borderRadius: 8, background: G, color: "#fff", border: "none", cursor: "pointer", fontSize: 11, fontWeight: 600, fontFamily: "inherit" }}>+</button>
+              style={{ padding: "5px 10px", borderRadius: 8, background: G, color: "#fff", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", fontWeight: 600, fontFamily: "inherit" }}>+</button>
           </div>
           <button onClick={handleMarkAll}
-            style={{ width: "100%", padding: "6px", borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", color: "var(--dash-text-2,#45474D)", cursor: "pointer", fontSize: 11, fontFamily: "inherit" }}>
+            style={{ width: "100%", padding: "6px", borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border,rgba(183,191,217,0.2))", color: "var(--dash-text-2,#45474D)", cursor: "pointer", fontSize: "var(--text-xs)", fontFamily: "inherit" }}>
             ✓ Tout marquer envoyé ({total})
           </button>
         </div>
@@ -1412,7 +1412,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
       <div style={{ padding: "10px 16px 14px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>{completedTasks}/{tasks.length}</span>
+            <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{completedTasks}/{tasks.length}</span>
             <div style={{ width: 60, height: 3, background: "var(--dash-faint-2,rgba(183,191,217,0.15))", borderRadius: 99, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${taskPct * 100}%`, borderRadius: 99, background: G, transition: "width 0.5s" }} className="clone-progress-fill" />
             </div>
@@ -1425,22 +1425,22 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
               <div key={task.id} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "6px 0", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.08))" }}>
                 <button onClick={() => toggleTask(task.id)} style={{ width: 16, height: 16, borderRadius: 5, flexShrink: 0, marginTop: 2, border: "2px solid rgba(183,191,217,0.35)", background: "transparent", cursor: "pointer", transition: "all 0.15s" }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, fontWeight: 500, color: "var(--dash-text,#121317)", lineHeight: 1.35 }}>{task.label}</div>
-                  <span style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase", padding: "1px 5px", borderRadius: 99, background: p.bg, color: p.color }}>{task.priority}</span>
+                  <div style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--dash-text,#121317)", lineHeight: 1.35 }}>{task.label}</div>
+                  <span style={{ fontSize: "var(--text-2xs)", fontWeight: 600, textTransform: "uppercase", padding: "1px 5px", borderRadius: 99, background: p.bg, color: p.color }}>{task.priority}</span>
                 </div>
-                <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", flexShrink: 0 }}>{shortDate(task.dueDate)}</span>
+                <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", flexShrink: 0 }}>{shortDate(task.dueDate)}</span>
               </div>
             )
           })}
           {done.length > 0 && (
             <>
-              <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", padding: "6px 0 4px", textTransform: "uppercase", letterSpacing: "0.07em" }}>Complétées</div>
+              <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", padding: "6px 0 4px", textTransform: "uppercase", letterSpacing: "0.07em" }}>Complétées</div>
               {done.map(task => (
                 <div key={task.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "4px 0", borderBottom: "1px solid var(--dash-divider)", opacity: 0.45 }}>
                   <button onClick={() => toggleTask(task.id)} className="clone-check-done" style={{ width: 16, height: 16, borderRadius: 5, flexShrink: 0, border: "none", background: G, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <GIcon name="check" size={10} color="#fff" />
                   </button>
-                  <span style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textDecoration: "line-through", flex: 1 }}>{task.label}</span>
+                  <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", textDecoration: "line-through", flex: 1 }}>{task.label}</span>
                 </div>
               ))}
             </>
@@ -1456,13 +1456,13 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
               onChange={e => setNewTaskLabel(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") submitNewTask(); if (e.key === "Escape") { setAddingTask(false); setNewTaskLabel("") } }}
               placeholder="Nom de la tâche…"
-              style={{ flex: 1, fontSize: 12, padding: "5px 10px", borderRadius: 8, border: "1.5px solid var(--g1,#E11D48)", background: "var(--dash-faint,rgba(183,191,217,0.04))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)" }}
+              style={{ flex: 1, fontSize: "var(--text-xs)", padding: "5px 10px", borderRadius: 8, border: "1.5px solid var(--g1,#E11D48)", background: "var(--dash-faint,rgba(183,191,217,0.04))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)" }}
             />
-            <button onClick={submitNewTask} style={{ padding: "5px 10px", borderRadius: 8, background: G, color: "#fff", border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, fontFamily: "inherit" }}>+</button>
-            <button onClick={() => { setAddingTask(false); setNewTaskLabel("") }} style={{ padding: "5px 8px", borderRadius: 8, background: "transparent", border: "1px solid var(--dash-border)", cursor: "pointer", fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", fontFamily: "inherit" }}>✕</button>
+            <button onClick={submitNewTask} style={{ padding: "5px 10px", borderRadius: 8, background: G, color: "#fff", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", fontWeight: 600, fontFamily: "inherit" }}>+</button>
+            <button onClick={() => { setAddingTask(false); setNewTaskLabel("") }} style={{ padding: "5px 8px", borderRadius: 8, background: "transparent", border: "1px solid var(--dash-border)", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", fontFamily: "inherit" }}>✕</button>
           </div>
         ) : (
-          <button onClick={() => setAddingTask(true)} style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 5, padding: "6px", borderRadius: 8, background: "transparent", border: "1px dashed var(--dash-border,rgba(183,191,217,0.3))", color: "var(--dash-text-3,#9a9aaa)", fontSize: 11, cursor: "pointer", fontFamily: "inherit", width: "100%", justifyContent: "center" }}>
+          <button onClick={() => setAddingTask(true)} style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 5, padding: "6px", borderRadius: 8, background: "transparent", border: "1px dashed var(--dash-border,rgba(183,191,217,0.3))", color: "var(--dash-text-3,#9a9aaa)", fontSize: "var(--text-xs)", cursor: "pointer", fontFamily: "inherit", width: "100%", justifyContent: "center" }}>
             <GIcon name="add" size={13} color="var(--dash-text-3,#9a9aaa)" /> Ajouter une tâche
           </button>
         )}
@@ -1480,8 +1480,8 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
             { val: totalAmt > 0 ? `${(totalAmt / 1000).toFixed(0)}k Dhs` : "—", label: "Engagé", href: "/budget" },
           ].map(({ val, label, href }) => (
             <Link key={label} href={href} style={{ padding: "9px 10px", borderRadius: 10, background: "var(--dash-faint,rgba(183,191,217,0.07))", border: "1px solid var(--dash-border)", textDecoration: "none" }}>
-              <div style={{ fontSize: 16, fontWeight: 800, backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{val}</div>
-              <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>{label}</div>
+              <div style={{ fontSize: "var(--text-base)", fontWeight: 800, backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{val}</div>
+              <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>{label}</div>
             </Link>
           ))}
         </div>
@@ -1491,19 +1491,19 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
             const slug = b.vendor.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
             return (
               <Link key={b.id} href={`/vendor/${slug}`} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: "1px solid var(--dash-divider)", textDecoration: "none" }}>
-                <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: `${s.color}15`, border: `1px solid ${s.color}22`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 700, color: s.color }}>
+                <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: `${s.color}15`, border: `1px solid ${s.color}22`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-2xs)", fontWeight: 700, color: s.color }}>
                   {b.vendor.split(" ").map((w: string) => w[0]).join("").slice(0, 2)}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{b.vendor}</div>
-                  <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)" }}>{b.category}</div>
+                  <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{b.vendor}</div>
+                  <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{b.category}</div>
                 </div>
-                <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 99, background: s.bg, color: s.color, flexShrink: 0 }}>{s.label}</span>
+                <span style={{ fontSize: "var(--text-2xs)", fontWeight: 700, padding: "2px 6px", borderRadius: 99, background: s.bg, color: s.color, flexShrink: 0 }}>{s.label}</span>
               </Link>
             )
           })}
         </div>
-        <Link href="/explore" style={{ marginTop: 8, display: "block", padding: "7px", borderRadius: 99, textAlign: "center", background: G, color: "#fff", fontSize: 11, fontWeight: 600, textDecoration: "none" }}>
+        <Link href="/explore" style={{ marginTop: 8, display: "block", padding: "7px", borderRadius: 99, textAlign: "center", background: G, color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none" }}>
           + Ajouter un prestataire
         </Link>
       </div>
@@ -1516,7 +1516,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
       <div style={{ padding: "10px 16px 14px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
         {unread > 0 && (
           <div style={{ marginBottom: 8 }}>
-            <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: G, color: "#fff" }}>
+            <span style={{ fontSize: "var(--text-2xs)", fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: G, color: "#fff" }}>
               {unread} non lu{unread !== 1 ? "s" : ""}
             </span>
           </div>
@@ -1524,21 +1524,21 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
         <div style={{ flex: 1, overflowY: "auto", scrollbarWidth: "none" }}>
           {messages.map(msg => (
             <Link key={msg.id} href="/messages" style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid var(--dash-divider)", textDecoration: "none" }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", flexShrink: 0, background: msg.unread > 0 ? G : "var(--dash-faint-2,rgba(183,191,217,0.15))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: msg.unread > 0 ? "#fff" : "var(--dash-text-2,#45474D)" }}>
+              <div style={{ width: 32, height: 32, borderRadius: "50%", flexShrink: 0, background: msg.unread > 0 ? G : "var(--dash-faint-2,rgba(183,191,217,0.15))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-2xs)", fontWeight: 700, color: msg.unread > 0 ? "#fff" : "var(--dash-text-2,#45474D)" }}>
                 {msg.avatar}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 12, fontWeight: msg.unread > 0 ? 700 : 500, color: "var(--dash-text,#121317)" }}>{msg.vendor}</span>
-                  <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", marginLeft: 8 }}>{msg.time}</span>
+                  <span style={{ fontSize: "var(--text-xs)", fontWeight: msg.unread > 0 ? 700 : 500, color: "var(--dash-text,#121317)" }}>{msg.vendor}</span>
+                  <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", marginLeft: 8 }}>{msg.time}</span>
                 </div>
-                <div style={{ fontSize: 11, color: msg.unread > 0 ? "var(--dash-text-2,#45474D)" : "var(--dash-text-3,#9a9aaa)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 1, fontWeight: msg.unread > 0 ? 500 : 400 }}>{msg.lastMsg}</div>
+                <div style={{ fontSize: "var(--text-xs)", color: msg.unread > 0 ? "var(--dash-text-2,#45474D)" : "var(--dash-text-3,#9a9aaa)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: 1, fontWeight: msg.unread > 0 ? 500 : 400 }}>{msg.lastMsg}</div>
               </div>
               {msg.unread > 0 && <div style={{ width: 7, height: 7, borderRadius: "50%", background: G, flexShrink: 0 }} />}
             </Link>
           ))}
         </div>
-        <Link href="/messages" style={{ marginTop: 8, display: "block", padding: "7px", borderRadius: 99, textAlign: "center", border: "1px solid var(--dash-border)", color: "var(--dash-text-2,#45474D)", fontSize: 11, fontWeight: 500, textDecoration: "none" }}>
+        <Link href="/messages" style={{ marginTop: 8, display: "block", padding: "7px", borderRadius: 99, textAlign: "center", border: "1px solid var(--dash-border)", color: "var(--dash-text-2,#45474D)", fontSize: "var(--text-xs)", fontWeight: 500, textDecoration: "none" }}>
           Voir tous les messages →
         </Link>
       </div>
@@ -1637,7 +1637,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
           </div>
 
           <p style={{
-            fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
+            fontSize: "var(--text-xs)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase",
             color: "#E11D48", margin: "0 0 12px",
           }}>
             ✦ Commençons ✦
@@ -1651,7 +1651,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
             Créez votre premier événement
           </h1>
           <p style={{
-            fontSize: 15, color: "var(--dash-text-2,#6a6a71)",
+            fontSize: "var(--text-base)", color: "var(--dash-text-2,#6a6a71)",
             margin: "0 0 32px", lineHeight: 1.6, maxWidth: 440,
           }}>
             Mariage, anniversaire, corporate… En 3 étapes on calibre budget, invités, prestataires, planning.
@@ -1677,9 +1677,9 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
               }}>
                 <span style={{
                   fontFamily: "'Google Symbols','Material Symbols Outlined'",
-                  fontSize: 20, color: "#E11D48", lineHeight: 1,
+                  fontSize: "var(--text-md)", color: "#E11D48", lineHeight: 1,
                 }}>{f.icon}</span>
-                <span style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{f.label}</span>
+                <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{f.label}</span>
               </div>
             ))}
           </div>
@@ -1691,7 +1691,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
               display: "inline-flex", alignItems: "center", gap: 8,
               padding: "14px 32px", borderRadius: 14,
               background: "linear-gradient(135deg,#E11D48,#9333EA)", color: "#fff",
-              fontSize: 15, fontWeight: 700, border: "none", cursor: "pointer",
+              fontSize: "var(--text-base)", fontWeight: 700, border: "none", cursor: "pointer",
               fontFamily: "inherit",
               boxShadow: "0 8px 24px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
               transition: "transform 0.15s, box-shadow 0.15s",
@@ -1705,11 +1705,11 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
             Créer mon événement en 3 étapes
           </button>
 
-          <p style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", marginTop: 14 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 14 }}>
             Gratuit · Simple · Données sécurisées
           </p>
 
-          <div style={{ marginTop: 20, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>
+          <div style={{ marginTop: 20, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
             Ou{" "}
             <Link href="/accueil" style={{ color: "var(--dash-text-2,#6a6a71)", textDecoration: "underline" }}>
               retour à l&apos;accueil
@@ -1780,9 +1780,9 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
           <button onClick={() => setMobileOpen(true)} style={{ width: 34, height: 34, borderRadius: 9, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <GIcon name="menu" size={18} color="var(--dash-text-2,#45474D)" />
           </button>
-          <span style={{ fontSize: 14, fontWeight: 700, color: "var(--dash-text,#121317)", letterSpacing: "-0.02em" }}>Momento</span>
+          <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", letterSpacing: "-0.02em" }}>Momento</span>
           {totalUnread > 0 && (
-            <Link href="/messages" style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: G, color: "#fff", textDecoration: "none" }}>
+            <Link href="/messages" style={{ marginLeft: "auto", fontSize: "var(--text-2xs)", fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: G, color: "#fff", textDecoration: "none" }}>
               {totalUnread} non lu{totalUnread !== 1 ? "s" : ""}
             </Link>
           )}
@@ -1803,12 +1803,12 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: event.color, boxShadow: `0 0 8px ${event.color}90` }} />
-              <span style={{ fontSize: 10, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Événement actif</span>
+              <span style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Événement actif</span>
             </div>
             <h1 style={{ fontSize: "clamp(1.2rem,2.2vw,1.6rem)", fontWeight: 800, color: "var(--dash-text,#121317)", letterSpacing: "-0.03em", margin: "0 0 3px" }}>
               {event.name}
             </h1>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
+            <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", margin: 0 }}>
               {new Date(event.date).toLocaleDateString("fr-MA", { day: "numeric", month: "long", year: "numeric" })}
               {" · "}
               <span style={{ fontWeight: 700, backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>J-{daysLeft}</span>
@@ -1823,8 +1823,8 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
             ].map(({ icon, val, label, href }) => (
               <Link key={label} href={href} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 13px", borderRadius: 999, textDecoration: "none", background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border)", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }} className="clone-card-white">
                 <GIcon name={icon} size={13} color="var(--g1,#E11D48)" />
-                <span style={{ fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)" }}>{val}</span>
-                <span style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)" }}>{label}</span>
+                <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>{val}</span>
+                <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{label}</span>
               </Link>
             ))}
           </div>
@@ -1832,7 +1832,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
 
         {/* Toolbar */}
         <div style={{ padding: "8px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
-          <span style={{ fontSize: 10, color: "var(--dash-text-3,#c9cad0)" }}>Glisser · Redimensionner (poignée bas-droite)</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#c9cad0)" }}>Glisser · Redimensionner (poignée bas-droite)</span>
           <div style={{ display: "flex", gap: 6 }}>
             <button onClick={() => setDarkMode(d => !d)} title={darkMode ? "Mode clair" : "Mode sombre"}
               style={{ width: 30, height: 30, borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1847,7 +1847,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
               <GIcon name="restart_alt" size={15} color="var(--dash-text-3,#9a9aaa)" />
             </button>
             <button onClick={() => setShowPicker(true)}
-              style={{ display: "flex", alignItems: "center", gap: 5, padding: "0 12px", height: 30, borderRadius: 99, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border)", fontSize: 11, fontWeight: 600, color: "var(--dash-text-2,#45474D)", cursor: "pointer", fontFamily: "inherit" }}>
+              style={{ display: "flex", alignItems: "center", gap: 5, padding: "0 12px", height: 30, borderRadius: 99, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border)", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2,#45474D)", cursor: "pointer", fontFamily: "inherit" }}>
               <GIcon name="add" size={13} color="var(--g1,#E11D48)" />Widget
             </button>
           </div>
