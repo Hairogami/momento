@@ -127,8 +127,12 @@ export default function AntNav({
 }) {
   const { data: session, status } = useSession()
   const isLoggedIn = status === "authenticated"
-  const role       = (session?.user as { role?: string } | undefined)?.role ?? "client"
-  const isVendor   = role === "vendor"
+  // NOTE: la connexion vendor passera par une page totalement séparée (pas
+  // encore créée). Tant qu'elle n'existe pas, AntNav reste en mode client
+  // uniquement, peu importe le role en DB. Les routes /vendor/* restent
+  // accessibles via URL directe (backend non cassé).
+  const isVendor   = false
+  void session
   const { plan }   = usePlan()
   const planLabel = plan === "pro" ? "Pro" : plan === "max" ? "Max" : "Free"
   const planBg    = plan === "pro" ? "linear-gradient(135deg,#E11D48,#9333EA)"
@@ -227,7 +231,7 @@ export default function AntNav({
 
   // Nav stable pour tous les états d'auth — seul le href de "Dashboard" change.
   // Pour les prestataires, on remplace la CTA "Vous êtes prestataire ?" par le shortcut Espace pro.
-  const dashboardHref = !isLoggedIn ? "/login" : isVendor ? "/vendor/dashboard" : "/accueil"
+  const dashboardHref = !isLoggedIn ? "/login" : isVendor ? "/vendor/dashboard" : "/dashboard"
   const navLinks = NAV_LINKS_PUBLIC
     .filter(l => !(isVendor && l.label === "Vous êtes prestataire ?"))
     .map(l => (l.label === "Mon Planner" ? { ...l, href: dashboardHref } : l))
