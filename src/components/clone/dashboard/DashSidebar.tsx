@@ -80,7 +80,15 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     }
     void refresh()
     const id = setInterval(refresh, 30000)
-    return () => { cancelled = true; clearInterval(id) }
+    // Évent custom : pages qui marquent des messages comme lus (ex: ouvrir
+    // une conversation) déclenchent un re-fetch immédiat sans attendre 30s.
+    const onChanged = () => { void refresh() }
+    window.addEventListener("momento-unread-changed", onChanged)
+    return () => {
+      cancelled = true
+      clearInterval(id)
+      window.removeEventListener("momento-unread-changed", onChanged)
+    }
   }, [])
   const messageUnread = messageUnreadLive
   const [upsellOpen, setUpsellOpen] = useState(false)

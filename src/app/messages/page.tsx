@@ -78,7 +78,12 @@ export default function CloneMessagesPage() {
   useEffect(() => {
     if (!active) { setMsgs([]); return }
     setLoadM(true)
-    fetchMsgs(active).finally(() => setLoadM(false))
+    fetchMsgs(active).finally(() => {
+      setLoadM(false)
+      // Conv ouverte → messages marqués read côté serveur → notifier la sidebar
+      // pour qu'elle re-fetch /api/unread immédiatement (sans attendre 30s).
+      try { window.dispatchEvent(new CustomEvent("momento-unread-changed")) } catch {}
+    })
     pollRef.current = setInterval(() => fetchMsgs(active), 5000)
     return () => { if (pollRef.current) clearInterval(pollRef.current) }
   }, [active, fetchMsgs])
