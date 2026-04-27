@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
@@ -41,6 +41,16 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
   const [marketing, setMarketing] = useState(true)
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState("")
+
+  // a11y — Escape closes the modal (WCAG 2.1.2 No keyboard trap)
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [open, onClose])
 
   if (!open) return null
 
@@ -103,6 +113,10 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="signup-gate-title"
+      aria-describedby="signup-gate-subtitle"
       onClick={onClose}
       style={{
         position: "fixed", inset: 0, zIndex: 100,
@@ -125,12 +139,12 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
           <div>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "var(--text-xl)", fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+            <h2 id="signup-gate-title" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "var(--text-xl)", fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
               {title ?? <>Créez votre compte <em style={{ fontStyle: "italic", backgroundImage: G, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>gratuit</em></>}
             </h2>
-            <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2, #b0b0cc)", marginTop: 6 }}>{subtitle ?? "30 secondes. Pas de carte bancaire."}</p>
+            <p id="signup-gate-subtitle" style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2, #b0b0cc)", marginTop: 6 }}>{subtitle ?? "30 secondes. Pas de carte bancaire."}</p>
           </div>
-          <button onClick={onClose} style={{ background: "transparent", border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: "var(--text-lg)", cursor: "pointer", marginLeft: 10 }}>✕</button>
+          <button type="button" aria-label="Fermer la fenêtre d'inscription" onClick={onClose} style={{ background: "transparent", border: "none", color: "var(--dash-text-3, #8888aa)", fontSize: "var(--text-lg)", cursor: "pointer", marginLeft: 10 }}>✕</button>
         </div>
 
         {/* Value props */}

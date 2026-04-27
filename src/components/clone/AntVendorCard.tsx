@@ -140,7 +140,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={imgUrl}
-              alt={category}
+              alt={`${name} — ${category} à ${city}`}
               loading="lazy"
               onLoad={() => setImgLoaded(true)}
               style={{
@@ -161,8 +161,10 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
 
           {/* Fav button */}
           <button
+            type="button"
             onClick={toggleFav}
-            aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
+            aria-label={fav ? `Retirer ${name} des favoris` : `Ajouter ${name} aux favoris`}
+            aria-pressed={fav}
             style={{
               position: "absolute", top: 12, right: 12,
               width: 34, height: 34, borderRadius: "50%",
@@ -177,7 +179,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
             onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.12)")}
             onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
           >
-            {fav ? "❤️" : "🤍"}
+            <span aria-hidden="true">{fav ? "❤️" : "🤍"}</span>
           </button>
 
           {/* Bottom info on image */}
@@ -238,14 +240,28 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
   )
 
   if (onGatedClick) {
+    // a11y — keyboard activation (Enter / Space) for the role="link" wrapper
+    const onKey = (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        onGatedClick(id)
+      }
+    }
     return (
-      <div role="link" tabIndex={0} onClick={onWrapperClick} style={{ textDecoration: "none", display: "block", cursor: "pointer" }}>
+      <div
+        role="link"
+        tabIndex={0}
+        onClick={onWrapperClick}
+        onKeyDown={onKey}
+        aria-label={`${name}, ${category} à ${city}, noté ${rating.toFixed(1)} sur 5`}
+        style={{ textDecoration: "none", display: "block", cursor: "pointer" }}
+      >
         {inner}
       </div>
     )
   }
   return (
-    <Link href={`/vendor/${id}`} style={{ textDecoration: "none", display: "block" }}>
+    <Link href={`/vendor/${id}`} aria-label={`${name}, ${category} à ${city}, noté ${rating.toFixed(1)} sur 5`} style={{ textDecoration: "none", display: "block" }}>
       {inner}
     </Link>
   )

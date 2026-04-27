@@ -13,14 +13,16 @@ export default function ClonePage() {
   return (
     <div className="ant-root" style={{ backgroundColor: "var(--dash-bg,#fff)", color: "var(--dash-text,#121317)" }}>
       <AntNav animateInDelay={1200} />
-      <AntHero />
-      <AntVideoSection />
-      <AntUseCases />
-      <AntFeatureExplorer />
-      <AntAgentFirst />
-      <AntTestimonials />
-      <AntPricing />
-      <AntDownload />
+      <main id="main-content">
+        <AntHero />
+        <AntVideoSection />
+        <AntUseCases />
+        <AntFeatureExplorer />
+        <AntAgentFirst />
+        <AntTestimonials />
+        <AntPricing />
+        <AntDownload />
+      </main>
       <AntFooter />
     </div>
   )

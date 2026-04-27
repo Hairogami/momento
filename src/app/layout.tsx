@@ -196,6 +196,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
+        {/* Skip-to-content link — visible only on keyboard focus, jumps past
+            the nav for keyboard / screen reader users (WCAG 2.4.1). */}
+        <a href="#main-content" className="skip-to-content sr-only-focusable">
+          Aller au contenu principal
+        </a>
         <ThemeProvider>
           <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>

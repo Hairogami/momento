@@ -282,12 +282,16 @@ function WidgetCard({
       {(removable || href) && (
         <div style={{ position: "absolute", top: 8, right: 8, zIndex: 5, display: "flex", gap: 4, opacity: hovered ? 1 : 0, transition: "opacity 0.15s" }}>
           {href && (
-            <Link href={href} onClick={e => e.stopPropagation()} style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: 6, background: "rgba(183,191,217,0.15)", color: "var(--dash-text-3,#9a9aaa)" }}>
+            <Link href={href} onClick={e => e.stopPropagation()}
+              aria-label={`Ouvrir ${title}`}
+              style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: 6, background: "rgba(183,191,217,0.15)", color: "var(--dash-text-3,#9a9aaa)" }}>
               <GIcon name="open_in_new" size={12} />
             </Link>
           )}
           {removable && onRemove && (
             <button
+              type="button"
+              aria-label={`Retirer le widget ${title}`}
               onMouseDown={e => { e.preventDefault(); e.stopPropagation(); onRemove(id) }}
               style={{ width: 22, height: 22, borderRadius: 6, background: "rgba(183,191,217,0.15)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-3,#9a9aaa)" }}
             ><GIcon name="close" size={10} /></button>
@@ -340,15 +344,21 @@ function WidgetCard({
 
 // ── Widget picker modal ───────────────────────────────────────────────────────
 function WidgetPickerModal({ active, onAdd, onClose }: { active: string[]; onAdd: (id: string) => void; onClose: () => void }) {
+  // a11y — Escape to close (WCAG 2.1.2)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [onClose])
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(18,19,23,0.45)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={onClose}>
+    <div role="dialog" aria-modal="true" aria-labelledby="widget-picker-title" style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(18,19,23,0.45)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{ background: "var(--dash-surface,#fff)", borderRadius: 24, width: "100%", maxWidth: 520, padding: "24px", boxShadow: "0 24px 80px rgba(0,0,0,0.15)" }} className="clone-surface">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
           <div>
-            <h2 style={{ fontSize: "var(--text-base)", fontWeight: 800, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>Ajouter un widget</h2>
+            <h2 id="widget-picker-title" style={{ fontSize: "var(--text-base)", fontWeight: 800, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>Ajouter un widget</h2>
             <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>Personnalisez votre espace</p>
           </div>
-          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--dash-faint-2,rgba(183,191,217,0.12))", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <button type="button" aria-label="Fermer" onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--dash-faint-2,rgba(183,191,217,0.12))", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <GIcon name="close" size={14} color="var(--dash-text-2,#6a6a71)" />
           </button>
         </div>
@@ -376,12 +386,18 @@ function WidgetPickerModal({ active, onAdd, onClose }: { active: string[]; onAdd
 
 // ── Palette picker modal ──────────────────────────────────────────────────────
 function PalettePickerModal({ current, onChange, onClose }: { current: { g1: string; g2: string }; onChange: (p: { g1: string; g2: string }) => void; onClose: () => void }) {
+  // a11y — Escape to close
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [onClose])
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(18,19,23,0.45)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={onClose}>
+    <div role="dialog" aria-modal="true" aria-labelledby="palette-picker-title" style={{ position: "fixed", inset: 0, zIndex: 60, background: "rgba(18,19,23,0.45)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{ background: "var(--dash-surface,#fff)", borderRadius: 24, width: "100%", maxWidth: 400, padding: "24px", boxShadow: "0 24px 80px rgba(0,0,0,0.15)" }} className="clone-surface">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h2 style={{ fontSize: "var(--text-base)", fontWeight: 800, color: "var(--dash-text,#121317)", margin: 0 }}>Palette de couleurs</h2>
-          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--dash-faint-2,rgba(183,191,217,0.12))", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <h2 id="palette-picker-title" style={{ fontSize: "var(--text-base)", fontWeight: 800, color: "var(--dash-text,#121317)", margin: 0 }}>Palette de couleurs</h2>
+          <button type="button" aria-label="Fermer" onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--dash-faint-2,rgba(183,191,217,0.12))", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <GIcon name="close" size={14} color="var(--dash-text-2,#6a6a71)" />
           </button>
         </div>
@@ -1043,10 +1059,10 @@ export default function DashboardClient({
       {showPicker  && <WidgetPickerModal active={widgetOrder} onAdd={addWidget} onClose={() => setShowPicker(false)} />}
       {showPalette && <PalettePickerModal current={palette} onChange={setPalette} onClose={() => setShowPalette(false)} />}
 
-      <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", minHeight: "100vh" }} className="pb-20 md:pb-0">
+      <main id="main-content" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", minHeight: "100vh" }} className="pb-20 md:pb-0">
         {/* Mobile header */}
         <div className="flex lg:hidden" style={{ alignItems: "center", gap: 12, padding: "12px 16px", background: "var(--dash-surface,#fff)", borderBottom: "1px solid var(--dash-border)", position: "sticky", top: 0, zIndex: 20 }}>
-          <button onClick={() => setMobileOpen(true)} style={{ width: 34, height: 34, borderRadius: 9, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <button type="button" onClick={() => setMobileOpen(true)} aria-label="Ouvrir le menu de navigation" style={{ width: 34, height: 34, borderRadius: 9, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <GIcon name="menu" size={18} color="var(--dash-text-2,#45474D)" />
           </button>
           <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", letterSpacing: "-0.02em" }}>Momento</span>
@@ -1101,19 +1117,24 @@ export default function DashboardClient({
         <div style={{ padding: "8px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
           <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#c9cad0)" }}>Glisser · Redimensionner (poignée bas-droite)</span>
           <div style={{ display: "flex", gap: 6 }}>
-            <button onClick={() => setTheme(darkMode ? "light" : "dark")} title={darkMode ? "Mode clair" : "Mode sombre"}
+            <button type="button" onClick={() => setTheme(darkMode ? "light" : "dark")} title={darkMode ? "Mode clair" : "Mode sombre"}
+              aria-label={darkMode ? "Activer le mode clair" : "Activer le mode sombre"}
+              aria-pressed={darkMode}
               style={{ width: 30, height: 30, borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <GIcon name={darkMode ? "light_mode" : "dark_mode"} size={15} color="var(--dash-text-2,#45474D)" />
             </button>
-            <button onClick={() => setShowPalette(true)} title="Palette"
+            <button type="button" onClick={() => setShowPalette(true)} title="Palette"
+              aria-label="Choisir une palette de couleurs"
               style={{ width: 30, height: 30, borderRadius: 8, background: `${palette.g1}18`, border: `1px solid ${palette.g1}40`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <GIcon name="palette" size={15} color={palette.g1} />
             </button>
-            <button onClick={resetLayout} title="Réinitialiser"
+            <button type="button" onClick={resetLayout} title="Réinitialiser"
+              aria-label="Réinitialiser la disposition des widgets"
               style={{ width: 30, height: 30, borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <GIcon name="restart_alt" size={15} color="var(--dash-text-3,#9a9aaa)" />
             </button>
-            <button onClick={() => setShowPicker(true)}
+            <button type="button" onClick={() => setShowPicker(true)}
+              aria-label="Ajouter un widget"
               style={{ display: "flex", alignItems: "center", gap: 5, padding: "0 12px", height: 30, borderRadius: 99, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border)", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2,#45474D)", cursor: "pointer", fontFamily: "inherit" }}>
               <GIcon name="add" size={13} color="var(--g1,#E11D48)" />Widget
             </button>
