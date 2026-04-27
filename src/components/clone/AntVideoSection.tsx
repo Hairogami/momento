@@ -2140,13 +2140,13 @@ export default function AntVideoSection() {
 
               {/* Texte en-tête — centré */}
               <div style={{ textAlign: "center" }}>
-                <p style={{ fontSize: "clamp(1.25rem, 0.5rem + 1.6vw, 2.4rem)", fontWeight: 500, lineHeight: 1.15, color: "#f5f5f5", margin: "0 0 0.4vh", letterSpacing: "-0.02em" }}>
+                <p style={{ fontSize: "clamp(1.1rem, 1.8vw, 3rem)", fontWeight: 500, lineHeight: 1.15, color: "#f5f5f5", margin: "0 0 0.4vh", letterSpacing: "-0.02em" }}>
                   Tout ce qu&apos;il te faut pour organiser{" "}
                   <span style={{ background: "linear-gradient(90deg,#E11D48,#9333EA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                     le mariage que tu veux.
                   </span>
                 </p>
-                <p style={{ fontSize: "clamp(0.78rem, 0.4rem + 0.7vw, 1.1rem)", color: "rgba(255,255,255,0.35)", margin: 0 }}>
+                <p style={{ fontSize: "clamp(0.65rem, 0.7vw, 1.1rem)", color: "rgba(255,255,255,0.35)", margin: 0 }}>
                   Pour chaque jour jusqu&apos;au grand jour.
                 </p>
               </div>
@@ -2162,10 +2162,10 @@ export default function AntVideoSection() {
                       onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = "rgba(255,255,255,0.04)"; el.style.borderColor = "rgba(255,255,255,0.07)" }}
                     >
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: "clamp(0.85rem, 0.5rem + 0.85vw, 1.35rem)", fontWeight: 600, color: "#f5f5f5" }}>{f.title}</span>
-                        <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "clamp(0.85rem, 0.5rem + 0.6vw, 1.2rem)" }}>→</span>
+                        <span style={{ fontSize: "clamp(0.7rem, 0.95vw, 1.35rem)", fontWeight: 600, color: "#f5f5f5" }}>{f.title}</span>
+                        <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "clamp(0.65rem, 0.85vw, 1.2rem)" }}>→</span>
                       </div>
-                      <p style={{ fontSize: "clamp(0.7rem, 0.4rem + 0.65vw, 1.05rem)", color: "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.4 }}>{f.desc}</p>
+                      <p style={{ fontSize: "clamp(0.55rem, 0.65vw, 1.05rem)", color: "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.4 }}>{f.desc}</p>
                       <div style={{ flex: 1, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", display: "flex", flexDirection: "column", minHeight: 0 }}>{f.preview}</div>
                     </div>
                   </Link>
