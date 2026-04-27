@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useMemo, useRef } from "react"
 import { useSession } from "next-auth/react"
+import { useTheme } from "@/components/ThemeProvider"
 import AntNav from "@/components/clone/AntNav"
 import AntVendorCard from "@/components/clone/AntVendorCard"
 import SignupGateModal from "@/components/SignupGateModal"
@@ -162,45 +163,13 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   initialVendors: VendorListItem[]
   totalCount: number
 }) {
-  // Source de vérité unique : classe `dark` sur <html> (gérée par le script
-  // no-flash + ThemeProvider). ExploreClient lit depuis là plutôt que d'avoir
-  // son propre état parallèle désynchronisé.
-  const [dark, setDarkState] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true
-    return document.documentElement.classList.contains("dark")
-  })
-
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const html = document.documentElement
-    setDarkState(html.classList.contains("dark"))
-    const obs = new MutationObserver(() => {
-      const d = html.classList.contains("dark")
-      setDarkState(prev => (prev === d ? prev : d))
-    })
-    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
-    const onEvt = ((e: CustomEvent) => {
-      const d = e.detail?.dark
-      if (typeof d === "boolean") setDarkState(d)
-    }) as EventListener
-    window.addEventListener("momento-theme-change", onEvt)
-    return () => {
-      obs.disconnect()
-      window.removeEventListener("momento-theme-change", onEvt)
-    }
-  }, [])
-
-  // Wrapper local : un toggle dans ExploreClient doit appliquer partout
+  // Source unique : ThemeProvider. Le `setDark` historique est conservé pour
+  // compat avec le toggle UI plus bas — il délègue au provider.
+  const { resolved, setTheme } = useTheme()
+  const dark = resolved === "dark"
   const setDark = (next: boolean | ((prev: boolean) => boolean)) => {
     const value = typeof next === "function" ? next(dark) : next
-    setDarkState(value)
-    document.documentElement.classList.toggle("dark", value)
-    document.documentElement.classList.toggle("clone-dark", value)
-    try {
-      localStorage.setItem("momento_clone_dark_mode", JSON.stringify(value))
-      localStorage.setItem("momento_theme", value ? "dark" : "light")
-    } catch {}
-    window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: value } }))
+    setTheme(value ? "dark" : "light")
   }
 
   const [search, setSearch]       = useState("")

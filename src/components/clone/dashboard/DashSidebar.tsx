@@ -3,6 +3,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { signOut, useSession } from "next-auth/react"
+import { useTheme } from "@/components/ThemeProvider"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import MobileDashNav from "./MobileDashNav"
 import CreateEventModal from "./CreateEventModal"
@@ -111,10 +112,11 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const [eventOpen, setEventOpen] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const router = useRouter()
-  const [darkMode,  setDarkMode]  = useState<boolean>(() => {
-    if (typeof window !== "undefined") return document.documentElement.classList.contains("dark")
-    return true
-  })
+  // Source unique : ThemeProvider. Le toggle ci-dessous (toggleDark) appelle
+  // setTheme — toutes les surfaces (DashboardClient, ExploreClient, AntNav,
+  // settings) consomment le même contexte donc se rafraîchissent de concert.
+  const { resolved, setTheme } = useTheme()
+  const darkMode = resolved === "dark"
   const [menuOpen,  setMenuOpen]  = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0]
@@ -123,26 +125,6 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   if (isMobile) {
     return <MobileDashNav messageUnread={messageUnread} />
   }
-
-  // Listen for theme changes from other components (AntNav)
-  useEffect(() => {
-    const handler = ((e: CustomEvent) => { const d = e.detail?.dark; if (typeof d === "boolean") setDarkMode(d) }) as EventListener
-    window.addEventListener("momento-theme-change", handler)
-    return () => window.removeEventListener("momento-theme-change", handler)
-  }, [])
-
-  // Observer html class — catch ThemeProvider + system listener changes
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const html = document.documentElement
-    setDarkMode(html.classList.contains("dark"))
-    const obs = new MutationObserver(() => {
-      const d = html.classList.contains("dark")
-      setDarkMode(prev => (prev === d ? prev : d))
-    })
-    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
-    return () => obs.disconnect()
-  }, [])
 
   // Fermer le menu sur clic extérieur
   useEffect(() => {
@@ -154,16 +136,10 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     return () => document.removeEventListener("mousedown", onOutside)
   }, [menuOpen])
 
+  // Toggle délégué au provider — bascule strictement light ↔ dark (pas de
+  // cycle vers system pour rester aligné avec l'UX historique de la sidebar).
   function toggleDark() {
-    const next = !darkMode
-    setDarkMode(next)
-    document.documentElement.classList.toggle("dark", next)
-    document.documentElement.classList.toggle("clone-dark", next)
-    try {
-      localStorage.setItem("momento_clone_dark_mode", JSON.stringify(next))
-      localStorage.setItem("momento_theme", next ? "dark" : "light")
-    } catch {}
-    window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: next } }))
+    setTheme(darkMode ? "light" : "dark")
   }
 
   return (
