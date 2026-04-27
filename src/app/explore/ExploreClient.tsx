@@ -350,7 +350,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               onChange={v => setRatingMin(Number(v))}
               placeholder="Note"
               options={[
-                { value: "0",   label: "Toutes" },
+                { value: "0",   label: "Notes" },
                 { value: "4",   label: "★ 4+" },
                 { value: "4.5", label: "★ 4.5+" },
                 { value: "5",   label: "★ 5 seulement" },
