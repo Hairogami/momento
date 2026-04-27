@@ -10,6 +10,8 @@
 
 **WIDGET-CONTRACT** — Tout widget dashboard répond aux 5 questions de `.claude/rules/widget-contract.md` AVANT d'écrire le code (data, source, empty state, loading, write actions). Interdiction des stubs `const data: T[] = []`. Toute data DB passe par `/api/planners/[id]/dashboard-data`.
 
+**BRAND-CONSISTENCY** — Avant TOUT composant visible (JSX, style inline, modal, popup, filtre, bouton, scrollbar), lire `.claude/rules/brand-consistency.md`. INTERDICTION ABSOLUE de reprendre les couleurs de l'ancien design (`#FFF7ED`, `#9A3412`, `#C4532A`, `#FED7AA`, terracotta/sépia). Brand actuel = G gradient + tokens `--dash-*`. Réutiliser les patterns officiels (PillSelect, LinkRsvpDialog, EmailVerificationBanner, ViewToggle) au lieu de réinventer.
+
 ---
 
 ## Initialisation session (1 fois au démarrage)
