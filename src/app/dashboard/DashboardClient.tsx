@@ -1831,19 +1831,9 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
           )}
         </div>
 
-        {/* Progress banner — phrase dynamique + barre fluide animée */}
-        {event && (
-          <div style={{ padding: "24px 24px 0" }}>
-            <DashboardProgressBanner
-              eventLabel={getEventLabel(activePlannerDetails?.eventType, activePlannerDetails?.eventSubType)}
-              completionPct={completionPct}
-            />
-          </div>
-        )}
-
-        {/* Event header */}
-        <div style={{ padding: "24px 24px 0", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-          <div>
+        {/* Event header — 3 zones cohérentes brand: titre · progression centre · KPI pills */}
+        <div style={{ padding: "24px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+          <div style={{ flexShrink: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: event.color, boxShadow: `0 0 8px ${event.color}90` }} />
               <span style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Événement actif</span>
@@ -1858,7 +1848,15 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {/* Progress banner — centré, prend l'espace dispo, recule sous le titre sur écrans étroits */}
+          <div style={{ flex: "1 1 320px", minWidth: 0, maxWidth: 520 }}>
+            <DashboardProgressBanner
+              eventLabel={getEventLabel(activePlannerDetails?.eventType, activePlannerDetails?.eventSubType)}
+              completionPct={completionPct}
+            />
+          </div>
+
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", flexShrink: 0 }}>
             {[
               { icon: "groups",                 val: `${edata.guestConfirmed}/${edata.guestCount}`, label: "invités",  href: "/guests"  },
               { icon: "check_circle",           val: `${completedTasks}/${tasks.length}`,           label: "tâches",   href: "/planner" },
