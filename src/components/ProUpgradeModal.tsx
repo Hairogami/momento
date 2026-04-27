@@ -87,7 +87,7 @@ export default function ProUpgradeModal({ open, onClose, reason = "vendor-contac
               "Budget détaillé + verdict IA",
               "Thème visuel personnalisé",
             ].map(item => (
-              <div key={item} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, padding: "5px 0" }}>
+              <div key={item} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-xs)", padding: "5px 0" }}>
                 <span style={{ color: "#22c55e" }}>✓</span>
                 <span style={{ color: "var(--dash-text, #eeeef5)" }}>{item}</span>
               </div>

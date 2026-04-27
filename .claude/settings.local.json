@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "allow": [
       "mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
       "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages",
@@ -12,7 +11,21 @@
       "WebFetch(domain:codepen.io)",
       "Bash(npx next:*)",
       "Bash(npm run:*)",
-      "Bash(taskkill /PID 19780 /F)"
+      "Bash(taskkill /PID 19780 /F)",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__emulate",
+      "Bash(curl -sS -o /dev/null -w \"POST /api/tasks → %{http_code}\\\\n\" -X POST http://localhost:3000/api/tasks -H \"Content-Type: application/json\" -d '{\"title\":\"test\"}')",
+      "Bash(curl -sS -X POST http://localhost:3000/api/tasks -H \"Content-Type: application/json\" -d '{\"title\":\"test\"}')",
+      "Edit(~/.claude/skills/compactreview/**)",
+      "Bash(python \"C:/Users/moume/.claude/skills/skill-creator/scripts/init_skill.py\" compactreview --path \"C:/Users/moume/.claude/skills\")",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/moume/.claude/skills/skill-creator/scripts/init_skill.py\" compactreview --path \"C:/Users/moume/.claude/skills\")",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/moume/.claude/skills/skill-creator/scripts/quick_validate.py\" \"C:/Users/moume/.claude/skills/compactreview\")",
+      "Bash(awk 'NR==582,/^}$/{print NR\": \"$0}' src/app/dashboard/DashboardClient.tsx)",
+      "Bash(python scripts/fluid_type.py src/app/vendor/\\\\[slug\\\\]/VendorProfileClient.tsx)"
+    ],
+    "defaultMode": "bypassPermissions",
+    "additionalDirectories": [
+      "C:\\Users\\moume\\.claude\\skills\\compactreview",
+      "C:\\Users\\moume\\Documents\\momento\\src\\app\\api\\planners\\[id]"
     ]
   }
 }

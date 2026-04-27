@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "allow": [
       "Read",
       "Edit",
@@ -28,13 +27,15 @@
       "mcp__plugin_playwright_playwright:*",
       "mcp__plugin_prisma_Prisma-Local:*",
       "mcp__plugin_vercel_vercel:*",
-      "mcp__plugin_claude-mem_mcp-search:*"
+      "mcp__plugin_claude-mem_mcp-search:*",
+      "Bash(python scripts/fluid_type.py src/app/explore/ExploreClient.tsx src/components/AirbnbSearchBar.tsx src/components/ExploreNav.tsx)"
     ],
     "deny": [
       "Bash(rm -rf:*)",
       "Bash(git push --force:*)",
       "Bash(git reset --hard:*)"
-    ]
+    ],
+    "defaultMode": "bypassPermissions"
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,

@@ -210,7 +210,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
       >
         <div style={{ padding: "24px 26px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <p style={{ fontSize: 10.5, fontWeight: 700, color: "var(--dash-text-3, #8888aa)", textTransform: "uppercase", letterSpacing: "1.4px", margin: "0 0 4px" }}>
+            <p style={{ fontSize: "var(--text-2xs)", fontWeight: 700, color: "var(--dash-text-3, #8888aa)", textTransform: "uppercase", letterSpacing: "1.4px", margin: "0 0 4px" }}>
               Étape {step}/3
             </p>
             <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "var(--text-lg)", fontWeight: 500, letterSpacing: "-0.015em", margin: 0 }}>
@@ -236,7 +236,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                     return (
                       <button key={f.id} onClick={() => switchFamily(f.id)} type="button"
                         style={{
-                          padding: "11px 4px", borderRadius: 12, fontSize: 10.5, fontWeight: 600,
+                          padding: "11px 4px", borderRadius: 12, fontSize: "var(--text-2xs)", fontWeight: 600,
                           border: "1.5px solid",
                           borderColor: active ? "transparent" : "var(--dash-border, rgba(255,255,255,0.07))",
                           background: active ? "rgba(225,29,72,0.12)" : "var(--dash-faint, rgba(255,255,255,0.04))",
@@ -490,7 +490,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
               <div style={{ background: "var(--dash-faint, rgba(255,255,255,0.04))", border: "1px solid var(--dash-border, rgba(255,255,255,0.07))", borderRadius: 16, padding: "14px 16px", marginBottom: 14 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-                  <span style={{ fontSize: 10.5, color: "var(--dash-text-3, #8888aa)", fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase" }}>Budget total</span>
+                  <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #8888aa)", fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase" }}>Budget total</span>
                   <span style={{ display: "inline-flex", alignItems: "baseline", gap: 4 }}>
                     <input
                       type="text"
@@ -520,7 +520,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: 10.5, color: "var(--dash-text-3, #8888aa)", fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase" }}>Répartition par poste</span>
+                <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #8888aa)", fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase" }}>Répartition par poste</span>
                 <span style={{
                   fontSize: "var(--text-xs)", fontWeight: 700, padding: "3px 10px", borderRadius: 99,
                   background: over ? "rgba(245,158,11,0.12)" : "rgba(34,197,94,0.12)",
@@ -537,7 +537,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                   return (
                     <div key={cat} style={{ background: "var(--dash-faint, rgba(255,255,255,0.04))", border: "1px solid var(--dash-border, rgba(255,255,255,0.07))", borderRadius: 12, padding: "10px 12px" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                        <span style={{ fontSize: 12.5, fontWeight: 600 }}>{cat}</span>
+                        <span style={{ fontSize: "var(--text-xs)", fontWeight: 600 }}>{cat}</span>
                         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                           <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)", fontWeight: 600, width: 32, textAlign: "right" }}>{pct}%</span>
                           <input type="number" min={0} max={budgetTotal * 2} step={500} value={amount}
@@ -620,7 +620,7 @@ const labelStyle: React.CSSProperties = {
 const subtleStyle: React.CSSProperties = { color: "var(--dash-text-3, #8888aa)", fontWeight: 500, textTransform: "none", letterSpacing: 0 }
 
 const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "11px 14px", borderRadius: 12, fontSize: 13.5,
+  width: "100%", padding: "11px 14px", borderRadius: 12, fontSize: "var(--text-sm)",
   border: "1.5px solid var(--dash-border, rgba(0,0,0,0.08))", outline: "none",
   fontFamily: "inherit", color: "var(--dash-text, #121317)",
   background: "var(--dash-input-bg, #fafafa)", boxSizing: "border-box",

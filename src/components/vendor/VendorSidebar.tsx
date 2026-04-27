@@ -65,7 +65,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
           <div key={idx} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {section.title && (
               <div style={{
-                fontSize: 10.5, fontWeight: 600, color: "#8a8f9c",
+                fontSize: "var(--text-2xs)", fontWeight: 600, color: "#8a8f9c",
                 textTransform: "uppercase", letterSpacing: "0.06em",
                 padding: "8px 12px 4px",
               }}>

@@ -98,7 +98,7 @@ export default function RecommandedCarousel({ plannerId, onVendorSelected }: Pro
           }}>
             ✨ Nos <em style={{ fontStyle: "italic", backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>recommandations</em> pour vous
           </h2>
-          <p style={{ fontSize: 12.5, color: "var(--dash-text-3, #8888aa)", margin: "4px 0 0" }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)", margin: "4px 0 0" }}>
             Sélection auto selon votre budget, votre ville et votre événement
           </p>
         </div>
