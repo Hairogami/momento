@@ -2166,7 +2166,7 @@ export default function AntVideoSection() {
                         <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "clamp(0.65rem, 0.85vw, 1.2rem)" }}>→</span>
                       </div>
                       <p style={{ fontSize: "clamp(0.55rem, 0.65vw, 1.05rem)", color: "rgba(255,255,255,0.35)", margin: 0, lineHeight: 1.4 }}>{f.desc}</p>
-                      <div style={{ flex: 1, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", display: "flex", flexDirection: "column", minHeight: 0 }}>{f.preview}</div>
+                      <div style={{ flex: 1, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", display: "flex", flexDirection: "column", minHeight: 0, containerType: "size" } as React.CSSProperties}>{f.preview}</div>
                     </div>
                   </Link>
                 ))}
