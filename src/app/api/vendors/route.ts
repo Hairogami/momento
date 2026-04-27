@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
-import { getRankingWeights, sortByScore } from "@/lib/rankingScore"
+import { cachedWithVersion, bumpVersion } from "@/lib/cache"
 
 export async function GET(req: NextRequest) {
   const ip = getIp(req)
@@ -20,48 +20,64 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
   const rawCategory = searchParams.get("category")
   const category = rawCategory ? rawCategory.slice(0, 100) : null
+  const rawCity = searchParams.get("city")
+  const city = rawCity ? rawCity.slice(0, 100) : null
   const page = Math.min(1000, Math.max(1, parseInt(searchParams.get("page") ?? "1", 10)))
   // WR-09: Cap at 50 per request on public endpoint to prevent bulk scraping
   const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10) || 20))
 
-  // Smart ranking: fetch all matching vendors, score in memory, paginate
-  const [weights, rows] = await Promise.all([
-    getRankingWeights(),
-    prisma.vendor.findMany({
-      where: category
-        ? { category: { contains: category, mode: "insensitive" } }
-        : {},
-      // Public endpoint — exclude PII (phone, email, address). Contact uniquement
-      // via /api/prestataires/interest (auth + ownership). Loi 09-08 / RGPD.
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        category: true,
-        description: true,
-        city: true,
-        priceMin: true,
-        priceMax: true,
-        priceRange: true,
-        rating: true,
-        reviewCount: true,
-        featured: true,
-        website: true,
-        instagram: true,
-        facebook: true,
-        region: true,
-        verified: true,
-        media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },
-      },
-    }),
-  ])
+  const subKey = `${category ?? "all"}:${city ?? "all"}:${page}:${limit}`
 
-  const scored = sortByScore(
-    rows.map(v => ({ ...v, mediaCount: v.media.length })),
-    weights
-  )
-  const vendors = scored.slice((page - 1) * limit, page * limit)
-  return Response.json({ vendors, total: scored.length, page, limit })
+  // Cache 5min (300s). Clé versionnée → bump à chaque write vendor invalide tout.
+  const payload = await cachedWithVersion("vendors", subKey, 300, async () => {
+    const where = {
+      AND: [
+        category ? { category: { contains: category, mode: "insensitive" as const } } : {},
+        city ? { city: { contains: city, mode: "insensitive" as const } } : {},
+      ],
+    }
+
+    const [rows, total] = await Promise.all([
+      prisma.vendor.findMany({
+        where,
+        // Index DB sur rankingScore desc → plus de scoring in-memory.
+        // Tie-breaker stable sur id pour pagination déterministe.
+        orderBy: [
+          { rankingScore: "desc" },
+          { id: "asc" },
+        ],
+        skip: (page - 1) * limit,
+        take: limit,
+        // Public endpoint — exclude PII (phone, email, address). Contact uniquement
+        // via /api/prestataires/interest (auth + ownership). Loi 09-08 / RGPD.
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          category: true,
+          description: true,
+          city: true,
+          priceMin: true,
+          priceMax: true,
+          priceRange: true,
+          rating: true,
+          reviewCount: true,
+          featured: true,
+          website: true,
+          instagram: true,
+          facebook: true,
+          region: true,
+          verified: true,
+          media: { select: { url: true, order: true }, orderBy: { order: "asc" }, take: 5 },
+        },
+      }),
+      prisma.vendor.count({ where }),
+    ])
+
+    return { vendors: rows, total, page, limit }
+  })
+
+  return Response.json(payload)
 }
 
 export async function POST(req: NextRequest) {
@@ -82,7 +98,7 @@ export async function POST(req: NextRequest) {
   const slug = rawSlug
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9-]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 100)
@@ -112,5 +128,9 @@ export async function POST(req: NextRequest) {
     }
     throw createErr
   }
+
+  // Invalidation cache liste publique
+  await bumpVersion("vendors")
+
   return Response.json(vendor, { status: 201 })
 }

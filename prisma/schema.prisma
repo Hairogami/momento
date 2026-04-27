@@ -227,6 +227,8 @@ model Vendor {
   featured    Boolean  @default(false)
   rating      Float?
   reviewCount Int      @default(0)
+  rankingScore     Float?    @default(0)
+  rankingUpdatedAt DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -242,6 +244,10 @@ model Vendor {
   favorites      Favorite[]
   blockedDates   VendorBlockedDate[]
   plannerVendors PlannerVendor[]
+
+  @@index([rankingScore(sort: Desc)])
+  @@index([category, rankingScore(sort: Desc)])
+  @@index([city, rankingScore(sort: Desc)])
 }
 
 model VendorVerification {

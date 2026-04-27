@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 import { logAdminAction, diffFields } from "@/lib/adminAudit"
+import { bumpVersion } from "@/lib/cache"
 import { z } from "zod"
 
 const PatchSchema = z.object({
@@ -90,6 +91,9 @@ export async function PATCH(
   revalidatePath("/explore")
   revalidatePath("/sitemap.xml")
 
+  // Invalide le cache liste publique /api/vendors (clés versionnées Redis)
+  await bumpVersion("vendors")
+
   return NextResponse.json({ success: true, changedFields: Object.keys(changes) })
 }
 
@@ -128,6 +132,9 @@ export async function DELETE(
 
   revalidatePath("/explore")
   revalidatePath("/sitemap.xml")
+
+  // Invalide le cache liste publique /api/vendors (clés versionnées Redis)
+  await bumpVersion("vendors")
 
   return NextResponse.json({ ok: true })
 }

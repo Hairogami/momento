@@ -11,6 +11,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { bumpVersion } from "@/lib/cache"
 import { z } from "zod"
 
 const PRICE_RANGES = ["budget", "mid", "premium"] as const
@@ -104,5 +105,9 @@ export async function PATCH(req: NextRequest) {
       verified: true, featured: true,
     },
   })
+
+  // Invalide le cache liste publique (clés versionnées)
+  await bumpVersion("vendors")
+
   return NextResponse.json({ vendor: updated })
 }
