@@ -33,6 +33,9 @@ const SITE_PALETTES = [
 ]
 
 function SiteEventPreview() {
+  // Helper cqw : référence 635px (calibré comme RsvpPreview).
+  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+
   // 0:wide terra · 1:zoom-in sidebar · 2:rose · 3:noir-rouge · 4:zoom-out · 5:pause
   const step = useAnimLoop([3500, 1500, 2000, 2000, 2500, 1500])
   // Stratégie : pas de scale CSS. À la place, on étire le sidebar à 100% du card pendant le zoom
@@ -46,7 +49,7 @@ function SiteEventPreview() {
   const archPattern = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='68' viewBox='0 0 48 68'><g fill='none' stroke='${patternStrokeColor}' stroke-width='1.4' opacity='1'><path d='M8 60 L8 28 Q8 8 24 8 Q40 8 40 28 L40 60'/><circle cx='24' cy='38' r='3.5' fill='${patternStrokeColor}' opacity='0.55'/></g></svg>")`
 
   return (
-    <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: 8, background: "#0a0a0a" }}>
+    <div style={{ width: "100%", height: "100%", overflow: "hidden", borderRadius: u(8), background: "#0a0a0a" }}>
       <div style={{
         width: "100%", height: "100%",
         transform: `scale(${cfg.z})`,
@@ -58,7 +61,7 @@ function SiteEventPreview() {
         <div style={{
           width: sidebarFull ? "100%" : "38%",
           background: "#0a0a0c",
-          borderRight: "1px solid rgba(255,255,255,0.06)",
+          borderRight: `${u(1)} solid rgba(255,255,255,0.06)`,
           display: "flex", flexDirection: "column",
           flexShrink: 0,
           padding: sidebarFull ? "10px 14px" : "5px 5px",
@@ -74,34 +77,34 @@ function SiteEventPreview() {
             height: sidebarFull ? "41.6%" : "100%",
           }}>
           {/* Lien retour */}
-          <div style={{ fontSize: 4, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>← Tous mes sites</div>
+          <div style={{ fontSize: u(4), color: "rgba(255,255,255,0.4)", marginBottom: u(4) }}>← Tous mes sites</div>
 
           {/* Titre + status */}
-          <div style={{ marginBottom: 4 }}>
-            <div style={{ fontSize: 6, color: "#fff", fontWeight: 600, marginBottom: 1.5 }}>Site événement</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#22c55e" }} />
-              <span style={{ fontSize: 4, color: "#22c55e" }}>Publié</span>
-              <span style={{ fontSize: 3.5, color: "rgba(255,255,255,0.35)" }}>· /evt/anass-oumaima</span>
+          <div style={{ marginBottom: u(4) }}>
+            <div style={{ fontSize: u(6), color: "#fff", fontWeight: 600, marginBottom: u(1.5) }}>Site événement</div>
+            <div style={{ display: "flex", alignItems: "center", gap: u(2) }}>
+              <div style={{ width: u(4), height: u(4), borderRadius: "50%", background: "#22c55e" }} />
+              <span style={{ fontSize: u(4), color: "#22c55e" }}>Publié</span>
+              <span style={{ fontSize: u(3.5), color: "rgba(255,255,255,0.35)" }}>· /evt/anass-oumaima</span>
             </div>
           </div>
 
           {/* Bouton Retirer publication */}
-          <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 3, padding: "3px 0", textAlign: "center", marginBottom: 4 }}>
-            <span style={{ fontSize: 4.5, color: "rgba(255,255,255,0.85)" }}>Retirer de la publication</span>
+          <div style={{ background: "rgba(255,255,255,0.05)", border: `${u(1)} solid rgba(255,255,255,0.1)`, borderRadius: u(3), padding: `${u(3)} 0`, textAlign: "center", marginBottom: u(4) }}>
+            <span style={{ fontSize: u(4.5), color: "rgba(255,255,255,0.85)" }}>Retirer de la publication</span>
           </div>
 
           {/* Tabs Contenu / Style / Photos */}
-          <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.08)", marginBottom: 4 }}>
-            <div style={{ flex: 1, padding: "3px 0", textAlign: "center", fontSize: 4.5, color: "rgba(255,255,255,0.5)" }}>📄 Contenu</div>
-            <div style={{ flex: 1, padding: "3px 0", textAlign: "center", fontSize: 4.5, color: "#fff", fontWeight: 600, borderBottom: "1.5px solid #22c55e", marginBottom: -1 }}>🎨 Style</div>
-            <div style={{ flex: 1, padding: "3px 0", textAlign: "center", fontSize: 4.5, color: "rgba(255,255,255,0.5)" }}>📷 Photos</div>
+          <div style={{ display: "flex", borderBottom: `${u(1)} solid rgba(255,255,255,0.08)`, marginBottom: u(4) }}>
+            <div style={{ flex: 1, padding: `${u(3)} 0`, textAlign: "center", fontSize: u(4.5), color: "rgba(255,255,255,0.5)" }}>📄 Contenu</div>
+            <div style={{ flex: 1, padding: `${u(3)} 0`, textAlign: "center", fontSize: u(4.5), color: "#fff", fontWeight: 600, borderBottom: `${u(1.5)} solid #22c55e`, marginBottom: u(-1) }}>🎨 Style</div>
+            <div style={{ flex: 1, padding: `${u(3)} 0`, textAlign: "center", fontSize: u(4.5), color: "rgba(255,255,255,0.5)" }}>📷 Photos</div>
           </div>
 
           {/* Section TEMPLATE (ADMIN) */}
-          <div style={{ marginBottom: 4 }}>
-            <div style={{ fontSize: 3.8, color: "rgba(255,255,255,0.4)", marginBottom: 2, letterSpacing: "0.05em", fontWeight: 600 }}>TEMPLATE (ADMIN)</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+          <div style={{ marginBottom: u(4) }}>
+            <div style={{ fontSize: u(3.8), color: "rgba(255,255,255,0.4)", marginBottom: u(2), letterSpacing: "0.05em", fontWeight: 600 }}>TEMPLATE (ADMIN)</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: u(2) }}>
               {[
                 { l: "Mariage", e: "💍", a: true },
                 { l: "Fête familiale", e: "🎉", a: false },
@@ -110,47 +113,47 @@ function SiteEventPreview() {
                 { l: "Générique", e: "✨", a: false },
               ].map((t, i) => (
                 <div key={i} style={{
-                  display: "flex", alignItems: "center", gap: 2,
-                  padding: "2.5px 3px", borderRadius: 3,
+                  display: "flex", alignItems: "center", gap: u(2),
+                  padding: `${u(2.5)} ${u(3)}`, borderRadius: u(3),
                   background: t.a ? "rgba(225,29,72,0.15)" : "rgba(255,255,255,0.03)",
                   border: t.a ? "1px solid #E11D48" : "1px solid rgba(255,255,255,0.08)",
                 }}>
-                  <span style={{ fontSize: 4.5 }}>{t.e}</span>
-                  <span style={{ fontSize: 4, color: t.a ? "#fff" : "rgba(255,255,255,0.7)", fontWeight: t.a ? 600 : 400 }}>{t.l}</span>
+                  <span style={{ fontSize: u(4.5) }}>{t.e}</span>
+                  <span style={{ fontSize: u(4), color: t.a ? "#fff" : "rgba(255,255,255,0.7)", fontWeight: t.a ? 600 : 400 }}>{t.l}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Section PALETTE DE COULEURS — collapsible ouvert */}
-          <div style={{ marginBottom: 4 }}>
-            <div style={{ fontSize: 3.8, color: "rgba(255,255,255,0.4)", marginBottom: 2, letterSpacing: "0.05em", fontWeight: 600 }}>▾ PALETTE DE COULEURS</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+          <div style={{ marginBottom: u(4) }}>
+            <div style={{ fontSize: u(3.8), color: "rgba(255,255,255,0.4)", marginBottom: u(2), letterSpacing: "0.05em", fontWeight: 600 }}>▾ PALETTE DE COULEURS</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: u(2) }}>
               {SITE_PALETTES.map((p, i) => {
                 const active = i === paletteIdx
                 return (
                   <div key={p.id} style={{
                     display: "flex", alignItems: "center", justifyContent: "space-between",
-                    padding: "3px 4px", borderRadius: 3,
+                    padding: `${u(3)} ${u(4)}`, borderRadius: u(3),
                     background: active ? "rgba(225,29,72,0.18)" : "rgba(255,255,255,0.03)",
                     border: active ? "1px solid #E11D48" : "1px solid rgba(255,255,255,0.08)",
                     transition: "background 0.3s, border 0.3s, transform 0.25s",
                     transform: active ? "scale(1.05)" : "scale(1)",
                   }}>
-                    <span style={{ fontSize: 4.2, color: active ? "#fff" : "rgba(255,255,255,0.75)", fontWeight: active ? 600 : 400, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.label}</span>
-                    <span style={{ display: "flex", gap: 1, flexShrink: 0 }}>
-                      <span style={{ width: 4, height: 4, borderRadius: "50%", background: p.main }} />
-                      <span style={{ width: 4, height: 4, borderRadius: "50%", background: p.accent }} />
+                    <span style={{ fontSize: u(4.2), color: active ? "#fff" : "rgba(255,255,255,0.75)", fontWeight: active ? 600 : 400, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.label}</span>
+                    <span style={{ display: "flex", gap: u(1), flexShrink: 0 }}>
+                      <span style={{ width: u(4), height: u(4), borderRadius: "50%", background: p.main }} />
+                      <span style={{ width: u(4), height: u(4), borderRadius: "50%", background: p.accent }} />
                     </span>
                   </div>
                 )
               })}
               {[{m:"#556B2F",a:"#8B7355",l:"Vert olive"},{m:"#009B96",a:"#4A9FD6",l:"Baby Blue & Tiffany"},{m:"#B88AE8",a:"#6FD4D1",l:"Pastel"},{m:"#C1713A",a:"#8B4513",l:"Personnalisé"}].map((p,i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "3px 4px", borderRadius: 3, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <span style={{ fontSize: 4.2, color: "rgba(255,255,255,0.6)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.l}</span>
-                  <span style={{ display: "flex", gap: 1, flexShrink: 0 }}>
-                    <span style={{ width: 4, height: 4, borderRadius: "50%", background: p.m }} />
-                    <span style={{ width: 4, height: 4, borderRadius: "50%", background: p.a }} />
+                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: `${u(3)} ${u(4)}`, borderRadius: u(3), background: "rgba(255,255,255,0.03)", border: `${u(1)} solid rgba(255,255,255,0.08)` }}>
+                  <span style={{ fontSize: u(4.2), color: "rgba(255,255,255,0.6)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.l}</span>
+                  <span style={{ display: "flex", gap: u(1), flexShrink: 0 }}>
+                    <span style={{ width: u(4), height: u(4), borderRadius: "50%", background: p.m }} />
+                    <span style={{ width: u(4), height: u(4), borderRadius: "50%", background: p.a }} />
                   </span>
                 </div>
               ))}
@@ -159,7 +162,7 @@ function SiteEventPreview() {
 
           {/* Sections collapsibles */}
           {["▸ POLICE DES TITRES", "▸ POLICE DU CORPS DE TEXTE", "▸ MOTIF DÉCORATIF", "▸ ANIMATIONS"].map((l, i) => (
-            <div key={i} style={{ fontSize: 3.8, color: "rgba(255,255,255,0.4)", padding: "2px 0", letterSpacing: "0.05em", fontWeight: 600 }}>{l}</div>
+            <div key={i} style={{ fontSize: u(3.8), color: "rgba(255,255,255,0.4)", padding: `${u(2)} 0`, letterSpacing: "0.05em", fontWeight: 600 }}>{l}</div>
           ))}
           </div>
         </div>
@@ -184,83 +187,83 @@ function SiteEventPreview() {
           }} />
 
           {/* Top nav — toggle CENTRÉ et plus grand (signature Layali) */}
-          <div style={{ position: "relative", zIndex: 3, padding: "5px 7px 3px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", gap: 5 }}>
+          <div style={{ position: "relative", zIndex: 3, padding: `${u(5)} ${u(7)} ${u(3)}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", gap: u(5) }}>
               {["ACCUEIL","HISTOIRE","CÉRÉMONIE","RSVP"].map(l => (
-                <span key={l} style={{ fontSize: 5, color: "rgba(255,255,255,0.85)", letterSpacing: "0.12em", fontWeight: 600 }}>{l}</span>
+                <span key={l} style={{ fontSize: u(5), color: "rgba(255,255,255,0.85)", letterSpacing: "0.12em", fontWeight: 600 }}>{l}</span>
               ))}
             </div>
-            <div style={{ background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: 10, padding: "2.5px 6px", fontSize: 5, color: "#fff", fontWeight: 600 }}>APERÇU&nbsp;LIVE</div>
+            <div style={{ background: "rgba(0,0,0,0.5)", border: `${u(1)} solid rgba(255,255,255,0.18)`, borderRadius: u(10), padding: `${u(2.5)} ${u(6)}`, fontSize: u(5), color: "#fff", fontWeight: 600 }}>APERÇU&nbsp;LIVE</div>
           </div>
 
           {/* Toggle Desktop / Mobile — CENTRÉ flottant en haut, taille plus visible */}
           <div style={{
             position: "absolute", zIndex: 4,
-            top: 5, left: "50%", transform: "translateX(-50%)",
-            display: "flex", alignItems: "center", gap: 3,
-            background: "rgba(0,0,0,0.65)", border: "1px solid rgba(255,255,255,0.22)",
+            top: u(5), left: "50%", transform: "translateX(-50%)",
+            display: "flex", alignItems: "center", gap: u(3),
+            background: "rgba(0,0,0,0.65)", border: `${u(1)} solid rgba(255,255,255,0.22)`,
             backdropFilter: "blur(4px)",
-            borderRadius: 14, padding: "3px 5px",
+            borderRadius: u(14), padding: `${u(3)} ${u(5)}`,
           }}>
             {/* Tab Desktop ACTIVE */}
-            <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 9, padding: "3px 7px", display: "flex", alignItems: "center", gap: 3 }}>
+            <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: u(9), padding: `${u(3)} ${u(7)}`, display: "flex", alignItems: "center", gap: u(3) }}>
               <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#0a0a0a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="1.5" y="2.5" width="13" height="9" rx="1"/>
                 <line x1="5.5" y1="14" x2="10.5" y2="14"/>
                 <line x1="8" y1="11.5" x2="8" y2="14"/>
               </svg>
-              <span style={{ fontSize: 5, color: "#0a0a0a", fontWeight: 700 }}>Ordi</span>
+              <span style={{ fontSize: u(5), color: "#0a0a0a", fontWeight: 700 }}>Ordi</span>
             </div>
             {/* Tab Mobile inactive */}
-            <div style={{ padding: "3px 5px", display: "flex", alignItems: "center", gap: 2 }}>
+            <div style={{ padding: `${u(3)} ${u(5)}`, display: "flex", alignItems: "center", gap: u(2) }}>
               <svg width="7" height="11" viewBox="0 0 10 16" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.4" strokeLinecap="round">
                 <rect x="1.5" y="1.5" width="7" height="13" rx="1.4"/>
                 <line x1="4" y1="12.5" x2="6" y2="12.5"/>
               </svg>
-              <span style={{ fontSize: 5, color: "rgba(255,255,255,0.6)", fontWeight: 500 }}>Mobile</span>
+              <span style={{ fontSize: u(5), color: "rgba(255,255,255,0.6)", fontWeight: 500 }}>Mobile</span>
             </div>
           </div>
 
           {/* Hero content centered — hierarchie égalisée, "Anass & Oumaima" sur UNE LIGNE */}
-          <div style={{ flex: 1, position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 2px", gap: 5 }}>
+          <div style={{ flex: 1, position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: `0 ${u(2)}`, gap: u(5) }}>
             {/* Couple — une seule ligne, agrandi */}
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 4, whiteSpace: "nowrap" }}>
-              <span style={{ fontSize: 28, color: "#fff", fontWeight: 500, fontFamily: "'Cormorant Garamond', 'Times New Roman', serif", lineHeight: 0.9, letterSpacing: "-0.015em", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>Anass</span>
-              <span style={{ color: cur.main, transition: "color 0.6s", fontStyle: "italic", fontSize: 24, fontFamily: "'Cormorant Garamond', serif", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>&amp;</span>
-              <span style={{ fontSize: 28, color: "#fff", fontWeight: 500, fontFamily: "'Cormorant Garamond', 'Times New Roman', serif", lineHeight: 0.9, letterSpacing: "-0.015em", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>Oumaima</span>
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: u(4), whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: u(28), color: "#fff", fontWeight: 500, fontFamily: "'Cormorant Garamond', 'Times New Roman', serif", lineHeight: 0.9, letterSpacing: "-0.015em", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>Anass</span>
+              <span style={{ color: cur.main, transition: "color 0.6s", fontStyle: "italic", fontSize: u(24), fontFamily: "'Cormorant Garamond', serif", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>&amp;</span>
+              <span style={{ fontSize: u(28), color: "#fff", fontWeight: 500, fontFamily: "'Cormorant Garamond', 'Times New Roman', serif", lineHeight: 0.9, letterSpacing: "-0.015em", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>Oumaima</span>
             </div>
             {/* Nous nous marions */}
-            <div style={{ fontSize: 8, color: cur.main, letterSpacing: "0.32em", fontWeight: 700, marginTop: 4, transition: "color 0.6s", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>NOUS NOUS MARIONS</div>
+            <div style={{ fontSize: u(8), color: cur.main, letterSpacing: "0.32em", fontWeight: 700, marginTop: u(4), transition: "color 0.6s", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>NOUS NOUS MARIONS</div>
             {/* Date */}
-            <div style={{ fontSize: 8, color: "rgba(255,255,255,0.92)", letterSpacing: "0.22em", fontWeight: 600, marginTop: 1 }}>17 NOVEMBRE 2026</div>
+            <div style={{ fontSize: u(8), color: "rgba(255,255,255,0.92)", letterSpacing: "0.22em", fontWeight: 600, marginTop: u(1) }}>17 NOVEMBRE 2026</div>
 
             {/* Countdown — cercles 38px (était 28 → +35% ≈ 38) */}
-            <div style={{ display: "flex", gap: 11, marginTop: 10 }}>
+            <div style={{ display: "flex", gap: u(11), marginTop: u(10) }}>
               {[{n:"205",l:"JOURS"},{n:"5",l:"HEURES"},{n:"18",l:"MIN"},{n:"36",l:"SEC"}].map((c,i)=>(
-                <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+                <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: u(3) }}>
                   <div style={{
-                    width: 38, height: 38, borderRadius: "50%",
+                    width: u(38), height: u(38), borderRadius: "50%",
                     border: `1.6px solid ${cur.main}`,
                     transition: "border-color 0.6s",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     boxShadow: `inset 0 0 0 1px ${cur.main}40, 0 0 8px ${cur.main}40`,
                   }}>
-                    <span style={{ fontSize: 15, color: "#fff", fontWeight: 500, fontFamily: "'Cormorant Garamond', serif", lineHeight: 1 }}>{c.n}</span>
+                    <span style={{ fontSize: u(15), color: "#fff", fontWeight: 500, fontFamily: "'Cormorant Garamond', serif", lineHeight: 1 }}>{c.n}</span>
                   </div>
-                  <span style={{ fontSize: 5, color: "rgba(255,255,255,0.75)", letterSpacing: "0.18em", fontWeight: 600 }}>{c.l}</span>
+                  <span style={{ fontSize: u(5), color: "rgba(255,255,255,0.75)", letterSpacing: "0.18em", fontWeight: 600 }}>{c.l}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Footer décoratif + signature */}
-          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2px 0 4px", gap: 3 }}>
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: `${u(2)} 0 ${u(4)}`, gap: u(3) }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ width: 25, height: 0.5, background: cur.main, transition: "background 0.6s", opacity: 0.6 }} />
-              <div style={{ width: 4, height: 4, transform: "rotate(45deg)", border: `0.5px solid ${cur.main}`, margin: "0 4px", transition: "border-color 0.6s" }} />
-              <div style={{ width: 25, height: 0.5, background: cur.main, transition: "background 0.6s", opacity: 0.6 }} />
+              <div style={{ width: u(25), height: u(0.5), background: cur.main, transition: "background 0.6s", opacity: 0.6 }} />
+              <div style={{ width: u(4), height: u(4), transform: "rotate(45deg)", border: `0.5px solid ${cur.main}`, margin: `0 ${u(4)}`, transition: "border-color 0.6s" }} />
+              <div style={{ width: u(25), height: u(0.5), background: cur.main, transition: "background 0.6s", opacity: 0.6 }} />
             </div>
-            <span style={{ fontSize: 4.5, color: "rgba(255,255,255,0.5)", letterSpacing: "0.22em", fontWeight: 500 }}>· CRÉÉ AVEC <span style={{ color: cur.main, fontWeight: 700, transition: "color 0.6s" }}>LAYALI</span> ·</span>
+            <span style={{ fontSize: u(4.5), color: "rgba(255,255,255,0.5)", letterSpacing: "0.22em", fontWeight: 500 }}>· CRÉÉ AVEC <span style={{ color: cur.main, fontWeight: 700, transition: "color 0.6s" }}>LAYALI</span> ·</span>
           </div>
         </div>
       </div>
@@ -270,6 +273,9 @@ function SiteEventPreview() {
 
 // ── 2. Prestataires — VendorSwipe (flow user : modal → photos → détail → swipe → liste) ─
 function VendorSwipePreview() {
+  // Helper cqw : référence 635px (calibré comme RsvpPreview).
+  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+
   // Flow exact (durées tunées 12-15s/cycle):
   // 0:modal Image2 · 1:Image1 · 2:Image2 retour · 3:ouvre détail · 4:détail · 5:ferme détail
   // · 6:zoom bouton 🎉 · 7:clic + swipe + toast · 8:vue Mes Prestataires · 9:pause
@@ -322,7 +328,7 @@ function VendorSwipePreview() {
   const cursorVisible = step <= 6 // disparaît après step 6 (après le clic 🎉)
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, position: "relative", background: "#000", borderRadius: 6, overflow: "hidden" }}>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: u(0), position: "relative", background: "#000", borderRadius: u(6), overflow: "hidden" }}>
 {/* Curseur souris — translate aligné sur le pic du SVG (hotspot 3,2 dans viewBox 24×28) */}
       <div style={{
         position: "absolute",
@@ -337,9 +343,9 @@ function VendorSwipePreview() {
         {isClicking && (
           <div key={`ring-${step}`} style={{
             position: "absolute",
-            top: -8.4, left: -7.5, // centre 22×22 sur (3.5, 2.6)
-            width: 22, height: 22, borderRadius: "50%",
-            border: "2px solid rgba(255,255,255,0.95)",
+            top: u(-8.4), left: u(-7.5), // centre 22×22 sur (3.5, 2.6)
+            width: u(22), height: u(22), borderRadius: "50%",
+            border: `${u(2)} solid rgba(255,255,255,0.95)`,
             transform: "scale(0)",
             animation: "cursorRing 0.7s ease 1.05s forwards",
           }} />
@@ -358,9 +364,9 @@ function VendorSwipePreview() {
       {(isModal || isDetail || isClosing || isSwiping) && (
         <>
           {/* Bandeau haut : compteur + close (X icon SVG style lucide comme VendorSwipeModal) */}
-          <div style={{ padding: "4px 8px 3px", display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5, flexShrink: 0 }}>
-            <span style={{ fontSize: 6.5, color: "rgba(255,255,255,0.4)" }}>1/19+</span>
-            <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ padding: `${u(4)} ${u(8)} ${u(3)}`, display: "flex", alignItems: "center", justifyContent: "flex-end", gap: u(5), flexShrink: 0 }}>
+            <span style={{ fontSize: u(6.5), color: "rgba(255,255,255,0.4)" }}>1/19+</span>
+            <div style={{ width: u(16), height: u(16), borderRadius: "50%", background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
@@ -371,18 +377,18 @@ function VendorSwipePreview() {
           {/* Stack card — agrandie 50% (76→100%, max 170→255), format 3:4 portrait conservé */}
           <div style={{
             flex: 1, position: "relative", display: "flex", alignItems: "center", justifyContent: "center",
-            minHeight: 0, padding: "0 4px",
+            minHeight: u(0), padding: `0 ${u(4)}`,
           }}>
             <div style={{
-              width: "100%", maxWidth: 255,
+              width: "100%", maxWidth: u(255),
               aspectRatio: "3 / 4",
-              borderRadius: 14,
+              borderRadius: u(14),
               overflow: "hidden",
               position: "relative",
               transform: isSwiping ? "translateX(140%) rotate(24deg)" : "translateX(0) rotate(0deg)",
               opacity: isSwiping ? 0 : 1,
               transition: isSwiping ? "transform 0.5s cubic-bezier(0.4,0,1,1), opacity 0.4s ease 0.15s" : "none",
-              boxShadow: "0 8px 20px rgba(0,0,0,0.55)",
+              boxShadow: `0 ${u(8)} ${u(20)} rgba(0,0,0,0.55)`,
               background: "#1a1a1a",
             }}>
               {/* Photos plein cadre — blurred quand détail ouvert */}
@@ -399,10 +405,10 @@ function VendorSwipePreview() {
 
               {/* Photo dots haut-centre — masquées quand détail ouvert */}
               {!isDetail && !isClosing && (
-                <div style={{ position: "absolute", top: 5, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 2, zIndex: 3 }}>
+                <div style={{ position: "absolute", top: u(5), left: "50%", transform: "translateX(-50%)", display: "flex", gap: u(2), zIndex: 3 }}>
                   {PHOTOS.map((_, i) => (
                     <div key={i} style={{
-                      height: 2.5,
+                      height: u(2.5),
                       width: i === photoIdx ? 14 : 3.5,
                       borderRadius: 99,
                       background: i === photoIdx ? "#fff" : "rgba(255,255,255,0.4)",
@@ -418,35 +424,35 @@ function VendorSwipePreview() {
                   position: "absolute",
                   top: "45%", transform: "translateY(-50%)",
                   [step === 1 ? "right" : "left"]: 6,
-                  width: 18, height: 18, borderRadius: "50%",
+                  width: u(18), height: u(18), borderRadius: "50%",
                   background: "rgba(255,255,255,0.95)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   zIndex: 4,
                   animation: "tapPulse 1.2s ease",
-                  boxShadow: "0 0 12px rgba(255,255,255,0.7)",
+                  boxShadow: `0 0 ${u(12)} rgba(255,255,255,0.7)`,
                 }}>
-                  <span style={{ fontSize: 11, color: "#000", fontWeight: 700, lineHeight: 1 }}>{step === 1 ? "›" : "‹"}</span>
+                  <span style={{ fontSize: u(11), color: "#000", fontWeight: 700, lineHeight: 1 }}>{step === 1 ? "›" : "‹"}</span>
                 </div>
               )}
 
               {/* Footer info — visible seulement en mode photo (pas détail) */}
               {!isDetail && !isClosing && (
                 <div style={{
-                  position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 2,
-                  padding: "20px 7px 6px",
+                  position: "absolute", bottom: u(0), left: u(0), right: u(0), zIndex: 2,
+                  padding: `${u(20)} ${u(7)} ${u(6)}`,
                   background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 60%, transparent 100%)",
                 }}>
-                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 4 }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 9.5, fontWeight: 800, color: "#fff", lineHeight: 1.05, textShadow: "0 1px 3px rgba(0,0,0,0.7)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>La Maison des Fleurs</div>
-                      <div style={{ fontSize: 5.5, color: "rgba(255,255,255,0.65)", marginTop: 1 }}>📍 Rabat</div>
+                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: u(4) }}>
+                    <div style={{ flex: 1, minWidth: u(0) }}>
+                      <div style={{ fontSize: u(9.5), fontWeight: 800, color: "#fff", lineHeight: 1.05, textShadow: "0 1px 3px rgba(0,0,0,0.7)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>La Maison des Fleurs</div>
+                      <div style={{ fontSize: u(5.5), color: "rgba(255,255,255,0.65)", marginTop: u(1) }}>📍 Rabat</div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 1, flexShrink: 0 }}>
-                      <span style={{ fontSize: 8, color: "#f59e0b", fontWeight: 700 }}>4.9</span>
-                      <span style={{ fontSize: 8, color: "#f59e0b" }}>★</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: u(1), flexShrink: 0 }}>
+                      <span style={{ fontSize: u(8), color: "#f59e0b", fontWeight: 700 }}>4.9</span>
+                      <span style={{ fontSize: u(8), color: "#f59e0b" }}>★</span>
                     </div>
                   </div>
-                  <div style={{ fontSize: 4.5, color: "rgba(255,255,255,0.35)", textAlign: "center", marginTop: 3 }}>Appuyer pour les détails · Glisser pour choisir</div>
+                  <div style={{ fontSize: u(4.5), color: "rgba(255,255,255,0.35)", textAlign: "center", marginTop: u(3) }}>Appuyer pour les détails · Glisser pour choisir</div>
                 </div>
               )}
 
@@ -455,25 +461,25 @@ function VendorSwipePreview() {
                 position: "absolute", inset: 0, zIndex: 5,
                 transform: isDetail ? "translateY(0)" : "translateY(100%)",
                 transition: isClosing ? "transform 0.55s cubic-bezier(0.4,0,1,1)" : "transform 0.5s cubic-bezier(0.32,0.72,0,1)",
-                padding: "5px 6px",
-                display: "flex", flexDirection: "column", gap: 3,
+                padding: `${u(5)} ${u(6)}`,
+                display: "flex", flexDirection: "column", gap: u(3),
                 overflow: "hidden",
               }}>
                 {/* Header dans détail — fontes agrandies */}
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 4 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 3, flexWrap: "wrap" }}>
-                      <span style={{ fontSize: 12, fontWeight: 800, color: "#fff", lineHeight: 1.05, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>La Maison des Fleurs</span>
-                      <span style={{ fontSize: 5.5, fontWeight: 700, padding: "1px 5px", borderRadius: 99, background: "rgba(74,222,128,0.2)", border: "1px solid rgba(74,222,128,0.4)", color: "#4ade80" }}>✓ Vérifié</span>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: u(4) }}>
+                  <div style={{ flex: 1, minWidth: u(0) }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: u(3), flexWrap: "wrap" }}>
+                      <span style={{ fontSize: u(12), fontWeight: 800, color: "#fff", lineHeight: 1.05, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>La Maison des Fleurs</span>
+                      <span style={{ fontSize: u(5.5), fontWeight: 700, padding: `${u(1)} ${u(5)}`, borderRadius: 99, background: "rgba(74,222,128,0.2)", border: `${u(1)} solid rgba(74,222,128,0.4)`, color: "#4ade80" }}>✓ Vérifié</span>
                     </div>
-                    <div style={{ fontSize: 7, color: "rgba(255,255,255,0.6)", marginTop: 2 }}>📍 Rabat · Fleuriste événementiel</div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 3, marginTop: 2 }}>
-                      <span style={{ fontSize: 8, color: "#f59e0b", fontWeight: 700 }}>4.9</span>
-                      <div style={{ display: "flex", gap: 0.5 }}>{"★★★★★".split("").map((s,i)=><span key={i} style={{ fontSize: 6, color: "#f59e0b" }}>{s}</span>)}</div>
-                      <span style={{ fontSize: 6, color: "rgba(255,255,255,0.45)" }}>· 42 avis</span>
+                    <div style={{ fontSize: u(7), color: "rgba(255,255,255,0.6)", marginTop: u(2) }}>📍 Rabat · Fleuriste événementiel</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: u(3), marginTop: u(2) }}>
+                      <span style={{ fontSize: u(8), color: "#f59e0b", fontWeight: 700 }}>4.9</span>
+                      <div style={{ display: "flex", gap: u(0.5) }}>{"★★★★★".split("").map((s,i)=><span key={i} style={{ fontSize: u(6), color: "#f59e0b" }}>{s}</span>)}</div>
+                      <span style={{ fontSize: u(6), color: "rgba(255,255,255,0.45)" }}>· 42 avis</span>
                     </div>
                   </div>
-                  <div style={{ width: 13, height: 13, borderRadius: "50%", background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <div style={{ width: u(13), height: u(13), borderRadius: "50%", background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
@@ -481,17 +487,17 @@ function VendorSwipePreview() {
                 </div>
 
                 {/* À propos — fontes agrandies */}
-                <div style={{ padding: "5px 7px", borderRadius: 6, background: "rgba(0,0,0,0.42)", backdropFilter: "blur(8px)" }}>
-                  <div style={{ fontSize: 5, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.18em", fontWeight: 700, marginBottom: 2 }}>À propos</div>
-                  <p style={{ fontSize: 7.5, color: "rgba(255,255,255,0.92)", lineHeight: 1.4, margin: 0 }}>
+                <div style={{ padding: `${u(5)} ${u(7)}`, borderRadius: u(6), background: "rgba(0,0,0,0.42)", backdropFilter: "blur(8px)" }}>
+                  <div style={{ fontSize: u(5), color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.18em", fontWeight: 700, marginBottom: u(2) }}>À propos</div>
+                  <p style={{ fontSize: u(7.5), color: "rgba(255,255,255,0.92)", lineHeight: 1.4, margin: 0 }}>
                     Fleuriste passionnée à Rabat depuis 2018. Créations sur mesure pour mariages et événements d&apos;exception.
                   </p>
                 </div>
 
                 {/* 3 FORFAITS — fontes agrandies */}
                 <div>
-                  <div style={{ fontSize: 5, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.18em", fontWeight: 700, marginBottom: 3 }}>Nos forfaits</div>
-                  <div style={{ display: "flex", gap: 4 }}>
+                  <div style={{ fontSize: u(5), color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.18em", fontWeight: 700, marginBottom: u(3) }}>Nos forfaits</div>
+                  <div style={{ display: "flex", gap: u(4) }}>
                     {[
                       { l: "Standard",  p: "2 000",  c: "#94a3b8", desc: "Bouquet" },
                       { l: "Premium",   p: "5 000",  c: "#C1713A", desc: "+ table" },
@@ -501,33 +507,33 @@ function VendorSwipePreview() {
                         flex: 1,
                         background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)",
                         border: `1px solid ${f.c}66`,
-                        borderRadius: 6, padding: "4px 5px",
+                        borderRadius: u(6), padding: `${u(4)} ${u(5)}`,
                       }}>
-                        <div style={{ fontSize: 6, color: f.c, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>{f.l}</div>
-                        <div style={{ fontSize: 9.5, color: "#fff", fontWeight: 800, marginTop: 1.5, lineHeight: 1 }}>{f.p}<span style={{ fontSize: 5, fontWeight: 600, marginLeft: 2 }}>Dhs</span></div>
-                        <div style={{ fontSize: 5, color: "rgba(255,255,255,0.55)", marginTop: 2, lineHeight: 1.2 }}>{f.desc}</div>
+                        <div style={{ fontSize: u(6), color: f.c, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>{f.l}</div>
+                        <div style={{ fontSize: u(9.5), color: "#fff", fontWeight: 800, marginTop: u(1.5), lineHeight: 1 }}>{f.p}<span style={{ fontSize: u(5), fontWeight: 600, marginLeft: u(2) }}>Dhs</span></div>
+                        <div style={{ fontSize: u(5), color: "rgba(255,255,255,0.55)", marginTop: u(2), lineHeight: 1.2 }}>{f.desc}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Contacts grid 2x2 — fontes agrandies */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "3.5px 5px", borderRadius: 6, background: "rgba(0,0,0,0.5)", border: "1px solid rgba(74,222,128,0.3)" }}>
-                    <div style={{ width: 12, height: 12, borderRadius: 3, background: "rgba(74,222,128,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: 6.5 }}>📞</span></div>
-                    <span style={{ fontSize: 6.5, color: "rgba(255,255,255,0.9)", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>06 12 34 56 78</span>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: u(4) }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: u(4), padding: `${u(3.5)} ${u(5)}`, borderRadius: u(6), background: "rgba(0,0,0,0.5)", border: `${u(1)} solid rgba(74,222,128,0.3)` }}>
+                    <div style={{ width: u(12), height: u(12), borderRadius: u(3), background: "rgba(74,222,128,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: u(6.5) }}>📞</span></div>
+                    <span style={{ fontSize: u(6.5), color: "rgba(255,255,255,0.9)", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>06 12 34 56 78</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "3.5px 5px", borderRadius: 6, background: "rgba(0,0,0,0.5)", border: "1px solid rgba(225,48,108,0.35)" }}>
-                    <div style={{ width: 12, height: 12, borderRadius: 3, background: "linear-gradient(135deg,#f09433,#dc2743,#bc1888)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: 5, fontWeight: 900, color: "#fff" }}>IG</span></div>
-                    <span style={{ fontSize: 6.5, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>@maisonfleurs</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: u(4), padding: `${u(3.5)} ${u(5)}`, borderRadius: u(6), background: "rgba(0,0,0,0.5)", border: `${u(1)} solid rgba(225,48,108,0.35)` }}>
+                    <div style={{ width: u(12), height: u(12), borderRadius: u(3), background: "linear-gradient(135deg,#f09433,#dc2743,#bc1888)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: u(5), fontWeight: 900, color: "#fff" }}>IG</span></div>
+                    <span style={{ fontSize: u(6.5), color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>@maisonfleurs</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "3.5px 5px", borderRadius: 6, background: "rgba(0,0,0,0.5)", border: "1px solid rgba(24,119,242,0.35)" }}>
-                    <div style={{ width: 12, height: 12, borderRadius: 3, background: "#1877f2", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: 7, fontWeight: 900, color: "#fff" }}>f</span></div>
-                    <span style={{ fontSize: 6.5, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Facebook</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: u(4), padding: `${u(3.5)} ${u(5)}`, borderRadius: u(6), background: "rgba(0,0,0,0.5)", border: `${u(1)} solid rgba(24,119,242,0.35)` }}>
+                    <div style={{ width: u(12), height: u(12), borderRadius: u(3), background: "#1877f2", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: u(7), fontWeight: 900, color: "#fff" }}>f</span></div>
+                    <span style={{ fontSize: u(6.5), color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Facebook</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "3.5px 5px", borderRadius: 6, background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                    <div style={{ width: 12, height: 12, borderRadius: 3, background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: 6.5 }}>✉️</span></div>
-                    <span style={{ fontSize: 6.5, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>contact@…</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: u(4), padding: `${u(3.5)} ${u(5)}`, borderRadius: u(6), background: "rgba(0,0,0,0.5)", border: `${u(1)} solid rgba(255,255,255,0.15)` }}>
+                    <div style={{ width: u(12), height: u(12), borderRadius: u(3), background: "rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ fontSize: u(6.5) }}>✉️</span></div>
+                    <span style={{ fontSize: u(6.5), color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>contact@…</span>
                   </div>
                 </div>
               </div>
@@ -535,50 +541,50 @@ function VendorSwipePreview() {
           </div>
 
           {/* Boutons d'action — TAILLE AGRANDIE (32px) + cinématique zoom 🎉 */}
-          <div style={{ padding: "5px 0 7px", display: "flex", justifyContent: "center", alignItems: "center", gap: 9, flexShrink: 0 }}>
+          <div style={{ padding: `${u(5)} 0 ${u(7)}`, display: "flex", justifyContent: "center", alignItems: "center", gap: u(9), flexShrink: 0 }}>
             <div style={{
-              width: 32, height: 32, borderRadius: "50%", background: "#0a0a0a",
-              border: "2px solid #ef4444",
+              width: u(32), height: u(32), borderRadius: "50%", background: "#0a0a0a",
+              border: `${u(2)} solid #ef4444`,
               display: "flex", alignItems: "center", justifyContent: "center",
               opacity: isZoomBtn ? 0.25 : 1,
               transform: isZoomBtn ? "scale(0.8)" : "scale(1)",
               transition: "opacity 0.5s, transform 0.5s",
             }}>
-              <div style={{ width: 18, height: 18, borderRadius: "50%", border: "2px solid #ef4444", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: 11, color: "#ef4444", lineHeight: 1, fontWeight: 700 }}>×</span>
+              <div style={{ width: u(18), height: u(18), borderRadius: "50%", border: `${u(2)} solid #ef4444`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: u(11), color: "#ef4444", lineHeight: 1, fontWeight: 700 }}>×</span>
               </div>
             </div>
             <div style={{
-              width: 32, height: 32, borderRadius: "50%", background: "#0a0a0a",
-              border: "2px solid rgba(255,255,255,0.2)",
+              width: u(32), height: u(32), borderRadius: "50%", background: "#0a0a0a",
+              border: `${u(2)} solid rgba(255,255,255,0.2)`,
               display: "flex", alignItems: "center", justifyContent: "center",
               opacity: isZoomBtn ? 0.25 : 1,
               transform: isZoomBtn ? "scale(0.8)" : "scale(1)",
               transition: "opacity 0.5s, transform 0.5s",
             }}>
-              <span style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1 }}>↻</span>
+              <span style={{ fontSize: u(14), color: "rgba(255,255,255,0.6)", lineHeight: 1 }}>↻</span>
             </div>
             <div style={{
-              width: 32, height: 32, borderRadius: "50%", background: "#0a0a0a",
-              border: "2px solid #ef4444",
+              width: u(32), height: u(32), borderRadius: "50%", background: "#0a0a0a",
+              border: `${u(2)} solid #ef4444`,
               display: "flex", alignItems: "center", justifyContent: "center",
               opacity: isZoomBtn ? 0.25 : 1,
               transform: isZoomBtn ? "scale(0.8)" : "scale(1)",
               transition: "opacity 0.5s, transform 0.5s",
             }}>
-              <span style={{ fontSize: 14, color: "#ef4444", lineHeight: 1 }}>♥</span>
+              <span style={{ fontSize: u(14), color: "#ef4444", lineHeight: 1 }}>♥</span>
             </div>
             {/* 🎉 vert — cinématique zoom : normale → grossit (zoom) → reste pour le swipe */}
             <div style={{
-              width: 32, height: 32, borderRadius: "50%", background: "#22c55e",
-              border: "2px solid #15803d",
+              width: u(32), height: u(32), borderRadius: "50%", background: "#22c55e",
+              border: `${u(2)} solid #15803d`,
               display: "flex", alignItems: "center", justifyContent: "center",
               boxShadow: isZoomBtn ? "0 0 28px rgba(34,197,94,0.85), 0 6px 16px rgba(34,197,94,0.6)" : "0 2px 6px rgba(34,197,94,0.4)",
               transform: isZoomBtn ? "scale(2.2) translateY(-12px)" : "scale(1)",
               transition: "transform 0.7s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.5s",
               zIndex: 5,
             }}>
-              <span style={{ fontSize: 16 }}>🎉</span>
+              <span style={{ fontSize: u(16) }}>🎉</span>
             </div>
           </div>
         </>
@@ -596,14 +602,14 @@ function VendorSwipePreview() {
         }}>
           <div style={{
             background: "linear-gradient(135deg,#22c55e,#16a34a)",
-            borderRadius: 14, padding: "11px 18px",
-            display: "flex", alignItems: "center", gap: 7,
-            boxShadow: "0 8px 24px rgba(34,197,94,0.6)",
+            borderRadius: u(14), padding: `${u(11)} ${u(18)}`,
+            display: "flex", alignItems: "center", gap: u(7),
+            boxShadow: `0 ${u(8)} ${u(24)} rgba(34,197,94,0.6)`,
           }}>
-            <span style={{ fontSize: 16, color: "#fff" }}>✓</span>
+            <span style={{ fontSize: u(16), color: "#fff" }}>✓</span>
             <div>
-              <div style={{ fontSize: 11, color: "#fff", fontWeight: 800, letterSpacing: "-0.01em" }}>Ajouté à mes prestataires</div>
-              <div style={{ fontSize: 8, color: "rgba(255,255,255,0.9)", marginTop: 1 }}>La Maison des Fleurs</div>
+              <div style={{ fontSize: u(11), color: "#fff", fontWeight: 800, letterSpacing: "-0.01em" }}>Ajouté à mes prestataires</div>
+              <div style={{ fontSize: u(8), color: "rgba(255,255,255,0.9)", marginTop: u(1) }}>La Maison des Fleurs</div>
             </div>
           </div>
         </div>
@@ -611,91 +617,91 @@ function VendorSwipePreview() {
 
       {/* === LISTE "Mes prestataires" — card limitée en largeur comme swipe (~250px max) === */}
       {isList && (
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, padding: "5px 4px", overflow: "hidden", animation: "slideIn 0.5s ease" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: u(0), padding: `${u(5)} ${u(4)}`, overflow: "hidden", animation: "slideIn 0.5s ease" }}>
           {/* Title page */}
-          <div style={{ marginBottom: 5, flexShrink: 0 }}>
-            <div style={{ fontSize: 9, color: "#fff", fontWeight: 700, lineHeight: 1 }}>Mes prestataires</div>
-            <div style={{ fontSize: 4.5, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>1 sur 12 catégories sélectionnés</div>
+          <div style={{ marginBottom: u(5), flexShrink: 0 }}>
+            <div style={{ fontSize: u(9), color: "#fff", fontWeight: 700, lineHeight: 1 }}>Mes prestataires</div>
+            <div style={{ fontSize: u(4.5), color: "rgba(255,255,255,0.4)", marginTop: u(1) }}>1 sur 12 catégories sélectionnés</div>
           </div>
 
           {/* Section catégorie : Fleuriste */}
           <div style={{ flexShrink: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                <span style={{ fontSize: 6.5, fontWeight: 700, color: "#fff" }}>Fleuriste</span>
-                <span style={{ fontSize: 4, fontWeight: 700, padding: "0.5px 4px", borderRadius: 99, background: "rgba(34,197,94,0.2)", color: "#22c55e" }}>1 sélectionné</span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: u(3) }}>
+              <div style={{ display: "flex", alignItems: "center", gap: u(3) }}>
+                <span style={{ fontSize: u(6.5), fontWeight: 700, color: "#fff" }}>Fleuriste</span>
+                <span style={{ fontSize: u(4), fontWeight: 700, padding: `${u(0.5)} ${u(4)}`, borderRadius: 99, background: "rgba(34,197,94,0.2)", color: "#22c55e" }}>1 sélectionné</span>
               </div>
-              <div style={{ fontSize: 4.5, fontWeight: 600, padding: "1px 5px", borderRadius: 99, border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.5)" }}>+ Ajouter</div>
+              <div style={{ fontSize: u(4.5), fontWeight: 600, padding: `${u(1)} ${u(5)}`, borderRadius: 99, border: `${u(1)} solid rgba(255,255,255,0.2)`, color: "rgba(255,255,255,0.5)" }}>+ Ajouter</div>
             </div>
             {/* Card limitée 255px comme swipe, pas full width */}
             <div style={{
-              width: "100%", maxWidth: 255,
+              width: "100%", maxWidth: u(255),
               background: "#0a0a0a",
-              borderRadius: 12,
+              borderRadius: u(12),
               overflow: "hidden",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+              border: `${u(1)} solid rgba(255,255,255,0.08)`,
+              boxShadow: `0 ${u(4)} ${u(12)} rgba(0,0,0,0.3)`,
               animation: "slideIn 0.6s ease",
             }}>
               {/* Photo header — taille proche capture user Mamounia (~140px ratio) */}
-              <div style={{ position: "relative", height: 130, overflow: "hidden", background: "rgba(255,255,255,0.05)" }}>
+              <div style={{ position: "relative", height: u(130), overflow: "hidden", background: "rgba(255,255,255,0.05)" }}>
                 <div style={{ position: "absolute", inset: 0, backgroundImage: `url("${PHOTOS[0]}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
                 {/* Flèche browse gauche */}
-                <div style={{ position: "absolute", top: "50%", left: 4, transform: "translateY(-50%)", width: 12, height: 12, borderRadius: "50%", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: 6, color: "#fff", lineHeight: 1, fontWeight: 700 }}>‹</span>
+                <div style={{ position: "absolute", top: "50%", left: u(4), transform: "translateY(-50%)", width: u(12), height: u(12), borderRadius: "50%", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: u(6), color: "#fff", lineHeight: 1, fontWeight: 700 }}>‹</span>
                 </div>
                 {/* Photo dots */}
-                <div style={{ position: "absolute", bottom: 4, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 2 }}>
-                  {[0,1,2].map(i => <div key={i} style={{ width: i === 0 ? 8 : 3, height: 2, borderRadius: 99, background: i === 0 ? "#fff" : "rgba(255,255,255,0.45)" }} />)}
+                <div style={{ position: "absolute", bottom: u(4), left: "50%", transform: "translateX(-50%)", display: "flex", gap: u(2) }}>
+                  {[0,1,2].map(i => <div key={i} style={{ width: i === 0 ? 8 : 3, height: u(2), borderRadius: 99, background: i === 0 ? "#fff" : "rgba(255,255,255,0.45)" }} />)}
                 </div>
               </div>
               {/* Content */}
-              <div style={{ padding: "7px 9px 9px" }}>
+              <div style={{ padding: `${u(7)} ${u(9)} ${u(9)}` }}>
                 {/* Nom + rating */}
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 4, gap: 4 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 9.5, fontWeight: 700, color: "#fff", lineHeight: 1.1 }}>La Maison des Fleurs</div>
-                    <div style={{ fontSize: 6, color: "rgba(255,255,255,0.45)", marginTop: 1.5 }}>Fleuriste · Rabat</div>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: u(4), gap: u(4) }}>
+                  <div style={{ flex: 1, minWidth: u(0) }}>
+                    <div style={{ fontSize: u(9.5), fontWeight: 700, color: "#fff", lineHeight: 1.1 }}>La Maison des Fleurs</div>
+                    <div style={{ fontSize: u(6), color: "rgba(255,255,255,0.45)", marginTop: u(1.5) }}>Fleuriste · Rabat</div>
                   </div>
                   <span style={{
-                    fontSize: 6, fontWeight: 700, color: "#E11D48",
-                    background: "rgba(225,29,72,0.15)", padding: "1.5px 5px", borderRadius: 99,
+                    fontSize: u(6), fontWeight: 700, color: "#E11D48",
+                    background: "rgba(225,29,72,0.15)", padding: `${u(1.5)} ${u(5)}`, borderRadius: 99,
                     whiteSpace: "nowrap",
                   }}>★ 5.0</span>
                 </div>
                 {/* Pill Site web seule (comme capture user) */}
-                <div style={{ marginBottom: 6 }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 2, padding: "1.5px 6px", borderRadius: 99, background: "rgba(99,102,241,0.18)", border: "1px solid rgba(99,102,241,0.35)" }}>
-                    <span style={{ fontSize: 5 }}>🌐</span>
-                    <span style={{ fontSize: 5.5, color: "#a5b4fc", fontWeight: 600 }}>Site web</span>
+                <div style={{ marginBottom: u(6) }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: u(2), padding: `${u(1.5)} ${u(6)}`, borderRadius: 99, background: "rgba(99,102,241,0.18)", border: `${u(1)} solid rgba(99,102,241,0.35)` }}>
+                    <span style={{ fontSize: u(5) }}>🌐</span>
+                    <span style={{ fontSize: u(5.5), color: "#a5b4fc", fontWeight: 600 }}>Site web</span>
                   </div>
                 </div>
                 {/* Bouton "Contacter via WhatsApp" pleine largeur gradient rose/violet */}
                 <div style={{
                   background: "linear-gradient(135deg,#E11D48,#9333EA)",
                   borderRadius: 99,
-                  padding: "5px 0",
+                  padding: `${u(5)} 0`,
                   textAlign: "center",
-                  marginBottom: 5,
-                  boxShadow: "0 2px 8px rgba(225,29,72,0.35)",
+                  marginBottom: u(5),
+                  boxShadow: `0 ${u(2)} ${u(8)} rgba(225,29,72,0.35)`,
                 }}>
-                  <span style={{ fontSize: 7, color: "#fff", fontWeight: 700 }}>Contacter via WhatsApp 💬</span>
+                  <span style={{ fontSize: u(7), color: "#fff", fontWeight: 700 }}>Contacter via WhatsApp 💬</span>
                 </div>
                 {/* Ligne dropdown Sélectionné + Retirer */}
-                <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <div style={{ display: "flex", gap: u(4), alignItems: "center" }}>
                   <div style={{
-                    flex: 1, padding: "3px 7px", borderRadius: 6,
-                    background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.3)",
+                    flex: 1, padding: `${u(3)} ${u(7)}`, borderRadius: u(6),
+                    background: "rgba(139,92,246,0.15)", border: `${u(1)} solid rgba(139,92,246,0.3)`,
                     display: "flex", alignItems: "center", justifyContent: "space-between",
                   }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                      <span style={{ width: 4.5, height: 4.5, borderRadius: "50%", background: "#a78bfa" }} />
-                      <span style={{ fontSize: 6.5, color: "#a78bfa", fontWeight: 700 }}>Sélectionné</span>
+                    <span style={{ display: "flex", alignItems: "center", gap: u(3) }}>
+                      <span style={{ width: u(4.5), height: u(4.5), borderRadius: "50%", background: "#a78bfa" }} />
+                      <span style={{ fontSize: u(6.5), color: "#a78bfa", fontWeight: 700 }}>Sélectionné</span>
                     </span>
-                    <span style={{ fontSize: 5, color: "rgba(167,139,250,0.7)" }}>▼</span>
+                    <span style={{ fontSize: u(5), color: "rgba(167,139,250,0.7)" }}>▼</span>
                   </div>
-                  <div style={{ padding: "3px 7px", borderRadius: 6, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)" }}>
-                    <span style={{ fontSize: 6, color: "#ef4444", fontWeight: 600 }}>Retirer</span>
+                  <div style={{ padding: `${u(3)} ${u(7)}`, borderRadius: u(6), background: "rgba(239,68,68,0.1)", border: `${u(1)} solid rgba(239,68,68,0.3)` }}>
+                    <span style={{ fontSize: u(6), color: "#ef4444", fontWeight: 600 }}>Retirer</span>
                   </div>
                 </div>
               </div>
@@ -1182,6 +1188,9 @@ function RsvpPreview() {
 
 // ── 4. Messages — chat en temps réel ──────────────────────────────────────────
 function MessagesPreview() {
+  // Helper cqw : référence 635px (calibré comme RsvpPreview).
+  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+
   // 9 steps : 0 typing msg1, 1 send, 2 vendor typing, 3 vendor msg1,
   // 4 typing msg2, 5 send, 6 vendor typing, 7 vendor msg2, 8 pause
   const step = useAnimLoop([2800, 800, 1400, 2400, 2700, 800, 1400, 2400, 1600])
@@ -1234,58 +1243,58 @@ function MessagesPreview() {
     maxWidth: "78%",
     background: "linear-gradient(135deg,#E11D48,#9333EA)",
     color: "#fff",
-    fontSize: 13, lineHeight: 1.4,
-    padding: "9px 13px",
-    borderRadius: "15px 15px 3px 15px",
+    fontSize: u(13), lineHeight: 1.4,
+    padding: `${u(9)} ${u(13)}`,
+    borderRadius: `${u(15)} ${u(15)} ${u(3)} ${u(15)}`,
     fontFamily: fontMomento, fontWeight: 500,
-    boxShadow: "0 2px 6px rgba(225,29,72,0.28)",
+    boxShadow: `0 ${u(2)} ${u(6)} rgba(225,29,72,0.28)`,
   }
   const vendorBubble: React.CSSProperties = {
     maxWidth: "78%",
     background: "rgba(255,255,255,0.1)",
     color: "#f5f5f5",
-    fontSize: 13, lineHeight: 1.4,
-    padding: "9px 13px",
-    borderRadius: "15px 15px 15px 3px",
+    fontSize: u(13), lineHeight: 1.4,
+    padding: `${u(9)} ${u(13)}`,
+    borderRadius: `${u(15)} ${u(15)} ${u(15)} ${u(3)}`,
     fontFamily: fontMomento, fontWeight: 500,
-    border: "1px solid rgba(255,255,255,0.08)",
+    border: `${u(1)} solid rgba(255,255,255,0.08)`,
   }
   const vendorAvatar = (
     <div style={{
-      width: 22, height: 22, borderRadius: "50%",
+      width: u(22), height: u(22), borderRadius: "50%",
       background: "linear-gradient(135deg,#0369A1,#0891B2)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: 12, flexShrink: 0,
+      fontSize: u(12), flexShrink: 0,
     }}>🏛</div>
   )
 
   return (
     <div style={{
       flex: 1, display: "flex", flexDirection: "column",
-      minHeight: 0, overflow: "hidden",
-      background: "#0E0F12", borderRadius: 8,
+      minHeight: u(0), overflow: "hidden",
+      background: "#0E0F12", borderRadius: u(8),
       fontFamily: fontMomento,
     }}>
       {/* HEADER thread */}
       <div style={{
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "10px 13px",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        display: "flex", alignItems: "center", gap: u(10),
+        padding: `${u(10)} ${u(13)}`,
+        borderBottom: `${u(1)} solid rgba(255,255,255,0.08)`,
         background: "rgba(255,255,255,0.03)",
         flexShrink: 0,
       }}>
         <div style={{
-          width: 34, height: 34, borderRadius: "50%",
+          width: u(34), height: u(34), borderRadius: "50%",
           background: "linear-gradient(135deg,#0369A1,#0891B2)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 17, flexShrink: 0,
+          fontSize: u(17), flexShrink: 0,
         }}>🏛</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        <div style={{ flex: 1, minWidth: u(0) }}>
+          <div style={{ fontSize: u(13), fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
             Salle des fêtes Royale
           </div>
-          <div style={{ fontSize: 10, color: "#22c55e", display: "flex", alignItems: "center", gap: 4, marginTop: 1 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} /> En ligne · Casablanca
+          <div style={{ fontSize: u(10), color: "#22c55e", display: "flex", alignItems: "center", gap: u(4), marginTop: u(1) }}>
+            <span style={{ width: u(6), height: u(6), borderRadius: "50%", background: "#22c55e", display: "inline-block" }} /> En ligne · Casablanca
           </div>
         </div>
       </div>
@@ -1293,9 +1302,9 @@ function MessagesPreview() {
       {/* BODY bubbles */}
       <div style={{
         flex: 1, overflow: "hidden",
-        padding: "10px 10px 6px",
+        padding: `${u(10)} ${u(10)} ${u(6)}`,
         display: "flex", flexDirection: "column",
-        gap: 6,
+        gap: u(6),
         justifyContent: "flex-end",
       }}>
         {showUserMsg1 && (
@@ -1304,17 +1313,17 @@ function MessagesPreview() {
           </div>
         )}
         {showVendorTyp1 && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
             {vendorAvatar}
-            <div style={{ ...vendorBubble, padding: "8px 12px", display: "flex", gap: 4, alignItems: "center" }}>
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            <div style={{ ...vendorBubble, padding: `${u(8)} ${u(12)}`, display: "flex", gap: u(4), alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
             </div>
           </div>
         )}
         {showVendorMsg1 && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: step === 3 ? "slideIn 0.32s ease" : undefined }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-end", animation: step === 3 ? "slideIn 0.32s ease" : undefined }}>
             {vendorAvatar}
             <div style={vendorBubble}>{MSG_VENDOR_1}</div>
           </div>
@@ -1325,17 +1334,17 @@ function MessagesPreview() {
           </div>
         )}
         {showVendorTyp2 && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
             {vendorAvatar}
-            <div style={{ ...vendorBubble, padding: "8px 12px", display: "flex", gap: 4, alignItems: "center" }}>
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            <div style={{ ...vendorBubble, padding: `${u(8)} ${u(12)}`, display: "flex", gap: u(4), alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
             </div>
           </div>
         )}
         {showVendorMsg2 && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: step === 7 ? "slideIn 0.32s ease" : undefined }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-end", animation: step === 7 ? "slideIn 0.32s ease" : undefined }}>
             {vendorAvatar}
             <div style={vendorBubble}>{MSG_VENDOR_2}</div>
           </div>
@@ -1344,18 +1353,18 @@ function MessagesPreview() {
 
       {/* INPUT bar */}
       <div style={{
-        padding: "10px 12px",
-        borderTop: "1px solid rgba(255,255,255,0.08)",
+        padding: `${u(10)} ${u(12)}`,
+        borderTop: `${u(1)} solid rgba(255,255,255,0.08)`,
         background: "rgba(255,255,255,0.03)",
-        display: "flex", alignItems: "center", gap: 9,
+        display: "flex", alignItems: "center", gap: u(9),
         flexShrink: 0,
       }}>
         <div style={{
-          flex: 1, minHeight: 34, padding: "8px 14px",
+          flex: 1, minHeight: u(34), padding: `${u(8)} ${u(14)}`,
           background: "rgba(255,255,255,0.06)",
           border: `1.5px solid ${showCursor ? "rgba(225,29,72,0.5)" : "rgba(255,255,255,0.1)"}`,
           borderRadius: 99,
-          fontSize: 13, color: inputText ? "#fff" : "rgba(255,255,255,0.4)",
+          fontSize: u(13), color: inputText ? "#fff" : "rgba(255,255,255,0.4)",
           fontFamily: fontMomento, fontWeight: 500,
           display: "flex", alignItems: "center",
           boxShadow: showCursor ? "0 0 0 3px rgba(225,29,72,0.15)" : "none",
@@ -1364,19 +1373,19 @@ function MessagesPreview() {
         }}>
           {inputText || (showCursor ? "" : "Tapez votre message…")}
           {showCursor && (
-            <span style={{ color: "#fff", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>
+            <span style={{ color: "#fff", marginLeft: u(1), animation: "rsvpBlink 0.8s infinite" }}>|</span>
           )}
         </div>
         <button style={{
-          width: 34, height: 34, borderRadius: "50%",
+          width: u(34), height: u(34), borderRadius: "50%",
           background: "linear-gradient(135deg,#E11D48,#9333EA)",
           color: "#fff", border: "none",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 17, fontWeight: 700,
+          fontSize: u(17), fontWeight: 700,
           flexShrink: 0,
           transform: (step === 1 || step === 5) ? "scale(0.88)" : "scale(1)",
           transition: "transform 0.2s",
-          boxShadow: "0 2px 10px rgba(225,29,72,0.45)",
+          boxShadow: `0 ${u(2)} ${u(10)} rgba(225,29,72,0.45)`,
           cursor: "pointer",
         }}>↑</button>
       </div>
@@ -1386,6 +1395,9 @@ function MessagesPreview() {
 
 // ── 5. Agent IA — assistant conseil ───────────────────────────────────────────
 function AgentAIPreview() {
+  // Helper cqw : référence 635px (calibré comme RsvpPreview).
+  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+
   // 14 steps : 3 conversations enchaînées
   // Q1 (presta search) : 0 typing → 1 send → 2 IA dots → 3 réponse + cards
   // Q2 (budget) : 4 typing → 5 send → 6 IA dots → 7 réponse + chart
@@ -1441,29 +1453,29 @@ function AgentAIPreview() {
     maxWidth: "80%",
     background: "linear-gradient(135deg,#E11D48,#9333EA)",
     color: "#fff",
-    fontSize: 12, lineHeight: 1.4,
-    padding: "8px 12px",
-    borderRadius: "14px 14px 3px 14px",
+    fontSize: u(12), lineHeight: 1.4,
+    padding: `${u(8)} ${u(12)}`,
+    borderRadius: `${u(14)} ${u(14)} ${u(3)} ${u(14)}`,
     fontFamily: fontMomento, fontWeight: 500,
-    boxShadow: "0 1px 4px rgba(225,29,72,0.25)",
+    boxShadow: `0 ${u(1)} ${u(4)} rgba(225,29,72,0.25)`,
   }
   const aiBubble: React.CSSProperties = {
     maxWidth: "82%",
     background: "rgba(147,51,234,0.12)",
     color: "#f5f5f5",
-    fontSize: 12, lineHeight: 1.4,
-    padding: "8px 12px",
-    borderRadius: "14px 14px 14px 3px",
+    fontSize: u(12), lineHeight: 1.4,
+    padding: `${u(8)} ${u(12)}`,
+    borderRadius: `${u(14)} ${u(14)} ${u(14)} ${u(3)}`,
     fontFamily: fontMomento, fontWeight: 500,
-    border: "1px solid rgba(147,51,234,0.25)",
+    border: `${u(1)} solid rgba(147,51,234,0.25)`,
   }
   const aiAvatar = (
     <div style={{
-      width: 22, height: 22, borderRadius: 7,
+      width: u(22), height: u(22), borderRadius: u(7),
       background: "linear-gradient(135deg,#E11D48,#9333EA)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: 12, flexShrink: 0,
-      boxShadow: "0 1px 4px rgba(147,51,234,0.4)",
+      fontSize: u(12), flexShrink: 0,
+      boxShadow: `0 ${u(1)} ${u(4)} rgba(147,51,234,0.4)`,
     }}>✨</div>
   )
 
@@ -1491,53 +1503,53 @@ function AgentAIPreview() {
   return (
     <div style={{
       flex: 1, display: "flex", flexDirection: "column",
-      minHeight: 0, overflow: "hidden",
-      background: "#0E0F12", borderRadius: 8,
+      minHeight: u(0), overflow: "hidden",
+      background: "#0E0F12", borderRadius: u(8),
       fontFamily: fontMomento,
     }}>
       {/* HEADER Agent Layali ✨ */}
       <div style={{
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "10px 13px",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        display: "flex", alignItems: "center", gap: u(10),
+        padding: `${u(10)} ${u(13)}`,
+        borderBottom: `${u(1)} solid rgba(255,255,255,0.08)`,
         background: "rgba(147,51,234,0.06)",
         flexShrink: 0,
       }}>
         <div style={{
-          width: 34, height: 34, borderRadius: 9,
+          width: u(34), height: u(34), borderRadius: u(9),
           background: "linear-gradient(135deg,#E11D48,#9333EA)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 17, flexShrink: 0,
-          boxShadow: "0 2px 10px rgba(147,51,234,0.5)",
+          fontSize: u(17), flexShrink: 0,
+          boxShadow: `0 ${u(2)} ${u(10)} rgba(147,51,234,0.5)`,
         }}>✨</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>
+        <div style={{ flex: 1, minWidth: u(0) }}>
+          <div style={{ fontSize: u(13), fontWeight: 700, color: "#fff" }}>
             Agent Layali <span style={{
               background: "linear-gradient(135deg,#E11D48,#9333EA)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}>✨</span>
           </div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 1 }}>
+          <div style={{ fontSize: u(10), color: "rgba(255,255,255,0.5)", marginTop: u(1) }}>
             IA · Toujours dispo
           </div>
         </div>
         <div style={{
-          fontSize: 9, color: "#fff",
+          fontSize: u(9), color: "#fff",
           background: "linear-gradient(135deg,#E11D48,#9333EA)",
-          borderRadius: 99, padding: "3px 9px",
+          borderRadius: 99, padding: `${u(3)} ${u(9)}`,
           fontWeight: 700, letterSpacing: "0.04em",
-          boxShadow: "0 1px 5px rgba(147,51,234,0.4)",
+          boxShadow: `0 ${u(1)} ${u(5)} rgba(147,51,234,0.4)`,
         }}>IA</div>
       </div>
 
       {/* BODY conversation scrollable (newest at bottom, oldest hidden behind header) */}
       <div ref={bodyRef} className="ai-chat-scroll" style={{
-        flex: "1 1 0", minHeight: 0,
+        flex: "1 1 0", minHeight: u(0),
         overflowY: "auto", overflowX: "hidden",
-        padding: "10px 10px 6px",
+        padding: `${u(10)} ${u(10)} ${u(6)}`,
         display: "flex", flexDirection: "column",
-        gap: 6, justifyContent: "flex-end",
+        gap: u(6), justifyContent: "flex-end",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
         scrollBehavior: "smooth",
@@ -1549,44 +1561,44 @@ function AgentAIPreview() {
           </div>
         )}
         {showA1Typing && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
             {aiAvatar}
-            <div style={{ ...aiBubble, padding: "9px 13px", display: "flex", gap: 4, alignItems: "center" }}>
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            <div style={{ ...aiBubble, padding: `${u(9)} ${u(13)}`, display: "flex", gap: u(4), alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
             </div>
           </div>
         )}
         {showA1 && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-start", animation: step === 3 ? "slideIn 0.32s ease" : undefined }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-start", animation: step === 3 ? "slideIn 0.32s ease" : undefined }}>
             {aiAvatar}
-            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: u(6) }}>
               <span>J&apos;ai trouvé 3 photographes pour toi 📸</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: u(4) }}>
                 {PHOTOS.map((p, i) => (
                   <div key={p.name} style={{
-                    display: "flex", alignItems: "center", gap: 7,
-                    padding: "5px 7px", borderRadius: 8,
+                    display: "flex", alignItems: "center", gap: u(7),
+                    padding: `${u(5)} ${u(7)}`, borderRadius: u(8),
                     background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    border: `${u(1)} solid rgba(255,255,255,0.08)`,
                     animation: step === 3 ? `slideIn 0.4s ease ${0.2 + i * 0.18}s backwards` : undefined,
                   }}>
                     <div style={{
-                      width: 18, height: 18, borderRadius: 5,
+                      width: u(18), height: u(18), borderRadius: u(5),
                       background: "linear-gradient(135deg,#DC2626,#D97706)",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 9, flexShrink: 0,
+                      fontSize: u(9), flexShrink: 0,
                     }}>📷</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 10.5, fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
-                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.55)" }}>{p.price}</div>
+                    <div style={{ flex: 1, minWidth: u(0) }}>
+                      <div style={{ fontSize: u(10.5), fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
+                      <div style={{ fontSize: u(9), color: "rgba(255,255,255,0.55)" }}>{p.price}</div>
                     </div>
                     <div style={{
-                      fontSize: 9, fontWeight: 700,
+                      fontSize: u(9), fontWeight: 700,
                       color: p.color,
                       background: "rgba(34,197,94,0.15)",
-                      padding: "2px 6px", borderRadius: 99,
+                      padding: `${u(2)} ${u(6)}`, borderRadius: 99,
                       flexShrink: 0,
                     }}>{p.match}%</div>
                   </div>
@@ -1603,31 +1615,31 @@ function AgentAIPreview() {
           </div>
         )}
         {showA2Typing && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
             {aiAvatar}
-            <div style={{ ...aiBubble, padding: "9px 13px", display: "flex", gap: 4, alignItems: "center" }}>
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            <div style={{ ...aiBubble, padding: `${u(9)} ${u(13)}`, display: "flex", gap: u(4), alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
             </div>
           </div>
         )}
         {showA2 && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-start", animation: step === 7 ? "slideIn 0.32s ease" : undefined }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-start", animation: step === 7 ? "slideIn 0.32s ease" : undefined }}>
             {aiAvatar}
-            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: u(6) }}>
               <span>
                 Le <span style={{ color: "#fbbf24", fontWeight: 700 }}>photographe</span> est sous-représenté 📊 Je propose <span style={{ color: "#22c55e", fontWeight: 700 }}>3 000 Dh</span> au lieu de <span style={{ textDecoration: "line-through", opacity: 0.6 }}>1 500 Dh</span>, et baisser <span style={{ color: "#fbbf24", fontWeight: 700 }}>Lieu</span> à <span style={{ color: "#22c55e", fontWeight: 700 }}>18 000 Dh</span>.
               </span>
               {/* Mini répartition budget */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: u(3) }}>
                 {BUDGET_AFTER.map((b, i) => {
                   const pct = (b.amount / BUDGET_TOTAL_AFTER) * 100
                   return (
                     <div key={b.cat} style={{
                       animation: step === 7 ? `slideIn 0.4s ease ${0.3 + i * 0.12}s backwards` : undefined,
                     }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "rgba(255,255,255,0.7)", marginBottom: 2 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: u(9), color: "rgba(255,255,255,0.7)", marginBottom: u(2) }}>
                         <span style={{ fontWeight: b.changed ? 700 : 500, color: b.changed ? "#22c55e" : "rgba(255,255,255,0.7)" }}>
                           {b.cat} {b.changed && "✓"}
                         </span>
@@ -1635,7 +1647,7 @@ function AgentAIPreview() {
                           {b.amount.toLocaleString("fr-FR")} Dh
                         </span>
                       </div>
-                      <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                      <div style={{ height: u(5), borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
                         <div style={{
                           height: "100%", width: `${pct}%`,
                           background: b.color,
@@ -1658,43 +1670,43 @@ function AgentAIPreview() {
           </div>
         )}
         {showA3Typing && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-end", animation: "slideIn 0.32s ease" }}>
             {aiAvatar}
-            <div style={{ ...aiBubble, padding: "9px 13px", display: "flex", gap: 4, alignItems: "center" }}>
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
-              <div className="typing-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
+            <div style={{ ...aiBubble, padding: `${u(9)} ${u(13)}`, display: "flex", gap: u(4), alignItems: "center" }}>
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "150ms" }} />
+              <div className="typing-dot" style={{ width: u(6), height: u(6), borderRadius: "50%", background: "rgba(255,255,255,0.6)", animationDelay: "300ms" }} />
             </div>
           </div>
         )}
         {showA3 && (
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 5, alignItems: "flex-start", animation: step === 11 ? "slideIn 0.32s ease" : undefined }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: u(5), alignItems: "flex-start", animation: step === 11 ? "slideIn 0.32s ease" : undefined }}>
             {aiAvatar}
-            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ ...aiBubble, display: "flex", flexDirection: "column", gap: u(6) }}>
               <span>
                 J&apos;aime beaucoup le <span style={{ color: "#F5E6D3", fontWeight: 700 }}>Beige crème</span>. À ta place je rajouterais une touche de <span style={{ color: "#C1713A", fontWeight: 700 }}>Terracotta</span> ou de <span style={{ color: "#556B2F", fontWeight: 700 }}>Vert olive</span> 🎨
               </span>
               {/* Swatches */}
-              <div style={{ display: "flex", gap: 5 }}>
+              <div style={{ display: "flex", gap: u(5) }}>
                 {[
                   { name: "Beige", color: "#F5E6D3" },
                   { name: "Terracotta", color: "#C1713A" },
                   { name: "Vert olive", color: "#556B2F" },
                 ].map((s, i) => (
                   <div key={s.name} style={{
-                    display: "flex", alignItems: "center", gap: 4,
-                    padding: "3px 7px", borderRadius: 99,
+                    display: "flex", alignItems: "center", gap: u(4),
+                    padding: `${u(3)} ${u(7)}`, borderRadius: 99,
                     background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    border: `${u(1)} solid rgba(255,255,255,0.08)`,
                     animation: step === 11 ? `slideIn 0.4s ease ${0.25 + i * 0.13}s backwards` : undefined,
                   }}>
                     <div style={{
-                      width: 10, height: 10, borderRadius: "50%",
+                      width: u(10), height: u(10), borderRadius: "50%",
                       background: s.color,
-                      border: "1px solid rgba(255,255,255,0.15)",
+                      border: `${u(1)} solid rgba(255,255,255,0.15)`,
                       flexShrink: 0,
                     }} />
-                    <span style={{ fontSize: 9, color: "#fff", fontWeight: 500 }}>{s.name}</span>
+                    <span style={{ fontSize: u(9), color: "#fff", fontWeight: 500 }}>{s.name}</span>
                   </div>
                 ))}
               </div>
@@ -1705,18 +1717,18 @@ function AgentAIPreview() {
 
       {/* INPUT bar */}
       <div style={{
-        padding: "10px 12px",
-        borderTop: "1px solid rgba(255,255,255,0.08)",
+        padding: `${u(10)} ${u(12)}`,
+        borderTop: `${u(1)} solid rgba(255,255,255,0.08)`,
         background: "rgba(255,255,255,0.03)",
-        display: "flex", alignItems: "center", gap: 9,
+        display: "flex", alignItems: "center", gap: u(9),
         flexShrink: 0,
       }}>
         <div style={{
-          flex: 1, minHeight: 34, padding: "8px 14px",
+          flex: 1, minHeight: u(34), padding: `${u(8)} ${u(14)}`,
           background: "rgba(255,255,255,0.06)",
           border: `1.5px solid ${showCursor ? "rgba(147,51,234,0.5)" : "rgba(255,255,255,0.1)"}`,
           borderRadius: 99,
-          fontSize: 12, color: inputText ? "#fff" : "rgba(255,255,255,0.4)",
+          fontSize: u(12), color: inputText ? "#fff" : "rgba(255,255,255,0.4)",
           fontFamily: fontMomento, fontWeight: 500,
           display: "flex", alignItems: "center",
           boxShadow: showCursor ? "0 0 0 3px rgba(147,51,234,0.15)" : "none",
@@ -1725,19 +1737,19 @@ function AgentAIPreview() {
         }}>
           {inputText || (showCursor ? "" : "Demande à Layali…")}
           {showCursor && (
-            <span style={{ color: "#fff", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>
+            <span style={{ color: "#fff", marginLeft: u(1), animation: "rsvpBlink 0.8s infinite" }}>|</span>
           )}
         </div>
         <button style={{
-          width: 34, height: 34, borderRadius: "50%",
+          width: u(34), height: u(34), borderRadius: "50%",
           background: "linear-gradient(135deg,#E11D48,#9333EA)",
           color: "#fff", border: "none",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 17, fontWeight: 700,
+          fontSize: u(17), fontWeight: 700,
           flexShrink: 0,
           transform: (step === 1 || step === 5 || step === 9) ? "scale(0.88)" : "scale(1)",
           transition: "transform 0.2s",
-          boxShadow: "0 2px 10px rgba(147,51,234,0.45)",
+          boxShadow: `0 ${u(2)} ${u(10)} rgba(147,51,234,0.45)`,
           cursor: "pointer",
         }}>↑</button>
       </div>
@@ -1747,6 +1759,9 @@ function AgentAIPreview() {
 
 // ── 6. Budget — donut SVG fidèle + zoom sur ajout dépense ──────────────────
 function BudgetPreview() {
+  // Helper cqw : référence 635px (calibré comme RsvpPreview).
+  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+
   // 8 steps : 0 wide-shot donut cascade, 1 zoom-in bouton +, 2 form ouvert,
   // 3 typing montant, 4 clic Valider, 5 zoom-out, 6 nouvelle slice + toast, 7 pause
   const step = useAnimLoop([3500, 1300, 1500, 2500, 1000, 1000, 2700, 1500])
@@ -1815,40 +1830,40 @@ function BudgetPreview() {
   return (
     <div style={{
       flex: 1, display: "flex", flexDirection: "column",
-      minHeight: 0, overflow: "hidden",
-      background: "#0E0F12", borderRadius: 8,
+      minHeight: u(0), overflow: "hidden",
+      background: "#0E0F12", borderRadius: u(8),
       fontFamily: fontMomento,
       position: "relative",
     }}>
       {/* HEADER */}
       <div style={{
-        padding: "10px 13px",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
-        display: "flex", alignItems: "center", gap: 9,
+        padding: `${u(10)} ${u(13)}`,
+        borderBottom: `${u(1)} solid rgba(255,255,255,0.08)`,
+        display: "flex", alignItems: "center", gap: u(9),
         flexShrink: 0,
       }}>
-        <span style={{ fontSize: 18 }}>💰</span>
+        <span style={{ fontSize: u(18) }}>💰</span>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>Budget</div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>Yasmine & Yazid · 17 nov 2025</div>
+          <div style={{ fontSize: u(14), fontWeight: 700, color: "#fff" }}>Budget</div>
+          <div style={{ fontSize: u(10), color: "rgba(255,255,255,0.4)" }}>Yasmine & Yazid · 17 nov 2025</div>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontVariantNumeric: "tabular-nums" }}>
-            {spent.toLocaleString("fr-FR")} <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 10 }}>/ 100 000 Dhs</span>
+          <div style={{ fontSize: u(13), fontWeight: 700, color: "#fff", fontVariantNumeric: "tabular-nums" }}>
+            {spent.toLocaleString("fr-FR")} <span style={{ color: "rgba(255,255,255,0.4)", fontSize: u(10) }}>/ 100 000 Dhs</span>
           </div>
         </div>
       </div>
 
       {/* MAIN content — 2 layouts empilés (wide-shot vs form-zoom) crossfade */}
       <div style={{
-        flex: "1 1 0", minHeight: 0,
+        flex: "1 1 0", minHeight: u(0),
         position: "relative",
         overflow: "hidden",
       }}>
         {/* WIDE-SHOT : donut + legend + bouton */}
         <div style={{
           position: "absolute", inset: 0,
-          padding: "10px 12px",
+          padding: `${u(10)} ${u(12)}`,
           display: "flex", flexDirection: "column",
           opacity: showWide ? 1 : 0,
           transform: showWide ? "scale(1)" : "scale(0.5)",
@@ -1857,11 +1872,11 @@ function BudgetPreview() {
         }}>
           <div style={{
             flex: 1, display: "flex", alignItems: "center",
-            justifyContent: "center", gap: 14,
+            justifyContent: "center", gap: u(14),
           }}>
             {/* Donut */}
-            <div style={{ position: "relative", width: 150, height: 150, flexShrink: 0 }}>
-              <svg width="150" height="150" viewBox="0 0 150 150" style={{ transform: "rotate(-90deg)" }}>
+            <div style={{ position: "relative", width: u(150), height: u(150), flexShrink: 0 }}>
+              <svg width="100%" height="100%" viewBox="0 0 150 150" style={{ transform: "rotate(-90deg)" }}>
                 <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="18" />
                 {slicesWithGeo.map((s, i) => (
                   <circle
@@ -1888,36 +1903,36 @@ function BudgetPreview() {
                 alignItems: "center", justifyContent: "center",
               }}>
                 <div style={{
-                  fontSize: 26, fontWeight: 800,
+                  fontSize: u(26), fontWeight: 800,
                   fontVariantNumeric: "tabular-nums",
                   lineHeight: 1,
                   transition: "color 0.5s",
                   color: step === 6 ? "#22c55e" : "#fff",
                 }}>{pct}%</div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 4, letterSpacing: "0.06em" }}>dépensé</div>
+                <div style={{ fontSize: u(10), color: "rgba(255,255,255,0.45)", marginTop: u(4), letterSpacing: "0.06em" }}>dépensé</div>
               </div>
             </div>
             {/* Legend (centré vertical avec donut) */}
             <div style={{
               display: "flex", flexDirection: "column",
-              gap: 6, minWidth: 0,
+              gap: u(6), minWidth: u(0),
               justifyContent: "center",
             }}>
               {slices.slice(0, 5).map((s, i) => (
                 <div key={s.name} style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  fontSize: 13,
+                  display: "flex", alignItems: "center", gap: u(8),
+                  fontSize: u(13),
                   animation: step === 0 ? `slideIn 0.4s ease ${i * 0.18 + 0.3}s backwards` :
                               (s.isNew && step === 6 ? "slideIn 0.5s ease 0.3s backwards" : undefined),
                 }}>
                   <div style={{
-                    width: 13, height: 13, borderRadius: 4,
+                    width: u(13), height: u(13), borderRadius: u(4),
                     background: s.color,
                     flexShrink: 0,
                     boxShadow: s.isNew && step >= 6 ? `0 0 10px ${s.color}` : "none",
                   }} />
                   <span style={{ flex: 1, color: s.isNew && step >= 6 ? "#22c55e" : "rgba(255,255,255,0.85)", fontWeight: s.isNew ? 700 : 600, whiteSpace: "nowrap" }}>{s.name}</span>
-                  <span style={{ color: "rgba(255,255,255,0.6)", fontVariantNumeric: "tabular-nums", fontSize: 12, fontWeight: 600, marginLeft: 4 }}>
+                  <span style={{ color: "rgba(255,255,255,0.6)", fontVariantNumeric: "tabular-nums", fontSize: u(12), fontWeight: 600, marginLeft: u(4) }}>
                     {s.value.toLocaleString("fr-FR")}
                   </span>
                 </div>
@@ -1927,18 +1942,18 @@ function BudgetPreview() {
           {/* Bouton "+ Ajouter dépense" centré horizontal */}
           <div style={{ display: "flex", justifyContent: "center", flexShrink: 0 }}>
             <button style={{
-              padding: "12px 22px", borderRadius: 11,
+              padding: `${u(12)} ${u(22)}`, borderRadius: u(11),
               background: step === 1 ? "linear-gradient(135deg,#E11D48,#9333EA)" : "linear-gradient(135deg,rgba(225,29,72,0.18),rgba(147,51,234,0.18))",
               border: `1.5px solid ${step === 1 ? "transparent" : "rgba(225,29,72,0.4)"}`,
-              color: "#fff", fontSize: 14, fontWeight: 700,
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+              color: "#fff", fontSize: u(14), fontWeight: 700,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: u(7),
               cursor: "pointer",
               transform: step === 1 ? "scale(0.95)" : "scale(1)",
               boxShadow: step === 1 ? "0 0 0 5px rgba(225,29,72,0.25), 0 4px 16px rgba(225,29,72,0.55)" : "0 2px 8px rgba(225,29,72,0.2)",
               transition: "all 0.3s ease",
               fontFamily: fontMomento,
             }}>
-              <span style={{ fontSize: 17, lineHeight: 1 }}>＋</span> Ajouter une dépense
+              <span style={{ fontSize: u(17), lineHeight: 1 }}>＋</span> Ajouter une dépense
             </button>
           </div>
         </div>
@@ -1946,7 +1961,7 @@ function BudgetPreview() {
         {/* FORM-ZOOM : prend tout l'espace centré */}
         <div style={{
           position: "absolute", inset: 0,
-          padding: "10px 12px",
+          padding: `${u(10)} ${u(12)}`,
           display: "flex", alignItems: "center", justifyContent: "center",
           opacity: showForm ? 1 : 0,
           transform: showForm ? "scale(1)" : "scale(1.4)",
@@ -1954,52 +1969,52 @@ function BudgetPreview() {
           pointerEvents: showForm ? "auto" : "none",
         }}>
           <div style={{
-            width: "100%", maxWidth: 280,
+            width: "100%", maxWidth: u(280),
             background: "rgba(255,255,255,0.06)",
-            border: "1.5px solid rgba(255,255,255,0.12)",
-            borderRadius: 14,
+            border: `${u(1.5)} solid rgba(255,255,255,0.12)`,
+            borderRadius: u(14),
             padding: 14,
-            display: "flex", flexDirection: "column", gap: 10,
+            display: "flex", flexDirection: "column", gap: u(10),
           }}>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, textAlign: "center" }}>
+            <div style={{ fontSize: u(11), color: "rgba(255,255,255,0.55)", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, textAlign: "center" }}>
               Nouvelle dépense
             </div>
             {/* Catégorie pré-remplie */}
             <div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", marginBottom: 4, fontWeight: 600 }}>Catégorie</div>
+              <div style={{ fontSize: u(11), color: "rgba(255,255,255,0.55)", marginBottom: u(4), fontWeight: 600 }}>Catégorie</div>
               <div style={{
                 background: "rgba(212,115,58,0.2)",
-                border: "1.5px solid rgba(212,115,58,0.55)",
-                borderRadius: 8, padding: "8px 12px",
-                fontSize: 14, color: "#fff", fontWeight: 600,
-                display: "flex", alignItems: "center", gap: 9,
+                border: `${u(1.5)} solid rgba(212,115,58,0.55)`,
+                borderRadius: u(8), padding: `${u(8)} ${u(12)}`,
+                fontSize: u(14), color: "#fff", fontWeight: 600,
+                display: "flex", alignItems: "center", gap: u(9),
               }}>
-                <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#D4733A" }} />
+                <div style={{ width: u(11), height: u(11), borderRadius: "50%", background: "#D4733A" }} />
                 Traiteur
               </div>
             </div>
             {/* Montant */}
             <div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", marginBottom: 4, fontWeight: 600 }}>Montant</div>
+              <div style={{ fontSize: u(11), color: "rgba(255,255,255,0.55)", marginBottom: u(4), fontWeight: 600 }}>Montant</div>
               <div style={{
                 background: "rgba(255,255,255,0.06)",
                 border: `2px solid ${step === 3 ? "rgba(225,29,72,0.55)" : "rgba(255,255,255,0.12)"}`,
-                borderRadius: 8, padding: "8px 12px",
-                fontSize: 17, color: "#fff", fontWeight: 700,
-                minHeight: 28, display: "flex", alignItems: "center",
+                borderRadius: u(8), padding: `${u(8)} ${u(12)}`,
+                fontSize: u(17), color: "#fff", fontWeight: 700,
+                minHeight: u(28), display: "flex", alignItems: "center",
                 boxShadow: step === 3 ? "0 0 0 4px rgba(225,29,72,0.15)" : "none",
                 transition: "border 0.2s, box-shadow 0.2s",
                 fontVariantNumeric: "tabular-nums",
               }}>
                 {typedAmount || (step !== 3 ? <span style={{ color: "rgba(255,255,255,0.3)", fontWeight: 400 }}>0</span> : null)}
-                <span style={{ color: "rgba(255,255,255,0.5)", marginLeft: 7, fontSize: 13, fontWeight: 500 }}>Dhs</span>
+                <span style={{ color: "rgba(255,255,255,0.5)", marginLeft: u(7), fontSize: u(13), fontWeight: 500 }}>Dhs</span>
               </div>
             </div>
             {/* Bouton Valider */}
             <button style={{
-              padding: "11px 0", borderRadius: 9,
+              padding: `${u(11)} 0`, borderRadius: u(9),
               background: step === 4 ? "#22c55e" : "linear-gradient(135deg,#E11D48,#9333EA)",
-              color: "#fff", fontSize: 15, fontWeight: 700, border: "none",
+              color: "#fff", fontSize: u(15), fontWeight: 700, border: "none",
               cursor: "pointer", textAlign: "center",
               transform: step === 4 ? "scale(0.94)" : "scale(1)",
               boxShadow: step === 4 ? "0 0 0 5px rgba(34,197,94,0.3), 0 4px 14px rgba(34,197,94,0.55)" : "0 3px 10px rgba(225,29,72,0.35)",
@@ -2015,17 +2030,17 @@ function BudgetPreview() {
       {/* Toast (wrapper centré pour éviter conflit translateX/animation) */}
       {showToast && (
         <div style={{
-          position: "absolute", top: 60, left: 0, right: 0,
+          position: "absolute", top: u(60), left: u(0), right: u(0),
           display: "flex", justifyContent: "center",
           zIndex: 5, pointerEvents: "none",
         }}>
           <div style={{
             background: "linear-gradient(135deg,#22c55e,#16a34a)",
-            color: "#fff", padding: "8px 16px",
+            color: "#fff", padding: `${u(8)} ${u(16)}`,
             borderRadius: 99,
-            fontSize: 13, fontWeight: 700,
-            display: "flex", alignItems: "center", gap: 6,
-            boxShadow: "0 6px 20px rgba(34,197,94,0.55)",
+            fontSize: u(13), fontWeight: 700,
+            display: "flex", alignItems: "center", gap: u(6),
+            boxShadow: `0 ${u(6)} ${u(20)} rgba(34,197,94,0.55)`,
             animation: "slideIn 0.45s ease",
             fontFamily: fontMomento,
             whiteSpace: "nowrap",
