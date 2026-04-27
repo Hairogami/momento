@@ -41,6 +41,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   if (!session?.user?.id) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
+  const userId = session.user.id
 
   const { id } = await params
 
@@ -49,11 +50,11 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     where: { id },
     select: { id: true, userId: true, budget: true },
   })
-  if (!planner || planner.userId !== session.user.id) {
+  if (!planner || planner.userId !== userId) {
     return Response.json({ error: "Not found" }, { status: 404 })
   }
 
-  const [guests, budgetItems, bookings] = await Promise.all([
+  const [guests, budgetItems, bookings, conversations] = await Promise.all([
     prisma.guest.findMany({
       where: { plannerId: id },
       select: {
@@ -76,7 +77,25 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       },
       orderBy: { createdAt: "desc" },
     }),
+    // Conversations du user (dont messages les plus récents) pour widget Messages
+    prisma.conversation.findMany({
+      where: { clientId: userId, plannerId: id },
+      include: {
+        messages: { orderBy: { createdAt: "desc" }, take: 1 },
+      },
+      orderBy: { updatedAt: "desc" },
+      take: 10,
+    }),
   ])
+
+  // Enrich conversations avec vendor info (1 batch). Vendor n'a pas de champ
+  // image direct ; le widget gère le fallback côté front si avatar vide.
+  const slugs = [...new Set(conversations.map(c => c.vendorSlug))]
+  const vendors = slugs.length > 0 ? await prisma.vendor.findMany({
+    where: { slug: { in: slugs } },
+    select: { slug: true, name: true },
+  }) : []
+  const vendorMap = new Map(vendors.map(v => [v.slug, v]))
 
   // Aggrégation budget par catégorie pour le widget Budget
   const byCategory = new Map<string, { allocated: number; spent: number }>()
@@ -99,6 +118,34 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const guestCount = guests.length
   const guestConfirmed = guests.filter(g => g.rsvp === "yes").length
 
+  // Liste plate des dépenses (raw) pour DepensesRecentesWidget — chaque ligne
+  // garde son label spécifique, contrairement au budgetItems agrégé qui groupe
+  // tout par catégorie pour le donut.
+  const recentExpenses = budgetItems
+    .filter(b => (b.actual ?? 0) > 0)
+    .map(b => ({
+      label: b.label,
+      allocated: b.estimated,
+      spent: b.actual ?? 0,
+      color: colorFor(b.category),
+      icon: iconFor(b.category),
+    }))
+
+  // Format Message[] pour le widget — avatar vide géré par fallback côté widget
+  const messages = conversations.map(c => {
+    const vendor = vendorMap.get(c.vendorSlug)
+    const last = c.messages[0]
+    const isUnread = last && !last.read && last.senderId !== userId
+    return {
+      id: c.id,
+      vendor: vendor?.name ?? c.vendorSlug,
+      lastMsg: last?.content?.slice(0, 80) ?? "",
+      time: (last?.createdAt ?? c.updatedAt).toISOString(),
+      unread: isUnread ? 1 : 0,
+      avatar: "",
+    }
+  })
+
   return Response.json({
     guests: guests.map(g => ({
       id: g.id,
@@ -109,6 +156,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       city: g.city ?? undefined,
     })),
     budgetItems: budgetWidgetItems,
+    recentExpenses,
     bookings: bookings.map(b => ({
       id: b.id,
       vendor: b.vendor?.name ?? "—",
@@ -116,6 +164,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       status: (b.status === "confirmed" ? "CONFIRMED" : b.status === "cancelled" ? "INQUIRY" : "PENDING") as "CONFIRMED" | "PENDING" | "INQUIRY",
       amount: b.totalPrice ?? undefined,
     })),
+    messages,
     edata: {
       budget: planner.budget ?? 0,
       budgetSpent: totalSpent,

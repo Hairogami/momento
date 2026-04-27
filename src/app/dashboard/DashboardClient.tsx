@@ -1247,7 +1247,9 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
   const [dashboardData, setDashboardData] = useState<{
     guests: Guest[]
     budgetItems: BudgetItem[]
+    recentExpenses: BudgetItem[]
     bookings: Booking[]
+    messages: Message[]
     edata: { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }
   } | null>(null)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
@@ -1293,8 +1295,9 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
   const edata    = dashboardData?.edata ?? { budget: 0, budgetSpent: 0, guestCount: 0, guestConfirmed: 0 }
   const tasks    = tasksByEvent[activeEventId]  ?? []
   const bookings: Booking[]    = dashboardData?.bookings ?? []
-  const messages: Message[]    = []
+  const messages: Message[]    = dashboardData?.messages ?? []
   const budgetItems: BudgetItem[] = dashboardData?.budgetItems ?? []
+  const recentExpenses: BudgetItem[] = dashboardData?.recentExpenses ?? []
   const guests: Guest[]        = dashboardData?.guests ?? []
 
   const daysLeft       = event ? Math.max(0, Math.ceil((new Date(event.date).getTime() - Date.now()) / 86400000)) : 0
@@ -1586,7 +1589,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
           case "plantable":    return <PlanTableWidget guests={guests} />
           case "rsvplive":     return <RSVPLiveWidget guests={guests} />
           case "regimes":      return <RegimesWidget guests={guests} />
-          case "depenses":     return <DepensesRecentesWidget budgetItems={budgetItems} />
+          case "depenses":     return <DepensesRecentesWidget budgetItems={recentExpenses} />
           case "epargne":      return <ObjectifEpargneWidget budget={edata.budget} budgetSpent={edata.budgetSpent} eventDate={event.date} />
           case "repartition":  return <RepartitionBudgetWidget budgetItems={budgetItems} />
           case "contrats":     return <ContratsWidget bookings={bookings} />
