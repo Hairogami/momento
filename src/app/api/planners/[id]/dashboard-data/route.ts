@@ -54,7 +54,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     return Response.json({ error: "Not found" }, { status: 404 })
   }
 
-  const [guests, budgetItems, bookings, conversations, tasks] = await Promise.all([
+  const [guests, budgetItems, bookings, conversations, tasks, eventSiteWithRsvps] = await Promise.all([
     prisma.guest.findMany({
       where: { plannerId: id },
       select: {
@@ -92,6 +92,19 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
         id: true, title: true, completed: true, category: true, dueDate: true,
       },
       orderBy: { createdAt: "asc" },
+    }),
+    prisma.eventSite.findUnique({
+      where: { plannerId: id },
+      select: {
+        id: true,
+        viewCount: true,
+        rsvps: {
+          select: {
+            id: true, guestName: true, attendingMain: true, plusOneName: true, createdAt: true,
+          },
+          orderBy: { createdAt: "desc" },
+        },
+      },
     }),
   ])
 
@@ -137,6 +150,22 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       color: colorFor(b.category),
       icon: iconFor(b.category),
     }))
+
+  // Stats RSVP du site événement (page /guests + widget Invités dashboard)
+  const rsvps = eventSiteWithRsvps?.rsvps ?? []
+  const rsvpConfirmed = rsvps.filter(r => r.attendingMain).length
+  const rsvpPlusOnes = rsvps.filter(r => r.attendingMain && r.plusOneName && r.plusOneName.trim().length > 0).length
+  const rsvpStats = {
+    viewCount: eventSiteWithRsvps?.viewCount ?? 0,
+    confirmed: rsvpConfirmed,
+    plusOnes: rsvpPlusOnes,
+    total: rsvps.length,
+    recent: rsvps.slice(0, 3).map(r => ({
+      id: r.id,
+      guestName: r.guestName,
+      attendingMain: r.attendingMain,
+    })),
+  }
 
   // Format Message[] pour le widget — avatar vide géré par fallback côté widget
   const messages = conversations.map(c => {
@@ -186,5 +215,6 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       guestCount,
       guestConfirmed,
     },
+    rsvpStats,
   })
 }

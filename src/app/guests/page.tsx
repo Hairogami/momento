@@ -1,195 +1,225 @@
 "use client"
-import { useState, useEffect } from "react"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
+
+import { useEffect, useState } from "react"
 import AntNav from "@/components/clone/AntNav"
 import { usePlanners } from "@/hooks/usePlanners"
+import { StatsBar } from "@/components/guests/StatsBar"
+import { ViewToggle, type GuestsView } from "@/components/guests/ViewToggle"
+import { RsvpCard, type Rsvp } from "@/components/guests/RsvpCard"
+import { RsvpTable } from "@/components/guests/RsvpTable"
+import { GuestCard, type Guest } from "@/components/guests/GuestCard"
+import { GuestTable } from "@/components/guests/GuestTable"
+import { GuestsExportMenu } from "@/components/guests/GuestsExportMenu"
+import { LinkRsvpDialog } from "@/components/guests/LinkRsvpDialog"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
-type Status = "confirmé" | "en attente" | "décliné"
-type Guest = { id: string; name: string; table: string; status: Status; phone?: string }
-
-const STATUS_COLORS: Record<Status, string> = {
-  "confirmé":   "#22c55e",
-  "en attente": "#f59e0b",
-  "décliné":    "#ef4444",
+type RsvpsPayload = {
+  rsvps: Rsvp[]
+  stats: { viewCount: number; confirmed: number; plusOnes: number; total: number }
 }
 
+export default function GuestsPage() {
+  const { activeEventId } = usePlanners()
+  const [guests, setGuests] = useState<Guest[]>([])
+  const [rsvpData, setRsvpData] = useState<RsvpsPayload | null>(null)
+  const [view, setView] = useState<GuestsView>("cards")
+  const [linkingRsvpId, setLinkingRsvpId] = useState<string | null>(null)
+  const [newGuestName, setNewGuestName] = useState("")
 
-const FILTERS: { label: string; value: Status | "tous" }[] = [
-  { label: "Tous",       value: "tous"       },
-  { label: "Confirmés",  value: "confirmé"   },
-  { label: "En attente", value: "en attente" },
-  { label: "Déclinés",   value: "décliné"    },
-]
+  useEffect(() => {
+    try {
+      const v = localStorage.getItem("momento_guests_view")
+      if (v === "cards" || v === "list") setView(v)
+    } catch {}
+  }, [])
 
-export default function CloneGuestsPage() {
-  const { events, activeEventId, setActiveEventId } = usePlanners()
-  const [guestsByEvent, setGuestsByEvent] = useState<Record<string, Guest[]>>({})
-  const [filter, setFilter]   = useState<Status | "tous">("tous")
-  const [search, setSearch]   = useState("")
-  const [showAdd, setShowAdd] = useState(false)
-  const [newName, setNewName]   = useState("")
-  const [newTable, setNewTable] = useState("Table 1")
-  const [newPhone, setNewPhone] = useState("")
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    try { localStorage.setItem("momento_guests_view", view) } catch {}
+  }, [view])
 
+  useEffect(() => {
+    if (!activeEventId) return
+    Promise.all([
+      fetch(`/api/guests?plannerId=${activeEventId}`).then((r) => r.ok ? r.json() : []).catch(() => []),
+      fetch(`/api/planners/${activeEventId}/rsvps`).then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([gs, rs]: [unknown, RsvpsPayload | null]) => {
+      if (Array.isArray(gs)) {
+        setGuests(gs.map((g: Record<string, unknown>) => ({
+          id: String(g.id),
+          name: String(g.name),
+          rsvp: String(g.rsvp ?? "pending"),
+          notes: typeof g.notes === "string" ? g.notes : null,
+          linkedRsvpId: typeof g.linkedRsvpId === "string" ? g.linkedRsvpId : null,
+        })))
+      }
+      if (rs && Array.isArray(rs.rsvps)) {
+        setRsvpData({
+          rsvps: rs.rsvps.map((r) => ({
+            ...r,
+            createdAt: typeof r.createdAt === "string" ? r.createdAt : new Date(r.createdAt as unknown as string).toISOString(),
+          })),
+          stats: rs.stats,
+        })
+      }
+    })
+  }, [activeEventId])
 
-  function handleEventChange(id: string) {
-    setActiveEventId(id)
-    try { localStorage.setItem("momento_active_event", id) } catch {}
+  async function addGuest() {
+    if (!newGuestName.trim() || !activeEventId) return
+    const name = newGuestName.trim()
+    setNewGuestName("")
+    const r = await fetch("/api/guests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, plannerId: activeEventId }),
+    })
+    if (r.ok) {
+      const created = await r.json()
+      setGuests((g) => [{
+        id: created.id,
+        name: created.name,
+        rsvp: created.rsvp ?? "pending",
+        notes: created.notes ?? null,
+        linkedRsvpId: created.linkedRsvpId ?? null,
+      }, ...g])
+    }
   }
 
-  const activeEvent = events.find(e => e.id === activeEventId) ?? events[0] ?? { id: "", name: "", date: "", color: "#E11D48" }
-  const guests = guestsByEvent[activeEventId] ?? []
-
-  const confirmed  = guests.filter(g => g.status === "confirmé").length
-  const pending    = guests.filter(g => g.status === "en attente").length
-  const declined   = guests.filter(g => g.status === "décliné").length
-
-  const filtered = guests
-    .filter(g => filter === "tous" || g.status === filter)
-    .filter(g => !search || g.name.toLowerCase().includes(search.toLowerCase()) || g.table.toLowerCase().includes(search.toLowerCase()))
-
-  function setStatus(id: string, status: Status) {
-    setGuestsByEvent(prev => ({
-      ...prev,
-      [activeEventId]: (prev[activeEventId] ?? []).map(g => g.id === id ? { ...g, status } : g),
-    }))
+  async function patchGuest(id: string, patch: Partial<Guest>) {
+    setGuests((g) => g.map((x) => (x.id === id ? { ...x, ...patch } : x)))
+    await fetch(`/api/guests/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    }).catch(() => {})
   }
 
-  function addGuest() {
-    const name = newName.trim()
-    if (!name) return
-    const guest: Guest = { id: `g${Date.now()}`, name, table: newTable, status: "en attente", phone: newPhone.trim() || undefined }
-    setGuestsByEvent(prev => ({ ...prev, [activeEventId]: [...(prev[activeEventId] ?? []), guest] }))
-    setNewName(""); setNewPhone(""); setShowAdd(false)
+  async function deleteGuest(id: string) {
+    setGuests((g) => g.filter((x) => x.id !== id))
+    await fetch(`/api/guests/${id}`, { method: "DELETE" }).catch(() => {})
   }
 
-  const tables = [...new Set(guests.map(g => g.table))].sort()
+  async function patchRsvp(id: string, patch: Partial<Rsvp>) {
+    setRsvpData((d) => d ? { ...d, rsvps: d.rsvps.map((r) => r.id === id ? { ...r, ...patch } : r) } : d)
+    await fetch(`/api/rsvps/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    }).catch(() => {})
+  }
+
+  async function deleteRsvp(id: string) {
+    setRsvpData((d) => d ? { ...d, rsvps: d.rsvps.filter((r) => r.id !== id) } : d)
+    await fetch(`/api/rsvps/${id}`, { method: "DELETE" }).catch(() => {})
+  }
+
+  async function linkRsvp(guestId: string, rsvpId: string) {
+    await fetch(`/api/guests/${guestId}/link`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rsvpId }),
+    }).catch(() => {})
+    setGuests((g) => g.map((x) => (x.id === guestId ? { ...x, linkedRsvpId: rsvpId } : x)))
+  }
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={handleEventChange} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
+    <div style={{ minHeight: "100vh", background: "var(--dash-bg, #f7f7fb)" }}>
+      <style jsx global>{`
+        @media print {
+          nav, .no-print { display: none !important; }
+          body { background: white !important; }
+          article, table, tr { break-inside: avoid; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { border: 1px solid #ccc; padding: 6px; }
+        }
+      `}</style>
 
-      <main className="pb-20 md:pb-0" style={{ flex: 1, padding: "clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px) 64px", overflowY: "auto" }}>
-        {/* Header */}
-        <div style={{ marginBottom: 28, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <h1 style={{ fontSize: "clamp(1.3rem,2vw,1.7rem)", fontWeight: 800, color: "var(--dash-text,#121317)", letterSpacing: "-0.03em", margin: "0 0 4px" }}>Invités</h1>
-            <p style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: activeEvent.color, display: "inline-block" }} />
-              {activeEvent.name}
-            </p>
+      <div className="lg:hidden no-print"><AntNav /></div>
+
+      <main className="pb-20 md:pb-0" style={{
+        maxWidth: 1280, margin: "0 auto",
+        padding: "clamp(16px, 4vw, 32px)",
+        display: "flex", flexDirection: "column", gap: "var(--space-5)",
+      }}>
+        <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "var(--space-3)", flexWrap: "wrap" }}>
+          <h1 style={{ fontSize: "var(--text-2xl)", fontWeight: 700, color: "var(--dash-text-1)", margin: 0 }}>
+            Mes invités
+          </h1>
+          <div className="no-print" style={{ display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
+            <ViewToggle value={view} onChange={setView} />
+            {activeEventId && <GuestsExportMenu plannerId={activeEventId} />}
           </div>
-          <button
-            onClick={() => setShowAdd(v => !v)}
-            style={{ padding: "10px 20px", borderRadius: 99, background: G, color: "#fff", border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
-          >+ Ajouter un invité</button>
-        </div>
+        </header>
 
-        {/* Add form */}
-        {showAdd && (
-          <div style={{ marginBottom: 24, padding: "20px 24px", background: "var(--dash-surface,#fff)", borderRadius: 16, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 16px" }}>Nouvel invité</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
-              <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Nom complet…" onKeyDown={e => e.key === "Enter" && addGuest()} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
-              <input value={newPhone} onChange={e => setNewPhone(e.target.value)} placeholder="Téléphone (opt.)" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
-              <select value={newTable} onChange={e => setNewTable(e.target.value)} style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-bg,#f7f7fb)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }}>
-                {[...tables, "Nouvelle table"].map(t => <option key={t}>{t}</option>)}
-              </select>
+        <StatsBar
+          viewCount={rsvpData?.stats.viewCount ?? 0}
+          confirmed={rsvpData?.stats.confirmed ?? 0}
+          plusOnes={rsvpData?.stats.plusOnes ?? 0}
+        />
+
+        <section>
+          <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 600, color: "var(--dash-text-1)", marginBottom: "var(--space-3)" }}>
+            Mes invités ({guests.length})
+          </h2>
+          <div className="no-print" style={{ display: "flex", gap: "var(--space-2)", marginBottom: "var(--space-3)" }}>
+            <input
+              value={newGuestName}
+              onChange={(e) => setNewGuestName(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") addGuest() }}
+              placeholder="Ajouter un invité (ex: Tante Fatima)"
+              style={{
+                flex: 1, padding: "var(--space-2) var(--space-3)", fontSize: "var(--text-sm)",
+                background: "var(--dash-surface-2)", color: "var(--dash-text-1)",
+                border: "1px solid var(--dash-border)", borderRadius: "var(--radius-md)",
+              }}
+            />
+            <button type="button" onClick={addGuest} style={{
+              padding: "var(--space-2) var(--space-4)", background: G,
+              color: "#fff", border: "none", borderRadius: "var(--radius-md)",
+              cursor: "pointer", fontSize: "var(--text-sm)", fontWeight: 600,
+            }}>+ Ajouter</button>
+          </div>
+          {view === "cards" ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "var(--space-3)" }}>
+              {guests.map((g) => <GuestCard key={g.id} guest={g} onPatch={patchGuest} onDelete={deleteGuest} />)}
+              {guests.length === 0 && (
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3)" }}>Aucun invité. Ajoute-en un ci-dessus.</p>
+              )}
             </div>
-            <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
-              <button onClick={addGuest} style={{ padding: "9px 20px", borderRadius: 10, background: G, color: "#fff", border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Ajouter</button>
-              <button onClick={() => { setShowAdd(false); setNewName(""); setNewPhone("") }} style={{ padding: "9px 16px", borderRadius: 10, background: "var(--dash-faint,rgba(183,191,217,0.07))", color: "var(--dash-text-2,#6a6a71)", border: "none", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>Annuler</button>
-            </div>
-          </div>
-        )}
-
-        {/* Stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 14, marginBottom: 28 }}>
-          {[
-            { label: "Total",      value: guests.length, color: "var(--dash-text,#121317)" },
-            { label: "Confirmés",  value: confirmed,     color: "#22c55e" },
-            { label: "En attente", value: pending,       color: "#f59e0b" },
-            { label: "Déclinés",   value: declined,      color: "#ef4444" },
-          ].map(s => (
-            <div key={s.label} style={{ background: "var(--dash-surface,#fff)", borderRadius: 16, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", padding: "16px 20px" }}>
-              <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 6px" }}>{s.label}</p>
-              <p style={{ fontSize: 26, fontWeight: 800, color: s.color, margin: 0, letterSpacing: "-0.04em" }}>{s.value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Filters + search */}
-        <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
-          <div style={{ display: "flex", gap: 4 }}>
-            {FILTERS.map(f => (
-              <button
-                key={f.value}
-                onClick={() => setFilter(f.value)}
-                style={{
-                  padding: "7px 14px", borderRadius: 99, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, fontFamily: "inherit",
-                  background: filter === f.value ? G : "var(--dash-faint,rgba(183,191,217,0.07))",
-                  color: filter === f.value ? "#fff" : "var(--dash-text-2,#6a6a71)",
-                }}
-              >{f.label}</button>
-            ))}
-          </div>
-          <input
-            value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Rechercher un invité ou une table…"
-            style={{ flex: 1, minWidth: 200, padding: "8px 14px", borderRadius: 10, border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", background: "var(--dash-surface,#fff)", color: "var(--dash-text,#121317)", fontSize: 13, fontFamily: "inherit", outline: "none" }}
-          />
-        </div>
-
-        {/* Guest list */}
-        <div style={{ overflowX: "auto" }}>
-        <div style={{ background: "var(--dash-surface,#fff)", borderRadius: 18, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))", boxShadow: "0 2px 12px rgba(0,0,0,0.05)", overflow: "hidden", minWidth: 480 }}>
-          <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.10))", display: "flex", gap: 12 }}>
-            <span style={{ flex: 1, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }}>Nom</span>
-            <span style={{ width: 80, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }}>Table</span>
-            <span style={{ width: 120, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }}>Téléphone</span>
-            <span style={{ width: 110, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--dash-text-3,#9a9aaa)" }}>Statut</span>
-          </div>
-
-          {filtered.length === 0 && (
-            <p style={{ fontSize: 13, color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "32px 0" }}>Aucun invité trouvé</p>
+          ) : (
+            <GuestTable guests={guests} onPatch={patchGuest} onDelete={deleteGuest} />
           )}
+        </section>
 
-          {filtered.map((g, i) => (
-            <div key={g.id} style={{
-              display: "flex", alignItems: "center", gap: 12, padding: "13px 20px",
-              borderBottom: i < filtered.length - 1 ? "1px solid var(--dash-divider,rgba(183,191,217,0.10))" : "none",
-            }}>
-              {/* Avatar */}
-              <div style={{ width: 32, height: 32, borderRadius: "50%", background: `${activeEvent.color}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: activeEvent.color, flexShrink: 0 }}>
-                {g.name.charAt(0).toUpperCase()}
-              </div>
-              <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.name}</span>
-              <span style={{ width: 80, fontSize: 12, color: "var(--dash-text-2,#6a6a71)" }}>{g.table}</span>
-              <span style={{ width: 120, fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>{g.phone ?? "—"}</span>
-              <div style={{ width: 110, flexShrink: 0 }}>
-                <select
-                  value={g.status}
-                  onChange={e => setStatus(g.id, e.target.value as Status)}
-                  style={{
-                    width: "100%", padding: "5px 8px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 600, fontFamily: "inherit",
-                    background: `${STATUS_COLORS[g.status]}18`, color: STATUS_COLORS[g.status], outline: "none",
-                  }}
-                >
-                  <option value="confirmé">✓ Confirmé</option>
-                  <option value="en attente">⏳ En attente</option>
-                  <option value="décliné">✗ Décliné</option>
-                </select>
-              </div>
+        <section>
+          <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 600, color: "var(--dash-text-1)", marginBottom: "var(--space-3)" }}>
+            Réponses du site ({rsvpData?.stats.total ?? 0})
+          </h2>
+          {view === "cards" ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "var(--space-3)" }}>
+              {(rsvpData?.rsvps ?? []).map((r) => (
+                <RsvpCard key={r.id} rsvp={r} onPatch={patchRsvp} onLink={(id) => setLinkingRsvpId(id)} />
+              ))}
+              {(!rsvpData || rsvpData.rsvps.length === 0) && (
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3)" }}>Aucune réponse pour le moment.</p>
+              )}
             </div>
-          ))}
-        </div>
-        </div>
+          ) : (
+            <RsvpTable rsvps={rsvpData?.rsvps ?? []} onPatch={patchRsvp} onDelete={deleteRsvp} />
+          )}
+        </section>
       </main>
+
+      {linkingRsvpId && (
+        <LinkRsvpDialog
+          rsvpId={linkingRsvpId}
+          guests={guests}
+          onLink={linkRsvp}
+          onClose={() => setLinkingRsvpId(null)}
+        />
+      )}
     </div>
   )
 }
