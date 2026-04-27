@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { IS_DEV } from "@/lib/devMock"
+import { captureError } from "@/lib/observability"
 
 export async function GET() {
   const session = await auth()
@@ -13,7 +14,7 @@ export async function GET() {
       prisma.planner.findMany({
         where: { userId: session.user.id },
         select: { createdAt: true, weddingDate: true, steps: { select: { status: true } } },
-      }).catch((e: unknown) => { console.error("[stats] DB error:", e); return [] }),
+      }).catch((e: unknown) => { captureError(e, { route: "/api/stats", source: "db" }); return [] }),
       prisma.stepVendor.findMany({
         where: { step: { planner: { userId: session.user.id } } },
         select: { vendor: { select: { category: true } } },

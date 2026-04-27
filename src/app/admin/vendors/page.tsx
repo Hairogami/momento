@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { captureError } from "@/lib/observability"
 
 type AdminVendor = {
   id:        string
@@ -106,7 +107,7 @@ export default function AdminVendorsPage() {
       setActionMsg(`✅ ${v.name} créé`)
       router.push(`/admin/vendors/${v.slug}`)
     } catch (e) {
-      console.error("[admin createVendor]", e)
+      captureError(e, { component: "AdminVendorsPage", action: "createVendor" })
       setActionMsg("❌ Erreur réseau")
     } finally {
       setCreating(false)
@@ -126,7 +127,7 @@ export default function AdminVendorsPage() {
       setActionMsg(`✅ ${v.name} supprimé`)
       load()
     } catch (e) {
-      console.error("[admin deleteVendor]", e)
+      captureError(e, { component: "AdminVendorsPage", action: "deleteVendor" })
       setActionMsg("❌ Erreur réseau")
     }
   }

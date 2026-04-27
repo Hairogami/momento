@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 import { requireVerifiedEmail } from "@/lib/auth-guards"
+import { captureError } from "@/lib/observability"
 
 /** Strip dangerous HTML/script content from user input, including encoded entities */
 function sanitize(str: string): string {
@@ -156,7 +157,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message, conversationId: convId }, { status: 201 })
   } catch (err) {
-    console.error("Messages POST error:", err)
+    captureError(err, { route: "/api/messages", method: "POST" })
     return NextResponse.json({ error: "Une erreur est survenue." }, { status: 500 })
   }
 }

@@ -9,6 +9,7 @@
  */
 
 import type { NextRequest } from "next/server"
+import { captureError } from "@/lib/observability"
 
 // ── In-memory fallback ────────────────────────────────────────────────────────
 
@@ -105,11 +106,12 @@ export async function rateLimitAsync(
     if (upstash) return upstash(key, limit, windowMs)
     return rateLimitMemory(key, limit, windowMs)
   } catch (e) {
-    console.error(
-      "[rateLimit] CRITICAL: rate limiter unavailable, failing open. " +
-      "Configure UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN in Vercel env.",
-      e instanceof Error ? e.message : e
-    )
+    captureError(e, {
+      source: "rateLimit",
+      severity: "CRITICAL",
+      message: "rate limiter unavailable, failing open. Configure UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN in Vercel env.",
+      key,
+    })
     return { ok: true }
   }
 }

@@ -6,6 +6,7 @@ import { vendorSlugExists } from "@/lib/vendorQueries"
 import { randomBytes } from "crypto"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 import { z } from "zod"
+import { captureError } from "@/lib/observability"
 
 const MagicLinkSchema = z.object({
   slug:      z.string().min(1).max(100),
@@ -131,7 +132,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, step: "verify_email" }, { status: 201 })
   } catch (err) {
-    console.error("[/api/vendor/claim]", err)
+    captureError(err, { route: "/api/vendor/claim" })
     return NextResponse.json({ error: "Erreur serveur." }, { status: 500 })
   }
 }

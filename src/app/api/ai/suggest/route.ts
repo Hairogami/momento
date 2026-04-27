@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { rateLimitAsync } from "@/lib/rateLimiter"
+import { captureError } from "@/lib/observability"
 import { NextRequest } from "next/server"
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -87,7 +88,7 @@ Return ONLY valid JSON, no markdown, no extra text.`
       return Response.json({ vendors: [] })
     }
   } catch (err) {
-    console.error("[ai/suggest] Anthropic error:", err)
+    captureError(err, { route: "/api/ai/suggest", source: "anthropic" })
     return Response.json({ vendors: [] })
   }
 }

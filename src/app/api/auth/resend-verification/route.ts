@@ -3,6 +3,7 @@ import { randomUUID } from "crypto"
 import { prisma } from "@/lib/prisma"
 import { sendVerificationEmail } from "@/lib/email"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
+import { captureError } from "@/lib/observability"
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,13 +50,13 @@ export async function POST(req: NextRequest) {
       try {
         await sendVerificationEmail({ to: user.email, firstName: user.firstName, token })
       } catch (e) {
-        console.error("Resend email error:", e)
+        captureError(e, { route: "/api/auth/resend-verification", step: "email-send" })
       }
     }
 
     return NextResponse.json({ message: "E-mail de vérification renvoyé si le compte existe." })
   } catch (err) {
-    console.error("Resend verification error:", err)
+    captureError(err, { route: "/api/auth/resend-verification" })
     return NextResponse.json({ message: "E-mail de vérification renvoyé si le compte existe." })
   }
 }

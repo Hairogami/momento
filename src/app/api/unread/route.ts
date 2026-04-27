@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { getUserId } from "@/lib/api-auth"
+import { captureError } from "@/lib/observability"
 
 export async function GET() {
   const userId = await getUserId()
@@ -34,7 +35,7 @@ export async function GET() {
       })
     }
   } catch (err) {
-    if (process.env.NODE_ENV !== "production") console.error("[unread]", err)
+    captureError(err, { route: "/api/unread" })
   }
 
   return NextResponse.json({ messages, notifications: 0 })

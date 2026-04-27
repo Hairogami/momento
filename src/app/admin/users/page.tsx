@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import { captureError, captureMessage } from "@/lib/observability"
 
 type AdminUser = {
   id:             string
@@ -103,13 +104,13 @@ export default function AdminUsersPage() {
       if (!r.ok) {
         const d = await r.json().catch(() => ({}))
         const msg = d.error ?? `HTTP ${r.status}`
-        console.error("[admin patchUser] failed", { id, body, status: r.status, msg })
+        captureMessage("[admin patchUser] failed", "error", { component: "AdminUsersPage", id, body, status: r.status, msg })
         setActionMsg(`❌ ${msg}`)
         return false
       }
       return true
     } catch (e) {
-      console.error("[admin patchUser] network error", e)
+      captureError(e, { component: "AdminUsersPage", action: "patchUser" })
       setActionMsg(`❌ Erreur réseau`)
       return false
     }

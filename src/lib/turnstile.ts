@@ -14,6 +14,8 @@
  * et un rollout progressif sans casser le signup.
  */
 
+import { captureError } from "@/lib/observability"
+
 const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
 
 export const turnstileEnabled = (): boolean => !!process.env.TURNSTILE_SECRET_KEY
@@ -39,7 +41,7 @@ export async function verifyTurnstile(token: string | undefined | null, ip?: str
     const data = await r.json() as { success?: boolean }
     return !!data.success
   } catch (e) {
-    console.error("[turnstile] verify error:", e)
+    captureError(e, { source: "turnstile.verify" })
     return false
   }
 }

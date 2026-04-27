@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { captureError } from "@/lib/observability"
 
 export async function PATCH(req: NextRequest) {
   const session = await auth()
@@ -85,7 +86,7 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json({ user })
   } catch (err) {
-    console.error("[update-profile]", err)
+    captureError(err, { route: "/api/auth/update-profile" })
     return NextResponse.json({ error: "Erreur serveur." }, { status: 500 })
   }
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
+import { captureError } from "@/lib/observability"
 
 const C = {
   bg:         "#0b0b10",
@@ -47,7 +48,7 @@ export default function VendorMediaManager({ slug, initial }: { slug: string; in
           const m = await uploadOne(f)
           uploaded.push(m)
         } catch (e) {
-          console.error("[media upload]", e)
+          captureError(e, { component: "VendorMediaManager", action: "upload" })
           setMsg(`❌ ${f.name} — ${e instanceof Error ? e.message : "erreur"}`)
         }
       }
@@ -73,7 +74,7 @@ export default function VendorMediaManager({ slug, initial }: { slug: string; in
       setItems(prev => prev.filter(x => x.id !== m.id))
       setMsg("✅ Photo supprimée")
     } catch (e) {
-      console.error("[media delete]", e)
+      captureError(e, { component: "VendorMediaManager", action: "delete" })
       setMsg("❌ Erreur réseau")
     }
   }

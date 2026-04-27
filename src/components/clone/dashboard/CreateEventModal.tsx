@@ -3,6 +3,7 @@ import { useMemo, useState } from "react"
 import { invalidatePlannerCache } from "@/hooks/usePlanners"
 import { EVENT_FAMILIES, getEventSubType, getBudgetMedian, type EventFamilyId, type EventSubType } from "@/lib/eventTypes"
 import { MOROCCAN_CITIES } from "@/lib/cities"
+import { captureError, captureMessage } from "@/lib/observability"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -145,14 +146,14 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
       const data = await res.json().catch(() => ({} as { error?: string }))
       if (!res.ok) {
         setError(data.error ?? `Erreur ${res.status} lors de la création.`)
-        console.error("[CreateEventModal] POST /api/planners failed:", res.status, data)
+        captureMessage("[CreateEventModal] POST /api/planners failed", "error", { component: "CreateEventModal", status: res.status, data })
         return
       }
       invalidatePlannerCache()
       reset()
       onCreated(data)
     } catch (err) {
-      console.error("[CreateEventModal] network error:", err)
+      captureError(err, { component: "CreateEventModal", action: "createPlanner" })
       setError("Erreur réseau. Vérifiez votre connexion et réessayez.")
     } finally {
       setLoading(false)

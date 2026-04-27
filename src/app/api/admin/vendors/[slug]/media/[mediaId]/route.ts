@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { logAdminAction } from "@/lib/adminAudit"
+import { captureError } from "@/lib/observability"
 
 /**
  * DELETE /api/admin/vendors/[slug]/media/[mediaId]
@@ -34,7 +35,7 @@ export async function DELETE(
   // Best-effort blob delete (si le delete blob échoue, on supprime quand même la row)
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try { await del(media.url) } catch (e) {
-      console.error("[admin vendor media delete] blob del failed", e)
+      captureError(e, { route: "/api/admin/vendors/[slug]/media/[mediaId]", step: "blob-del", slug, mediaId })
     }
   }
 

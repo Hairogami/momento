@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
+import { captureError } from "@/lib/observability"
 
 export async function POST(req: NextRequest) {
   try {
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Mot de passe réinitialisé." })
   } catch (err) {
-    console.error("Reset password error:", err)
+    captureError(err, { route: "/api/auth/reset-password" })
     return NextResponse.json({ error: "Une erreur est survenue." }, { status: 500 })
   }
 }
