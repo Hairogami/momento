@@ -28,14 +28,31 @@
       "mcp__plugin_prisma_Prisma-Local:*",
       "mcp__plugin_vercel_vercel:*",
       "mcp__plugin_claude-mem_mcp-search:*",
-      "Bash(python scripts/fluid_type.py src/app/explore/ExploreClient.tsx src/components/AirbnbSearchBar.tsx src/components/ExploreNav.tsx)"
+      "Bash(python scripts/fluid_type.py src/app/explore/ExploreClient.tsx src/components/AirbnbSearchBar.tsx src/components/ExploreNav.tsx)",
+      "Bash(grep -v \"\\\\.d\\\\.ts$\")",
+      "Bash(grep -n \"fill=\\\\\"#\\\\|stroke=\\\\\"#\\\\|#fff\\\\b\\\\|#f[a-f0-9]\\\\{5\\\\}\\\\b\\\\|#1\\\\{0,1\\\\}21317\\\\|#fafbfd\\\\|#f4f5f9\" \"c:/Users/moume/Documents/momento/src/components/vendor/home/VendorHome.tsx\")",
+      "Bash(grep -v \"#E11D48\\\\|#9333EA\\\\|#fff\\\\b\\\\|#FFF\\\\b\\\\|#000\\\\b\\\\|#22c55e\\\\|#ef4444\\\\|#f59e0b\\\\|^.*//.*$\\\\|^.*\\\\*.*$\")",
+      "Bash(xargs wc *)",
+      "mcp__plugin_claude-mem_mcp-search__smart_outline",
+      "mcp__plugin_claude-mem_mcp-search__search",
+      "mcp__plugin_claude-mem_mcp-search__get_observations",
+      "mcp__plugin_claude-mem_mcp-search__timeline",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__click",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__press_key",
+      "Bash(openssl rand *)"
     ],
     "deny": [
       "Bash(rm -rf:*)",
       "Bash(git push --force:*)",
       "Bash(git reset --hard:*)"
     ],
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "bypassPermissions",
+    "additionalDirectories": [
+      "C:\\Users\\moume\\Documents\\momento\\src\\app\\api\\notifications\\[id]",
+      "c:\\Users\\moume\\Documents\\momento\\.claude"
+    ]
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
