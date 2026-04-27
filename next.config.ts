@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
     // CSP base (réutilisée partout sauf pour /evt/preview qui doit s'iframe)
     const baseCspParts = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+      `script-src 'self' 'unsafe-inline' ${process.env.NODE_ENV === "development" ? "'unsafe-eval'" : ""} https://challenges.cloudflare.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: blob: https://images.unsplash.com https://avatars.githubusercontent.com https://cdn.discordapp.com https://lh3.googleusercontent.com https://platform-lookaside.fbsbx.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com https://cdnjs.cloudflare.com https://i.zafaf.net https://*.public.blob.vercel-storage.com",

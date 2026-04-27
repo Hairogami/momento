@@ -17,9 +17,16 @@ export function invalidatePlanCache() {
   _cacheUserId = null
 }
 
+// DEV bypass — en local on est toujours "max" pour bosser sans paywall
+const DEV_BYPASS = process.env.NODE_ENV === "development"
+
 export function usePlan(): { plan: UserPlan; loading: boolean; refresh: () => void } {
   const user = useSessionUser()
   const userId = user?.id ?? null
+
+  if (DEV_BYPASS) {
+    return { plan: "max", loading: false, refresh: () => {} }
+  }
 
   const cacheValid =
     _cache !== null &&
