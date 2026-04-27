@@ -346,11 +346,11 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             />
             {/* Note */}
             <PillSelect
-              value={String(ratingMin)}
+              value={ratingMin > 0 ? String(ratingMin) : ""}
               onChange={v => setRatingMin(Number(v))}
-              placeholder="Note"
+              placeholder="Notes"
               options={[
-                { value: "0",   label: "Notes" },
+                { value: "0",   label: "Toutes" },
                 { value: "4",   label: "★ 4+" },
                 { value: "4.5", label: "★ 4.5+" },
                 { value: "5",   label: "★ 5 seulement" },
