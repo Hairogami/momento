@@ -149,23 +149,24 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Espace client</div>
           </div>
         </Link>
-        {/* Dark mode toggle pill — toujours visible */}
+        {/* Dark mode toggle — icône explicite (cohérent avec AntNav site public) */}
         <button
           onClick={toggleDark}
           title={darkMode ? "Mode clair" : "Mode sombre"}
+          aria-label={darkMode ? "Activer le mode clair" : "Activer le mode sombre"}
           style={{
-            width: 34, height: 20, borderRadius: 99, border: "none", cursor: "pointer",
-            background: darkMode ? "var(--g1,#E11D48)" : "var(--dash-faint-2, rgba(183,191,217,0.25))",
-            position: "relative", flexShrink: 0, transition: "background 0.2s", padding: 0,
+            width: 32, height: 32, borderRadius: "50%",
+            border: "1px solid var(--dash-border, rgba(183,191,217,0.22))",
+            background: "var(--dash-faint, rgba(183,191,217,0.07))",
+            cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            flexShrink: 0,
+            transition: "background 0.15s, border-color 0.15s",
           }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2, rgba(183,191,217,0.18))" }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint, rgba(183,191,217,0.07))" }}
         >
-          <div style={{
-            position: "absolute", top: 3, left: darkMode ? 17 : 3,
-            width: 14, height: 14, borderRadius: "50%",
-            background: "#fff",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-            transition: "left 0.2s",
-          }} />
+          <GIcon name={darkMode ? "light_mode" : "dark_mode"} size={16} color="var(--dash-text-2, #6a6a71)" />
         </button>
       </div>
 
