@@ -1,20 +1,27 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { IS_DEV, MOCK_DASHBOARD_DATA } from "@/lib/devMock"
+import { IS_DEV } from "@/lib/devMock"
+import { requireSession } from "@/lib/devAuth"
 
 export async function GET() {
+  // En IS_DEV: utiliser requireSession (mêmes mocks que les autres routes)
+  // pour récupérer le VRAI userId. Renvoyer MOCK_DASHBOARD_DATA.unreadCount
+  // hardcodé cassait la décrémentation du badge à l'ouverture d'une conv.
+  let userId: string
   if (IS_DEV) {
-    return NextResponse.json({ messages: MOCK_DASHBOARD_DATA.unreadCount, notifications: 0 })
+    const s = await requireSession()
+    userId = s.user.id
+  } else {
+    const session = await auth()
+    if (!session?.user?.id) return NextResponse.json({ messages: 0, notifications: 0 })
+    userId = session.user.id
   }
-
-  const session = await auth()
-  if (!session?.user?.id) return NextResponse.json({ messages: 0, notifications: 0 })
 
   let messages = 0;
   try {
     const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: userId },
       select: { role: true, vendorSlug: true },
     })
     if (user?.role === "vendor") {
@@ -24,7 +31,7 @@ export async function GET() {
         messages = await prisma.message.count({
           where: {
             read: false,
-            senderId: { not: session.user.id },
+            senderId: { not: userId },
             conversation: { vendorSlug: user.vendorSlug },
           },
         })
@@ -33,8 +40,8 @@ export async function GET() {
       messages = await prisma.message.count({
         where: {
           read: false,
-          senderId: { not: session.user.id },
-          conversation: { clientId: session.user.id },
+          senderId: { not: userId },
+          conversation: { clientId: userId },
         },
       })
     }
