@@ -1244,6 +1244,12 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
   const [eventsLoaded,  setEventsLoaded]  = useState(true)
   const [activePlannerDetails, setActivePlannerDetails] = useState<{ eventType?: string | null; eventSubType?: string | null; categories?: string[]; budget?: number | null; budgetBreakdown?: unknown; guestCount?: number | null } | null>(null)
   const [plannerVendors, setPlannerVendors] = useState<Array<{ vendor?: { category?: string | null } | null; status?: string | null }>>([])
+  const [dashboardData, setDashboardData] = useState<{
+    guests: Guest[]
+    budgetItems: BudgetItem[]
+    bookings: Booking[]
+    edata: { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }
+  } | null>(null)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [widgetRows,    setWidgetRows]    = useState<Record<string, number>>({})
@@ -1284,28 +1290,30 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
   const draggingId = useRef<string | null>(null)
 
   const event    = events.find(e => e.id === activeEventId) ?? events[0] ?? null
-  const edata    = { budget: 0, budgetSpent: 0, guestCount: 0, guestConfirmed: 0 }
+  const edata    = dashboardData?.edata ?? { budget: 0, budgetSpent: 0, guestCount: 0, guestConfirmed: 0 }
   const tasks    = tasksByEvent[activeEventId]  ?? []
-  const bookings: Booking[]    = []
+  const bookings: Booking[]    = dashboardData?.bookings ?? []
   const messages: Message[]    = []
-  const budgetItems: BudgetItem[] = []
-  const guests: Guest[]        = []
+  const budgetItems: BudgetItem[] = dashboardData?.budgetItems ?? []
+  const guests: Guest[]        = dashboardData?.guests ?? []
 
   const daysLeft       = event ? Math.max(0, Math.ceil((new Date(event.date).getTime() - Date.now()) / 86400000)) : 0
   const completedTasks = tasks.filter(t => t.done).length
   const taskPct        = tasks.length > 0 ? completedTasks / tasks.length : 0
   const totalUnread    = messages.reduce((s, m) => s + m.unread, 0)
 
-  // ── Active planner details + vendors for progress banner ───────────────────
+  // ── Active planner details + vendors + dashboard data ─────────────────────
   useEffect(() => {
-    if (!activeEventId) { setActivePlannerDetails(null); setPlannerVendors([]); return }
+    if (!activeEventId) { setActivePlannerDetails(null); setPlannerVendors([]); setDashboardData(null); return }
     Promise.all([
       fetch(`/api/planners/${activeEventId}`),
       fetch(`/api/planners/${activeEventId}/vendors`),
+      fetch(`/api/planners/${activeEventId}/dashboard-data`),
     ])
-      .then(async ([pr, vr]) => {
+      .then(async ([pr, vr, dr]) => {
         if (pr.ok) setActivePlannerDetails(await pr.json())
         if (vr.ok) setPlannerVendors(await vr.json())
+        if (dr.ok) setDashboardData(await dr.json())
       })
       .catch(() => {})
   }, [activeEventId])
@@ -1319,11 +1327,12 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
     : 0
 
   // ── localStorage hydration ────────────────────────────────────────────────
-  // activeEventId fallback si localStorage vide et events disponibles
+  // activeEventId fallback si localStorage vide OU si l'ID en cache pointe vers
+  // un planner que le user ne possède plus (orphelin) → on prend le premier valide.
   useEffect(() => {
-    if (!activeEventId && events.length > 0) {
-      setActiveEventId(events[0].id)
-    }
+    if (events.length === 0) return
+    const valid = events.some(e => e.id === activeEventId)
+    if (!valid) setActiveEventId(events[0].id)
   }, [events, activeEventId])
 
   // ── Chargement des réglages per-event (palette + widgets) ─────────────────
