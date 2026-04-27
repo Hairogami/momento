@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
+import { requireVerifiedEmail } from "@/lib/auth-guards"
 
 /** Strip dangerous HTML/script content from user input, including encoded entities */
 function sanitize(str: string): string {
@@ -89,6 +90,10 @@ export async function POST(req: NextRequest) {
 
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
+
+  // Hard-gate : un user non vérifié ne peut pas envoyer/initier de message (anti-spam)
+  const verifyGate = await requireVerifiedEmail(session.user.id)
+  if (verifyGate) return verifyGate
 
   let body: unknown
   try { body = await req.json() } catch {
