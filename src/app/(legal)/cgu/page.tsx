@@ -309,8 +309,24 @@ export default function CguPage() {
         </ul>
         <p>
           La responsabilité de Momento ne pourra en aucun cas être engagée pour un dommage indirect (perte de chance, perte commerciale, atteinte à l&apos;image).
-          {/* TODO_DECISION: plafond contractuel — décision business. À insérer (ex. "limitée à 12 mois d'abonnement effectivement versés") après validation par avocat. */}
         </p>
+        <div role="alert" style={{
+          margin: "var(--space-md, 16px) 0",
+          padding: "var(--space-md, 16px)",
+          border: "2px dashed #f59e0b",
+          borderRadius: 12,
+          background: "rgba(245, 158, 11, 0.08)",
+          color: "var(--dash-text, #121317)",
+          fontSize: "var(--text-sm, 14px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+        }}>
+          <strong style={{ color: "#f59e0b", fontSize: "var(--text-sm, 14px)" }}>
+            ⚠️ À compléter avant lancement
+          </strong>
+          <span>Insérer le plafond contractuel de responsabilité (décision business à valider par l&apos;avocat — ex. « limitée à 12 mois d&apos;abonnement effectivement versés »).</span>
+        </div>
         <p>
           Le Client et le Prestataire s&apos;engagent à tenter une résolution amiable de leurs différends.
           Momento peut, à titre de facilitateur non-obligatoire, proposer une assistance de médiation, sans que cela fasse naître une quelconque obligation ou responsabilité à sa charge.
@@ -378,8 +394,24 @@ export default function CguPage() {
         <p>
           Tout litige relatif à la formation, l&apos;interprétation ou l&apos;exécution des présentes CGU sera soumis, à défaut de résolution amiable,
           aux tribunaux compétents de la ville du siège social de Momento.
-          {/* TODO_DECISION: préciser la ville (par défaut Casablanca, à confirmer selon siège social effectif de la SARL). */}
         </p>
+        <div role="alert" style={{
+          margin: "var(--space-md, 16px) 0",
+          padding: "var(--space-md, 16px)",
+          border: "2px dashed #f59e0b",
+          borderRadius: 12,
+          background: "rgba(245, 158, 11, 0.08)",
+          color: "var(--dash-text, #121317)",
+          fontSize: "var(--text-sm, 14px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+        }}>
+          <strong style={{ color: "#f59e0b", fontSize: "var(--text-sm, 14px)" }}>
+            ⚠️ À compléter avant lancement
+          </strong>
+          <span>Préciser la ville des tribunaux compétents (Casablanca par défaut, à confirmer selon le siège social effectif de la société).</span>
+        </div>
         <p>
           Les Clients consommateurs conservent leurs droits d&apos;action devant les juridictions de leur domicile conformément à la loi 31-08.
         </p>
