@@ -34,7 +34,7 @@ const SITE_PALETTES = [
 
 function SiteEventPreview() {
   // Helper cqw : référence 635px (calibré comme RsvpPreview).
-  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+  const u = (n: number): string => `calc(${n} * min(0.1574cqw, 0.20cqh))`
 
   // 0:wide terra · 1:zoom-in sidebar · 2:rose · 3:noir-rouge · 4:zoom-out · 5:pause
   const step = useAnimLoop([3500, 1500, 2000, 2000, 2500, 1500])
@@ -274,7 +274,7 @@ function SiteEventPreview() {
 // ── 2. Prestataires — VendorSwipe (flow user : modal → photos → détail → swipe → liste) ─
 function VendorSwipePreview() {
   // Helper cqw : référence 635px (calibré comme RsvpPreview).
-  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+  const u = (n: number): string => `calc(${n} * min(0.1574cqw, 0.20cqh))`
 
   // Flow exact (durées tunées 12-15s/cycle):
   // 0:modal Image2 · 1:Image1 · 2:Image2 retour · 3:ouvre détail · 4:détail · 5:ferme détail
@@ -722,7 +722,7 @@ function RsvpPreview() {
 
   // Helper cqw : référence 635px → form tient avec marge sous "Confirmer".
   // Augmente le divisor = contenu plus petit, plus d'air vertical.
-  const u = (n: number): string => `calc(${n} * 0.1574cqw)` // 100/635
+  const u = (n: number): string => `calc(${n} * min(0.1574cqw, 0.20cqh))` // 100/635
 
   const [typedName, setTypedName] = useState("")
   const [typedPlusOne, setTypedPlusOne] = useState("")
@@ -1189,7 +1189,7 @@ function RsvpPreview() {
 // ── 4. Messages — chat en temps réel ──────────────────────────────────────────
 function MessagesPreview() {
   // Helper cqw : référence 635px (calibré comme RsvpPreview).
-  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+  const u = (n: number): string => `calc(${n} * min(0.1574cqw, 0.20cqh))`
 
   // 9 steps : 0 typing msg1, 1 send, 2 vendor typing, 3 vendor msg1,
   // 4 typing msg2, 5 send, 6 vendor typing, 7 vendor msg2, 8 pause
@@ -1396,7 +1396,7 @@ function MessagesPreview() {
 // ── 5. Agent IA — assistant conseil ───────────────────────────────────────────
 function AgentAIPreview() {
   // Helper cqw : référence 635px (calibré comme RsvpPreview).
-  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+  const u = (n: number): string => `calc(${n} * min(0.1574cqw, 0.20cqh))`
 
   // 14 steps : 3 conversations enchaînées
   // Q1 (presta search) : 0 typing → 1 send → 2 IA dots → 3 réponse + cards
@@ -1760,7 +1760,7 @@ function AgentAIPreview() {
 // ── 6. Budget — donut SVG fidèle + zoom sur ajout dépense ──────────────────
 function BudgetPreview() {
   // Helper cqw : référence 635px (calibré comme RsvpPreview).
-  const u = (n: number): string => `calc(${n} * 0.1574cqw)`
+  const u = (n: number): string => `calc(${n} * min(0.1574cqw, 0.20cqh))`
 
   // 8 steps : 0 wide-shot donut cascade, 1 zoom-in bouton +, 2 form ouvert,
   // 3 typing montant, 4 clic Valider, 5 zoom-out, 6 nouvelle slice + toast, 7 pause
