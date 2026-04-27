@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useMemo, useRef } from "react"
 import { useSession } from "next-auth/react"
+import { useTheme } from "@/components/ThemeProvider"
 import AntNav from "@/components/clone/AntNav"
 import AntVendorCard from "@/components/clone/AntVendorCard"
 import SignupGateModal from "@/components/SignupGateModal"
@@ -162,45 +163,13 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   initialVendors: VendorListItem[]
   totalCount: number
 }) {
-  // Source de vérité unique : classe `dark` sur <html> (gérée par le script
-  // no-flash + ThemeProvider). ExploreClient lit depuis là plutôt que d'avoir
-  // son propre état parallèle désynchronisé.
-  const [dark, setDarkState] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true
-    return document.documentElement.classList.contains("dark")
-  })
-
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const html = document.documentElement
-    setDarkState(html.classList.contains("dark"))
-    const obs = new MutationObserver(() => {
-      const d = html.classList.contains("dark")
-      setDarkState(prev => (prev === d ? prev : d))
-    })
-    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
-    const onEvt = ((e: CustomEvent) => {
-      const d = e.detail?.dark
-      if (typeof d === "boolean") setDarkState(d)
-    }) as EventListener
-    window.addEventListener("momento-theme-change", onEvt)
-    return () => {
-      obs.disconnect()
-      window.removeEventListener("momento-theme-change", onEvt)
-    }
-  }, [])
-
-  // Wrapper local : un toggle dans ExploreClient doit appliquer partout
+  // Source unique : ThemeProvider. Le `setDark` historique est conservé pour
+  // compat avec le toggle UI plus bas — il délègue au provider.
+  const { resolved, setTheme } = useTheme()
+  const dark = resolved === "dark"
   const setDark = (next: boolean | ((prev: boolean) => boolean)) => {
     const value = typeof next === "function" ? next(dark) : next
-    setDarkState(value)
-    document.documentElement.classList.toggle("dark", value)
-    document.documentElement.classList.toggle("clone-dark", value)
-    try {
-      localStorage.setItem("momento_clone_dark_mode", JSON.stringify(value))
-      localStorage.setItem("momento_theme", value ? "dark" : "light")
-    } catch {}
-    window.dispatchEvent(new CustomEvent("momento-theme-change", { detail: { dark: value } }))
+    setTheme(value ? "dark" : "light")
   }
 
   const [search, setSearch]       = useState("")
@@ -252,6 +221,19 @@ export default function ExploreClient({ initialVendors, totalCount }: {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
+  // Esc closes any open modal/sheet (a11y — WCAG 2.1.2 No keyboard trap)
+  useEffect(() => {
+    if (!catModalOpen && !filtersModalOpen && !filtersOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return
+      if (filtersModalOpen) setFiltersModalOpen(false)
+      else if (catModalOpen) setCatModalOpen(false)
+      else if (filtersOpen) setFiltersOpen(false)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [catModalOpen, filtersModalOpen, filtersOpen])
+
   // Filter + sort
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim()
@@ -299,13 +281,18 @@ export default function ExploreClient({ initialVendors, totalCount }: {
         <div className="flex items-center gap-2" style={{ width: "100%", maxWidth: 680 }}>
           {/* Search input */}
           <div style={{ flex: 1, minWidth: 0, position: "relative" }}>
-            <span style={{
+            <label htmlFor="explore-search" className="sr-only">Rechercher un prestataire</label>
+            <span aria-hidden="true" style={{
               position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)",
               fontSize: "var(--text-base)", color: "var(--dash-text-3,#9a9aaa)", pointerEvents: "none",
               fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal",
             }}>search</span>
             <input
-              type="text"
+              id="explore-search"
+              name="search"
+              type="search"
+              role="searchbox"
+              aria-label="Rechercher un prestataire par nom, catégorie ou ville"
               placeholder="DJ, photographe, traiteur..."
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -370,7 +357,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             />
             {/* Clear */}
             {hasFilters && (
-              <button onClick={clearFilters} style={{
+              <button type="button" onClick={clearFilters} aria-label="Réinitialiser tous les filtres" title="Réinitialiser les filtres" style={{
                 height: 40, padding: "0 14px", borderRadius: 999,
                 border: "1px solid rgba(225,29,72,0.3)", background: "rgba(225,29,72,0.05)",
                 color: "#E11D48", fontSize: "var(--text-xs)", fontWeight: 500,
@@ -421,7 +408,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             )}
           </button>
           {/* Desktop: Scroll left */}
-          <button className="hidden md:flex items-center justify-center" onClick={() => catsRef.current?.scrollBy({ left: -200, behavior: "smooth" })} style={{
+          <button type="button" aria-label="Faire défiler les catégories vers la gauche" className="hidden md:flex items-center justify-center" onClick={() => catsRef.current?.scrollBy({ left: -200, behavior: "smooth" })} style={{
             flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
@@ -468,7 +455,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             })}
           </div>
           {/* Desktop: Scroll right */}
-          <button className="hidden md:flex items-center justify-center" onClick={() => catsRef.current?.scrollBy({ left: 200, behavior: "smooth" })} style={{
+          <button type="button" aria-label="Faire défiler les catégories vers la droite" className="hidden md:flex items-center justify-center" onClick={() => catsRef.current?.scrollBy({ left: 200, behavior: "smooth" })} style={{
             flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
@@ -478,7 +465,10 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           {/* ── Dark toggle + Filtres (groupés à droite) ── */}
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
             <button
+              type="button"
               onClick={() => setDark(d => !d)}
+              aria-label={dark ? "Activer le mode clair" : "Activer le mode sombre"}
+              aria-pressed={dark}
               style={{
                 width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
                 border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
@@ -489,7 +479,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               }}
               title={dark ? "Mode clair" : "Mode sombre"}
             >
-              <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", lineHeight: 1 }}>
+              <span aria-hidden="true" style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", lineHeight: 1 }}>
                 {dark ? "light_mode" : "dark_mode"}
               </span>
             </button>
@@ -615,8 +605,10 @@ export default function ExploreClient({ initialVendors, totalCount }: {
       </div>
 
       {/* ── Main content ── */}
-      <div
+      <main
+        id="main-content"
         className="mx-auto pb-20 md:pb-0"
+        aria-label={`Liste de prestataires (${filtered.length} résultats)`}
         style={{ maxWidth: 1400, padding: "40px 24px 64px" }}
       >
         {/* Grid */}
@@ -666,8 +658,8 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             )}
           </>
         ) : (
-          <div style={{ textAlign: "center", padding: "80px 20px" }}>
-            <p style={{ fontSize: "var(--text-3xl)", margin: "0 0 16px" }}>🔍</p>
+          <div role="status" aria-live="polite" style={{ textAlign: "center", padding: "80px 20px" }}>
+            <p aria-hidden="true" style={{ fontSize: "var(--text-3xl)", margin: "0 0 16px" }}>🔍</p>
             <h2 className="clone-heading" style={{ fontSize: "var(--text-md)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>
               Aucun prestataire trouvé
             </h2>
@@ -675,6 +667,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               Essayez de modifier vos filtres ou votre recherche
             </p>
             <button
+              type="button"
               onClick={clearFilters}
               style={{
                 marginTop: 24, padding: "10px 28px", borderRadius: 999,
@@ -688,7 +681,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             </button>
           </div>
         )}
-      </div>
+      </main>
 
       {/* Footer-like bar */}
       <div style={{
@@ -703,8 +696,8 @@ export default function ExploreClient({ initialVendors, totalCount }: {
 
       {/* ── Category picker bottom sheet (mobile) ── */}
       {catModalOpen && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "flex-end" }}>
-          <div onClick={() => setCatModalOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
+        <div role="dialog" aria-modal="true" aria-labelledby="cat-modal-title" style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "flex-end" }}>
+          <div onClick={() => setCatModalOpen(false)} aria-hidden="true" style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
           <div style={{
             position: "relative", width: "100%",
             background: "var(--dash-surface,#fff)",
@@ -714,8 +707,10 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Catégorie</h3>
+              <h3 id="cat-modal-title" style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Catégorie</h3>
               <button
+                type="button"
+                aria-label="Fermer la sélection de catégorie"
                 onClick={() => setCatModalOpen(false)}
                 style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: "var(--text-sm)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}
               >✕</button>
@@ -754,8 +749,8 @@ export default function ExploreClient({ initialVendors, totalCount }: {
 
       {/* ── Filters bottom sheet (mobile) ── */}
       {filtersModalOpen && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "flex-end" }}>
-          <div onClick={() => setFiltersModalOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
+        <div role="dialog" aria-modal="true" aria-labelledby="filters-modal-title" style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "flex-end" }}>
+          <div onClick={() => setFiltersModalOpen(false)} aria-hidden="true" style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
           <div style={{
             position: "relative", width: "100%",
             background: "var(--dash-surface,#fff)",
@@ -765,8 +760,8 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Filtres</h3>
-              <button onClick={() => setFiltersModalOpen(false)} style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: "var(--text-sm)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}>✕</button>
+              <h3 id="filters-modal-title" style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Filtres</h3>
+              <button type="button" aria-label="Fermer les filtres" onClick={() => setFiltersModalOpen(false)} style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: "var(--text-sm)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}>✕</button>
             </div>
 
             {/* Réseaux sociaux */}

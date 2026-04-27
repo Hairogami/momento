@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { sendPasswordResetEmail } from "@/lib/email"
 import { logAdminAction } from "@/lib/adminAudit"
+import { captureError } from "@/lib/observability"
 
 /**
  * POST /api/admin/users/[id]/reset-password
@@ -46,7 +47,7 @@ export async function POST(
   try {
     await sendPasswordResetEmail({ to: target.email, firstName: target.firstName, token })
   } catch (e) {
-    console.error("[admin reset-password] email send failed", e)
+    captureError(e, { route: "/api/admin/users/[id]/reset-password", step: "email-send" })
     return NextResponse.json({ error: "Échec envoi e-mail." }, { status: 500 })
   }
 

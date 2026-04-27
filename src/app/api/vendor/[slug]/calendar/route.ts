@@ -11,6 +11,7 @@
  */
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { captureError } from "@/lib/observability"
 
 const MAX_MONTHS_FORWARD = 12
 const BOOKED = new Set(["won", "confirmed"])
@@ -86,7 +87,7 @@ export async function GET(
       { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" } }
     )
   } catch (err) {
-    console.error("[calendar] GET /api/vendor/[slug]/calendar error:", err)
+    captureError(err, { route: "/api/vendor/[slug]/calendar", method: "GET" })
     return NextResponse.json({ error: "Erreur serveur." }, { status: 500 })
   }
 }

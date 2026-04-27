@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth"
 import { put } from "@vercel/blob"
+import { requireVerifiedEmail } from "@/lib/auth-guards"
 
 const MAX_SIZE = 5 * 1024 * 1024 // 5 MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"]
@@ -7,6 +8,10 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"]
 export async function POST(req: Request) {
   const session = await auth()
   if (!session?.user?.id) return Response.json({ error: "Non authentifié." }, { status: 401 })
+
+  // Hard-gate : pas d'upload tant que l'email n'est pas vérifié
+  const verifyGate = await requireVerifiedEmail(session.user.id)
+  if (verifyGate) return verifyGate
 
   const formData = await req.formData()
   const file = formData.get("file") as File | null

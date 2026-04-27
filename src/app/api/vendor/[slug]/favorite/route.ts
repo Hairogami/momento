@@ -8,6 +8,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { captureError } from "@/lib/observability"
 
 const IS_DEV = process.env.NODE_ENV === "development" && process.env.VERCEL !== "1"
 
@@ -40,7 +41,7 @@ export async function GET(
     })
     return NextResponse.json({ favorited: !!fav })
   } catch (err) {
-    console.error("[favorite] GET error:", err)
+    captureError(err, { route: "/api/vendor/[slug]/favorite", method: "GET" })
     return NextResponse.json({ favorited: false })
   }
 }
@@ -70,7 +71,7 @@ export async function POST(
       return NextResponse.json({ favorited: true })
     }
   } catch (err) {
-    console.error("[favorite] POST error:", err)
+    captureError(err, { route: "/api/vendor/[slug]/favorite", method: "POST" })
     return NextResponse.json({ error: "Erreur serveur." }, { status: 500 })
   }
 }

@@ -1,22 +1,9 @@
-import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
 
 export async function GET() {
-  // En IS_DEV: utiliser requireSession (mêmes mocks que les autres routes)
-  // pour que /api/me renvoie le VRAI user.id de la session dev. Renvoyer
-  // un id 'mock-user-id' hardcodé cassait toute logique côté front qui
-  // compare myId aux senderId réels (ex: alignement messages chat).
-  let userId: string
-  if (IS_DEV) {
-    const s = await requireSession()
-    userId = s.user.id
-  } else {
-    const session = await auth()
-    if (!session?.user?.id) return Response.json({ error: "Non authentifié." }, { status: 401 })
-    userId = session.user.id
-  }
+  const userId = await getUserId()
+  if (!userId) return Response.json({ error: "Non authentifié." }, { status: 401 })
 
   const user = await prisma.user.findUnique({
     where: { id: userId },

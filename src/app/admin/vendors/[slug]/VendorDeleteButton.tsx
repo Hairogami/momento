@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { captureError } from "@/lib/observability"
 
 export default function VendorDeleteButton({ slug, name }: { slug: string; name: string }) {
   const router = useRouter()
@@ -21,7 +22,7 @@ export default function VendorDeleteButton({ slug, name }: { slug: string; name:
       }
       router.push("/admin/vendors")
     } catch (e) {
-      console.error("[admin vendor delete]", e)
+      captureError(e, { component: "VendorDeleteButton", slug })
       alert("❌ Erreur réseau")
       setLoading(false)
     }

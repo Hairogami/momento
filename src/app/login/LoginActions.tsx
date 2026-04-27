@@ -75,7 +75,7 @@ export default function LoginActions() {
       </div>
 
       {err && (
-        <p style={{ fontSize: "var(--text-xs)", padding: "9px 12px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", marginBottom: 10 }}>
+        <p role="alert" aria-live="polite" style={{ fontSize: "var(--text-xs)", padding: "9px 12px", borderRadius: 10, background: "rgba(225,29,72,0.07)", color: "#E11D48", marginBottom: 10 }}>
           {err}
         </p>
       )}
@@ -137,9 +137,13 @@ export default function LoginActions() {
         <div style={{ flex: 1, height: 1, background: "rgba(183,191,217,0.3)" }} />
       </div>
 
-      <form onSubmit={handleMagic} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <form onSubmit={handleMagic} aria-label="Connexion par lien magique" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <label htmlFor="magic-email" className="sr-only">Adresse email</label>
         <input
+          id="magic-email"
+          name="magicEmail"
           type="email"
+          autoComplete="email"
           placeholder="toi@exemple.com"
           required
           value={email}

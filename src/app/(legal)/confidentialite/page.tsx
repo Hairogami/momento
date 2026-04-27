@@ -63,9 +63,25 @@ export default function ConfidentialitePage() {
         <p style={strongNoticeStyle}>
           Momento
           <br />
-          {/* TODO_DECISION: compléter après création SARL : raison sociale, RC, ICE, adresse siège */}
           Contact : <a href="mailto:contact@momentoevents.app" style={linkStyle}>contact@momentoevents.app</a>
         </p>
+        <div role="alert" style={{
+          margin: "var(--space-md, 16px) 0",
+          padding: "var(--space-md, 16px)",
+          border: "2px dashed #f59e0b",
+          borderRadius: 12,
+          background: "rgba(245, 158, 11, 0.08)",
+          color: "var(--dash-text, #121317)",
+          fontSize: "var(--text-sm, 14px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+        }}>
+          <strong style={{ color: "#f59e0b", fontSize: "var(--text-sm, 14px)" }}>
+            ⚠️ À compléter avant lancement
+          </strong>
+          <span>Compléter la raison sociale, le numéro RC, l&apos;ICE et l&apos;adresse du siège social après création de la société.</span>
+        </div>
       </Section>
 
       <Section id="s2" n={2} title="Coordonnées et contact">
@@ -74,9 +90,25 @@ export default function ConfidentialitePage() {
           vous pouvez contacter l&apos;équipe Momento à l&apos;adresse <a href="mailto:contact@momentoevents.app" style={linkStyle}>contact@momentoevents.app</a>.
         </p>
         <p>
-          {/* TODO_DECISION: désigner un DPO (recommandé par CNDP campagne 2025, non obligatoire par la loi 09-08). */}
           Conformément aux recommandations de la CNDP, un correspondant à la protection des données (DPO) est en cours de désignation et ses coordonnées seront publiées dans la présente section dès nomination.
         </p>
+        <div role="alert" style={{
+          margin: "var(--space-md, 16px) 0",
+          padding: "var(--space-md, 16px)",
+          border: "2px dashed #f59e0b",
+          borderRadius: 12,
+          background: "rgba(245, 158, 11, 0.08)",
+          color: "var(--dash-text, #121317)",
+          fontSize: "var(--text-sm, 14px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+        }}>
+          <strong style={{ color: "#f59e0b", fontSize: "var(--text-sm, 14px)" }}>
+            ⚠️ À compléter avant lancement
+          </strong>
+          <span>Trancher la désignation d&apos;un DPO (recommandé par la CNDP campagne 2025, non obligatoire par la loi 09-08) — choisir entre Yazid Moumène ou un correspondant externe, puis publier ses coordonnées ici.</span>
+        </div>
       </Section>
 
       <Section id="s3" n={3} title="Finalités du traitement">
@@ -274,9 +306,25 @@ export default function ConfidentialitePage() {
           Ces cookies ne requièrent pas de consentement au sens de la pratique CNDP en vigueur.
         </p>
         <p>
-          {/* TODO_DECISION: si analytics (Google Analytics, Plausible, Sentry, etc.) ajoutés à l'avenir, publier bandeau cookies et permettre opt-out. */}
           Aucun cookie de suivi publicitaire tiers n&apos;est déployé à ce jour. Toute évolution fera l&apos;objet d&apos;une information préalable et d&apos;un mécanisme de consentement conforme.
         </p>
+        <div role="alert" style={{
+          margin: "var(--space-md, 16px) 0",
+          padding: "var(--space-md, 16px)",
+          border: "2px dashed #f59e0b",
+          borderRadius: 12,
+          background: "rgba(245, 158, 11, 0.08)",
+          color: "var(--dash-text, #121317)",
+          fontSize: "var(--text-sm, 14px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+        }}>
+          <strong style={{ color: "#f59e0b", fontSize: "var(--text-sm, 14px)" }}>
+            ⚠️ À compléter avant lancement
+          </strong>
+          <span>Si des outils analytics ou de monitoring tiers sont ajoutés à l&apos;avenir (Google Analytics, Plausible, Sentry, etc.), prévoir un bandeau cookies avec opt-out conforme aux pratiques CNDP avant déploiement.</span>
+        </div>
       </Section>
 
       <Section id="s12" n={12} title="Sécurité des données">
@@ -296,9 +344,25 @@ export default function ConfidentialitePage() {
           Le traitement de données personnelles opéré par Momento est en cours de déclaration auprès de la Commission Nationale de contrôle de la protection des Données à caractère Personnel (CNDP), conformément à l&apos;article 12 de la loi 09-08.
         </p>
         <p>
-          {/* TODO_DECISION: insérer n° récépissé + date de délivrance après dépôt. */}
           Le numéro de récépissé sera publié dans la présente section dès délivrance par la CNDP.
         </p>
+        <div role="alert" style={{
+          margin: "var(--space-md, 16px) 0",
+          padding: "var(--space-md, 16px)",
+          border: "2px dashed #f59e0b",
+          borderRadius: 12,
+          background: "rgba(245, 158, 11, 0.08)",
+          color: "var(--dash-text, #121317)",
+          fontSize: "var(--text-sm, 14px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+        }}>
+          <strong style={{ color: "#f59e0b", fontSize: "var(--text-sm, 14px)" }}>
+            ⚠️ À compléter avant lancement
+          </strong>
+          <span>Insérer le numéro de récépissé CNDP et la date de délivrance après dépôt de la déclaration auprès de la Commission.</span>
+        </div>
       </Section>
 
       <Section id="s14" n={14} title="Modifications de la politique">

@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 import { sendVerificationEmail } from "@/lib/email"
 import { verifyTurnstile, turnstileEnabled } from "@/lib/turnstile"
+import { captureError } from "@/lib/observability"
 
 const strongPassword = z.string().min(8).max(128)
   .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.")
@@ -127,20 +128,20 @@ export async function POST(req: NextRequest) {
       data: { token, userId: user.id, expiresAt, type: "email_verification" },
     })
   } catch (e) {
-    console.error("[register] emailVerification create error:", e)
+    captureError(e, { route: "/api/auth/register", step: "emailVerification-create" })
   }
 
   after(async () => {
     try {
       await sendVerificationEmail({ to: user.email, firstName: verifFirstName, token })
     } catch (e) {
-      console.error("[register] verification email error:", e)
+      captureError(e, { route: "/api/auth/register", step: "verification-email" })
     }
   })
 
   return NextResponse.json({ id: user.id }, { status: 201 })
   } catch (err) {
-    console.error("[register] error:", err)
+    captureError(err, { route: "/api/auth/register" })
     return NextResponse.json({ error: "Une erreur est survenue." }, { status: 500 })
   }
 }

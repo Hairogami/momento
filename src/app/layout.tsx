@@ -4,6 +4,21 @@ import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
+/**
+ * Anti-FOUC theme bootstrap — IIFE inline exécutée AVANT le premier paint.
+ * Lit `momento_theme` (système | light | dark | auto) + fallback legacy
+ * `momento_clone_dark_mode`, applique la classe .dark + color-scheme + data-theme
+ * sur <html> de façon synchrone, donc avant que le navigateur peigne quoi que ce soit.
+ * Doit rester EN TÊTE de <head>, avant les <link rel="stylesheet">.
+ */
+const THEME_BOOT_SCRIPT = `(function(){try{var d=document.documentElement;var t=localStorage.getItem('momento_theme');var legacy=localStorage.getItem('momento_clone_dark_mode');var dark;if(t==='dark'){dark=true}else if(t==='light'){dark=false}else if(t==='system'||t===null||t==='auto'){if(legacy!==null){dark=legacy==='true'}else{dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches}}else{dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches}if(dark){d.classList.add('dark','clone-dark');d.style.colorScheme='dark'}else{d.classList.remove('dark','clone-dark');d.style.colorScheme='light'}d.setAttribute('data-theme',dark?'dark':'light')}catch(e){}})();`;
+
+/**
+ * Anti-FOUC palette bootstrap — applique --g1/--g2 depuis localStorage avant paint
+ * pour éviter le flash de la palette par défaut sur les boutons gradient G.
+ */
+const PALETTE_BOOT_SCRIPT = `(function(){try{var p=JSON.parse(localStorage.getItem('momento_clone_palette')||'null');if(p){document.documentElement.style.setProperty('--g1',p.g1);document.documentElement.style.setProperty('--g2',p.g2)}}catch(e){}})();`;
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -78,6 +93,23 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Anti-FOUC : applique le thème AVANT le premier paint.
+            Doit rester en TÊTE de <head>, avant tout <link rel="stylesheet">,
+            pour que la classe .dark + color-scheme soient en place quand
+            globals.css est parsé et que le navigateur peint la page.
+            Contenu 100% statique contrôlé — pas d'input utilisateur. */}
+        {/* eslint-disable-next-line react/no-danger -- inline IIFE statique anti-FOUC */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: THEME_BOOT_SCRIPT,
+          }}
+        />
+        {/* eslint-disable-next-line react/no-danger -- inline IIFE statique palette */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: PALETTE_BOOT_SCRIPT,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
@@ -87,16 +119,6 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Google+Symbols:opsz,wght,FILL,GRAD,ROND@40..48,300,0..1,0,50&display=block"
           rel="stylesheet"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('momento_theme');var legacy=localStorage.getItem('momento_clone_dark_mode');var dark;if(t==='dark'){dark=true}else if(t==='light'){dark=false}else if(t==='system'||t===null){if(legacy!==null){dark=legacy==='true'}else{dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches}}else{dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches}if(dark){document.documentElement.classList.add('dark','clone-dark')}else{document.documentElement.classList.remove('dark','clone-dark')}}catch(e){}`,
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var p=JSON.parse(localStorage.getItem('momento_clone_palette')||'null');if(p){document.documentElement.style.setProperty('--g1',p.g1);document.documentElement.style.setProperty('--g2',p.g2)}}catch(e){}`,
-          }}
         />
         <style dangerouslySetInnerHTML={{
           __html: `
@@ -174,6 +196,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
+        {/* Skip-to-content link — visible only on keyboard focus, jumps past
+            the nav for keyboard / screen reader users (WCAG 2.4.1). */}
+        <a href="#main-content" className="skip-to-content sr-only-focusable">
+          Aller au contenu principal
+        </a>
         <ThemeProvider>
           <SessionProvider>{children}</SessionProvider>
         </ThemeProvider>

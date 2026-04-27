@@ -66,7 +66,7 @@ export default function CloneLoginPage() {
       </div>
 
       {/* ── Right panel — form ── */}
-      <div style={{
+      <main id="main-content" style={{
         flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
         padding: "48px 24px", background: "var(--dash-bg,#fff)",
       }}>
@@ -102,7 +102,7 @@ export default function CloneLoginPage() {
             Besoin d&apos;aide ? <Link href="/help" style={{ color: "var(--dash-text-2,#6a6a71)" }}>Centre d&apos;aide</Link>
           </p>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

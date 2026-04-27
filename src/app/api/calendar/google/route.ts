@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { captureError } from "@/lib/observability"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest) {
         })
       }
     } catch (refreshErr) {
-      console.error("[Google Calendar] token refresh failed", refreshErr)
+      captureError(refreshErr, { route: "/api/calendar/google", step: "token-refresh" })
     }
   }
 
@@ -81,7 +82,7 @@ export async function GET(req: NextRequest) {
 
     if (!res.ok) {
       const err = await res.json()
-      console.error("[Google Calendar]", err)
+      captureError(err, { route: "/api/calendar/google", step: "google-api", status: res.status })
       return NextResponse.json({ error: "Google Calendar API error." }, { status: res.status })
     }
 
@@ -109,7 +110,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ events })
   } catch (err) {
-    console.error("[Google Calendar] fetch error", err)
+    captureError(err, { route: "/api/calendar/google", step: "fetch" })
     return NextResponse.json({ error: "Internal error" }, { status: 500 })
   }
 }

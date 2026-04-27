@@ -7,6 +7,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { rateLimitAsync } from "@/lib/rateLimiter";
+import { captureError } from "@/lib/observability";
 import { headers } from "next/headers";
 
 const REMEMBER_ME_MAX_AGE = 30 * 24 * 60 * 60; // 30 jours
@@ -222,7 +223,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           await prisma.user.update({ where: { id: user.id }, data: updates });
         }
       } catch (err) {
-        console.error("[auth] signIn event error:", err);
+        captureError(err, { source: "auth.signIn-event", userId: user.id });
       }
     },
   },

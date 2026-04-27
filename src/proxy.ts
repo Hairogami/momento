@@ -27,9 +27,19 @@ export async function proxy(request: NextRequest) {
   // Check session cookie presence only — JWT decryption (JWE) is not reliable
   // in Edge runtime with Auth.js v5. Actual session validation happens in each
   // Server Component via auth(). This gate just avoids unnecessary page loads.
-  const sessionCookie =
-    request.cookies.get("authjs.session-token")?.value ||
-    request.cookies.get("__Secure-authjs.session-token")?.value
+  //
+  // TODO: when NextAuth exits beta to v5 stable, verify the cookie name
+  // stays as `authjs.session-token`. If renamed, update SESSION_COOKIE_NAMES.
+  // See: https://authjs.dev/getting-started/migrating-to-v5
+  const SESSION_COOKIE_NAMES = [
+    "authjs.session-token",              // NextAuth v5 (current)
+    "__Secure-authjs.session-token",     // NextAuth v5 over HTTPS
+    "next-auth.session-token",           // NextAuth v4 legacy fallback
+    "__Secure-next-auth.session-token",  // NextAuth v4 legacy over HTTPS
+  ]
+  const sessionCookie = SESSION_COOKIE_NAMES
+    .map(name => request.cookies.get(name)?.value)
+    .find(Boolean)
 
   const isProtected = PROTECTED.some(p => path.startsWith(p))
   const isAuthPage  = AUTH_ONLY.some(p => path.startsWith(p))

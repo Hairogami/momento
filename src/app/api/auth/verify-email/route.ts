@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { captureError } from "@/lib/observability"
 
 // C02: Use APP_URL as redirect base to avoid Host-header open redirect.
 // req.url is controlled by the Host header which can be spoofed in non-Vercel environments.
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     return safeRedirect("/login?verified=true", req)
   } catch (err) {
-    console.error("[verify-email]", err)
+    captureError(err, { route: "/api/auth/verify-email" })
     return safeRedirect("/login?error=erreur_serveur", req)
   }
 }

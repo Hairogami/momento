@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 import { IS_DEV } from "@/lib/devMock"
 import { requireSession } from "@/lib/devAuth"
+import { captureError } from "@/lib/observability"
 
 // Purge auto-lazy : événements en corbeille depuis > 15 jours → hard delete.
 // Exécuté au GET /api/planners (piggyback, pas besoin de cron).
@@ -15,7 +16,7 @@ async function purgeExpiredTrash(userId: string) {
       where: { userId, trashedAt: { lt: cutoff } },
     })
   } catch (e) {
-    console.error("[GET /api/planners] purge expired trash failed:", e)
+    captureError(e, { route: "/api/planners", method: "GET", step: "purge-trash" })
   }
 }
 
@@ -158,7 +159,10 @@ export async function POST(request: NextRequest) {
     return Response.json(planner, { status: 201 })
   } catch (err: unknown) {
     const e = err as { code?: string; message?: string; meta?: unknown }
-    console.error("[POST /api/planners] Prisma error:", {
+    captureError(err, {
+      route: "/api/planners",
+      method: "POST",
+      source: "prisma",
       code: e?.code,
       message: e?.message,
       meta: e?.meta,

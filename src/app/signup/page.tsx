@@ -115,7 +115,7 @@ export default function CloneSignupPage() {
   }
 
   return (
-    <div className="ant-root" style={{
+    <main id="main-content" className="ant-root" style={{
       minHeight: "100vh", background: "#f7f7fb",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "48px 20px",
@@ -174,13 +174,17 @@ export default function CloneSignupPage() {
                 Tu es ici pour…
               </p>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div role="radiogroup" aria-label="Type de compte" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {([
                   { value: "client" as Role, emoji: "🎉", title: "Organiser un événement", desc: "Trouver et contacter des prestataires pour mon mariage, anniversaire, etc." },
                   { value: "vendor" as Role, emoji: "🎧", title: "Proposer mes services", desc: "Créer mon profil prestataire et recevoir des demandes clients." },
                 ] as { value: Role; emoji: string; title: string; desc: string }[]).map(opt => (
                   <button
                     key={opt.value!}
+                    type="button"
+                    role="radio"
+                    aria-checked={role === opt.value}
+                    aria-label={opt.title + ". " + opt.desc}
                     onClick={() => setRole(opt.value)}
                     style={{
                       display: "flex", alignItems: "flex-start", gap: 14,
@@ -192,7 +196,7 @@ export default function CloneSignupPage() {
                       cursor: "pointer", transition: "all 0.15s", fontFamily: "inherit",
                     }}
                   >
-                    <span style={{ fontSize: "var(--text-xl)", flexShrink: 0 }}>{opt.emoji}</span>
+                    <span aria-hidden="true" style={{ fontSize: "var(--text-xl)", flexShrink: 0 }}>{opt.emoji}</span>
                     <div>
                       <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317", margin: "0 0 4px" }}>{opt.title}</p>
                       <p style={{ fontSize: "var(--text-xs)", color: "#6a6a71", margin: 0, lineHeight: 1.5 }}>{opt.desc}</p>
@@ -202,6 +206,7 @@ export default function CloneSignupPage() {
               </div>
 
               <button
+                type="button"
                 onClick={() => role && setStep(2)}
                 disabled={!role}
                 style={{
@@ -220,7 +225,7 @@ export default function CloneSignupPage() {
           {/* Step 2 — Form */}
           {step === 2 && (
             <div>
-              <button onClick={() => setStep(1)} style={{
+              <button type="button" onClick={() => setStep(1)} aria-label="Retour à l'étape précédente" style={{
                 display: "flex", alignItems: "center", gap: 6,
                 fontSize: "var(--text-sm)", color: "#6a6a71", background: "none",
                 border: "none", cursor: "pointer", marginBottom: 20, fontFamily: "inherit",
@@ -303,21 +308,41 @@ export default function CloneSignupPage() {
                 </>
               )}
 
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <form onSubmit={handleSubmit}
+                aria-label={role === "client" ? "Création de compte client" : "Création de compte prestataire"}
+                style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {role === "client" ? (
                   <>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                      <input placeholder="Prénom *" value={prenom} onChange={e => setPrenom(e.target.value)} required style={inputStyle}
-                        onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                      <input placeholder="Nom *" value={nom} onChange={e => setNom(e.target.value)} required style={inputStyle}
-                        onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                      <div>
+                        <label htmlFor="signup-prenom" className="sr-only">Prénom</label>
+                        <input id="signup-prenom" name="firstName" autoComplete="given-name"
+                          placeholder="Prénom *" value={prenom} onChange={e => setPrenom(e.target.value)} required style={inputStyle}
+                          onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                      </div>
+                      <div>
+                        <label htmlFor="signup-nom" className="sr-only">Nom</label>
+                        <input id="signup-nom" name="lastName" autoComplete="family-name"
+                          placeholder="Nom *" value={nom} onChange={e => setNom(e.target.value)} required style={inputStyle}
+                          onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+                      </div>
                     </div>
-                    <input type="email" placeholder="Email *" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle}
+                    <label htmlFor="signup-email" className="sr-only">Email</label>
+                    <input id="signup-email" name="email" autoComplete="email"
+                      type="email" placeholder="Email *" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <input type="password" placeholder="Mot de passe *" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle}
+                    <label htmlFor="signup-password" className="sr-only">Mot de passe</label>
+                    <input id="signup-password" name="password" autoComplete="new-password"
+                      type="password" placeholder="Mot de passe *" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle}
+                      aria-describedby="signup-password-reqs"
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <PasswordRequirements value={password} />
-                    <input type="password" placeholder="Confirmer le mot de passe *" value={confirm} onChange={e => setConfirm(e.target.value)} required style={inputStyle}
+                    <div id="signup-password-reqs">
+                      <PasswordRequirements value={password} />
+                    </div>
+                    <label htmlFor="signup-password-confirm" className="sr-only">Confirmer le mot de passe</label>
+                    <input id="signup-password-confirm" name="passwordConfirm" autoComplete="new-password"
+                      type="password" placeholder="Confirmer le mot de passe *" value={confirm} onChange={e => setConfirm(e.target.value)} required style={inputStyle}
+                      aria-invalid={!!confirm && password !== confirm}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     {confirm && password !== confirm && (
                       <p style={{ fontSize: "var(--text-xs)", color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
@@ -325,18 +350,34 @@ export default function CloneSignupPage() {
                   </>
                 ) : (
                   <>
-                    <input placeholder="Nom de l'entreprise *" value={entreprise} onChange={e => setEntreprise(e.target.value)} required style={inputStyle}
+                    <label htmlFor="signup-company" className="sr-only">Nom de l&apos;entreprise</label>
+                    <input id="signup-company" name="companyName" autoComplete="organization"
+                      placeholder="Nom de l'entreprise *" value={entreprise} onChange={e => setEntreprise(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <input placeholder="Catégorie (ex: DJ, Photographe…) *" value={categorie} onChange={e => setCategorie(e.target.value)} required style={inputStyle}
+                    <label htmlFor="signup-category" className="sr-only">Catégorie de prestataire</label>
+                    <input id="signup-category" name="vendorCategory"
+                      placeholder="Catégorie (ex: DJ, Photographe…) *" value={categorie} onChange={e => setCategorie(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <input type="email" placeholder="Email *" value={vEmail} onChange={e => setVEmail(e.target.value)} required style={inputStyle}
+                    <label htmlFor="signup-vendor-email" className="sr-only">Email professionnel</label>
+                    <input id="signup-vendor-email" name="vendorEmail" autoComplete="email"
+                      type="email" placeholder="Email *" value={vEmail} onChange={e => setVEmail(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <input placeholder="Téléphone" value={telephone} onChange={e => setTelephone(e.target.value)} style={inputStyle}
+                    <label htmlFor="signup-phone" className="sr-only">Numéro de téléphone</label>
+                    <input id="signup-phone" name="phone" type="tel" autoComplete="tel"
+                      placeholder="Téléphone" value={telephone} onChange={e => setTelephone(e.target.value)} style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <input type="password" placeholder="Mot de passe *" value={vPassword} onChange={e => setVPassword(e.target.value)} required minLength={8} style={inputStyle}
+                    <label htmlFor="signup-vendor-password" className="sr-only">Mot de passe</label>
+                    <input id="signup-vendor-password" name="vendorPassword" autoComplete="new-password"
+                      type="password" placeholder="Mot de passe *" value={vPassword} onChange={e => setVPassword(e.target.value)} required minLength={8} style={inputStyle}
+                      aria-describedby="signup-vendor-password-reqs"
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-                    <PasswordRequirements value={vPassword} />
-                    <input type="password" placeholder="Confirmer le mot de passe *" value={vConfirm} onChange={e => setVConfirm(e.target.value)} required style={inputStyle}
+                    <div id="signup-vendor-password-reqs">
+                      <PasswordRequirements value={vPassword} />
+                    </div>
+                    <label htmlFor="signup-vendor-password-confirm" className="sr-only">Confirmer le mot de passe</label>
+                    <input id="signup-vendor-password-confirm" name="vendorPasswordConfirm" autoComplete="new-password"
+                      type="password" placeholder="Confirmer le mot de passe *" value={vConfirm} onChange={e => setVConfirm(e.target.value)} required style={inputStyle}
+                      aria-invalid={!!vConfirm && vPassword !== vConfirm}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     {vConfirm && vPassword !== vConfirm && (
                       <p style={{ fontSize: "var(--text-xs)", color: "#dc2626", margin: "-4px 0 0" }}>Les mots de passe ne correspondent pas.</p>
@@ -345,7 +386,7 @@ export default function CloneSignupPage() {
                 )}
 
                 {error && (
-                  <p style={{
+                  <p role="alert" aria-live="polite" style={{
                     fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10,
                     background: "rgba(225,29,72,0.07)", color: "#E11D48",
                   }}>{error}</p>
@@ -389,6 +430,6 @@ export default function CloneSignupPage() {
           </p>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

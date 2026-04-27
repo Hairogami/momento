@@ -4,6 +4,7 @@
  */
 import { prisma } from "@/lib/prisma"
 import type { Prisma } from "@/generated/prisma/client"
+import { captureError } from "@/lib/observability"
 
 export type AuditChange = Record<string, { from: unknown; to: unknown }>
 
@@ -28,7 +29,7 @@ export async function logAdminAction(params: {
     })
   } catch (err) {
     // On ne bloque jamais l'action admin pour une erreur de log
-    console.error("[adminAudit] failed to log", params.action, err)
+    captureError(err, { source: "adminAudit", action: params.action })
   }
 }
 

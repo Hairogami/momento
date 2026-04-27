@@ -1,18 +1,7 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
 import { RsvpPatchSchema } from "@/lib/validations"
-
-async function getUserId(): Promise<string | null> {
-  if (IS_DEV) {
-    const s = await requireSession()
-    return s.user.id
-  }
-  const session = await auth()
-  return session?.user?.id ?? null
-}
+import { getUserId } from "@/lib/api-auth"
 
 async function checkOwnership(rsvpId: string, userId: string): Promise<boolean> {
   const rsvp = await prisma.eventRsvp.findUnique({

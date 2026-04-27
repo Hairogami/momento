@@ -27,7 +27,7 @@ function useAnimLoop(durations: number[]) {
 
 // ── 1. Site événement — palette swap (éditeur Momento, zoom cinéma) ──────────
 const SITE_PALETTES = [
-  { id: "terracotta", label: "Terracotta", main: "#C1713A", secondary: "#F5EDD6", accent: "#8B4513", text: "#3D2817" },
+  { id: "terracotta", label: "Terracotta", main: "#C1713A", secondary: "#F5E8D6", accent: "#A0522D", text: "#3D2817" },
   { id: "rose-or",    label: "Rose & Or",  main: "#D4506B", secondary: "#F4D5CC", accent: "#D4AF37", text: "#2E1218" },
   { id: "noir-rouge", label: "Noir & Rouge", main: "#DC1A24", secondary: "#FFE5E7", accent: "#0A0A0A", text: "#0A0A0A" },
 ]
@@ -148,7 +148,7 @@ function SiteEventPreview() {
                   </div>
                 )
               })}
-              {[{m:"#556B2F",a:"#8B7355",l:"Vert olive"},{m:"#009B96",a:"#4A9FD6",l:"Baby Blue & Tiffany"},{m:"#B88AE8",a:"#6FD4D1",l:"Pastel"},{m:"#C1713A",a:"#8B4513",l:"Personnalisé"}].map((p,i) => (
+              {[{m:"#556B2F",a:"#8B7355",l:"Vert olive"},{m:"#009B96",a:"#4A9FD6",l:"Baby Blue & Tiffany"},{m:"#B88AE8",a:"#6FD4D1",l:"Pastel"},{m:"#C1713A",a:"#A0522D",l:"Personnalisé"}].map((p,i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: `${u(3)} ${u(4)}`, borderRadius: u(3), background: "rgba(255,255,255,0.03)", border: `${u(1)} solid rgba(255,255,255,0.08)` }}>
                   <span style={{ fontSize: u(4.2), color: "rgba(255,255,255,0.6)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.l}</span>
                   <span style={{ display: "flex", gap: u(1), flexShrink: 0 }}>
@@ -833,7 +833,7 @@ function RsvpPreview() {
             Yazid & Yasmine — 17 nov 2025
           </span>
         </div>
-        <div style={{ fontSize: u(10), color: "#8B4513", letterSpacing: "0.18em", fontWeight: 700, textAlign: "center", marginBottom: u(13), fontFamily: fontMomento }}>
+        <div style={{ fontSize: u(10), color: "#A0522D", letterSpacing: "0.18em", fontWeight: 700, textAlign: "center", marginBottom: u(13), fontFamily: fontMomento }}>
           CONFIRMEZ VOTRE PRÉSENCE
         </div>
 
@@ -1487,13 +1487,13 @@ function AgentAIPreview() {
   ]
   // Budget categories with proposed change
   const BUDGET_BEFORE = [
-    { cat: "Lieu", amount: 22000, color: "#C4532A" },
+    { cat: "Lieu", amount: 22000, color: "#E11D48" },
     { cat: "Traiteur", amount: 12000, color: "#D4733A" },
     { cat: "Photo", amount: 1500, color: "#A03820", flag: "low" },
     { cat: "Déco", amount: 4000, color: "#B84830" },
   ]
   const BUDGET_AFTER = [
-    { cat: "Lieu", amount: 18000, color: "#C4532A", changed: true },
+    { cat: "Lieu", amount: 18000, color: "#E11D48", changed: true },
     { cat: "Traiteur", amount: 12000, color: "#D4733A" },
     { cat: "Photo", amount: 3000, color: "#A03820", changed: true },
     { cat: "Déco", amount: 4000, color: "#B84830" },
@@ -1786,7 +1786,7 @@ function BudgetPreview() {
   // Catégories budget (couleurs réelles BudgetChart.tsx — Traiteur incrémenté +5K)
   type Slice = { name: string; value: number; color: string; isNew?: boolean }
   const SLICES_BASE: Slice[] = [
-    { name: "Lieu",     value: 22000, color: "#C4532A" },
+    { name: "Lieu",     value: 22000, color: "#E11D48" },
     { name: "Traiteur", value: 15000, color: "#D4733A" },
     { name: "Photo",    value: 8000,  color: "#A03820" },
     { name: "Musique",  value: 5000,  color: "#E08050" },
@@ -1795,7 +1795,7 @@ function BudgetPreview() {
     { name: "Autre",    value: 1000,  color: "#8C6A5A" },
   ]
   const SLICES_AFTER: Slice[] = [
-    { name: "Lieu",     value: 22000, color: "#C4532A" },
+    { name: "Lieu",     value: 22000, color: "#E11D48" },
     { name: "Traiteur", value: 20000, color: "#D4733A", isNew: true },
     { name: "Photo",    value: 8000,  color: "#A03820" },
     { name: "Musique",  value: 5000,  color: "#E08050" },

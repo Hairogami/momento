@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { sendPasswordResetEmail } from "@/lib/email"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
 import { verifyTurnstile, turnstileEnabled } from "@/lib/turnstile"
+import { captureError } from "@/lib/observability"
 
 export async function POST(req: NextRequest) {
   try {
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
           try {
             await sendPasswordResetEmail({ to: user.email, firstName: user.firstName, token })
           } catch (e) {
-            console.error("Forgot password email error:", e)
+            captureError(e, { route: "/api/auth/forgot-password", step: "email-send" })
           }
         })
       }
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Si un compte existe, un e-mail a été envoyé." })
   } catch (err) {
-    console.error("Forgot password error:", err)
+    captureError(err, { route: "/api/auth/forgot-password" })
     return NextResponse.json({ message: "Si un compte existe, un e-mail a été envoyé." })
   }
 }

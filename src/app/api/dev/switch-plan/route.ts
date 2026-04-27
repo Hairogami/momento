@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { DEV_OWNER_EMAIL } from "@/lib/adminAuth"
+import { logAdminAction } from "@/lib/adminAudit"
 
 // DEV_OWNER_EMAIL centralisé via @/lib/adminAuth (DEV_OWNER_EMAIL)
 const ALLOWED_PLANS = new Set(["free", "pro", "max"])
@@ -36,11 +37,30 @@ export async function POST(req: NextRequest) {
     ? null
     : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 an
 
+  // Snapshot before pour le diff audit
+  const before = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { plan: true, planExpiresAt: true },
+  })
+
   await prisma.user.update({
     where: { id: session.user.id },
     data: {
       plan,
       planExpiresAt: expiry,
+    },
+  })
+
+  await logAdminAction({
+    adminId:    session.user.id,
+    adminEmail: session.user.email ?? DEV_OWNER_EMAIL,
+    action:     "dev.switch-plan",
+    targetType: "User",
+    targetId:   session.user.id,
+    changes:    {
+      plan:          { from: before?.plan ?? null, to: plan },
+      planExpiresAt: { from: before?.planExpiresAt ?? null, to: expiry },
+      env:           { from: null, to: process.env.VERCEL_ENV ?? "local" },
     },
   })
 

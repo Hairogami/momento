@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
+import { requireVerifiedEmail } from "@/lib/auth-guards"
 
 export const runtime = "nodejs"
 
@@ -18,15 +17,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const url = new URL(req.url)
   const format = url.searchParams.get("format") ?? "csv"
 
-  let userId: string
-  if (IS_DEV) {
-    const s = await requireSession()
-    userId = s.user.id
-  } else {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    userId = session.user.id
-  }
+  const userId = await getUserId()
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  // Hard-gate : pas d'export de données tant que l'email n'est pas vérifié.
+  // requireVerifiedEmail bypass en IS_DEV (cf. src/lib/auth-guards.ts).
+  const verifyGate = await requireVerifiedEmail(userId)
+  if (verifyGate) return verifyGate
 
   const planner = await prisma.planner.findUnique({
     where: { id: plannerId },
@@ -80,36 +76,61 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   }
 
   if (format === "xlsx") {
-    const XLSX = await import("xlsx")
-    const wb = XLSX.utils.book_new()
+    const ExcelJS = (await import("exceljs")).default
+    const wb = new ExcelJS.Workbook()
 
-    const guestRows = guests.map(g => ({
-      Statut: g.rsvp,
-      Nom: g.name,
-      Email: g.email ?? "",
-      Téléphone: g.phone ?? "",
-      "+1": g.plusOne ? "oui" : "",
-      Note: g.notes ?? "",
-      Date: g.createdAt.toISOString(),
-    }))
-    const rsvpRows = rsvps.map(r => ({
-      Statut: r.attendingMain ? "yes" : "no",
-      Nom: r.guestName,
-      Email: r.guestEmail ?? "",
-      Téléphone: r.guestPhone ?? "",
-      "+1": r.plusOneName ? "oui" : "",
-      "Nom +1": r.plusOneName ?? "",
-      Allergie: r.dietaryNeeds ?? "",
-      Message: r.message ?? "",
-      Lendemain: r.attendingDayAfter === true ? "oui" : (r.attendingDayAfter === false ? "non" : ""),
-      Date: r.createdAt.toISOString(),
-    }))
+    const guestSheet = wb.addWorksheet("Mes invités")
+    guestSheet.columns = [
+      { header: "Statut", key: "statut", width: 12 },
+      { header: "Nom", key: "nom", width: 24 },
+      { header: "Email", key: "email", width: 28 },
+      { header: "Téléphone", key: "telephone", width: 16 },
+      { header: "+1", key: "plusOne", width: 6 },
+      { header: "Note", key: "note", width: 30 },
+      { header: "Date", key: "date", width: 22 },
+    ]
+    for (const g of guests) {
+      guestSheet.addRow({
+        statut: g.rsvp,
+        nom: g.name,
+        email: g.email ?? "",
+        telephone: g.phone ?? "",
+        plusOne: g.plusOne ? "oui" : "",
+        note: g.notes ?? "",
+        date: g.createdAt.toISOString(),
+      })
+    }
 
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(guestRows), "Mes invités")
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rsvpRows), "Réponses site")
+    const rsvpSheet = wb.addWorksheet("Réponses site")
+    rsvpSheet.columns = [
+      { header: "Statut", key: "statut", width: 8 },
+      { header: "Nom", key: "nom", width: 24 },
+      { header: "Email", key: "email", width: 28 },
+      { header: "Téléphone", key: "telephone", width: 16 },
+      { header: "+1", key: "plusOne", width: 6 },
+      { header: "Nom +1", key: "plusOneName", width: 20 },
+      { header: "Allergie", key: "allergie", width: 18 },
+      { header: "Message", key: "message", width: 30 },
+      { header: "Lendemain", key: "lendemain", width: 12 },
+      { header: "Date", key: "date", width: 22 },
+    ]
+    for (const r of rsvps) {
+      rsvpSheet.addRow({
+        statut: r.attendingMain ? "yes" : "no",
+        nom: r.guestName,
+        email: r.guestEmail ?? "",
+        telephone: r.guestPhone ?? "",
+        plusOne: r.plusOneName ? "oui" : "",
+        plusOneName: r.plusOneName ?? "",
+        allergie: r.dietaryNeeds ?? "",
+        message: r.message ?? "",
+        lendemain: r.attendingDayAfter === true ? "oui" : (r.attendingDayAfter === false ? "non" : ""),
+        date: r.createdAt.toISOString(),
+      })
+    }
 
-    const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" })
-    return new NextResponse(buf, {
+    const buf = await wb.xlsx.writeBuffer()
+    return new NextResponse(buf as ArrayBuffer, {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "Content-Disposition": `attachment; filename="invites-${plannerId}.xlsx"`,

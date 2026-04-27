@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react"
 import Link from "next/link"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import AntNav from "@/components/clone/AntNav"
+import { useTheme } from "@/components/ThemeProvider"
 import { usePlanners } from "@/hooks/usePlanners"
 import PageSkeleton from "@/components/clone/PageSkeleton"
 
@@ -149,21 +150,15 @@ export default function SettingsPage() {
     }).catch(() => setLoading(false))
   }, [])
 
-  // Apply theme immediately + sync localStorage so AntNav et toutes les pages le lisent
+  // Source unique : ThemeProvider. Quand `s.theme` change (sélection user dans
+  // l'UI settings), on délègue au provider qui applique la classe .dark + colorScheme
+  // + persiste localStorage. "auto" (legacy) → "system" pour rester cohérent.
+  const { setTheme: applyTheme } = useTheme()
   useEffect(() => {
     if (!s) return
-    const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false
-    const isDark = s.theme === "dark" || (s.theme === "auto" && prefersDark)
-    document.documentElement.classList.toggle("clone-dark", isDark)
-    document.documentElement.classList.toggle("dark", isDark)
-    try {
-      localStorage.setItem("momento_clone_dark_mode", JSON.stringify(isDark))
-      localStorage.setItem("momento_clone_theme_pref", s.theme) // pour retrouver "auto" au rechargement
-      // Synchronise avec ThemeProvider (mapping "auto" → "system")
-      const providerTheme = s.theme === "auto" ? "system" : s.theme
-      localStorage.setItem("momento_theme", providerTheme)
-    } catch {}
-  }, [s])
+    const providerTheme = s.theme === "auto" ? "system" : s.theme
+    applyTheme(providerTheme)
+  }, [s, applyTheme])
 
   // Apply palette immediately
   useEffect(() => {

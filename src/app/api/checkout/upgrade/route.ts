@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { requireVerifiedEmail } from "@/lib/auth-guards"
 
 type UpgradePlan = "pro" | "pro_planner"
 type PaymentMethod = "cmi" | "paypal"
@@ -25,6 +26,10 @@ export async function POST(req: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
+
+  // Hard-gate : refuser si l'email n'est pas vérifié (defense-in-depth)
+  const verifyGate = await requireVerifiedEmail(session.user.id)
+  if (verifyGate) return verifyGate
 
   const body = (await req.json().catch(() => null)) as {
     plan?: UpgradePlan

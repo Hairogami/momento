@@ -1,22 +1,11 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
+import { captureError } from "@/lib/observability"
 
 export async function GET() {
-  // En IS_DEV: utiliser requireSession (mêmes mocks que les autres routes)
-  // pour récupérer le VRAI userId. Renvoyer MOCK_DASHBOARD_DATA.unreadCount
-  // hardcodé cassait la décrémentation du badge à l'ouverture d'une conv.
-  let userId: string
-  if (IS_DEV) {
-    const s = await requireSession()
-    userId = s.user.id
-  } else {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ messages: 0, notifications: 0 })
-    userId = session.user.id
-  }
+  const userId = await getUserId()
+  if (!userId) return NextResponse.json({ messages: 0, notifications: 0 })
 
   let messages = 0;
   try {
@@ -46,7 +35,7 @@ export async function GET() {
       })
     }
   } catch (err) {
-    if (process.env.NODE_ENV !== "production") console.error("[unread]", err)
+    captureError(err, { route: "/api/unread" })
   }
 
   return NextResponse.json({ messages, notifications: 0 })

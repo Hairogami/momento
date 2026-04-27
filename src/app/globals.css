@@ -51,7 +51,123 @@
 
 :root {
   color-scheme: light;
-  /* ── Momento — Crème Clair · Noir Chaud ── */
+  /* ── Momento — Brand-aligned shadcn defaults (G gradient: #E11D48 → #9333EA) ── */
+  /* Surfaces aligned with --dash-* (light) for visual consistency across dashboard + shadcn */
+  --background:           #f7f7fb;             /* matches --dash-bg */
+  --foreground:           #121317;             /* matches --dash-text */
+  --card:                 #ffffff;             /* matches --dash-surface */
+  --card-foreground:      #121317;
+  --popover:              #ffffff;
+  --popover-foreground:   #121317;
+  --primary:              #E11D48;             /* brand --g1 (rose) */
+  --primary-foreground:   #ffffff;
+  --secondary:            #f1f1f6;             /* neutre clair */
+  --secondary-foreground: #121317;
+  --muted:                #f1f1f6;
+  --muted-foreground:     #6a6a71;             /* matches --dash-text-2 */
+  --accent:               #9333EA;             /* brand --g2 (violet) */
+  --accent-foreground:    #ffffff;
+  --destructive:          oklch(0.577 0.245 27.325);
+  --border:               rgba(183,191,217,0.15); /* matches --dash-border */
+  --input:                rgba(183,191,217,0.30);
+  --ring:                 #E11D48;             /* brand --g1 focus ring */
+  --radius:               0.75rem;
+  --sidebar:              #ffffff;             /* matches --dash-sidebar */
+  --sidebar-foreground:   #121317;
+  --sidebar-primary:      #E11D48;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent:       #f1f1f6;
+  --sidebar-accent-foreground: #121317;
+  --sidebar-border:       rgba(183,191,217,0.15);
+  --sidebar-ring:         #E11D48;
+  --chart-1: #E11D48;                          /* brand g1 */
+  --chart-2: #9333EA;                          /* brand g2 */
+  --chart-3: #22c55e;                          /* success */
+  --chart-4: #f59e0b;                          /* warning */
+  --chart-5: #6a6a71;                          /* neutre */
+}
+
+/* ── Momento design tokens — `.bg/.text/.border/.accent` (respond to .dark and .palette-* on <html>) ── */
+:root {
+  --bg: #f7f7fb;
+  --bg-card: #ffffff;
+  --text: #121317;
+  --text-muted: #6a6a71;
+  --border: rgba(183,191,217,0.15);
+  --accent: #E11D48;
+
+  /* Brand gradient stops — referenced as var(--g1) / var(--g2) by .claude/rules/brand-consistency.md */
+  --g1: #E11D48;
+  --g2: #9333EA;
+
+  /* ── Legacy --momento-* named tokens (used via src/lib/colors.ts in 14 components) ── */
+  /* Kept at :root for back-compat. Remapped to brand colors instead of sépia/terracotta. */
+  --momento-terra-rgb:  225, 29, 72;           /* brand g1 in rgb */
+  --momento-ink:        #f7f7fb;               /* page bg */
+  --momento-terra:      #E11D48;               /* brand g1 (was #C4532A terracotta) */
+  --momento-white:      #121317;               /* foreground text */
+  --momento-anthracite: rgba(183,191,217,0.15);/* border */
+  --momento-mist:       #6a6a71;               /* muted text */
+  --momento-dark:       #ffffff;               /* card bg */
+  --momento-steel:      #9a9aaa;               /* faint text */
+  --momento-silver:     #f1f1f6;               /* surface alt */
+  --momento-accent:     #9333EA;               /* brand g2 */
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #0d0e14;                               /* matches --dash-bg dark */
+  --bg-card: #16171e;                          /* matches --dash-surface dark */
+  --text: #eeeef5;                             /* matches --dash-text dark */
+  --text-muted: #b0b0cc;
+  --border: rgba(255,255,255,0.07);
+  --accent: #E11D48;
+
+  /* Legacy --momento-* dark overrides — brand-aligned */
+  --momento-terra-rgb:  225, 29, 72;
+  --momento-ink:        #0d0e14;
+  --momento-terra:      #E11D48;
+  --momento-white:      #eeeef5;
+  --momento-anthracite: rgba(255,255,255,0.07);
+  --momento-mist:       #b0b0cc;
+  --momento-dark:       #16171e;
+  --momento-steel:      #8888aa;
+  --momento-silver:     #1e1f28;
+  --momento-accent:     #9333EA;
+
+  /* shadcn defaults — dark mode brand-aligned */
+  --background:           #0d0e14;
+  --foreground:           #eeeef5;
+  --card:                 #16171e;
+  --card-foreground:      #eeeef5;
+  --popover:              #16171e;
+  --popover-foreground:   #eeeef5;
+  --primary:              #E11D48;             /* brand g1 stays vibrant in dark */
+  --primary-foreground:   #ffffff;
+  --secondary:            #1e1f28;
+  --secondary-foreground: #eeeef5;
+  --muted:                #1e1f28;
+  --muted-foreground:     #b0b0cc;
+  --accent:               #9333EA;             /* brand g2 */
+  --accent-foreground:    #ffffff;
+  --destructive:          oklch(0.577 0.245 27.325);
+  --border:               rgba(255,255,255,0.07);
+  --input:                rgba(255,255,255,0.10);
+  --ring:                 #E11D48;
+  --sidebar:              #111218;
+  --sidebar-foreground:   #eeeef5;
+  --sidebar-primary:      #E11D48;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent:       #1e1f28;
+  --sidebar-accent-foreground: #eeeef5;
+  --sidebar-border:       rgba(255,255,255,0.07);
+  --sidebar-ring:         #E11D48;
+}
+
+/* ── Legacy sépia/terracotta palette — opt-in via `.legacy-page` class ──
+   Pages that still depend on the old crème/terra design must add `class="legacy-page"`
+   on their root element. New pages inherit the brand-aligned defaults above. */
+.legacy-page {
   --background:           #F5EDD6;
   --foreground:           #1A1208;
   --card:                 #EDE4CC;
@@ -64,13 +180,11 @@
   --secondary-foreground: #1A1208;
   --muted:                #E5DCCA;
   --muted-foreground:     #6A5F4A;
-  --accent:               #2C1A0E;
+  --accent:               #C4532A;
   --accent-foreground:    #F5EDD6;
-  --destructive:          oklch(0.577 0.245 27.325);
   --border:               #DDD4BC;
   --input:                #DDD4BC;
-  --ring:                 #2C1A0E;
-  --radius:               0.75rem;
+  --ring:                 #C4532A;
   --sidebar:              #EDE4CC;
   --sidebar-foreground:   #1A1208;
   --sidebar-primary:      #2C1A0E;
@@ -84,49 +198,13 @@
   --chart-3: #9A907A;
   --chart-4: #DDD4BC;
   --chart-5: #1A1208;
-}
-
-/* ── Momento design tokens (respond to .dark and .palette-* on <html>) ── */
-:root {
   --bg: #F5EDD6;
   --bg-card: #EDE4CC;
   --text: #1A1208;
   --text-muted: #6A5F4A;
-  --border: #DDD4BC;
-  --accent: #C4532A;
-
-  /* Named tokens — used via lib/colors.ts */
-  --momento-terra-rgb:  196, 83, 42;
-  --momento-ink:        #F5EDD6;
-  --momento-terra:      #C4532A;
-  --momento-white:      #1A1208;
-  --momento-anthracite: #DDD4BC;
-  --momento-mist:       #6A5F4A;
-  --momento-dark:       #EDE4CC;
-  --momento-steel:      #9A907A;
-  --momento-silver:     #3A2E1E;
-  --momento-accent:     #2C1A0E;
 }
-.dark {
-  --momento-terra-rgb:  217, 107, 58;
-  --bg: #1A1208;
-  --bg-card: #2C1A0E;
-  --text: #F5EDD6;
-  --text-muted: #D4C9B4;
-  --border: #3A2E1E;
-  --accent: #C4532A;
-  color-scheme: dark;
-
-  /* Named tokens dark overrides */
-  --momento-ink:        #1A1208;
-  --momento-terra:      #D96B3A;
-  --momento-white:      #F5EDD6;
-  --momento-anthracite: #3A2E1E;
-  --momento-mist:       #D4C9B4;
-  --momento-dark:       #2C1A0E;
-  --momento-steel:      #A89880;
-  --momento-silver:     #E2D8C8;
-  --momento-accent:     #F5EDD6;
+.legacy-page.dark,
+.dark .legacy-page {
   --background:           #1A1208;
   --foreground:           #F5EDD6;
   --card:                 #2C1A0E;
@@ -141,7 +219,6 @@
   --muted-foreground:     #9A907A;
   --accent:               #C4532A;
   --accent-foreground:    #F5EDD6;
-  --destructive:          oklch(0.577 0.245 27.325);
   --border:               #3A2E1E;
   --input:                #3A2E1E;
   --ring:                 #C4532A;
@@ -153,6 +230,10 @@
   --sidebar-accent-foreground: #F5EDD6;
   --sidebar-border:       #3A2E1E;
   --sidebar-ring:         #C4532A;
+  --bg: #1A1208;
+  --bg-card: #2C1A0E;
+  --text: #F5EDD6;
+  --text-muted: #D4C9B4;
 }
 
 /* ── Ocean palette ── */
@@ -437,7 +518,7 @@ html.evt-force-mobile .site-nav-burger { display: flex !important; }
   100% { background-position: 200% center; }
 }
 .badge-shimmer {
-  background: linear-gradient(90deg, #C4532A 0%, #F5C842 40%, #C4532A 60%, #F5C842 100%);
+  background: linear-gradient(90deg, var(--g1, #E11D48) 0%, var(--g2, #9333EA) 40%, var(--g1, #E11D48) 60%, var(--g2, #9333EA) 100%);
   background-size: 200% auto;
   animation: shimmer 3s linear infinite;
   -webkit-background-clip: text;
@@ -659,4 +740,101 @@ html { scrollbar-width: thin; scrollbar-color: rgba(120,120,130,0.25) transparen
 @media (max-width: 767px) {
   .dash-widget-grid { grid-template-columns: 1fr !important; }
   .dash-widget-grid > * { grid-column: span 1 !important; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Accessibility — WCAG 2.1 AA utilities (a11y audit)
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* sr-only: hide visually but keep for assistive tech */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* sr-only-focusable: visible only when focused (skip-to-content link) */
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip-to-content link visible when focused */
+.skip-to-content:focus {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  padding: 10px 18px;
+  background: var(--g1, #E11D48);
+  color: #fff;
+  border-radius: 10px;
+  font-size: var(--text-sm, 14px);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+
+/* Default focus-visible across the app — provides a brand-tinted ring on
+   any interactive element that doesn't already declare a custom one.
+   Inputs/buttons that set their own focus styles via inline JS will still
+   keep them; this is the keyboard-only fallback (mouse clicks won't trigger). */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible,
+[tabindex]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--g1, #E11D48) !important;
+  outline-offset: 2px !important;
+  border-radius: inherit;
+}
+
+/* Spotlight decorative background (login left panel) — pure CSS, replaces framer-motion ~80KB */
+.momento-spotlight-1 { animation: momentoSpot1 12s ease-in-out infinite alternate; }
+.momento-spotlight-2 { animation: momentoSpot2 15s ease-in-out 3s infinite alternate; }
+.momento-spotlight-3 { animation: momentoSpot3 18s ease-in-out 5s infinite alternate; }
+@keyframes momentoSpot1 {
+  0%   { transform: translate(-50%, -50%); }
+  33%  { transform: translate(-30%, -70%); }
+  66%  { transform: translate(-70%, -30%); }
+  100% { transform: translate(-50%, -50%); }
+}
+@keyframes momentoSpot2 {
+  0%   { transform: translate(0%, 0%); }
+  33%  { transform: translate(25%, 30%); }
+  66%  { transform: translate(-25%, 10%); }
+  100% { transform: translate(0%, 0%); }
+}
+@keyframes momentoSpot3 {
+  0%   { transform: translate(0%, 0%); }
+  33%  { transform: translate(-30%, -20%); }
+  66%  { transform: translate(15%, 20%); }
+  100% { transform: translate(0%, 0%); }
+}
+
+/* Respect prefers-reduced-motion — applies to all animated/transition styles */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

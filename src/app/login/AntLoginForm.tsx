@@ -105,11 +105,12 @@ export default function AntLoginForm() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {/* Mode toggle */}
-      <div style={{
+      <div role="tablist" aria-label="Mode connexion ou inscription" style={{
         display: "flex", background: "var(--dash-faint-2,#f0f0f8)", borderRadius: 12, padding: 4, gap: 4,
       }}>
         {(["login", "register"] as const).map(m => (
-          <button key={m} onClick={() => { setMode(m); setError("") }}
+          <button key={m} type="button" role="tab" aria-selected={mode === m}
+            onClick={() => { setMode(m); setError("") }}
             style={{
               flex: 1, height: 36, borderRadius: 9, border: "none", cursor: "pointer",
               fontSize: "var(--text-sm)", fontWeight: mode === m ? 600 : 400, fontFamily: "inherit",
@@ -124,27 +125,43 @@ export default function AntLoginForm() {
       </div>
 
       <form onSubmit={mode === "login" ? handleLogin : handleRegister}
+        aria-label={mode === "login" ? "Formulaire de connexion" : "Formulaire de création de compte"}
         style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {mode === "register" && (
-          <input placeholder="Prénom" value={name} onChange={e => setName(e.target.value)}
-            required style={inputStyle}
-            onFocus={e => (e.target.style.borderColor = "#E11D48")}
-            onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+          <>
+            <label htmlFor="auth-firstname" className="sr-only">Prénom</label>
+            <input id="auth-firstname" name="firstName" autoComplete="given-name"
+              placeholder="Prénom" value={name} onChange={e => setName(e.target.value)}
+              required style={inputStyle}
+              onFocus={e => (e.target.style.borderColor = "#E11D48")}
+              onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
+          </>
         )}
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
+        <label htmlFor="auth-email" className="sr-only">Email</label>
+        <input id="auth-email" name="email" autoComplete="email"
+          type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
           required style={inputStyle}
           onFocus={e => (e.target.style.borderColor = "#E11D48")}
           onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
-        <input type="password" placeholder="Mot de passe" value={password}
+        <label htmlFor="auth-password" className="sr-only">Mot de passe</label>
+        <input id="auth-password" name="password"
+          autoComplete={mode === "login" ? "current-password" : "new-password"}
+          type="password" placeholder="Mot de passe" value={password}
           onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle}
+          aria-describedby={mode === "register" ? "auth-password-reqs" : undefined}
           onFocus={e => (e.target.style.borderColor = "#E11D48")}
           onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
 
         {mode === "register" && (
           <>
-            <PasswordRequirements value={password} />
-            <input type="password" placeholder="Confirmer le mot de passe" value={confirm}
+            <div id="auth-password-reqs">
+              <PasswordRequirements value={password} />
+            </div>
+            <label htmlFor="auth-password-confirm" className="sr-only">Confirmer le mot de passe</label>
+            <input id="auth-password-confirm" name="passwordConfirm" autoComplete="new-password"
+              type="password" placeholder="Confirmer le mot de passe" value={confirm}
               onChange={e => setConfirm(e.target.value)} required style={inputStyle}
+              aria-invalid={!!confirm && password !== confirm}
               onFocus={e => (e.target.style.borderColor = "#E11D48")}
               onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
             {confirm && password !== confirm && (
@@ -182,7 +199,7 @@ export default function AntLoginForm() {
         )}
 
         {error && (
-          <p style={{
+          <p role="alert" aria-live="polite" style={{
             fontSize: "var(--text-sm)", padding: "10px 14px", borderRadius: 10,
             background: "rgba(225,29,72,0.07)", color: "#E11D48",
           }}>{error}</p>

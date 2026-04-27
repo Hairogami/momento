@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { rateLimitAsync, getIp } from "@/lib/rateLimiter"
+import { captureError } from "@/lib/observability"
 
 const ContactSchema = z.object({
   vendorSlug:  z.string().min(1).max(100),
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ id: request.id }, { status: 201 })
   } catch (err) {
-    console.error("[contact] error:", err)
+    captureError(err, { route: "/api/contact", method: "POST" })
     return NextResponse.json({ error: "Une erreur est survenue." }, { status: 500 })
   }
 }

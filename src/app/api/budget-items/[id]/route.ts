@@ -1,22 +1,13 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { BudgetItemPatchSchema } from "@/lib/validations"
-import { IS_DEV } from "@/lib/devMock"
-import { requireSession } from "@/lib/devAuth"
+import { getUserId } from "@/lib/api-auth"
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  let userId: string
-  if (IS_DEV) {
-    const s = await requireSession()
-    userId = s.user.id
-  } else {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    userId = session.user.id
-  }
+  const userId = await getUserId()
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   let body: unknown
   try { body = await req.json() } catch {
