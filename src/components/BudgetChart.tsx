@@ -14,7 +14,7 @@ interface BudgetChartProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  lieu: "#C4532A",
+  lieu: "#E11D48", // brand --g1
   traiteur: "#D4733A",
   photo: "#A03820",
   musique: "#E08050",

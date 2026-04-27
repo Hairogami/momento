@@ -51,12 +51,12 @@ const CAT_COLORS: Record<string, string> = {
   "Magicien":                        "#15803D",
   "Structures gonflables":           "#166534",
   "Jeux & animations enfants":       "#14532D",
-  "Créateur de cadeaux invités":     "#C4532A", // terra (default)
+  "Créateur de cadeaux invités":     "#E11D48", // brand --g1 (default)
   "Créateur de faire-part":          "#9A3D1A",
 }
 
 function getCatColor(cat: string): string {
-  return CAT_COLORS[cat] ?? "#C4532A"
+  return CAT_COLORS[cat] ?? "#E11D48" // brand --g1
 }
 
 interface Vendor {
@@ -76,7 +76,7 @@ interface ExploreMapProps {
 
 function starHtml(rating: number): string {
   return Array.from({ length: 5 })
-    .map((_, i) => `<span style="color:${i < rating ? "#C4532A" : "#DDD4BC"};font-size:11px;">★</span>`)
+    .map((_, i) => `<span style="color:${i < rating ? "#E11D48" : "#DDD4BC"};font-size:11px;">★</span>`)
     .join("")
 }
 
@@ -223,13 +223,13 @@ export default function ExploreMap({ vendors, activeCity, activeCategory, onCity
             .join("")
 
           const sample = vList.slice(0, 3).map(v => `<div style="font-size:10px;color:#6A5F4A;padding:1px 0;">• ${v.name}</div>`).join("")
-          const more = vList.length > 3 ? `<div style="font-size:10px;color:#C4532A;margin-top:1px;">+${vList.length - 3} autres</div>` : ""
+          const more = vList.length > 3 ? `<div style="font-size:10px;color:#E11D48;margin-top:1px;">+${vList.length - 3} autres</div>` : ""
 
           const marker = L.marker(coords, { icon }).addTo(map)
           marker.bindPopup(`
             <div style="font-family:system-ui,sans-serif;min-width:160px;">
               <div style="font-weight:700;font-size:13px;color:#1A1208;margin-bottom:3px;">📍 ${city}</div>
-              <div style="font-size:11px;color:#C4532A;font-weight:600;margin-bottom:6px;">${count} prestataire${count > 1 ? "s" : ""}</div>
+              <div style="font-size:11px;color:#E11D48;font-weight:600;margin-bottom:6px;">${count} prestataire${count > 1 ? "s" : ""}</div>
               <div style="margin-bottom:6px;border-bottom:1px solid #EDE4CC;padding-bottom:6px;">${catLines}</div>
               ${sample}${more}
               <div style="margin-top:6px;text-align:center;">
