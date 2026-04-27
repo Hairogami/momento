@@ -5,7 +5,7 @@ const IS_DEV = process.env.NODE_ENV === "development" && process.env.VERCEL !== 
 
 export async function GET() {
   if (IS_DEV) {
-    return Response.json({ id: "mock-user-id", email: "moumene486@gmail.com", name: "Dev User", role: "admin" })
+    return Response.json({ id: "mock-user-id", email: "moumene486@gmail.com", name: "Dev User", role: "admin", emailVerified: new Date().toISOString() })
   }
 
   const session = await auth()

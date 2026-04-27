@@ -183,7 +183,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user, account, profile }) {
       if (!user?.id || account?.type !== "oauth") return;
       try {
-        const updates: { name?: string; image?: string } = {};
+        const updates: { name?: string; image?: string; emailVerified?: Date } = {};
+        // OAuth provider (Google, Facebook) = email déjà vérifié par le provider.
+        // Marquer emailVerified pour éviter d'afficher la bannière inutilement.
+        const existing = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { emailVerified: true },
+        });
+        if (!existing?.emailVerified) updates.emailVerified = new Date();
         // W-N06: cap lengths to prevent oversized OAuth profile data being written to DB
         if (profile?.name && profile.name !== user.name) updates.name = (profile.name as string).slice(0, 200);
         const providerImage =
