@@ -1336,27 +1336,37 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
   }, [events, activeEventId])
 
   // ── Chargement des réglages per-event (palette + widgets) ─────────────────
+  // hydratedEid (state, pas ref) : l'utiliser comme dep du save effect garantit
+  // qu'au premier mount le save ne tourne PAS dans le même commit que l'hydration
+  // (ce qui sauverait les valeurs initiales DEFAULT et écraserait le cache user).
+  // Le state force un nouveau render APRÈS l'hydration → les setters async ont
+  // pris effet → le save tourne avec les vraies valeurs custom.
+  const [hydratedEid, setHydratedEid] = useState<string | null>(null)
   useEffect(() => {
+    if (!activeEventId) return
     try {
       const so = localStorage.getItem(`momento_widget_order_${activeEventId}`)
       const ss = localStorage.getItem(`momento_widget_sizes_${activeEventId}`)
       const se = localStorage.getItem(`momento_extra_widgets_${activeEventId}`)
       const sp = localStorage.getItem(`momento_palette_${activeEventId}`)
+      const sr = localStorage.getItem(`momento_widget_rows_${activeEventId}`)
       setWidgetOrder(so ? JSON.parse(so) : DEFAULT_ORDER)
-      setWidgetSizes(ss ? JSON.parse(ss) : {})
+      setWidgetSizes(ss ? JSON.parse(ss) : DEFAULT_SIZES)
       setExtraWidgets(se ? JSON.parse(se) : [])
       setPalette(sp ? JSON.parse(sp) : { g1: "#E11D48", g2: "#9333EA" })
-      const sr = localStorage.getItem(`momento_widget_rows_${activeEventId}`)
       setWidgetRows(sr ? JSON.parse(sr) : {})
     } catch {}
+    setHydratedEid(activeEventId)
   }, [activeEventId])
 
   // ── Persist ───────────────────────────────────────────────────────────────
-  useEffect(() => { try { localStorage.setItem("momento_active_event",                          activeEventId)               } catch {} }, [activeEventId])
-  useEffect(() => { try { localStorage.setItem(`momento_widget_order_${activeEventId}`,  JSON.stringify(widgetOrder))  } catch {} }, [widgetOrder,   activeEventId])
-  useEffect(() => { try { localStorage.setItem(`momento_widget_sizes_${activeEventId}`,  JSON.stringify(widgetSizes))  } catch {} }, [widgetSizes,   activeEventId])
-  useEffect(() => { try { localStorage.setItem(`momento_widget_rows_${activeEventId}`,   JSON.stringify(widgetRows))   } catch {} }, [widgetRows,    activeEventId])
-  useEffect(() => { try { localStorage.setItem(`momento_extra_widgets_${activeEventId}`, JSON.stringify(extraWidgets)) } catch {} }, [extraWidgets,  activeEventId])
+  // Guard hydratedEid === activeEventId : skip le save tant que l'hydration
+  // n'a pas eu lieu pour cet event (évite d'écraser le cache avec DEFAULT_*).
+  useEffect(() => { try { if (activeEventId) localStorage.setItem("momento_active_event", activeEventId) } catch {} }, [activeEventId])
+  useEffect(() => { if (hydratedEid !== activeEventId || !activeEventId) return; try { localStorage.setItem(`momento_widget_order_${activeEventId}`,  JSON.stringify(widgetOrder))  } catch {} }, [widgetOrder,   activeEventId, hydratedEid])
+  useEffect(() => { if (hydratedEid !== activeEventId || !activeEventId) return; try { localStorage.setItem(`momento_widget_sizes_${activeEventId}`,  JSON.stringify(widgetSizes))  } catch {} }, [widgetSizes,   activeEventId, hydratedEid])
+  useEffect(() => { if (hydratedEid !== activeEventId || !activeEventId) return; try { localStorage.setItem(`momento_widget_rows_${activeEventId}`,   JSON.stringify(widgetRows))   } catch {} }, [widgetRows,    activeEventId, hydratedEid])
+  useEffect(() => { if (hydratedEid !== activeEventId || !activeEventId) return; try { localStorage.setItem(`momento_extra_widgets_${activeEventId}`, JSON.stringify(extraWidgets)) } catch {} }, [extraWidgets,  activeEventId, hydratedEid])
   useEffect(() => { try { localStorage.setItem("momento_clone_dark_mode",                JSON.stringify(darkMode))     } catch {} }, [darkMode])
   useEffect(() => { try { localStorage.setItem(`momento_palette_${activeEventId}`,       JSON.stringify(palette))      } catch {} }, [palette,       activeEventId])
 
