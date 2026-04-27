@@ -580,26 +580,29 @@ body:has(.snap-scroll-container) {
 
 /* ── Fluid typography scale (responsive across 360px → 2560px viewports) ──
    Usage : style={{ fontSize: "var(--text-sm)" }} ou className="text-[var(--text-sm)]"
-   Formule : clamp(MIN, BASE + Xvw, MAX) — calé sur design 1440px ref. */
+   Formule : clamp(MIN, BASE + min(Xvw, X*1.778vh), MAX)
+   Le min(vw, vh*1.778) limite la croissance sur écrans larges et COURTS
+   (laptops 1600×900, ultrawides). Ratio 16:9 = neutre.
+   Calé sur design ref 1440×810. */
 :root {
-  --text-2xs:  clamp(0.625rem, 0.55rem + 0.20vw, 0.75rem);   /* 10 → 12px */
-  --text-xs:   clamp(0.75rem,  0.65rem + 0.30vw, 0.875rem);  /* 12 → 14px */
-  --text-sm:   clamp(0.8125rem,0.70rem + 0.35vw, 1rem);      /* 13 → 16px */
-  --text-base: clamp(0.9375rem,0.80rem + 0.40vw, 1.125rem);  /* 15 → 18px */
-  --text-md:   clamp(1rem,     0.85rem + 0.50vw, 1.25rem);   /* 16 → 20px */
-  --text-lg:   clamp(1.125rem, 0.90rem + 0.70vw, 1.5rem);    /* 18 → 24px */
-  --text-xl:   clamp(1.375rem, 1.00rem + 1.10vw, 2rem);      /* 22 → 32px */
-  --text-2xl:  clamp(1.75rem,  1.20rem + 1.70vw, 2.75rem);   /* 28 → 44px */
-  --text-3xl:  clamp(2.25rem,  1.50rem + 2.40vw, 3.75rem);   /* 36 → 60px */
-  --text-4xl:  clamp(2.75rem,  1.80rem + 3.00vw, 5rem);      /* 44 → 80px */
+  --text-2xs:  clamp(0.625rem, 0.55rem + min(0.20vw, 0.356vh), 0.75rem);   /* 10 → 12px */
+  --text-xs:   clamp(0.75rem,  0.65rem + min(0.30vw, 0.533vh), 0.875rem);  /* 12 → 14px */
+  --text-sm:   clamp(0.8125rem,0.70rem + min(0.35vw, 0.622vh), 1rem);      /* 13 → 16px */
+  --text-base: clamp(0.9375rem,0.80rem + min(0.40vw, 0.711vh), 1.125rem);  /* 15 → 18px */
+  --text-md:   clamp(1rem,     0.85rem + min(0.50vw, 0.889vh), 1.25rem);   /* 16 → 20px */
+  --text-lg:   clamp(1.125rem, 0.90rem + min(0.70vw, 1.244vh), 1.5rem);    /* 18 → 24px */
+  --text-xl:   clamp(1.375rem, 1.00rem + min(1.10vw, 1.956vh), 2rem);      /* 22 → 32px */
+  --text-2xl:  clamp(1.75rem,  1.20rem + min(1.70vw, 3.022vh), 2.75rem);   /* 28 → 44px */
+  --text-3xl:  clamp(2.25rem,  1.50rem + min(2.40vw, 4.267vh), 3.75rem);   /* 36 → 60px */
+  --text-4xl:  clamp(2.75rem,  1.80rem + min(3.00vw, 5.333vh), 5rem);      /* 44 → 80px */
 
   /* Fluid spacing — paire avec le scale typographique */
-  --space-2xs: clamp(0.25rem,  0.20rem + 0.15vw, 0.375rem);  /*  4 →  6px */
-  --space-xs:  clamp(0.5rem,   0.40rem + 0.25vw, 0.75rem);   /*  8 → 12px */
-  --space-sm:  clamp(0.75rem,  0.60rem + 0.40vw, 1.125rem);  /* 12 → 18px */
-  --space-md:  clamp(1rem,     0.80rem + 0.55vw, 1.5rem);    /* 16 → 24px */
-  --space-lg:  clamp(1.5rem,   1.20rem + 0.85vw, 2.25rem);   /* 24 → 36px */
-  --space-xl:  clamp(2rem,     1.50rem + 1.40vw, 3.5rem);    /* 32 → 56px */
+  --space-2xs: clamp(0.25rem,  0.20rem + min(0.15vw, 0.267vh), 0.375rem);  /*  4 →  6px */
+  --space-xs:  clamp(0.5rem,   0.40rem + min(0.25vw, 0.444vh), 0.75rem);   /*  8 → 12px */
+  --space-sm:  clamp(0.75rem,  0.60rem + min(0.40vw, 0.711vh), 1.125rem);  /* 12 → 18px */
+  --space-md:  clamp(1rem,     0.80rem + min(0.55vw, 0.978vh), 1.5rem);    /* 16 → 24px */
+  --space-lg:  clamp(1.5rem,   1.20rem + min(0.85vw, 1.511vh), 2.25rem);   /* 24 → 36px */
+  --space-xl:  clamp(2rem,     1.50rem + min(1.40vw, 2.489vh), 3.5rem);    /* 32 → 56px */
 
   /* Tailles fixes utiles : icônes, avatars (échelle UI invariante) */
   --icon-xs: 0.875rem;   /* 14px */
