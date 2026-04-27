@@ -741,3 +741,26 @@ html { scrollbar-width: thin; scrollbar-color: rgba(120,120,130,0.25) transparen
   .dash-widget-grid { grid-template-columns: 1fr !important; }
   .dash-widget-grid > * { grid-column: span 1 !important; }
 }
+
+/* Spotlight decorative background (login left panel) — pure CSS, replaces framer-motion ~80KB */
+.momento-spotlight-1 { animation: momentoSpot1 12s ease-in-out infinite alternate; }
+.momento-spotlight-2 { animation: momentoSpot2 15s ease-in-out 3s infinite alternate; }
+.momento-spotlight-3 { animation: momentoSpot3 18s ease-in-out 5s infinite alternate; }
+@keyframes momentoSpot1 {
+  0%   { transform: translate(-50%, -50%); }
+  33%  { transform: translate(-30%, -70%); }
+  66%  { transform: translate(-70%, -30%); }
+  100% { transform: translate(-50%, -50%); }
+}
+@keyframes momentoSpot2 {
+  0%   { transform: translate(0%, 0%); }
+  33%  { transform: translate(25%, 30%); }
+  66%  { transform: translate(-25%, 10%); }
+  100% { transform: translate(0%, 0%); }
+}
+@keyframes momentoSpot3 {
+  0%   { transform: translate(0%, 0%); }
+  33%  { transform: translate(-30%, -20%); }
+  66%  { transform: translate(15%, 20%); }
+  100% { transform: translate(0%, 0%); }
+}

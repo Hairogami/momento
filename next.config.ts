@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 import path from "path";
 import { withSentryConfig } from "@sentry/nextjs";
+import withBundleAnalyzer from "@next/bundle-analyzer";
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -62,7 +67,7 @@ const nextConfig: NextConfig = {
 };
 
 // Wrap with Sentry only when DSN is configured (avoid noise in dev / OSS contributors)
-export default process.env.SENTRY_DSN
+const withMaybeSentry = process.env.SENTRY_DSN
   ? withSentryConfig(nextConfig, {
       // Auth & project — set via env in CI / Vercel
       org: process.env.SENTRY_ORG,
@@ -84,3 +89,5 @@ export default process.env.SENTRY_DSN
       disableLogger: true,
     })
   : nextConfig
+
+export default bundleAnalyzer(withMaybeSentry)
