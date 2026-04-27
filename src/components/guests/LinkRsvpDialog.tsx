@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, type CSSProperties } from "react"
-import type { Guest } from "./GuestCard"
+import type { Guest } from "./types"
 
 type Props = {
   rsvpId: string
