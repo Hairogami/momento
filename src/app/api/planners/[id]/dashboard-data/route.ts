@@ -54,7 +54,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     return Response.json({ error: "Not found" }, { status: 404 })
   }
 
-  const [guests, budgetItems, bookings, conversations] = await Promise.all([
+  const [guests, budgetItems, bookings, conversations, tasks] = await Promise.all([
     prisma.guest.findMany({
       where: { plannerId: id },
       select: {
@@ -85,6 +85,13 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       },
       orderBy: { updatedAt: "desc" },
       take: 10,
+    }),
+    prisma.task.findMany({
+      where: { plannerId: id },
+      select: {
+        id: true, title: true, completed: true, category: true, dueDate: true,
+      },
+      orderBy: { createdAt: "asc" },
     }),
   ])
 
@@ -165,6 +172,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       amount: b.totalPrice ?? undefined,
     })),
     messages,
+    tasks: tasks.map(t => ({
+      id: t.id,
+      label: t.title,
+      done: t.completed,
+      priority: "moyenne" as "haute" | "moyenne" | "basse",
+      dueDate: t.dueDate ? t.dueDate.toISOString().slice(0, 10) : "",
+      category: t.category ?? "Divers",
+    })),
     edata: {
       budget: planner.budget ?? 0,
       budgetSpent: totalSpent,

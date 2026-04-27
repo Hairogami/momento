@@ -1250,13 +1250,13 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
     recentExpenses: BudgetItem[]
     bookings: Booking[]
     messages: Message[]
+    tasks: Task[]
     edata: { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }
   } | null>(null)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [widgetRows,    setWidgetRows]    = useState<Record<string, number>>({})
   const [extraWidgets,  setExtraWidgets]  = useState<string[]>([])
-  const [tasksByEvent,  setTasksByEvent]  = useState<Record<string, Task[]>>({})
   const [darkMode,      setDarkMode]      = useState(() => {
     if (typeof window === "undefined") return true
     // Source de vérité = classe html (positionnée par no-flash script + ThemeProvider)
@@ -1293,7 +1293,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
 
   const event    = events.find(e => e.id === activeEventId) ?? events[0] ?? null
   const edata    = dashboardData?.edata ?? { budget: 0, budgetSpent: 0, guestCount: 0, guestConfirmed: 0 }
-  const tasks    = tasksByEvent[activeEventId]  ?? []
+  const tasks: Task[]          = dashboardData?.tasks ?? []
   const bookings: Booking[]    = dashboardData?.bookings ?? []
   const messages: Message[]    = dashboardData?.messages ?? []
   const budgetItems: BudgetItem[] = dashboardData?.budgetItems ?? []
@@ -1411,15 +1411,45 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
     setExtraWidgets(p => [...p, finalId]); setWidgetOrder(p => [...p, finalId]); setWidgetSizes(p => ({ ...p, [finalId]: 1 as WidgetSize }))
   }
   function removeWidget(id: string) { setExtraWidgets(p => p.filter(w => w !== id)); setWidgetOrder(p => p.filter(w => w !== id)) }
-  function toggleTask(taskId: string) {
-    setTasksByEvent(prev => ({ ...prev, [activeEventId]: (prev[activeEventId] ?? []).map(t => t.id === taskId ? { ...t, done: !t.done } : t) }))
+  async function toggleTask(taskId: string) {
+    const current = dashboardData?.tasks.find(t => t.id === taskId)
+    if (!current) return
+    // Optimistic update
+    setDashboardData(prev => prev ? { ...prev, tasks: prev.tasks.map(t => t.id === taskId ? { ...t, done: !t.done } : t) } : prev)
+    try {
+      const r = await fetch(`/api/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completed: !current.done }),
+      })
+      if (!r.ok) throw new Error("toggle failed")
+    } catch {
+      // Rollback
+      setDashboardData(prev => prev ? { ...prev, tasks: prev.tasks.map(t => t.id === taskId ? { ...t, done: current.done } : t) } : prev)
+    }
   }
-  function submitNewTask() {
+  async function submitNewTask() {
     const label = newTaskLabel.trim()
-    if (!label) return
-    const newTask: Task = { id: `t${Date.now()}`, label, done: false, priority: "moyenne", dueDate: new Date().toISOString().slice(0, 10), category: "Divers" }
-    setTasksByEvent(prev => ({ ...prev, [activeEventId]: [...(prev[activeEventId] ?? []), newTask] }))
+    if (!label || !activeEventId) return
     setNewTaskLabel(""); setAddingTask(false)
+    try {
+      const r = await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: label, plannerId: activeEventId }),
+      })
+      if (!r.ok) return
+      const created = await r.json() as { id: string; title: string; dueDate: string | null; category: string | null }
+      const newTask: Task = {
+        id: created.id,
+        label: created.title,
+        done: false,
+        priority: "moyenne",
+        dueDate: created.dueDate ? created.dueDate.slice(0, 10) : "",
+        category: created.category ?? "Divers",
+      }
+      setDashboardData(prev => prev ? { ...prev, tasks: [...prev.tasks, newTask] } : prev)
+    } catch {}
   }
   function resetLayout() {
     setWidgetOrder([...DEFAULT_ORDER]); setWidgetSizes({ ...DEFAULT_SIZES }); setExtraWidgets([]); setWidgetRows({})
