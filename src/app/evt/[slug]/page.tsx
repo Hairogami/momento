@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
+import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+import { auth } from "@/lib/auth"
 import EventSiteRenderer from "@/components/event-site/EventSiteRenderer"
 
 export const revalidate = 3600 // ISR 1h
@@ -50,6 +52,7 @@ export default async function EventSitePage({ params }: { params: Promise<{ slug
     where: { slug },
     include: {
       photos: { orderBy: { order: "asc" }, select: { id: true, url: true, caption: true } },
+      planner: { select: { userId: true } },
     },
   })
 
@@ -57,10 +60,20 @@ export default async function EventSitePage({ params }: { params: Promise<{ slug
     notFound()
   }
 
-  // Incrémente view count — non-bloquant
-  prisma.eventSite
-    .update({ where: { id: site.id }, data: { viewCount: { increment: 1 } } })
-    .catch(() => {})
+  // Incrémente view count — non-bloquant, exclut owner et bots
+  try {
+    const session = await auth().catch(() => null)
+    const isOwner = session?.user?.id === site.planner.userId
+    const ua = (await headers()).get("user-agent") ?? ""
+    const isBot = /bot|crawler|spider|googlebot|bingbot|yahoo|duckduck|facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp/i.test(ua)
+    if (!isOwner && !isBot) {
+      prisma.eventSite
+        .update({ where: { id: site.id }, data: { viewCount: { increment: 1 } } })
+        .catch(() => {})
+    }
+  } catch {
+    // tracking jamais bloquant
+  }
 
   return (
     <EventSiteRenderer
