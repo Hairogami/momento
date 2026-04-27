@@ -788,18 +788,20 @@ function RsvpPreview() {
     { label: "Mes Prestataires", icon: "handshake" },
     { label: "Site événement", icon: "share" },
   ]
-  // Icônes SVG inline (fallback Material Symbols)
+  // Icônes SVG inline — width/height en cqw via style pour rester adaptatives
+  const iconStyle = { width: u(14), height: u(14) }
+  const bellStyle = { width: u(11), height: u(11) }
   const ICON: Record<string, React.ReactNode> = {
-    home: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z" /></svg>,
-    dashboard: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v5h-8zm0 7h8v11h-8zm-10 3h8v8H3z" /></svg>,
-    wallet: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 7H5V5h14V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16zM18 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>,
-    groups: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 8c0-3 4-5 8-5s8 2 8 5v1H4z"/></svg>,
-    chat: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v14H7l-4 4z"/></svg>,
-    event: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4h2V2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 6v10h14V10z"/></svg>,
-    favorite: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21l-1.5-1.4C5 15 2 12 2 8.5A5.5 5.5 0 0 1 7.5 3c1.7 0 3.4.8 4.5 2.1A6.1 6.1 0 0 1 16.5 3 5.5 5.5 0 0 1 22 8.5c0 3.5-3 6.5-8.5 11.1z"/></svg>,
-    handshake: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 6L9 9.5l5.5 5.5 1.5-1.5-2-2 5-5-1.5-1.5-5 5z M5 17l4-4 5.5 5.5L13 20l-3-3-3 3z"/></svg>,
-    share: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M9 11l6-4M9 13l6 4" stroke="currentColor" strokeWidth="2" fill="none"/></svg>,
-    bell: <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.9V4a1 1 0 0 0-2 0v1.1A6 6 0 0 0 6 11v5l-2 2v1h16v-1z"/></svg>,
+    home: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z" /></svg>,
+    dashboard: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v5h-8zm0 7h8v11h-8zm-10 3h8v8H3z" /></svg>,
+    wallet: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M21 7H5V5h14V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16zM18 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>,
+    groups: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 8c0-3 4-5 8-5s8 2 8 5v1H4z"/></svg>,
+    chat: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v14H7l-4 4z"/></svg>,
+    event: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M5 4h2V2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 6v10h14V10z"/></svg>,
+    favorite: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M12 21l-1.5-1.4C5 15 2 12 2 8.5A5.5 5.5 0 0 1 7.5 3c1.7 0 3.4.8 4.5 2.1A6.1 6.1 0 0 1 16.5 3 5.5 5.5 0 0 1 22 8.5c0 3.5-3 6.5-8.5 11.1z"/></svg>,
+    handshake: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 6L9 9.5l5.5 5.5 1.5-1.5-2-2 5-5-1.5-1.5-5 5z M5 17l4-4 5.5 5.5L13 20l-3-3-3 3z"/></svg>,
+    share: <svg style={iconStyle} viewBox="0 0 24 24" fill="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M9 11l6-4M9 13l6 4" stroke="currentColor" strokeWidth="2" fill="none"/></svg>,
+    bell: <svg style={bellStyle} viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.9V4a1 1 0 0 0-2 0v1.1A6 6 0 0 0 6 11v5l-2 2v1h16v-1z"/></svg>,
   }
 
   return (
@@ -940,95 +942,95 @@ function RsvpPreview() {
         }}>
           {/* Header — Logo + Espace client + Toggle dark */}
           <div style={{
-            padding: "11px 13px",
-            borderBottom: "1px solid rgba(183,191,217,0.1)",
-            display: "flex", alignItems: "center", gap: 9,
+            padding: `${u(11)} ${u(13)}`,
+            borderBottom: `${u(1)} solid rgba(183,191,217,0.1)`,
+            display: "flex", alignItems: "center", gap: u(9),
             flexShrink: 0,
           }}>
             <div style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: u(28), height: u(28), borderRadius: u(8),
               background: "linear-gradient(135deg,#E11D48,#9333EA)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 2px 10px rgba(225,29,72,0.5)",
+              boxShadow: `0 ${u(2)} ${u(10)} rgba(225,29,72,0.5)`,
               flexShrink: 0,
             }}>
-              <span style={{ color: "#fff", fontSize: 14, fontWeight: 800, letterSpacing: "-0.05em" }}>M</span>
+              <span style={{ color: "#fff", fontSize: u(14), fontWeight: 800, letterSpacing: "-0.05em" }}>M</span>
             </div>
             <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>Momento</div>
-              <div style={{ fontSize: 8.5, color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>Espace client</div>
+              <div style={{ fontSize: u(14), fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1.1 }}>Momento</div>
+              <div style={{ fontSize: u(8.5), color: "rgba(255,255,255,0.4)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: u(2) }}>Espace client</div>
             </div>
             <div style={{
-              width: 28, height: 17, borderRadius: 99,
+              width: u(28), height: u(17), borderRadius: 99,
               background: "#E11D48",
               position: "relative", flexShrink: 0,
             }}>
               <div style={{
-                position: "absolute", top: 2.5, left: 13.5,
-                width: 12, height: 12, borderRadius: "50%",
+                position: "absolute", top: u(2.5), left: u(13.5),
+                width: u(12), height: u(12), borderRadius: "50%",
                 background: "#fff",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
+                boxShadow: `0 ${u(1)} ${u(3)} rgba(0,0,0,0.25)`,
               }} />
             </div>
           </div>
 
           {/* Event switcher */}
           <div style={{
-            padding: "9px 11px",
-            borderBottom: "1px solid rgba(183,191,217,0.07)",
+            padding: `${u(9)} ${u(11)}`,
+            borderBottom: `${u(1)} solid rgba(183,191,217,0.07)`,
             flexShrink: 0,
           }}>
             <div style={{
-              padding: "8px 10px",
+              padding: `${u(8)} ${u(10)}`,
               background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 9,
-              display: "flex", alignItems: "center", gap: 7,
+              border: `${u(1)} solid rgba(255,255,255,0.08)`,
+              borderRadius: u(9),
+              display: "flex", alignItems: "center", gap: u(7),
             }}>
               <div style={{
-                width: 8, height: 8, borderRadius: "50%",
+                width: u(8), height: u(8), borderRadius: "50%",
                 background: "#E11D48",
-                boxShadow: "0 0 6px rgba(225,29,72,0.7)",
+                boxShadow: `0 0 ${u(6)} rgba(225,29,72,0.7)`,
                 flexShrink: 0,
               }} />
               <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <div style={{ fontSize: u(12), fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   Mariage Yasmine
                 </div>
-                <div style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Événement actif</div>
+                <div style={{ fontSize: u(8), color: "rgba(255,255,255,0.4)", marginTop: u(1) }}>Événement actif</div>
               </div>
-              <span style={{ fontSize: 9, color: "rgba(255,255,255,0.4)" }}>▾</span>
+              <span style={{ fontSize: u(9), color: "rgba(255,255,255,0.4)" }}>▾</span>
             </div>
           </div>
 
           {/* Nav items (Notifications inclus) */}
           <nav style={{
-            flex: 1, padding: "6px 7px", overflow: "hidden",
-            display: "flex", flexDirection: "column", gap: 1,
+            flex: 1, padding: `${u(6)} ${u(7)}`, overflow: "hidden",
+            display: "flex", flexDirection: "column", gap: u(1),
           }}>
             {NAV.map((item) => (
               <div key={item.label} style={{
                 position: "relative",
-                padding: "7px 11px", borderRadius: 8,
-                fontSize: 12.5,
+                padding: `${u(7)} ${u(11)}`, borderRadius: u(8),
+                fontSize: u(12.5),
                 background: item.active
                   ? "linear-gradient(135deg, rgba(225,29,72,0.1), rgba(147,51,234,0.07))"
                   : "transparent",
-                display: "flex", alignItems: "center", gap: 9,
+                display: "flex", alignItems: "center", gap: u(9),
                 fontWeight: item.active ? 600 : 400,
                 color: item.active ? "#fff" : "rgba(255,255,255,0.62)",
               }}>
                 {item.active && (
                   <div style={{
                     position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
-                    width: 3, height: 18, borderRadius: 99,
+                    width: u(3), height: u(18), borderRadius: 99,
                     background: "linear-gradient(135deg,#E11D48,#9333EA)",
                   }} />
                 )}
                 <span style={{
                   color: item.active ? "#E11D48" : "rgba(255,255,255,0.62)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  width: 16, height: 16, flexShrink: 0,
+                  width: u(16), height: u(16), flexShrink: 0,
                   position: "relative",
                 }}>
                   {ICON[item.icon]}
@@ -1037,11 +1039,11 @@ function RsvpPreview() {
                   {item.label}
                 </span>
                 {item.isNotif && showBadge && (
-                  <div style={{ position: "relative", width: 18, height: 18, flexShrink: 0 }}>
+                  <div style={{ position: "relative", width: u(18), height: u(18), flexShrink: 0 }}>
                     <div key={`ring-${step}`} style={{
                       position: "absolute", inset: 0,
                       borderRadius: "50%",
-                      border: "2px solid #E11D48",
+                      border: `${u(2)} solid #E11D48`,
                       transformOrigin: "center",
                       animation: "badgeRingPulse 1.2s ease-out 0.2s",
                       pointerEvents: "none",
@@ -1050,10 +1052,10 @@ function RsvpPreview() {
                       position: "absolute", inset: 0,
                       borderRadius: "50%",
                       background: "linear-gradient(135deg,#E11D48,#9333EA)",
-                      color: "#fff", fontSize: 11, fontWeight: 800,
+                      color: "#fff", fontSize: u(11), fontWeight: 800,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       animation: "badgePopBig 0.7s cubic-bezier(0.34,1.56,0.64,1)",
-                      boxShadow: "0 0 0 2px #15171c, 0 0 10px rgba(225,29,72,0.75)",
+                      boxShadow: `0 0 0 ${u(2)} #15171c, 0 0 ${u(10)} rgba(225,29,72,0.75)`,
                       lineHeight: 1,
                       fontFamily: fontMomento,
                     }}>1</div>
@@ -1065,21 +1067,21 @@ function RsvpPreview() {
 
           {/* Footer user */}
           <div style={{
-            padding: "9px 13px",
-            borderTop: "1px solid rgba(183,191,217,0.07)",
-            display: "flex", alignItems: "center", gap: 9,
+            padding: `${u(9)} ${u(13)}`,
+            borderTop: `${u(1)} solid rgba(183,191,217,0.07)`,
+            display: "flex", alignItems: "center", gap: u(9),
             flexShrink: 0,
           }}>
             <div style={{
-              width: 26, height: 26, borderRadius: "50%",
+              width: u(26), height: u(26), borderRadius: "50%",
               background: "linear-gradient(135deg,#E11D48,#9333EA)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", fontSize: 13, fontWeight: 700,
+              color: "#fff", fontSize: u(13), fontWeight: 700,
               flexShrink: 0,
             }}>Y</div>
             <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Yasmine</div>
-              <div style={{ fontSize: 9, color: "#E11D48", fontWeight: 500 }}>Voir mon profil →</div>
+              <div style={{ fontSize: u(12), fontWeight: 600, color: "#fff" }}>Yasmine</div>
+              <div style={{ fontSize: u(9), color: "#E11D48", fontWeight: 500 }}>Voir mon profil →</div>
             </div>
           </div>
         </div>
@@ -1093,40 +1095,40 @@ function RsvpPreview() {
         opacity: showWidget ? 1 : 0,
         transform: showWidget ? "scale(1)" : "scale(0.95)",
         transition: "opacity 0.5s ease, transform 0.6s ease",
-        padding: "12px 14px",
+        padding: `${u(12)} ${u(14)}`,
         display: "flex", alignItems: "center",
       }}>
         <div style={{
           width: "100%",
           background: "rgba(255,255,255,0.05)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          borderRadius: 10,
-          padding: "10px 12px",
-          display: "flex", flexDirection: "column", gap: 7,
+          border: `${u(1)} solid rgba(255,255,255,0.1)`,
+          borderRadius: u(10),
+          padding: `${u(10)} ${u(12)}`,
+          display: "flex", flexDirection: "column", gap: u(7),
         }}>
-          <div style={{ fontSize: 6.5, color: "rgba(255,255,255,0.45)", letterSpacing: "0.18em", fontWeight: 700 }}>
+          <div style={{ fontSize: u(6.5), color: "rgba(255,255,255,0.45)", letterSpacing: "0.18em", fontWeight: 700 }}>
             INVITÉS
           </div>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 5 }}>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: u(5) }}>
             <div style={{
-              fontSize: 22, fontWeight: 700, color: "#fff", lineHeight: 1,
+              fontSize: u(22), fontWeight: 700, color: "#fff", lineHeight: 1,
               fontVariantNumeric: "tabular-nums",
               transition: "color 0.4s ease",
             }}>{guestCount}</div>
-            <div style={{ fontSize: 7, color: "rgba(255,255,255,0.5)", paddingBottom: 2 }}>
+            <div style={{ fontSize: u(7), color: "rgba(255,255,255,0.5)", paddingBottom: u(2) }}>
               invités · <span style={{ color: "#4ade80", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{confirmedCount}</span> confirmés
             </div>
             <div style={{
               marginLeft: "auto",
-              padding: "2px 7px", borderRadius: 99,
+              padding: `${u(2)} ${u(7)}`, borderRadius: 99,
               background: "rgba(193,113,58,0.2)",
-              color: "#C1713A", fontSize: 8, fontWeight: 800,
+              color: "#C1713A", fontSize: u(8), fontWeight: 800,
               fontVariantNumeric: "tabular-nums",
             }}>{pct}%</div>
           </div>
           {/* Bar */}
           <div style={{
-            height: 6, borderRadius: 99, overflow: "hidden",
+            height: u(6), borderRadius: 99, overflow: "hidden",
             background: "rgba(255,255,255,0.08)",
             display: "flex",
           }}>
@@ -1143,32 +1145,32 @@ function RsvpPreview() {
             }} />
           </div>
           {/* Legend */}
-          <div style={{ display: "flex", gap: 8, fontSize: 7, color: "rgba(255,255,255,0.55)" }}>
-            <span><span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "#4ade80", marginRight: 3, verticalAlign: "middle" }} />{confirmedCount} oui</span>
-            <span><span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "#C1713A", marginRight: 3, verticalAlign: "middle" }} />{declinedCount} non</span>
-            <span><span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "#3a3a40", marginRight: 3, verticalAlign: "middle" }} />{pendingCount} attente</span>
+          <div style={{ display: "flex", gap: u(8), fontSize: u(7), color: "rgba(255,255,255,0.55)" }}>
+            <span><span style={{ display: "inline-block", width: u(5), height: u(5), borderRadius: "50%", background: "#4ade80", marginRight: u(3), verticalAlign: "middle" }} />{confirmedCount} oui</span>
+            <span><span style={{ display: "inline-block", width: u(5), height: u(5), borderRadius: "50%", background: "#C1713A", marginRight: u(3), verticalAlign: "middle" }} />{declinedCount} non</span>
+            <span><span style={{ display: "inline-block", width: u(5), height: u(5), borderRadius: "50%", background: "#3a3a40", marginRight: u(3), verticalAlign: "middle" }} />{pendingCount} attente</span>
           </div>
           {/* Toast nouvelle ligne */}
           {showWidget && (
             <div style={{
-              marginTop: 2,
-              padding: "5px 7px", borderRadius: 6,
+              marginTop: u(2),
+              padding: `${u(5)} ${u(7)}`, borderRadius: u(6),
               background: "rgba(74,222,128,0.12)",
-              border: "1px solid rgba(74,222,128,0.3)",
-              display: "flex", alignItems: "center", gap: 6,
+              border: `${u(1)} solid rgba(74,222,128,0.3)`,
+              display: "flex", alignItems: "center", gap: u(6),
               animation: "slideIn 0.5s ease 0.6s backwards",
             }}>
               <div style={{
-                width: 14, height: 14, borderRadius: "50%",
+                width: u(14), height: u(14), borderRadius: "50%",
                 background: "rgba(193,113,58,0.3)", color: "#C1713A",
-                fontSize: 7, fontWeight: 800,
+                fontSize: u(7), fontWeight: 800,
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>O</div>
-              <div style={{ flex: 1, fontSize: 7, color: "#fff", lineHeight: 1.3 }}>
+              <div style={{ flex: 1, fontSize: u(7), color: "#fff", lineHeight: 1.3 }}>
                 <span style={{ fontWeight: 700 }}>Omar</span>
                 <span style={{ color: "rgba(255,255,255,0.55)" }}> · +1 Mariam</span>
               </div>
-              <span style={{ color: "#4ade80", fontSize: 9, fontWeight: 700 }}>✓</span>
+              <span style={{ color: "#4ade80", fontSize: u(9), fontWeight: 700 }}>✓</span>
             </div>
           )}
         </div>
