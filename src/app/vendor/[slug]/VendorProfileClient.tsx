@@ -90,7 +90,7 @@ export default function VendorProfileClient({
   return (
     <div className="ant-root" style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
       <AntNav hideLinks centerSlot={
-        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--dash-text,#18181b)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300, display: "block", textAlign: "center" }}>{name}</span>
+        <span style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#18181b)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300, display: "block", textAlign: "center" }}>{name}</span>
       } />
 
       {/* ── Hero ── */}
@@ -103,7 +103,7 @@ export default function VendorProfileClient({
             width: "100%", height: "100%",
             background: "linear-gradient(140deg, var(--g1,#E11D48), var(--g2,#9333EA))",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 80, opacity: 0.4,
+            fontSize: "var(--text-4xl)", opacity: 0.4,
           }}>✨</div>
         )}
         <div style={{
@@ -118,7 +118,7 @@ export default function VendorProfileClient({
             background: "rgba(255,255,255,0.18)",
             backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
             border: "1px solid rgba(255,255,255,0.25)",
-            color: "#fff", fontSize: 13, cursor: "pointer", fontFamily: "inherit",
+            color: "#fff", fontSize: "var(--text-sm)", cursor: "pointer", fontFamily: "inherit",
           }}>
             ← Retour aux prestataires
           </button>
@@ -133,7 +133,7 @@ export default function VendorProfileClient({
               background: favorited ? "rgba(225,29,72,0.85)" : "rgba(255,255,255,0.18)",
               backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
               border: favorited ? "1px solid rgba(225,29,72,0.5)" : "1px solid rgba(255,255,255,0.25)",
-              color: "#fff", fontSize: 16, cursor: favLoading ? "wait" : "pointer",
+              color: "#fff", fontSize: "var(--text-base)", cursor: favLoading ? "wait" : "pointer",
               display: "flex", alignItems: "center", justifyContent: "center",
               transition: "all 0.2s",
             }}
@@ -144,7 +144,7 @@ export default function VendorProfileClient({
             width: 38, height: 38, borderRadius: "50%",
             background: "rgba(255,255,255,0.18)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
             border: "1px solid rgba(255,255,255,0.25)", color: "#fff",
-            fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: "var(--text-sm)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             ↗
           </button>
@@ -156,7 +156,7 @@ export default function VendorProfileClient({
               display: "inline-flex", alignItems: "center",
               background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               borderRadius: 20, padding: "3px 12px",
-              fontSize: 11, fontWeight: 600, color: "#fff", marginBottom: 10,
+              fontSize: "var(--text-xs)", fontWeight: 600, color: "#fff", marginBottom: 10,
               letterSpacing: "0.04em",
             }}>
               {category}
@@ -170,15 +170,15 @@ export default function VendorProfileClient({
               {name}
             </h1>
             <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-              <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 14 }}>📍 {city}</span>
+              <span style={{ color: "rgba(255,255,255,0.85)", fontSize: "var(--text-sm)" }}>📍 {city}</span>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <StarRow count={Math.round(rating)} size={14} />
-                <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 13, fontWeight: 600 }}>{rating.toFixed(1)}</span>
+                <span style={{ color: "rgba(255,255,255,0.85)", fontSize: "var(--text-sm)", fontWeight: 600 }}>{rating.toFixed(1)}</span>
               </div>
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 4,
                 background: "rgba(22,163,74,0.25)", border: "1px solid rgba(22,163,74,0.4)",
-                borderRadius: 20, padding: "3px 10px", fontSize: 11, fontWeight: 500, color: "#86efac",
+                borderRadius: 20, padding: "3px 10px", fontSize: "var(--text-xs)", fontWeight: 500, color: "#86efac",
               }}>
                 ✓ Vérifié
               </span>
@@ -195,9 +195,9 @@ export default function VendorProfileClient({
           {/* Description */}
           {description && (
             <section>
-                <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 12 }}>À propos</h2>
+                <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 12 }}>À propos</h2>
                 <p style={{
-                  fontSize: 14, color: "var(--dash-text-2,#45474D)", lineHeight: 1.75,
+                  fontSize: "var(--text-sm)", color: "var(--dash-text-2,#45474D)", lineHeight: 1.75,
                   background: "var(--dash-surface,#fff)", borderRadius: 16, padding: 20,
                   border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
                   margin: 0,
@@ -210,7 +210,7 @@ export default function VendorProfileClient({
           {/* Photo gallery */}
           {allPhotos.length > 1 && (
             <section>
-                <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 12 }}>
+                <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 12 }}>
                   Photos ({allPhotos.length})
                 </h2>
                 <div
@@ -256,10 +256,10 @@ export default function VendorProfileClient({
               border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
               boxShadow: "0 4px 32px rgba(0,0,0,0.07)",
             }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px" }}>
+              <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px" }}>
                 Contacter {name.split(" ")[0]}
               </h3>
-              <p style={{ fontSize: 13, color: "var(--dash-text-3,#6a6a71)", margin: "0 0 20px" }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#6a6a71)", margin: "0 0 20px" }}>
                 Réponse habituelle en moins de 2h
               </p>
 
@@ -275,8 +275,8 @@ export default function VendorProfileClient({
                     background: "var(--dash-faint,#f7f7fb)", borderRadius: 12, padding: "10px 12px",
                     border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
                   }}>
-                    <p style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "3px 0 0" }}>{value}</p>
+                    <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+                    <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: "3px 0 0" }}>{value}</p>
                   </div>
                 ))}
               </div>
@@ -288,7 +288,7 @@ export default function VendorProfileClient({
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   padding: "13px 20px", borderRadius: 999, width: "100%",
                   background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
-                  color: "#fff", fontSize: 14, fontWeight: 600,
+                  color: "#fff", fontSize: "var(--text-sm)", fontWeight: 600,
                   border: "none", cursor: "pointer", fontFamily: "inherit", marginBottom: 10,
                 }}
               >
@@ -308,7 +308,7 @@ export default function VendorProfileClient({
                         padding: "6px 14px", borderRadius: 999,
                         background: "var(--dash-faint,rgba(183,191,217,0.1))",
                         border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
-                        color: "var(--dash-text-2,#45474D)", fontSize: 12, textDecoration: "none",
+                        color: "var(--dash-text-2,#45474D)", fontSize: "var(--text-xs)", textDecoration: "none",
                         display: "flex", alignItems: "center", gap: 5,
                       }}
                     >
@@ -324,7 +324,7 @@ export default function VendorProfileClient({
                         padding: "6px 14px", borderRadius: 999,
                         background: "var(--dash-faint,rgba(183,191,217,0.1))",
                         border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
-                        color: "var(--dash-text-2,#45474D)", fontSize: 12, textDecoration: "none",
+                        color: "var(--dash-text-2,#45474D)", fontSize: "var(--text-xs)", textDecoration: "none",
                         display: "flex", alignItems: "center", gap: 5,
                       }}
                     >
@@ -339,7 +339,7 @@ export default function VendorProfileClient({
                         padding: "6px 14px", borderRadius: 999,
                         background: "var(--dash-faint,rgba(183,191,217,0.1))",
                         border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
-                        color: "var(--dash-text-2,#45474D)", fontSize: 12, textDecoration: "none",
+                        color: "var(--dash-text-2,#45474D)", fontSize: "var(--text-xs)", textDecoration: "none",
                         display: "flex", alignItems: "center", gap: 5,
                       }}
                     >
@@ -365,7 +365,7 @@ export default function VendorProfileClient({
 
           {/* Reviews */}
           <section>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 16 }}>
+            <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", marginBottom: 16 }}>
               Avis clients {reviews.length > 0 && `(${reviews.length})`}
             </h2>
             {reviews.length > 0 ? (
@@ -381,18 +381,18 @@ export default function VendorProfileClient({
                           width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
                           background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
                           display: "flex", alignItems: "center", justifyContent: "center",
-                          color: "#fff", fontWeight: 700, fontSize: 13,
+                          color: "#fff", fontWeight: 700, fontSize: "var(--text-sm)",
                         }}>
                           {r.author.charAt(0)}
                         </div>
                         <div>
-                          <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>{r.author}</p>
-                          <p style={{ fontSize: 11, color: "var(--dash-text-3,#6a6a71)", margin: "2px 0 0" }}>{r.event}</p>
+                          <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>{r.author}</p>
+                          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#6a6a71)", margin: "2px 0 0" }}>{r.event}</p>
                         </div>
                       </div>
                       <StarRow count={r.stars} size={13} />
                     </div>
-                    <p style={{ fontSize: 13, color: "var(--dash-text-2,#45474D)", margin: 0, lineHeight: 1.6 }}>{r.note}</p>
+                    <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#45474D)", margin: 0, lineHeight: 1.6 }}>{r.note}</p>
                   </div>
                 ))}
               </div>
@@ -402,7 +402,7 @@ export default function VendorProfileClient({
                 border: "1px solid var(--dash-border,rgba(183,191,217,0.18))",
                 textAlign: "center",
               }}>
-                <p style={{ fontSize: 13, color: "var(--dash-text-3,#6a6a71)", margin: 0 }}>
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#6a6a71)", margin: 0 }}>
                   Pas encore d&apos;avis. Soyez le premier à laisser votre avis après votre événement.
                 </p>
               </div>
@@ -461,14 +461,14 @@ export default function VendorProfileClient({
           <button onClick={() => setLightboxIdx(null)} style={{
             position: "absolute", top: 20, right: 20, width: 40, height: 40, borderRadius: "50%",
             background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
-            fontSize: 20, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: "var(--text-md)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
           }}>✕</button>
           {lightboxIdx > 0 && (
             <button onClick={e => { e.stopPropagation(); setLightboxIdx(i => Math.max(0, (i ?? 1) - 1)) }} style={{
               position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
               width: 44, height: 44, borderRadius: "50%",
               background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
-              fontSize: 22, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "var(--text-lg)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
             }}>‹</button>
           )}
           {lightboxIdx < allPhotos.length - 1 && (
@@ -476,10 +476,10 @@ export default function VendorProfileClient({
               position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)",
               width: 44, height: 44, borderRadius: "50%",
               background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
-              fontSize: 22, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "var(--text-lg)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
             }}>›</button>
           )}
-          <div style={{ position: "absolute", bottom: 20, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600 }}>
+          <div style={{ position: "absolute", bottom: 20, color: "rgba(255,255,255,0.6)", fontSize: "var(--text-sm)", fontWeight: 600 }}>
             {lightboxIdx + 1} / {allPhotos.length}
           </div>
         </div>
@@ -552,11 +552,11 @@ function ContactModal({ slug, vendorName, prefillDate, onClose }: { slug: string
       >
         {sent ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>✓</div>
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>
+            <div style={{ fontSize: "var(--text-2xl)", marginBottom: 12 }}>✓</div>
+            <h3 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 8px" }}>
               Message envoyé
             </h3>
-            <p style={{ fontSize: 13, color: "var(--dash-text-3,#6a6a71)", margin: "0 0 20px" }}>
+            <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#6a6a71)", margin: "0 0 20px" }}>
               {vendorName} vous répondra sous peu.
             </p>
             <button onClick={onClose} style={{
@@ -570,15 +570,15 @@ function ContactModal({ slug, vendorName, prefillDate, onClose }: { slug: string
         ) : (
           <>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 4 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+              <h3 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
                 Contacter {vendorName}
               </h3>
               <button onClick={onClose} aria-label="Fermer" style={{
-                background: "transparent", border: "none", fontSize: 22, cursor: "pointer",
+                background: "transparent", border: "none", fontSize: "var(--text-lg)", cursor: "pointer",
                 color: "var(--dash-text-3,#6a6a71)", padding: 0, lineHeight: 1,
               }}>×</button>
             </div>
-            <p style={{ fontSize: 12, color: "var(--dash-text-3,#6a6a71)", margin: "0 0 18px" }}>
+            <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#6a6a71)", margin: "0 0 18px" }}>
               Décrivez votre projet — le prestataire vous contactera directement.
             </p>
 
@@ -613,7 +613,7 @@ function ContactModal({ slug, vendorName, prefillDate, onClose }: { slug: string
 
               {error && (
                 <div style={{
-                  fontSize: 12, color: "#ef4444", background: "rgba(239,68,68,0.08)",
+                  fontSize: "var(--text-xs)", color: "#ef4444", background: "rgba(239,68,68,0.08)",
                   padding: "8px 12px", borderRadius: 8,
                 }}>{error}</div>
               )}
@@ -638,7 +638,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
       <span style={{
-        fontSize: 11, fontWeight: 600,
+        fontSize: "var(--text-xs)", fontWeight: 600,
         color: "var(--dash-text-3,#6a6a71)",
         textTransform: "uppercase", letterSpacing: "0.05em",
       }}>
@@ -655,7 +655,7 @@ const inputStyle: React.CSSProperties = {
   border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
   background: "var(--dash-faint,#f7f7fb)",
   color: "var(--dash-text,#121317)",
-  fontSize: 13,
+  fontSize: "var(--text-sm)",
   fontFamily: "inherit",
   outline: "none",
 }
@@ -725,16 +725,16 @@ function ShareModal({ name, category, city, onClose }: { name: string; category:
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
+          <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
             Partager ce prestataire
           </h3>
           <button onClick={onClose} aria-label="Fermer" style={{
-            background: "transparent", border: "none", fontSize: 20, cursor: "pointer",
+            background: "transparent", border: "none", fontSize: "var(--text-md)", cursor: "pointer",
             color: "var(--dash-text-3,#6a6a71)", padding: 0, lineHeight: 1,
           }}>×</button>
         </div>
 
-        <p style={{ fontSize: 12, color: "var(--dash-text-3,#6a6a71)", margin: "0 0 16px" }}>
+        <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#6a6a71)", margin: "0 0 16px" }}>
           {name} · {category} · {city}
         </p>
 
@@ -752,11 +752,11 @@ function ShareModal({ name, category, city, onClose }: { name: string; category:
                 background: "var(--dash-faint,#f7f7fb)",
                 border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
                 color: "var(--dash-text,#121317)", textDecoration: "none",
-                fontSize: 13, fontWeight: 500, fontFamily: "inherit",
+                fontSize: "var(--text-sm)", fontWeight: 500, fontFamily: "inherit",
                 transition: "background 0.15s",
               }}
             >
-              <span style={{ fontSize: 16 }}>{opt.icon}</span>
+              <span style={{ fontSize: "var(--text-base)" }}>{opt.icon}</span>
               {opt.label}
             </a>
           ))}
@@ -770,7 +770,7 @@ function ShareModal({ name, category, city, onClose }: { name: string; category:
             background: copied ? "rgba(22,163,74,0.1)" : "var(--dash-faint,#f7f7fb)",
             border: `1px solid ${copied ? "rgba(22,163,74,0.3)" : "var(--dash-border,rgba(183,191,217,0.3))"}`,
             color: copied ? "#16a34a" : "var(--dash-text,#121317)",
-            fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
+            fontSize: "var(--text-sm)", fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
             transition: "all 0.2s",
           }}
