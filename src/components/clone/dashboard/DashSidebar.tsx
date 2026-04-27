@@ -57,10 +57,32 @@ function GIcon({ name, size = 18, color = "var(--dash-text-2,#6a6a71)" }: { name
   )
 }
 
-export default function DashSidebar({ events, activeEventId, onEventChange, firstName: firstNameProp, messageUnread = 0 }: DashSidebarProps) {
+export default function DashSidebar({ events, activeEventId, onEventChange, firstName: firstNameProp, messageUnread: messageUnreadProp = 0 }: DashSidebarProps) {
   const pathname   = usePathname()
   const { data: session } = useSession()
   const { plan } = usePlan()
+  // Sidebar montée sur 7+ pages — fetch elle-même les counts pour ne pas
+  // dépendre de chaque page parent. Polling 30s pour reflet quasi-live.
+  const [messageUnreadLive, setMessageUnreadLive] = useState<number>(messageUnreadProp)
+  const [notifUnreadLive, setNotifUnreadLive] = useState<number>(0)
+  useEffect(() => {
+    let cancelled = false
+    async function refresh() {
+      try {
+        const [u, n] = await Promise.all([
+          fetch("/api/unread", { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch("/api/notifications", { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null),
+        ])
+        if (cancelled) return
+        if (u && typeof u.messages === "number") setMessageUnreadLive(u.messages)
+        if (Array.isArray(n)) setNotifUnreadLive(n.filter((x: { read: boolean }) => !x.read).length)
+      } catch { /* silent */ }
+    }
+    void refresh()
+    const id = setInterval(refresh, 30000)
+    return () => { cancelled = true; clearInterval(id) }
+  }, [])
+  const messageUnread = messageUnreadLive
   const [upsellOpen, setUpsellOpen] = useState(false)
   const [upsellReason, setUpsellReason] = useState<"messages" | "guests" | "checklist" | "favorites" | "events-multiple" | "vendor-contact" | "theme" | "event-site">("messages")
   const canSwitch = session?.user?.email === DEV_OWNER_EMAIL
@@ -390,7 +412,17 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
                 onMouseLeave={e => { if (pathname !== item.href) (e.currentTarget as HTMLElement).style.background = "transparent" }}
               >
                 <GIcon name={item.icon} size={16} color={pathname === item.href ? "var(--g1,#E11D48)" : "var(--dash-text-2,#6a6a71)"} />
-                {item.label}
+                <span style={{ flex: 1 }}>{item.label}</span>
+                {item.href === "/notifications" && notifUnreadLive > 0 && (
+                  <span style={{ fontSize: "var(--text-2xs)", fontWeight: 700, background: G, color: "#fff", padding: "1px 6px", borderRadius: 999, minWidth: 18, textAlign: "center" }}>
+                    {notifUnreadLive}
+                  </span>
+                )}
+                {item.href === "/messages" && messageUnread > 0 && (
+                  <span style={{ fontSize: "var(--text-2xs)", fontWeight: 700, background: G, color: "#fff", padding: "1px 6px", borderRadius: 999, minWidth: 18, textAlign: "center" }}>
+                    {messageUnread}
+                  </span>
+                )}
               </Link>
             ))}
 

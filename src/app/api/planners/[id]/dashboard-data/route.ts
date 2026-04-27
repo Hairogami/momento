@@ -80,7 +80,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     }),
     // Conversations du user (dont messages les plus récents) pour widget Messages
     prisma.conversation.findMany({
-      where: { clientId: userId, plannerId: id },
+      // Inclure conversations rattachées au planner ET conversations globales
+      // (sans plannerId, ex: contact vendor avant création planner). Sinon
+      // un user qui contacte un vendor en premier ne voit jamais la conv.
+      where: { clientId: userId, OR: [{ plannerId: id }, { plannerId: null }] },
       include: {
         messages: { orderBy: { createdAt: "desc" }, take: 1 },
       },
