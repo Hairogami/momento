@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
@@ -54,6 +54,16 @@ export const metadata: Metadata = {
       "x-default": "https://momentoevents.app",
     },
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f7fb" },
+    { media: "(prefers-color-scheme: dark)",  color: "#0d0e14" },
+  ],
 };
 
 export default function RootLayout({
