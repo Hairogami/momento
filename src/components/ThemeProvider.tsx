@@ -55,10 +55,13 @@ function applyTheme(resolved: ResolvedTheme, palette: Palette) {
   if (resolved === "dark") {
     html.classList.add("dark")
     html.classList.add("clone-dark")
+    html.style.colorScheme = "dark"
   } else {
     html.classList.remove("dark")
     html.classList.remove("clone-dark")
+    html.style.colorScheme = "light"
   }
+  html.setAttribute("data-theme", resolved)
   html.classList.remove("palette-ocean", "palette-forest", "palette-ardoise")
   const cls = PALETTE_CLASSES[palette]
   if (cls) html.classList.add(cls)
