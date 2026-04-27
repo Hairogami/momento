@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { DEV_OWNER_EMAIL } from "@/lib/adminAuth"
+import { logAdminAction } from "@/lib/adminAudit"
 
 // DEV_OWNER_EMAIL centralisé via @/lib/adminAuth (DEV_OWNER_EMAIL)
 
@@ -31,6 +32,17 @@ export async function POST(_req: NextRequest) {
     await prisma.user.update({
       where: { id: user.id },
       data: { role: "client" },
+    })
+    await logAdminAction({
+      adminId:    user.id,
+      adminEmail: user.email ?? DEV_OWNER_EMAIL,
+      action:     "dev.switch-role",
+      targetType: "User",
+      targetId:   user.id,
+      changes:    {
+        role: { from: "vendor", to: "client" },
+        env:  { from: null, to: process.env.VERCEL_ENV ?? "local" },
+      },
     })
     return NextResponse.json({ role: "client", redirect: "/accueil" })
   }
@@ -76,6 +88,19 @@ export async function POST(_req: NextRequest) {
   await prisma.user.update({
     where: { id: user.id },
     data: { role: "vendor", vendorSlug },
+  })
+
+  await logAdminAction({
+    adminId:    user.id,
+    adminEmail: user.email ?? DEV_OWNER_EMAIL,
+    action:     "dev.switch-role",
+    targetType: "User",
+    targetId:   user.id,
+    changes:    {
+      role:       { from: user.role, to: "vendor" },
+      vendorSlug: { from: user.vendorSlug, to: vendorSlug },
+      env:        { from: null, to: process.env.VERCEL_ENV ?? "local" },
+    },
   })
 
   return NextResponse.json({ role: "vendor", vendorSlug, redirect: "/vendor/dashboard" })
