@@ -33,11 +33,11 @@ export default function MesPrestatairesWidget({ plannerId, refreshKey }: { plann
   if (!plannerId || (!loading && categories.length === 0)) {
     return (
       <div style={{ padding: "16px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 10 }}>
-        <span style={{ fontSize: 28 }}>🤝</span>
-        <p style={{ fontSize: 12, color: "var(--dash-text-2,#6a6a71)", textAlign: "center", margin: 0 }}>
+        <span style={{ fontSize: "var(--text-xl)" }}>🤝</span>
+        <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", textAlign: "center", margin: 0 }}>
           Créez un événement pour gérer vos prestataires
         </p>
-        <Link href="/mes-prestataires" style={{ fontSize: 11, fontWeight: 600, color: "#E11D48", textDecoration: "none" }}>
+        <Link href="/mes-prestataires" style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#E11D48", textDecoration: "none" }}>
           Commencer →
         </Link>
       </div>
@@ -48,11 +48,11 @@ export default function MesPrestatairesWidget({ plannerId, refreshKey }: { plann
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "14px 16px 16px" }}>
       {/* Progress header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)" }}>
+        <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>
           {covered.length}/{categories.length} catégories
         </span>
         <span style={{
-          fontSize: 12, fontWeight: 700,
+          fontSize: "var(--text-xs)", fontWeight: 700,
           backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
         }}>{pct}%</span>
       </div>
@@ -65,7 +65,7 @@ export default function MesPrestatairesWidget({ plannerId, refreshKey }: { plann
       {/* Category chips */}
       <div style={{ flex: 1, display: "flex", flexWrap: "wrap", gap: 7, alignContent: "flex-start", overflowY: "auto" }}>
         {loading ? (
-          <p style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)" }}>Chargement…</p>
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Chargement…</p>
         ) : (
           categories.map(cat => {
             const hasCoverage = vendors.some(v => v.vendor.category === cat)
@@ -73,7 +73,7 @@ export default function MesPrestatairesWidget({ plannerId, refreshKey }: { plann
             return (
               <div key={cat} style={{
                 display: "flex", alignItems: "center", gap: 5,
-                padding: "5px 11px", borderRadius: 99, fontSize: 11, fontWeight: 600,
+                padding: "5px 11px", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 600,
                 background: hasCoverage ? "rgba(34,197,94,0.1)" : "var(--dash-faint-2,rgba(183,191,217,0.1))",
                 color: hasCoverage ? "#22c55e" : "var(--dash-text-3,#9a9aaa)",
                 border: `1px solid ${hasCoverage ? "rgba(34,197,94,0.2)" : "rgba(183,191,217,0.2)"}`,
@@ -93,7 +93,7 @@ export default function MesPrestatairesWidget({ plannerId, refreshKey }: { plann
         padding: "9px 16px", borderRadius: 12, textDecoration: "none",
         background: pct === 100 ? "rgba(34,197,94,0.1)" : "rgba(225,29,72,0.06)",
         color: pct === 100 ? "#22c55e" : "#E11D48",
-        fontSize: 11, fontWeight: 700, gap: 5,
+        fontSize: "var(--text-xs)", fontWeight: 700, gap: 5,
       }}>
         {pct === 100 ? "✓ Tous vos prestataires" : `+ Gérer vos prestataires`}
       </Link>

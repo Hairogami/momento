@@ -71,13 +71,13 @@ export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: n
                     position: "absolute", top: -4, right: -6,
                     width: 14, height: 14, borderRadius: "50%",
                     background: G, color: "#fff",
-                    fontSize: 9, fontWeight: 700,
+                    fontSize: "var(--text-2xs)", fontWeight: 700,
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>{messageUnread}</span>
                 )}
               </div>
               <span style={{
-                fontSize: 10, fontWeight: active ? 600 : 400,
+                fontSize: "var(--text-2xs)", fontWeight: active ? 600 : 400,
                 color: active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)",
               }}>{item.label}</span>
               {active && (
@@ -97,7 +97,7 @@ export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: n
           cursor: "pointer", fontFamily: "inherit",
         }}>
           <GIcon name="menu" size={22} color="var(--dash-text-3,#9a9aaa)" />
-          <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Menu</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Menu</span>
         </button>
       </nav>
 
@@ -126,7 +126,7 @@ export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: n
                 }}>
                   <GIcon name={item.icon} size={20} color={active ? "var(--g1,#E11D48)" : "var(--dash-text-2,#6a6a71)"} />
                   <span style={{
-                    fontSize: 15, fontWeight: active ? 600 : 400,
+                    fontSize: "var(--text-base)", fontWeight: active ? 600 : 400,
                     color: active ? "var(--dash-text,#121317)" : "var(--dash-text-2,#45474D)",
                   }}>{item.label}</span>
                 </Link>

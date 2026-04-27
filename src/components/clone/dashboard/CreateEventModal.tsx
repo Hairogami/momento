@@ -213,11 +213,11 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
             <p style={{ fontSize: 10.5, fontWeight: 700, color: "var(--dash-text-3, #8888aa)", textTransform: "uppercase", letterSpacing: "1.4px", margin: "0 0 4px" }}>
               Étape {step}/3
             </p>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 500, letterSpacing: "-0.015em", margin: 0 }}>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "var(--text-lg)", fontWeight: 500, letterSpacing: "-0.015em", margin: 0 }}>
               {step === 1 ? "Votre événement" : step === 2 ? "Vos prestataires" : "Votre budget"}
             </h2>
           </div>
-          <button onClick={handleClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, color: "var(--dash-text-3, #8888aa)", padding: 4 }}>✕</button>
+          <button onClick={handleClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-lg)", color: "var(--dash-text-3, #8888aa)", padding: 4 }}>✕</button>
         </div>
 
         <div style={{ height: 3, background: "var(--dash-faint-2, rgba(255,255,255,0.08))", margin: "14px 26px 0", borderRadius: 99 }}>
@@ -244,7 +244,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                           cursor: "pointer", transition: "all 0.12s",
                           boxShadow: active ? "0 0 0 1.5px color-mix(in srgb, var(--g1,#E11D48) 45%, transparent) inset" : undefined,
                         }}>
-                        <div style={{ fontSize: 18 }}>{f.emoji}</div>
+                        <div style={{ fontSize: "var(--text-md)" }}>{f.emoji}</div>
                         <div style={{ marginTop: 4, lineHeight: 1.2 }}>{f.label.split(" ")[0]}</div>
                       </button>
                     )
@@ -268,10 +268,10 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                     aria-haspopup="listbox"
                   >
                     <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 16 }}>{subtype?.emoji ?? family.emoji}</span>
+                      <span style={{ fontSize: "var(--text-base)" }}>{subtype?.emoji ?? family.emoji}</span>
                       <span>{subtype?.label ?? "Choisir un sous-type"}</span>
                     </span>
-                    <span style={{ fontSize: 11, color: "var(--g1, #E11D48)", transform: subtypeOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>▼</span>
+                    <span style={{ fontSize: "var(--text-xs)", color: "var(--g1, #E11D48)", transform: subtypeOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>▼</span>
                   </button>
                   {subtypeOpen && (
                     <>
@@ -306,16 +306,16 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                                 padding: "10px 12px", borderRadius: 10, border: "none",
                                 background: active ? "rgba(225,29,72,0.14)" : "transparent",
                                 color: "var(--dash-text, #121317)",
-                                fontSize: 13, fontWeight: active ? 700 : 500,
+                                fontSize: "var(--text-sm)", fontWeight: active ? 700 : 500,
                                 cursor: "pointer", textAlign: "left", fontFamily: "inherit",
                                 transition: "background 0.12s",
                               }}
                               onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "var(--dash-faint-2, rgba(0,0,0,0.05))" }}
                               onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
                             >
-                              <span style={{ fontSize: 16 }}>{s.emoji ?? ""}</span>
+                              <span style={{ fontSize: "var(--text-base)" }}>{s.emoji ?? ""}</span>
                               <span style={{ flex: 1 }}>{s.label}</span>
-                              {active && <span style={{ color: "var(--g1, #E11D48)", fontSize: 12, fontWeight: 800 }}>✓</span>}
+                              {active && <span style={{ color: "var(--g1, #E11D48)", fontSize: "var(--text-xs)", fontWeight: 800 }}>✓</span>}
                             </button>
                           )
                         })}
@@ -324,7 +324,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                   )}
                 </div>
                 {subtype?.description && (
-                  <p style={{ fontSize: 11, color: "var(--dash-text-3, #8888aa)", marginTop: 6 }}>{subtype.description}</p>
+                  <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)", marginTop: 6 }}>{subtype.description}</p>
                 )}
               </div>
 
@@ -356,7 +356,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                       <span style={{ color: city ? "var(--dash-text, #121317)" : "var(--dash-text-3, #8888aa)" }}>
                         {city || "Choisir une ville"}
                       </span>
-                      <span style={{ fontSize: 11, color: "var(--g1, #E11D48)", transform: cityOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>▼</span>
+                      <span style={{ fontSize: "var(--text-xs)", color: "var(--g1, #E11D48)", transform: cityOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>▼</span>
                     </button>
                     {cityOpen && (
                       <>
@@ -391,7 +391,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                                   padding: "9px 12px", borderRadius: 10, border: "none",
                                   background: active ? "rgba(225,29,72,0.14)" : "transparent",
                                   color: "var(--dash-text, #121317)",
-                                  fontSize: 13, fontWeight: active ? 700 : 500,
+                                  fontSize: "var(--text-sm)", fontWeight: active ? 700 : 500,
                                   cursor: "pointer", textAlign: "left", fontFamily: "inherit",
                                   transition: "background 0.12s",
                                 }}
@@ -399,7 +399,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                                 onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent" }}
                               >
                                 <span style={{ flex: 1 }}>{c}</span>
-                                {active && <span style={{ color: "var(--g1, #E11D48)", fontSize: 12, fontWeight: 800 }}>✓</span>}
+                                {active && <span style={{ color: "var(--g1, #E11D48)", fontSize: "var(--text-xs)", fontWeight: 800 }}>✓</span>}
                               </button>
                             )
                           })}
@@ -420,10 +420,10 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
           {step === 2 && (
             <div>
-              <p style={{ fontSize: 13, color: "var(--dash-text-2, #b0b0cc)", margin: "0 0 4px" }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2, #b0b0cc)", margin: "0 0 4px" }}>
                 On a pré-sélectionné les catégories pour un <strong style={{ color: "var(--dash-text, #eeeef5)" }}>{subtype?.label.toLowerCase() ?? family.label.toLowerCase()}</strong>.
               </p>
-              <p style={{ fontSize: 12, color: "var(--dash-text-3, #8888aa)", margin: "0 0 16px" }}>
+              <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)", margin: "0 0 16px" }}>
                 Ajustez à votre guise — minimum 3 catégories.{" "}
                 <strong style={{ color: activeCats.length >= 3 ? "#22c55e" : "var(--g1, #E11D48)" }}>
                   {activeCats.length} sélectionnée{activeCats.length !== 1 ? "s" : ""}
@@ -437,7 +437,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                   return (
                     <button key={cat.value} onClick={() => toggleCat(cat.value)} type="button"
                       style={{
-                        padding: "10px 12px", borderRadius: 12, fontSize: 12, fontWeight: 600,
+                        padding: "10px 12px", borderRadius: 12, fontSize: "var(--text-xs)", fontWeight: 600,
                         border: "1.5px solid",
                         borderColor: selected ? "transparent" : "var(--dash-border, rgba(255,255,255,0.07))",
                         background: selected ? "rgba(225,29,72,0.10)" : "var(--dash-faint, rgba(255,255,255,0.04))",
@@ -446,7 +446,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                         transition: "all 0.12s", position: "relative",
                         boxShadow: selected ? "0 0 0 1.5px color-mix(in srgb, var(--g1,#E11D48) 50%, transparent) inset" : undefined,
                       }}>
-                      <span style={{ fontSize: 16 }}>{cat.emoji}</span>
+                      <span style={{ fontSize: "var(--text-base)" }}>{cat.emoji}</span>
                       <span style={{ lineHeight: 1.25, flex: 1 }}>{cat.value}</span>
                       {isDefault && (
                         <span
@@ -470,7 +470,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                 })}
               </div>
 
-              {error && <p style={{ fontSize: 12, color: "#ef4444", marginTop: 10, marginBottom: 0 }}>{error}</p>}
+              {error && <p style={{ fontSize: "var(--text-xs)", color: "#ef4444", marginTop: 10, marginBottom: 0 }}>{error}</p>}
 
               <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
                 <button onClick={() => setStep(1)} style={btnSecondary} type="button">← Retour</button>
@@ -484,7 +484,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
           {step === 3 && subtype && (
             <div>
-              <p style={{ fontSize: 13, color: "var(--dash-text-2, #b0b0cc)", margin: "0 0 16px" }}>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2, #b0b0cc)", margin: "0 0 16px" }}>
                 Pré-rempli selon le marché pour un <strong style={{ color: "var(--dash-text, #eeeef5)" }}>{subtype.label.toLowerCase()}</strong>{city ? <> à <strong style={{ color: "var(--dash-text, #eeeef5)" }}>{city}</strong></> : null}.
               </p>
 
@@ -505,13 +505,13 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                       style={{
                         width: `${Math.max(4, budgetTotal.toLocaleString("fr-FR").length + 1)}ch`,
                         textAlign: "right",
-                        fontSize: 22, fontWeight: 800,
+                        fontSize: "var(--text-lg)", fontWeight: 800,
                         backgroundImage: G, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                         background: "none", border: "none", outline: "none", padding: 0,
                         fontFamily: "inherit", caretColor: "#E11D48",
                       }}
                     />
-                    <span style={{ fontSize: 12, color: "var(--dash-text-3, #8888aa)", fontWeight: 500 }}>Dhs</span>
+                    <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)", fontWeight: 500 }}>Dhs</span>
                   </span>
                 </div>
                 <input type="range" min={10_000} max={500_000} step={5_000}
@@ -522,7 +522,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                 <span style={{ fontSize: 10.5, color: "var(--dash-text-3, #8888aa)", fontWeight: 700, letterSpacing: 1.3, textTransform: "uppercase" }}>Répartition par poste</span>
                 <span style={{
-                  fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99,
+                  fontSize: "var(--text-xs)", fontWeight: 700, padding: "3px 10px", borderRadius: 99,
                   background: over ? "rgba(245,158,11,0.12)" : "rgba(34,197,94,0.12)",
                   color: over ? "#f59e0b" : "#22c55e",
                   border: over ? "1px solid rgba(245,158,11,0.3)" : "1px solid rgba(34,197,94,0.3)",
@@ -539,11 +539,11 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
                         <span style={{ fontSize: 12.5, fontWeight: 600 }}>{cat}</span>
                         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <span style={{ fontSize: 11, color: "var(--dash-text-3, #8888aa)", fontWeight: 600, width: 32, textAlign: "right" }}>{pct}%</span>
+                          <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)", fontWeight: 600, width: 32, textAlign: "right" }}>{pct}%</span>
                           <input type="number" min={0} max={budgetTotal * 2} step={500} value={amount}
                             onChange={e => updateCatBudget(cat, parseInt(e.target.value, 10) || 0)}
-                            style={{ width: 80, padding: "5px 7px", borderRadius: 7, border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))", background: "var(--dash-bg, #0d0e14)", color: "var(--dash-text, #eeeef5)", fontSize: 12, fontWeight: 700, textAlign: "right", fontFamily: "inherit" }} />
-                          <span style={{ fontSize: 10, color: "var(--dash-text-3, #8888aa)" }}>Dhs</span>
+                            style={{ width: 80, padding: "5px 7px", borderRadius: 7, border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))", background: "var(--dash-bg, #0d0e14)", color: "var(--dash-text, #eeeef5)", fontSize: "var(--text-xs)", fontWeight: 700, textAlign: "right", fontFamily: "inherit" }} />
+                          <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #8888aa)" }}>Dhs</span>
                         </span>
                       </div>
                       <input type="range" min={0} max={budgetTotal} step={500} value={amount}
@@ -558,19 +558,19 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
               <div style={{ display: "grid", gridTemplateColumns: over ? "1fr 1fr" : "1fr 1fr", gap: 8, marginTop: 10 }}>
                 <button onClick={resetBreakdown} type="button"
                   title="Répartit le budget selon les % recommandés pour ce type d'événement"
-                  style={{ padding: "9px", background: "transparent", color: "var(--dash-text,#121317)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                  style={{ padding: "9px", background: "transparent", color: "var(--dash-text,#121317)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
                   ↻ Réinitialiser la répartition
                 </button>
                 {over ? (
                   <button onClick={alignTotalToSum} type="button"
                     title="Augmente le budget final pour couvrir la somme actuelle"
-                    style={{ padding: "9px", background: G, color: "#fff", border: "none", borderRadius: 99, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                    style={{ padding: "9px", background: G, color: "#fff", border: "none", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                     ↑ Passer le total à {budgetSum.toLocaleString("fr-FR")} Dhs
                   </button>
                 ) : (
                   <button onClick={alignTotalToSum} type="button"
                     title="Aligne le total sur la somme actuelle"
-                    style={{ padding: "9px", background: "rgba(225,29,72,0.08)", color: "#E11D48", border: "1px solid rgba(225,29,72,0.25)", borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                    style={{ padding: "9px", background: "rgba(225,29,72,0.08)", color: "#E11D48", border: "1px solid rgba(225,29,72,0.25)", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
                     = Total = somme ({budgetSum.toLocaleString("fr-FR")} Dhs)
                   </button>
                 )}
@@ -578,24 +578,24 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 
               {/* Raccourcis incréments du total */}
               <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
-                <span style={{ fontSize: 10, color: "var(--dash-text-3,#8888aa)", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
+                <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#8888aa)", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
                   Augmenter budget
                 </span>
                 {[1000, 5000, 10000, 25000].map(delta => (
                   <button key={delta} onClick={() => bumpTotal(delta)} type="button"
-                    style={{ padding: "5px 10px", background: "var(--dash-faint,rgba(183,191,217,0.08))", color: "var(--dash-text,#121317)", border: "1px solid var(--dash-border,rgba(183,191,217,0.22))", borderRadius: 99, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                    style={{ padding: "5px 10px", background: "var(--dash-faint,rgba(183,191,217,0.08))", color: "var(--dash-text,#121317)", border: "1px solid var(--dash-border,rgba(183,191,217,0.22))", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
                     +{delta.toLocaleString("fr-FR")}
                   </button>
                 ))}
               </div>
 
               {over && (
-                <p style={{ fontSize: 11, color: "#f59e0b", marginTop: 8, textAlign: "center" }}>
+                <p style={{ fontSize: "var(--text-xs)", color: "#f59e0b", marginTop: 8, textAlign: "center" }}>
                   La somme des catégories dépasse le total de <strong>{(budgetSum - budgetTotal).toLocaleString("fr-FR")} Dhs</strong>.
                 </p>
               )}
 
-              {error && <p style={{ fontSize: 12, color: "#ef4444", marginTop: 10, marginBottom: 0 }}>{error}</p>}
+              {error && <p style={{ fontSize: "var(--text-xs)", color: "#ef4444", marginTop: 10, marginBottom: 0 }}>{error}</p>}
 
               <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
                 <button onClick={() => setStep(2)} style={btnSecondary} type="button">← Retour</button>
@@ -614,7 +614,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 11, fontWeight: 700, color: "var(--dash-text-3, #8888aa)", display: "block", marginBottom: 6,
+  fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text-3, #8888aa)", display: "block", marginBottom: 6,
   textTransform: "uppercase", letterSpacing: "1.2px",
 }
 const subtleStyle: React.CSSProperties = { color: "var(--dash-text-3, #8888aa)", fontWeight: 500, textTransform: "none", letterSpacing: 0 }
@@ -628,7 +628,7 @@ const inputStyle: React.CSSProperties = {
 
 const btnPrimary: React.CSSProperties = {
   padding: "13px 22px", borderRadius: 99, border: "none",
-  background: G, color: "#fff", fontSize: 14, fontWeight: 700,
+  background: G, color: "#fff", fontSize: "var(--text-sm)", fontWeight: 700,
   cursor: "pointer", fontFamily: "inherit", transition: "opacity 0.15s",
   boxShadow: "0 6px 18px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
 }
@@ -637,5 +637,5 @@ const btnSecondary: React.CSSProperties = {
   padding: "13px 22px", borderRadius: 99,
   border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))",
   background: "var(--dash-faint, rgba(255,255,255,0.04))", color: "var(--dash-text-2, #b0b0cc)",
-  fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+  fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
 }

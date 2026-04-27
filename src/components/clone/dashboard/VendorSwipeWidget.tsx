@@ -178,14 +178,14 @@ export default function VendorSwipeWidget({
 
   if (!card) return (
     <div style={{ padding: 20, height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ fontSize: 10, fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 16 }}>
+      <div style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 16 }}>
         Découvrir
       </div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <p style={{ fontSize: 32, margin: "0 0 10px" }}>🎉</p>
-        <p style={{ fontSize: 13, fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 4px" }}>Tous vus !</p>
+        <p style={{ fontSize: "var(--text-xl)", margin: "0 0 10px" }}>🎉</p>
+        <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: "0 0 4px" }}>Tous vus !</p>
         {liked.length > 0 && (
-          <p style={{ fontSize: 11, color: "#9a9aaa", marginBottom: 12 }}>
+          <p style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", marginBottom: 12 }}>
             {liked.length} prestataire{liked.length !== 1 ? "s" : ""} ajouté{liked.length !== 1 ? "s" : ""}
           </p>
         )}
@@ -193,14 +193,14 @@ export default function VendorSwipeWidget({
           <Link href="/mes-prestataires" style={{
             padding: "8px 16px", borderRadius: 99, marginBottom: 8,
             background: "rgba(34,197,94,0.1)", color: "#22c55e",
-            fontSize: 11, fontWeight: 600, textDecoration: "none", display: "inline-block",
+            fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none", display: "inline-block",
           }}>Voir mes prestataires →</Link>
         )}
         <button onClick={() => loadCards(true)} style={{
           padding: "7px 18px", borderRadius: 99, marginTop: 4,
           background: "rgba(183,191,217,0.1)", color: "var(--dash-text-2,#6a6a71)",
           border: "1px solid rgba(183,191,217,0.2)",
-          fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+          fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
         }}>Voir les skippés</button>
       </div>
     </div>
@@ -217,26 +217,26 @@ export default function VendorSwipeWidget({
     <div style={{ padding: "20px 20px 16px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ fontSize: 10, fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em" }}>Découvrir</span>
+          <span style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "#9a9aaa", textTransform: "uppercase", letterSpacing: "0.09em" }}>Découvrir</span>
           {onOpenModal && (
             <button onClick={() => onOpenModal(card?.category, card?.slug)} title="Ouvrir l'annuaire complet" style={{
               width: 20, height: 20, borderRadius: 6,
               background: "rgba(183,191,217,0.1)", border: "1px solid rgba(183,191,217,0.2)",
               cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
               fontFamily: "'Google Symbols','Material Symbols Outlined'",
-              fontSize: 11, color: "#9a9aaa", fontWeight: "normal",
+              fontSize: "var(--text-xs)", color: "#9a9aaa", fontWeight: "normal",
             }}>open_in_full</button>
           )}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {liked.length > 0 && (
             <Link href="/mes-prestataires" style={{
-              fontSize: 10, fontWeight: 600,
+              fontSize: "var(--text-2xs)", fontWeight: 600,
               background: "rgba(34,197,94,0.1)", color: "#22c55e",
               padding: "2px 7px", borderRadius: 99, textDecoration: "none",
             }}>🎉 {liked.length}</Link>
           )}
-          <span style={{ fontSize: 10, color: "#9a9aaa" }}>{index + 1}/{cards.length}</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "#9a9aaa" }}>{index + 1}/{cards.length}</span>
         </div>
       </div>
 
@@ -262,10 +262,10 @@ export default function VendorSwipeWidget({
           }}
         >
           {drag.x > 25 && (
-            <div style={{ position: "absolute", top: 14, left: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #22c55e", color: "#22c55e", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (drag.x - 25) / 55), transform: "rotate(-14deg)", background: "rgba(34,197,94,0.1)", zIndex: 5 }}>LIKE 🎉</div>
+            <div style={{ position: "absolute", top: 14, left: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #22c55e", color: "#22c55e", fontSize: "var(--text-xs)", fontWeight: 800, opacity: Math.min(1, (drag.x - 25) / 55), transform: "rotate(-14deg)", background: "rgba(34,197,94,0.1)", zIndex: 5 }}>LIKE 🎉</div>
           )}
           {drag.x < -25 && (
-            <div style={{ position: "absolute", top: 14, right: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #ef4444", color: "#ef4444", fontSize: 11, fontWeight: 800, opacity: Math.min(1, (-drag.x - 25) / 55), transform: "rotate(14deg)", background: "rgba(239,68,68,0.1)", zIndex: 5 }}>SKIP ✕</div>
+            <div style={{ position: "absolute", top: 14, right: 14, padding: "4px 10px", borderRadius: 8, border: "2px solid #ef4444", color: "#ef4444", fontSize: "var(--text-xs)", fontWeight: 800, opacity: Math.min(1, (-drag.x - 25) / 55), transform: "rotate(14deg)", background: "rgba(239,68,68,0.1)", zIndex: 5 }}>SKIP ✕</div>
           )}
           {card.photos.length > 0 && (
             <Image
@@ -299,15 +299,15 @@ export default function VendorSwipeWidget({
             <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: theme.accent, opacity: 0.08, filter: "blur(30px)", pointerEvents: "none" }} />
           )}
           {card.photos.length === 0 && (
-            <div style={{ width: 44, height: 44, borderRadius: 13, background: `${theme.accent}20`, border: `1px solid ${theme.accent}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: "auto" }}>{theme.emoji}</div>
+            <div style={{ width: 44, height: 44, borderRadius: 13, background: `${theme.accent}20`, border: `1px solid ${theme.accent}30`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-lg)", marginBottom: "auto" }}>{theme.emoji}</div>
           )}
           {card.photos.length > 0 && <div style={{ flex: 1 }} />}
           <div style={{ position: "relative", zIndex: 4 }}>
-            <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 3, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{card.name}</div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", marginBottom: 10, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>{card.category} · {card.city}</div>
+            <div style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "#fff", marginBottom: 3, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>{card.name}</div>
+            <div style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.9)", marginBottom: 10, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>{card.category} · {card.city}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: theme.accent, background: `${theme.accent}25`, padding: "2px 7px", borderRadius: 99, textShadow: "none" }}>★ {card.rating.toFixed(1)}</span>
-              {card.priceMin && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.85)", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>dès {card.priceMin.toLocaleString("fr-MA")} Dhs</span>}
+              <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: theme.accent, background: `${theme.accent}25`, padding: "2px 7px", borderRadius: 99, textShadow: "none" }}>★ {card.rating.toFixed(1)}</span>
+              {card.priceMin && <span style={{ fontSize: "var(--text-2xs)", color: "rgba(255,255,255,0.85)", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>dès {card.priceMin.toLocaleString("fr-MA")} Dhs</span>}
             </div>
           </div>
         </div>
@@ -315,13 +315,13 @@ export default function VendorSwipeWidget({
 
       <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "center", marginTop: 14 }}>
         {/* ✕ Skip */}
-        <button onClick={() => swipe("left")} style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.35)", background: "rgba(239,68,68,0.06)", color: "#ef4444", cursor: "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>close</button>
+        <button onClick={() => swipe("left")} style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid rgba(239,68,68,0.35)", background: "rgba(239,68,68,0.06)", color: "#ef4444", cursor: "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: "var(--text-md)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>close</button>
         {/* ↩ Rewind */}
-        <button onClick={undo} disabled={index === 0 || history.length === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: index === 0 ? "#c9cad0" : "#6a6a71", cursor: index === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
+        <button onClick={undo} disabled={index === 0 || history.length === 0} style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid rgba(183,191,217,0.25)", background: "rgba(183,191,217,0.05)", color: index === 0 ? "#c9cad0" : "#6a6a71", cursor: index === 0 ? "not-allowed" : "pointer", fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal", fontSize: "var(--text-base)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>undo</button>
         {/* ♥ Favori */}
-        <button onClick={() => { const isFav = favoritedIds.has(card.slug); setFavoritedIds(prev => { const s = new Set(prev); isFav ? s.delete(card.slug) : s.add(card.slug); return s; }); fetch(`/api/vendor/${card.slug}/favorite`, { method: "POST" }).catch(() => {}) }} style={{ width: 36, height: 36, borderRadius: "50%", border: favoritedIds.has(card.slug) ? "1.5px solid rgba(239,68,68,0.6)" : "1.5px solid rgba(239,68,68,0.25)", background: favoritedIds.has(card.slug) ? "rgba(239,68,68,0.2)" : "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
+        <button onClick={() => { const isFav = favoritedIds.has(card.slug); setFavoritedIds(prev => { const s = new Set(prev); isFav ? s.delete(card.slug) : s.add(card.slug); return s; }); fetch(`/api/vendor/${card.slug}/favorite`, { method: "POST" }).catch(() => {}) }} style={{ width: 36, height: 36, borderRadius: "50%", border: favoritedIds.has(card.slug) ? "1.5px solid rgba(239,68,68,0.6)" : "1.5px solid rgba(239,68,68,0.25)", background: favoritedIds.has(card.slug) ? "rgba(239,68,68,0.2)" : "rgba(239,68,68,0.05)", color: "#e11d48", cursor: "pointer", fontSize: "var(--text-base)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>♥</button>
         {/* 🎉 Sélectionné */}
-        <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px color-mix(in srgb, var(--g1,#E11D48) 35%, transparent)", transition: "all 0.15s" }}>🎉</button>
+        <button onClick={() => swipe("right")} style={{ width: 52, height: 52, borderRadius: "50%", border: "none", background: G, color: "#fff", cursor: "pointer", fontSize: "var(--text-lg)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px color-mix(in srgb, var(--g1,#E11D48) 35%, transparent)", transition: "all 0.15s" }}>🎉</button>
       </div>
     </div>
   )

@@ -48,7 +48,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
     <div style={{ padding: "22px 24px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
       {/* Header */}
       <div style={{
-        fontSize: 10, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)",
+        fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)",
         textTransform: "uppercase", letterSpacing: "0.09em",
         marginBottom: 18,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -56,7 +56,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
         <span>Budget</span>
         {isOverBudget && (
           <span style={{
-            fontSize: 9, background: "rgba(239,68,68,0.1)", color: "#ef4444",
+            fontSize: "var(--text-2xs)", background: "rgba(239,68,68,0.1)", color: "#ef4444",
             padding: "2px 7px", borderRadius: 99, fontWeight: 700,
           }}>DÉPASSÉ</span>
         )}
@@ -100,7 +100,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
             pointerEvents: "none",
           }}>
             <span style={{
-              fontSize: 16, fontWeight: 800, lineHeight: 1,
+              fontSize: "var(--text-base)", fontWeight: 800, lineHeight: 1,
               backgroundImage: isOverBudget
                 ? "none"
                 : "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
@@ -109,27 +109,27 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
               backgroundClip: isOverBudget ? undefined : "text",
               color: isOverBudget ? "#ef4444" : undefined,
             }}>{Math.round(pct * 100)}%</span>
-            <span style={{ fontSize: 8, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", marginTop: 1 }}>utilisé</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", marginTop: 1 }}>utilisé</span>
           </div>
         </div>
 
         {/* Numbers */}
         <div style={{ flex: 1 }}>
           <div style={{ marginBottom: 10 }}>
-            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Dépensé</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Dépensé</div>
             <div style={{
-              fontSize: 18, fontWeight: 800, lineHeight: 1,
+              fontSize: "var(--text-md)", fontWeight: 800, lineHeight: 1,
               backgroundImage: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}>
               {spent.toLocaleString("fr-MA")}
             </div>
-            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Dhs</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Dhs</div>
           </div>
           <div>
-            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Restant</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Restant</div>
             <div style={{
-              fontSize: 14, fontWeight: 700,
+              fontSize: "var(--text-sm)", fontWeight: 700,
               color: remaining < total * 0.1 ? "#ef4444" : "var(--dash-text,#121317)",
             }}>
               {remaining.toLocaleString("fr-MA")} Dhs
@@ -146,19 +146,19 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
           const isEditing = editingIdx === idx
           return (
             <div key={item.label} style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 13, flexShrink: 0 }}>{item.icon}</span>
+              <span style={{ fontSize: "var(--text-sm)", flexShrink: 0 }}>{item.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, alignItems: "center" }}>
-                  <span style={{ fontSize: 10, fontWeight: 500, color: "var(--dash-text-2,#45474D)" }}>{item.label}</span>
+                  <span style={{ fontSize: "var(--text-2xs)", fontWeight: 500, color: "var(--dash-text-2,#45474D)" }}>{item.label}</span>
                   {isEditing ? (
                     <input ref={inputRef} type="number" value={editValue}
                       onChange={e => setEditValue(e.target.value)}
                       onBlur={() => commitEdit(idx)}
                       onKeyDown={e => { if (e.key === "Enter") commitEdit(idx); if (e.key === "Escape") setEditingIdx(null) }}
-                      style={{ width: 72, fontSize: 10, padding: "1px 5px", borderRadius: 6, border: "1.5px solid var(--g1,#E11D48)", background: "var(--dash-faint,rgba(183,191,217,0.06))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)", textAlign: "right" }} />
+                      style={{ width: 72, fontSize: "var(--text-2xs)", padding: "1px 5px", borderRadius: 6, border: "1.5px solid var(--g1,#E11D48)", background: "var(--dash-faint,rgba(183,191,217,0.06))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)", textAlign: "right" }} />
                   ) : (
                     <button onClick={() => startEdit(idx, effectiveSpent)} title="Modifier"
-                      style={{ fontSize: 10, fontWeight: 600, color: item.color, background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "1px 4px", borderRadius: 4 }}>
+                      style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: item.color, background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "1px 4px", borderRadius: 4 }}>
                       {effectiveSpent.toLocaleString("fr-MA")} ✎
                     </button>
                   )}
@@ -182,8 +182,8 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
         paddingTop: 12, borderTop: "1px solid rgba(183,191,217,0.1)",
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}>
-        <span style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Total budget</span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "var(--dash-text,#121317)" }}>
+        <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Total budget</span>
+        <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>
           {total.toLocaleString("fr-MA")} Dhs
         </span>
       </div>

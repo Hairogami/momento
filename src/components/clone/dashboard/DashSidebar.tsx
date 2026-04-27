@@ -142,11 +142,11 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0, boxShadow: "0 2px 10px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
           }}>
-            <span style={{ color: "#fff", fontSize: 13, fontWeight: 800, letterSpacing: "-0.03em" }}>M</span>
+            <span style={{ color: "#fff", fontSize: "var(--text-sm)", fontWeight: 800, letterSpacing: "-0.03em" }}>M</span>
           </div>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: "var(--dash-text,#121317)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>Momento</div>
-            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Espace client</div>
+            <div style={{ fontSize: "var(--text-sm)", fontWeight: 800, color: "var(--dash-text,#121317)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>Momento</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Espace client</div>
           </div>
         </Link>
         {/* Dark mode toggle pill — toujours visible */}
@@ -188,13 +188,13 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             boxShadow: `0 0 6px ${activeEvent?.color ?? "#E11D48"}80`,
           }} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {events.length === 0
                 ? <span style={{ display: "inline-block", width: 90, height: 10, borderRadius: 4, background: "var(--dash-border,rgba(183,191,217,0.25))" }} />
                 : (activeEvent?.name || "Mon événement")
               }
             </div>
-            <div style={{ fontSize: 9, color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Événement actif</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Événement actif</div>
           </div>
           <GIcon name="expand_more" size={14} color="var(--dash-text-3,#9a9aaa)" />
         </button>
@@ -225,7 +225,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
                   }}
                 >
                   <div style={{ width: 7, height: 7, borderRadius: "50%", background: e.color, flexShrink: 0 }} />
-                  <span style={{ fontSize: 12, fontWeight: 500, color: "var(--dash-text,#121317)", flex: 1 }}>{e.name}</span>
+                  <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--dash-text,#121317)", flex: 1 }}>{e.name}</span>
                   {e.id === activeEventId && <GIcon name="check" size={14} color="var(--g1,#E11D48)" />}
                 </button>
                 {/* Bouton supprimer inline — soft delete (corbeille 15j) */}
@@ -260,7 +260,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             <div style={{ borderTop: "1px solid var(--dash-divider, rgba(183,191,217,0.12))", padding: "8px 14px" }}>
               <button
                 onClick={() => { setEventOpen(false); setShowCreateModal(true) }}
-                style={{ fontSize: 11, color: "var(--dash-text-3,#9a9aaa)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: 0, fontFamily: "inherit" }}
+                style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: 0, fontFamily: "inherit" }}
               >
                 <GIcon name="add" size={13} color="var(--dash-text-3,#9a9aaa)" />
                 Créer un événement
@@ -294,11 +294,11 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
                 }} />
               )}
               <GIcon name={item.icon} size={18} color={isCurrent ? "var(--g1,#E11D48)" : "var(--dash-text-2,#6a6a71)"} />
-              <span style={{ fontSize: 13, fontWeight: isCurrent ? 600 : 400, color: isCurrent ? "var(--dash-text,#121317)" : "var(--dash-text-2,#45474D)", flex: 1 }}>
+              <span style={{ fontSize: "var(--text-sm)", fontWeight: isCurrent ? 600 : 400, color: isCurrent ? "var(--dash-text,#121317)" : "var(--dash-text-2,#45474D)", flex: 1 }}>
                 {item.label}
               </span>
               {item.href === "/messages" && messageUnread > 0 && !isLocked && (
-                <span style={{ fontSize: 10, fontWeight: 700, background: G, color: "#fff", padding: "1px 6px", borderRadius: 99, minWidth: 18, textAlign: "center" }}>
+                <span style={{ fontSize: "var(--text-2xs)", fontWeight: 700, background: G, color: "#fff", padding: "1px 6px", borderRadius: 99, minWidth: 18, textAlign: "center" }}>
                   {messageUnread}
                 </span>
               )}
@@ -335,7 +335,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
         <Link href="/explore" style={{
           display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
           padding: "10px 14px", borderRadius: 11, background: G, color: "#fff",
-          fontSize: 12, fontWeight: 600, textDecoration: "none",
+          fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none",
           boxShadow: "0 3px 16px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)", transition: "opacity 0.15s",
         }}>
           <GIcon name="search" size={15} color="#fff" />
@@ -358,12 +358,12 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
           }}>
             {/* Header utilisateur */}
             <Link href="/profile" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, padding: "14px 14px 10px" }}>
-              <div style={{ width: 36, height: 36, borderRadius: "50%", background: G, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, color: "#fff" }}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: G, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-sm)", fontWeight: 700, color: "#fff" }}>
                 {firstName[0]?.toUpperCase() ?? "U"}
               </div>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{firstName}</div>
-                <div style={{ fontSize: 11, color: "var(--g1,#E11D48)", fontWeight: 500 }}>Voir mon profil →</div>
+                <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{firstName}</div>
+                <div style={{ fontSize: "var(--text-xs)", color: "var(--g1,#E11D48)", fontWeight: 500 }}>Voir mon profil →</div>
               </div>
             </Link>
 
@@ -382,7 +382,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
                 style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px", textDecoration: "none",
                   background: pathname === item.href ? "rgba(225,29,72,0.06)" : "transparent",
                   color: pathname === item.href ? "var(--g1,#E11D48)" : "var(--dash-text,#121317)",
-                  fontSize: 13, fontWeight: pathname === item.href ? 600 : 400,
+                  fontSize: "var(--text-sm)", fontWeight: pathname === item.href ? 600 : 400,
                   transition: "background 0.1s",
                 }}
                 onMouseEnter={e => { if (pathname !== item.href) (e.currentTarget as HTMLElement).style.background = "var(--dash-faint-2,#f4f4f8)" }}
@@ -395,7 +395,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
 
             {/* Déconnexion */}
             <button onClick={() => signOut({ callbackUrl: "/" })}
-              style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px 14px", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: 13, color: "#ef4444", textAlign: "left" }}>
+              style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px 14px", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "var(--text-sm)", color: "#ef4444", textAlign: "left" }}>
               <GIcon name="logout" size={16} color="#ef4444" />
               Se déconnecter
             </button>
@@ -413,12 +413,12 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
             transition: "background 0.15s",
           }}
         >
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: G, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff" }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: G, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-xs)", fontWeight: 700, color: "#fff" }}>
             {firstName[0]?.toUpperCase() ?? "U"}
           </div>
           <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--dash-text,#121317)" }}>{firstName}</div>
-            <div style={{ fontSize: 10, color: "var(--dash-text-3,#9a9aaa)" }}>Mon compte</div>
+            <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{firstName}</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Mon compte</div>
           </div>
           <GIcon name={menuOpen ? "expand_more" : "expand_less"} size={16} color="var(--dash-text-3,#9a9aaa)" />
         </button>
@@ -490,7 +490,7 @@ function DevTools({ currentPlan }: { currentPlan: string }) {
           background: "var(--dash-faint, rgba(183,191,217,0.08))",
           border: "1px dashed var(--g1,#E11D48)",
           color: "var(--dash-text,#121317)",
-          fontSize: 11, fontWeight: 600, cursor: switching ? "wait" : "pointer",
+          fontSize: "var(--text-xs)", fontWeight: 600, cursor: switching ? "wait" : "pointer",
           fontFamily: "inherit", width: "100%", textAlign: "left",
         }}
         title="Bascule entre dashboard client et prestataire"
@@ -500,7 +500,7 @@ function DevTools({ currentPlan }: { currentPlan: string }) {
           <span>{switching ? "Bascule…" : "Basculer client ↔ prestataire"}</span>
         </span>
         <span style={{
-          fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+          fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
           color: "var(--g1,#E11D48)", background: "rgba(225,29,72,0.1)",
           padding: "2px 5px", borderRadius: 4,
         }}>DEV</span>
@@ -513,11 +513,11 @@ function DevTools({ currentPlan }: { currentPlan: string }) {
         border: "1px dashed var(--g1,#E11D48)",
       }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+          <span style={{ fontSize: "var(--text-2xs)", fontWeight: 700, color: "var(--dash-text-2,#6a6a71)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
             Plan : {currentPlan}
           </span>
           <span style={{
-            fontSize: 8, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+            fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
             color: "var(--g1,#E11D48)", background: "rgba(225,29,72,0.1)",
             padding: "2px 5px", borderRadius: 4,
           }}>DEV</span>
@@ -533,7 +533,7 @@ function DevTools({ currentPlan }: { currentPlan: string }) {
                 border: currentPlan === p ? "1.5px solid var(--g1,#E11D48)" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
                 background: currentPlan === p ? "rgba(225,29,72,0.08)" : "var(--dash-surface,#fff)",
                 color: currentPlan === p ? "var(--g1,#E11D48)" : "var(--dash-text,#121317)",
-                fontSize: 10, fontWeight: 700, textTransform: "uppercase",
+                fontSize: "var(--text-2xs)", fontWeight: 700, textTransform: "uppercase",
                 cursor: (changingPlan !== null || currentPlan === p) ? "not-allowed" : "pointer",
                 fontFamily: "inherit",
                 opacity: changingPlan === p ? 0.5 : 1,
