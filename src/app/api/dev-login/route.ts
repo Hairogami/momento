@@ -32,6 +32,7 @@ export async function GET() {
   const token = await encode({
     token: {
       sub: user.id,
+      id: user.id, // session callback dans auth.ts lit token.id (pas token.sub)
       email: user.email,
       name: user.name,
       picture: user.image,

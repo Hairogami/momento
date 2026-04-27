@@ -521,80 +521,64 @@ function ChecklistJXWidget({ tasks, eventDate }: { tasks: Task[]; eventDate: str
   )
 }
 
-function RSVPLiveWidget({ guests }: { guests: Guest[] }) {
-  const confirmed = guests.filter(g => g.rsvp === "yes").length
-  const declined  = guests.filter(g => g.rsvp === "no").length
-  const pending   = guests.filter(g => g.rsvp === "pending").length
-  const total     = guests.length
-  const [showPopup, setShowPopup] = useState(false)
-  const [rsvps, setRsvps] = useState<Record<string, "yes" | "pending" | "no">>(() =>
-    Object.fromEntries(guests.map(g => [g.id, g.rsvp]))
-  )
-  const [faireParts, setFaireParts] = useState(0)
-  const [fpInput, setFpInput] = useState("")
-
-  const conf2 = Object.values(rsvps).filter(v => v === "yes").length
-  const decl2 = Object.values(rsvps).filter(v => v === "no").length
-  const pend2 = Object.values(rsvps).filter(v => v === "pending").length
-
+function RSVPLiveWidget({ rsvpStats }: {
+  rsvpStats?: { viewCount: number; confirmed: number; plusOnes: number; total: number; recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }> }
+}) {
+  const stats = rsvpStats ?? { viewCount: 0, confirmed: 0, plusOnes: 0, total: 0, recent: [] }
+  const loading = !rsvpStats
   return (
-    <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box", position: "relative" }}>
-      <div style={{ display: "flex", height: 8, borderRadius: 99, overflow: "hidden", background: "var(--dash-faint,rgba(183,191,217,0.18))" }}>
-        <div style={{ width: `${total > 0 ? (conf2/total)*100 : 0}%`, background: "#22c55e", transition: "width 0.3s" }} />
-        <div style={{ width: `${total > 0 ? (pend2/total)*100 : 0}%`, background: "#f59e0b", transition: "width 0.3s" }} />
-        <div style={{ width: `${total > 0 ? (decl2/total)*100 : 0}%`, background: "#ef4444", transition: "width 0.3s" }} />
+    <div style={{ padding: "14px 16px 14px", display: "flex", flexDirection: "column", gap: 12, height: "100%", boxSizing: "border-box" }}>
+      <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", gap: 8, paddingBottom: 8, borderBottom: "1px solid var(--dash-divider, rgba(183,191,217,0.10))" }}>
+        <KpiCol value={stats.viewCount} label="vues" color="var(--dash-text, #121317)" />
+        <KpiCol value={stats.confirmed} label="confirmés" color="#22c55e" />
+        <KpiCol value={stats.plusOnes} label="+1" color="#9333EA" />
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
-        {[{ l:"Oui ✓", v:conf2, c:"#22c55e" }, { l:"Attente", v:pend2, c:"#f59e0b" }, { l:"Non ✗", v:decl2, c:"#ef4444" }].map(x => (
-          <div key={x.l} style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "var(--text-md)", fontWeight: 700, color: x.c }}>{x.v}</div>
-            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", fontWeight: 600 }}>{x.l}</div>
-          </div>
-        ))}
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1, minHeight: 0, overflow: "hidden" }}>
+        {loading ? (
+          <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #9a9aaa)", margin: 0 }}>Chargement…</p>
+        ) : stats.recent.length === 0 ? (
+          <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #9a9aaa)", margin: 0 }}>Aucune réponse pour le moment.</p>
+        ) : (
+          stats.recent.map(r => (
+            <div key={r.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, fontSize: "var(--text-xs)" }}>
+              <span style={{ color: "var(--dash-text, #121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1, fontWeight: 500 }}>{r.guestName}</span>
+              <span style={{ color: "var(--dash-text-3, #9a9aaa)", fontSize: "var(--text-2xs)" }}>{relativeTime(r.createdAt)}</span>
+              <span style={{ color: r.attendingMain ? "#22c55e" : "#ef4444", fontWeight: 700 }}>{r.attendingMain ? "✓" : "✗"}</span>
+            </div>
+          ))
+        )}
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{conf2}/{total} confirmés</span>
-        <button onClick={() => setShowPopup(v => !v)} style={{ fontSize: "var(--text-2xs)", padding: "3px 10px", borderRadius: 99, border: "none", background: G, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
-          Gérer
-        </button>
-      </div>
-      {showPopup && (
-        <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 30, background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border,rgba(183,191,217,0.4))", borderRadius: 14, padding: 14, boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Gérer les RSVP</span>
-            <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
-          </div>
-          <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
-            <input value={fpInput} onChange={e => setFpInput(e.target.value)} placeholder="Faire-parts envoyés" type="number"
-              style={{ flex: 1, height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: "var(--text-xs)", outline: "none", fontFamily: "inherit" }} />
-            <button onClick={() => { setFaireParts(p => p + (parseInt(fpInput)||0)); setFpInput("") }}
-              style={{ height: 28, padding: "0 10px", borderRadius: 8, border: "none", background: G, color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-              + {faireParts > 0 ? `(${faireParts})` : ""}
-            </button>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 160, overflowY: "auto" }}>
-            {guests.map(g => (
-              <div key={g.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ flex: 1, fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{g.name}</span>
-                <div style={{ display: "flex", gap: 3 }}>
-                  {(["yes","pending","no"] as const).map(s => (
-                    <button key={s} onClick={() => setRsvps(p => ({ ...p, [g.id]: s }))} style={{
-                      width: 22, height: 22, borderRadius: 6, border: "none", cursor: "pointer", fontSize: "var(--text-2xs)", fontWeight: 700,
-                      background: rsvps[g.id] === s ? (s === "yes" ? "#22c55e" : s === "no" ? "#ef4444" : "#f59e0b") : "var(--dash-faint,rgba(183,191,217,0.18))",
-                      color: rsvps[g.id] === s ? "#fff" : "var(--dash-text-3,#9a9aaa)",
-                    }}>
-                      {s === "yes" ? "✓" : s === "no" ? "✗" : "?"}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <a href="/guests" style={{ marginTop: "auto", fontSize: "var(--text-2xs)", color: "var(--dash-text-2, #6a6a71)", textDecoration: "underline" }}>
+        Voir tout →
+      </a>
     </div>
   )
 }
+
+function KpiCol({ value, label, color }: { value: number; label: string; color: string }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+      <div style={{ fontSize: "var(--text-lg)", fontWeight: 800, color, lineHeight: 1, letterSpacing: "-0.02em" }}>{value}</div>
+      <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #9a9aaa)", textTransform: "uppercase", letterSpacing: "0.04em", fontWeight: 600 }}>{label}</div>
+    </div>
+  )
+}
+
+function relativeTime(iso?: string): string {
+  if (!iso) return ""
+  const d = new Date(iso).getTime()
+  if (isNaN(d)) return ""
+  const diff = Date.now() - d
+  const m = Math.floor(diff / 60000)
+  if (m < 1) return "à l'instant"
+  if (m < 60) return `${m} min`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h}h`
+  const days = Math.floor(h / 24)
+  if (days < 7) return `${days}j`
+  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+}
+
 
 function MoodboardWidget({ eventId }: { eventId: string }) {
   const MOODBOARD_KEY = `moodboard_images_${eventId}`
@@ -1252,6 +1236,13 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
     messages: Message[]
     tasks: Task[]
     edata: { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }
+    rsvpStats?: {
+      viewCount: number
+      confirmed: number
+      plusOnes: number
+      total: number
+      recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }>
+    }
   } | null>(null)
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
@@ -1617,7 +1608,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
           case "timeline":     return <TimelineWidget tasks={tasks} eventDate={event.date} />
           case "transport":    return <TransportWidget guests={guests} eventId={activeEventId} />
           case "plantable":    return <PlanTableWidget guests={guests} />
-          case "rsvplive":     return <RSVPLiveWidget guests={guests} />
+          case "rsvplive":     return <RSVPLiveWidget rsvpStats={dashboardData?.rsvpStats} />
           case "regimes":      return <RegimesWidget guests={guests} />
           case "depenses":     return <DepensesRecentesWidget budgetItems={recentExpenses} />
           case "epargne":      return <ObjectifEpargneWidget budget={edata.budget} budgetSpent={edata.budgetSpent} eventDate={event.date} />

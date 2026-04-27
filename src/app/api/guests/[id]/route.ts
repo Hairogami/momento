@@ -34,3 +34,24 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const updated = await prisma.guest.update({ where: { id }, data: parsed.data })
   return NextResponse.json(updated)
 }
+
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
+  let userId: string
+  if (IS_DEV) {
+    const s = await requireSession()
+    userId = s.user.id
+  } else {
+    const session = await auth()
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    userId = session.user.id
+  }
+
+  const guest = await prisma.guest.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
+  if (!guest || guest.workspace.userId !== userId)
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+
+  await prisma.guest.delete({ where: { id } })
+  return NextResponse.json({ ok: true })
+}

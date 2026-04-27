@@ -194,6 +194,7 @@ model Guest {
   notes       String?
   city        String?
   inviteSent  Boolean  @default(false)
+  linkedRsvpId String?
   createdAt   DateTime @default(now())
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)

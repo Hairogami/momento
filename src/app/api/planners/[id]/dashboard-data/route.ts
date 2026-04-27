@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth"
 import { NextRequest } from "next/server"
 import { IS_DEV } from "@/lib/devMock"
 import { requireSession } from "@/lib/devAuth"
+import { dedupRsvps } from "@/lib/rsvpDedup"
 
 const CATEGORY_COLORS: Record<string, string> = {
   lieu: "#C4532A",
@@ -54,7 +55,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     return Response.json({ error: "Not found" }, { status: 404 })
   }
 
-  const [guests, budgetItems, bookings, conversations, tasks] = await Promise.all([
+  const [guests, budgetItems, bookings, conversations, tasks, eventSiteWithRsvps] = await Promise.all([
     prisma.guest.findMany({
       where: { plannerId: id },
       select: {
@@ -92,6 +93,20 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
         id: true, title: true, completed: true, category: true, dueDate: true,
       },
       orderBy: { createdAt: "asc" },
+    }),
+    prisma.eventSite.findUnique({
+      where: { plannerId: id },
+      select: {
+        id: true,
+        viewCount: true,
+        rsvps: {
+          select: {
+            id: true, guestName: true, guestEmail: true, guestPhone: true,
+            attendingMain: true, plusOneName: true, createdAt: true,
+          },
+          orderBy: { createdAt: "desc" },
+        },
+      },
     }),
   ])
 
@@ -137,6 +152,26 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       color: colorFor(b.category),
       icon: iconFor(b.category),
     }))
+
+  // Stats RSVP du site événement — dédup par email > phone > nom (cohérence
+  // avec page /guests et exports : 1 personne = 1 ligne, peu importe le
+  // nombre de soumissions du form public).
+  const rawRsvps = eventSiteWithRsvps?.rsvps ?? []
+  const rsvps = dedupRsvps(rawRsvps)
+  const rsvpConfirmed = rsvps.filter(r => r.attendingMain).length
+  const rsvpPlusOnes = rsvps.filter(r => r.attendingMain && r.plusOneName && r.plusOneName.trim().length > 0).length
+  const rsvpStats = {
+    viewCount: eventSiteWithRsvps?.viewCount ?? 0,
+    confirmed: rsvpConfirmed,
+    plusOnes: rsvpPlusOnes,
+    total: rsvps.length,
+    recent: rsvps.slice(0, 3).map(r => ({
+      id: r.id,
+      guestName: r.guestName,
+      attendingMain: r.attendingMain,
+      createdAt: r.createdAt.toISOString(),
+    })),
+  }
 
   // Format Message[] pour le widget — avatar vide géré par fallback côté widget
   const messages = conversations.map(c => {
@@ -186,5 +221,6 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       guestCount,
       guestConfirmed,
     },
+    rsvpStats,
   })
 }
