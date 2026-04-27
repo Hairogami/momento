@@ -4,6 +4,7 @@ import dynamic from "next/dynamic"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
+import { useTheme } from "@/components/ThemeProvider"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import type { BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
@@ -414,6 +415,23 @@ function PalettePickerModal({ current, onChange, onClose }: { current: { g1: str
 
 
 // ── Main ──────────────────────────────────────────────────────────────────────
+type DashboardDataShape = {
+  guests: Guest[]
+  budgetItems: BudgetItem[]
+  recentExpenses: BudgetItem[]
+  bookings: Booking[]
+  messages: Message[]
+  tasks: Task[]
+  edata: { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }
+  rsvpStats?: {
+    viewCount: number
+    confirmed: number
+    plusOnes: number
+    total: number
+    recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }>
+  }
+}
+
 type DashboardClientProps = {
   initialPlanners: Array<{
     id: string
@@ -424,9 +442,18 @@ type DashboardClientProps = {
     categories: string[]
   }>
   firstName: string
+  /** Pre-hydrated dashboard data for the SSR-resolved active planner — eliminates round-trip flash. */
+  initialDashboardData?: DashboardDataShape | null
+  /** Planner id that `initialDashboardData` was built for (so we only seed state when localStorage agrees). */
+  initialActivePlannerId?: string | null
 }
 
-export default function DashboardClient({ initialPlanners, firstName: initialFirstName }: DashboardClientProps) {
+export default function DashboardClient({
+  initialPlanners,
+  firstName: initialFirstName,
+  initialDashboardData = null,
+  initialActivePlannerId = null,
+}: DashboardClientProps) {
   const router = useRouter()
   const [showCreateModal, setShowCreateModal] = useState(false)
   // Active event — persisté en localStorage pour synchroniser toutes les pages
@@ -442,49 +469,32 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
       }))
   )
   const [activeEventId, setActiveEventId] = useState(() => {
-    try { return localStorage.getItem("momento_active_event") ?? "" } catch { return "" }
+    // SSR-safe: localStorage absent server-side → fall back to the SSR-resolved planner id
+    // so initial state matches the planner that `initialDashboardData` was built for.
+    if (typeof window === "undefined") return initialActivePlannerId ?? ""
+    try { return localStorage.getItem("momento_active_event") ?? (initialActivePlannerId ?? "") } catch { return initialActivePlannerId ?? "" }
   })
   const [eventsLoaded,  setEventsLoaded]  = useState(true)
   const [activePlannerDetails, setActivePlannerDetails] = useState<{ eventType?: string | null; eventSubType?: string | null; categories?: string[]; budget?: number | null; budgetBreakdown?: unknown; guestCount?: number | null } | null>(null)
   const [plannerVendors, setPlannerVendors] = useState<Array<{ vendor?: { category?: string | null } | null; status?: string | null }>>([])
-  const [dashboardData, setDashboardData] = useState<{
-    guests: Guest[]
-    budgetItems: BudgetItem[]
-    recentExpenses: BudgetItem[]
-    bookings: Booking[]
-    messages: Message[]
-    tasks: Task[]
-    edata: { budget: number; budgetSpent: number; guestCount: number; guestConfirmed: number }
-    rsvpStats?: {
-      viewCount: number
-      confirmed: number
-      plusOnes: number
-      total: number
-      recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }>
-    }
-  } | null>(null)
+  const [dashboardData, setDashboardData] = useState<DashboardDataShape | null>(() => {
+    // Lazily seed from SSR pre-fetch when the resolved active planner matches.
+    // Avoids the 200-500ms hydration round-trip flash on first paint.
+    if (typeof window === "undefined") return initialDashboardData
+    if (!initialDashboardData || !initialActivePlannerId) return null
+    let stored: string | null = null
+    try { stored = localStorage.getItem("momento_active_event") } catch {}
+    if (!stored || stored === initialActivePlannerId) return initialDashboardData
+    return null
+  })
   const [widgetOrder,   setWidgetOrder]   = useState<string[]>(DEFAULT_ORDER)
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [widgetRows,    setWidgetRows]    = useState<Record<string, number>>({})
   const [extraWidgets,  setExtraWidgets]  = useState<string[]>([])
-  const [darkMode,      setDarkMode]      = useState(() => {
-    if (typeof window === "undefined") return true
-    // Source de vérité = classe html (positionnée par no-flash script + ThemeProvider)
-    return document.documentElement.classList.contains("dark")
-  })
-
-  // Sync darkMode avec la classe html (ThemeProvider, toggle AntNav, system listener)
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const html = document.documentElement
-    setDarkMode(html.classList.contains("dark"))
-    const obs = new MutationObserver(() => {
-      const d = html.classList.contains("dark")
-      setDarkMode(prev => (prev === d ? prev : d))
-    })
-    obs.observe(html, { attributes: true, attributeFilter: ["class"] })
-    return () => obs.disconnect()
-  }, [])
+  // Source unique : ThemeProvider — plus de classList observers locaux ni de
+  // localStorage doublons. Le toggle ci-dessous délègue au provider.
+  const { resolved, setTheme } = useTheme()
+  const darkMode = resolved === "dark"
   const [palette,       setPalette]       = useState({ g1: "#E11D48", g2: "#9333EA" })
   const [isDragging,    setIsDragging]    = useState(false)
   const [dropTarget,    setDropTarget]    = useState<string | null>(null)
@@ -580,13 +590,10 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
   useEffect(() => { if (hydratedEid !== activeEventId || !activeEventId) return; try { localStorage.setItem(`momento_widget_sizes_${activeEventId}`,  JSON.stringify(widgetSizes))  } catch {} }, [widgetSizes,   activeEventId, hydratedEid])
   useEffect(() => { if (hydratedEid !== activeEventId || !activeEventId) return; try { localStorage.setItem(`momento_widget_rows_${activeEventId}`,   JSON.stringify(widgetRows))   } catch {} }, [widgetRows,    activeEventId, hydratedEid])
   useEffect(() => { if (hydratedEid !== activeEventId || !activeEventId) return; try { localStorage.setItem(`momento_extra_widgets_${activeEventId}`, JSON.stringify(extraWidgets)) } catch {} }, [extraWidgets,  activeEventId, hydratedEid])
-  useEffect(() => { try { localStorage.setItem("momento_clone_dark_mode",                JSON.stringify(darkMode))     } catch {} }, [darkMode])
   useEffect(() => { try { localStorage.setItem(`momento_palette_${activeEventId}`,       JSON.stringify(palette))      } catch {} }, [palette,       activeEventId])
 
-  // ── Dark mode — appliqué sur <html>, PAS de cleanup (persiste entre pages) ──
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode)
-  }, [darkMode])
+  // Dark mode : géré entièrement par ThemeProvider (classe .dark + colorScheme
+  // + localStorage `momento_theme`). Le toggle ci-dessous appelle setTheme().
 
   // ── Palette — CSS vars sur <html> ─────────────────────────────────────────
   useEffect(() => {
@@ -1094,7 +1101,7 @@ export default function DashboardClient({ initialPlanners, firstName: initialFir
         <div style={{ padding: "8px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
           <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#c9cad0)" }}>Glisser · Redimensionner (poignée bas-droite)</span>
           <div style={{ display: "flex", gap: 6 }}>
-            <button onClick={() => setDarkMode(d => !d)} title={darkMode ? "Mode clair" : "Mode sombre"}
+            <button onClick={() => setTheme(darkMode ? "light" : "dark")} title={darkMode ? "Mode clair" : "Mode sombre"}
               style={{ width: 30, height: 30, borderRadius: 8, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <GIcon name={darkMode ? "light_mode" : "dark_mode"} size={15} color="var(--dash-text-2,#45474D)" />
             </button>
