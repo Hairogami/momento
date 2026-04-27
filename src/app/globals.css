@@ -742,6 +742,70 @@ html { scrollbar-width: thin; scrollbar-color: rgba(120,120,130,0.25) transparen
   .dash-widget-grid > * { grid-column: span 1 !important; }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Accessibility — WCAG 2.1 AA utilities (a11y audit)
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* sr-only: hide visually but keep for assistive tech */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* sr-only-focusable: visible only when focused (skip-to-content link) */
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip-to-content link visible when focused */
+.skip-to-content:focus {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  padding: 10px 18px;
+  background: var(--g1, #E11D48);
+  color: #fff;
+  border-radius: 10px;
+  font-size: var(--text-sm, 14px);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+
+/* Default focus-visible across the app — provides a brand-tinted ring on
+   any interactive element that doesn't already declare a custom one.
+   Inputs/buttons that set their own focus styles via inline JS will still
+   keep them; this is the keyboard-only fallback (mouse clicks won't trigger). */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible,
+[tabindex]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--g1, #E11D48) !important;
+  outline-offset: 2px !important;
+  border-radius: inherit;
+}
+
 /* Spotlight decorative background (login left panel) — pure CSS, replaces framer-motion ~80KB */
 .momento-spotlight-1 { animation: momentoSpot1 12s ease-in-out infinite alternate; }
 .momento-spotlight-2 { animation: momentoSpot2 15s ease-in-out 3s infinite alternate; }
@@ -763,4 +827,14 @@ html { scrollbar-width: thin; scrollbar-color: rgba(120,120,130,0.25) transparen
   33%  { transform: translate(-30%, -20%); }
   66%  { transform: translate(15%, 20%); }
   100% { transform: translate(0%, 0%); }
+}
+
+/* Respect prefers-reduced-motion — applies to all animated/transition styles */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
