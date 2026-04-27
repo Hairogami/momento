@@ -1,4 +1,20 @@
 "use client"
+/**
+ * /accueil — Hub post-login multi-événements.
+ *
+ * Rôle dans l'architecture (NE PAS confondre avec /dashboard) :
+ *  - /accueil   = hub : liste de TOUS les événements de l'utilisateur, créer/supprimer/restaurer,
+ *                 quick-links (explore, planner, messages, favoris), corbeille 15 j.
+ *                 → C'est la page d'atterrissage par défaut après login (cf. src/lib/auth.ts:126
+ *                 et tous les callbackUrl de signIn). Référencée par toutes les nav (DashSidebar,
+ *                 AntNav, MobileDashNav).
+ *  - /dashboard = détail d'UN événement actif (widgets RSVP, budget, tâches, etc.) — ouvert
+ *                 après sélection d'un planner depuis /accueil.
+ *
+ * Décision (P3 cleanup, avr 2026) : /accueil et /dashboard sont conservés car ils servent
+ * deux niveaux d'UX distincts (multi-événements vs détail). Toute fusion ou rename casse
+ * les redirections OAuth, l'onboarding, et les sidebars. Voir CONCERNS.md / fix-p3-cleanup.
+ */
 import { useEffect, useState, useRef, useMemo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
