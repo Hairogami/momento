@@ -714,6 +714,10 @@ function RsvpPreview() {
   // (6) zoom sur Invités + badge "1" pop, (7) widget update, (8) pause finale
   const step = useAnimLoop([2400, 1000, 2400, 1000, 1500, 1800, 2200, 2800, 1500])
 
+  // Helper cqw : référence 635px → form tient avec marge sous "Confirmer".
+  // Augmente le divisor = contenu plus petit, plus d'air vertical.
+  const u = (n: number): string => `calc(${n} * 0.1574cqw)` // 100/635
+
   const [typedName, setTypedName] = useState("")
   const [typedPlusOne, setTypedPlusOne] = useState("")
 
@@ -799,8 +803,8 @@ function RsvpPreview() {
   }
 
   return (
-    <div style={{ position: "relative", flex: 1, minHeight: 0, overflow: "hidden", borderRadius: 8 }}>
-      {/* FRAME 1 — RSVP form Momento, PJS, tailles encore +30% */}
+    <div style={{ position: "relative", flex: 1, minHeight: 0, overflow: "hidden", borderRadius: u(8) }}>
+      {/* FRAME 1 — RSVP form, valeurs en cqw via u() */}
       <div style={{
         position: "absolute", inset: 0,
         background: "#FAF7F2",
@@ -808,84 +812,84 @@ function RsvpPreview() {
         transform: showForm ? "scale(1)" : "scale(0.94)",
         transition: "opacity 0.5s ease, transform 0.6s ease",
         display: "flex", flexDirection: "column",
-        padding: "14px 16px",
+        padding: `${u(14)} ${u(16)}`,
         fontFamily: fontMomento,
       }}>
         {/* header bandeau terracotta */}
         <div style={{
-          background: "#C1713A", borderRadius: 7,
-          padding: "9px 0", textAlign: "center",
-          marginBottom: 11,
+          background: "#C1713A", borderRadius: u(7),
+          padding: `${u(9)} 0`, textAlign: "center",
+          marginBottom: u(11),
         }}>
-          <span style={{ fontSize: 15, color: "#fff", fontWeight: 700, fontFamily: fontMomento, letterSpacing: "0.01em" }}>
+          <span style={{ fontSize: u(15), color: "#fff", fontWeight: 700, fontFamily: fontMomento, letterSpacing: "0.01em" }}>
             Yazid & Yasmine — 17 nov 2025
           </span>
         </div>
-        <div style={{ fontSize: 10, color: "#8B4513", letterSpacing: "0.18em", fontWeight: 700, textAlign: "center", marginBottom: 13, fontFamily: fontMomento }}>
+        <div style={{ fontSize: u(10), color: "#8B4513", letterSpacing: "0.18em", fontWeight: 700, textAlign: "center", marginBottom: u(13), fontFamily: fontMomento }}>
           CONFIRMEZ VOTRE PRÉSENCE
         </div>
 
         {/* Nom complet */}
-        <div style={{ marginBottom: 11 }}>
-          <div style={{ fontSize: 12, color: "#5a3a20", marginBottom: 5, fontWeight: 600, fontFamily: fontMomento }}>Nom complet</div>
+        <div style={{ marginBottom: u(11) }}>
+          <div style={{ fontSize: u(12), color: "#5a3a20", marginBottom: u(5), fontWeight: 600, fontFamily: fontMomento }}>Nom complet</div>
           <div style={{
             background: "#fff",
-            border: `2px solid ${step === 0 ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
-            borderRadius: 8, padding: "7px 10px",
-            fontSize: 15, color: "#2a1a0a",
-            minHeight: 23, display: "flex", alignItems: "center",
-            boxShadow: step === 0 ? "0 0 0 4px rgba(193,113,58,0.15)" : "none",
+            border: `${u(2)} solid ${step === 0 ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
+            borderRadius: u(8), padding: `${u(7)} ${u(10)}`,
+            fontSize: u(15), color: "#2a1a0a",
+            minHeight: u(23), display: "flex", alignItems: "center",
+            boxShadow: step === 0 ? `0 0 0 ${u(4)} rgba(193,113,58,0.15)` : "none",
             transition: "box-shadow 0.2s, border-color 0.2s",
             fontFamily: fontMomento,
             fontWeight: 500,
           }}>
             {typedName || (step !== 0 ? <span style={{ color: "#bbb", fontWeight: 400 }}>Prénom Nom</span> : null)}
-            {step === 0 && <span style={{ color: "#C1713A", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>}
+            {step === 0 && <span style={{ color: "#C1713A", marginLeft: u(1), animation: "rsvpBlink 0.8s infinite" }}>|</span>}
           </div>
         </div>
 
         {/* Présent ? */}
-        <div style={{ marginBottom: 11 }}>
-          <div style={{ fontSize: 12, color: "#5a3a20", marginBottom: 5, fontWeight: 600, fontFamily: fontMomento }}>Présent à l&apos;événement ?</div>
-          <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ marginBottom: u(11) }}>
+          <div style={{ fontSize: u(12), color: "#5a3a20", marginBottom: u(5), fontWeight: 600, fontFamily: fontMomento }}>Présent à l&apos;événement ?</div>
+          <div style={{ display: "flex", gap: u(8) }}>
             <div style={{
-              flex: 1, padding: "8px 0", borderRadius: 99,
+              flex: 1, padding: `${u(8)} 0`, borderRadius: 99,
               background: ouiSelected ? "#C1713A" : "#fff",
-              border: `2px solid ${ouiSelected ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
+              border: `${u(2)} solid ${ouiSelected ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
               color: ouiSelected ? "#fff" : "#5a3a20",
-              fontSize: 14, fontWeight: 700, textAlign: "center",
+              fontSize: u(14), fontWeight: 700, textAlign: "center",
               transition: "all 0.3s ease",
               transform: step === 1 ? "scale(0.93)" : "scale(1)",
-              boxShadow: step === 1 ? "0 0 0 4px rgba(193,113,58,0.25)" : "none",
+              boxShadow: step === 1 ? `0 0 0 ${u(4)} rgba(193,113,58,0.25)` : "none",
               fontFamily: fontMomento,
             }}>Oui</div>
             <div style={{
-              flex: 1, padding: "8px 0", borderRadius: 99,
-              background: "#fff", border: "2px solid rgba(193,113,58,0.25)",
-              color: "#8a6a5a", fontSize: 14, fontWeight: 700, textAlign: "center",
+              flex: 1, padding: `${u(8)} 0`, borderRadius: 99,
+              background: "#fff", border: `${u(2)} solid rgba(193,113,58,0.25)`,
+              color: "#8a6a5a", fontSize: u(14), fontWeight: 700, textAlign: "center",
               fontFamily: fontMomento,
             }}>Non</div>
           </div>
         </div>
 
         {/* +1 */}
-        <div style={{ marginBottom: 13 }}>
-          <div style={{ fontSize: 12, color: "#5a3a20", marginBottom: 5, fontWeight: 600, fontFamily: fontMomento }}>
+        <div style={{ marginBottom: u(13) }}>
+          <div style={{ fontSize: u(12), color: "#5a3a20", marginBottom: u(5), fontWeight: 600, fontFamily: fontMomento }}>
             Nom de votre +1
           </div>
           <div style={{
             background: "#fff",
-            border: `2px solid ${step === 2 ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
-            borderRadius: 8, padding: "7px 10px",
-            fontSize: 15, color: "#2a1a0a",
-            minHeight: 23, display: "flex", alignItems: "center",
-            boxShadow: step === 2 ? "0 0 0 4px rgba(193,113,58,0.15)" : "none",
+            border: `${u(2)} solid ${step === 2 ? "#C1713A" : "rgba(193,113,58,0.25)"}`,
+            borderRadius: u(8), padding: `${u(7)} ${u(10)}`,
+            fontSize: u(15), color: "#2a1a0a",
+            minHeight: u(23), display: "flex", alignItems: "center",
+            boxShadow: step === 2 ? `0 0 0 ${u(4)} rgba(193,113,58,0.15)` : "none",
             transition: "box-shadow 0.2s, border-color 0.2s",
             fontFamily: fontMomento,
             fontWeight: 500,
           }}>
             {typedPlusOne || (step !== 2 ? <span style={{ color: "#bbb", fontWeight: 400 }}>Prénom Nom</span> : null)}
-            {step === 2 && <span style={{ color: "#C1713A", marginLeft: 1, animation: "rsvpBlink 0.8s infinite" }}>|</span>}
+            {step === 2 && <span style={{ color: "#C1713A", marginLeft: u(1), animation: "rsvpBlink 0.8s infinite" }}>|</span>}
           </div>
         </div>
 
@@ -893,26 +897,26 @@ function RsvpPreview() {
         <div style={{ marginTop: "auto" }}>
           {!submitted ? (
             <div style={{
-              padding: "12px 0", borderRadius: 99,
+              padding: `${u(12)} 0`, borderRadius: 99,
               background: "#C1713A", color: "#fff",
-              fontSize: 15, fontWeight: 700, textAlign: "center",
+              fontSize: u(15), fontWeight: 700, textAlign: "center",
               transform: step === 3 ? "scale(0.94)" : "scale(1)",
               transition: "transform 0.3s ease",
-              boxShadow: step === 3 ? "0 0 0 5px rgba(193,113,58,0.3)" : "0 4px 12px rgba(193,113,58,0.32)",
+              boxShadow: step === 3 ? `0 0 0 ${u(5)} rgba(193,113,58,0.3)` : `0 ${u(4)} ${u(12)} rgba(193,113,58,0.32)`,
               fontFamily: fontMomento,
             }}>
               Confirmer ma réponse
             </div>
           ) : (
             <div style={{
-              padding: "14px 0", textAlign: "center",
+              padding: `${u(14)} 0`, textAlign: "center",
               animation: "slideIn 0.4s ease",
             }}>
-              <div style={{ fontSize: 34, color: "#C1713A", lineHeight: 1, marginBottom: 7, fontFamily: fontMomento, fontWeight: 700 }}>✓</div>
-              <div style={{ fontSize: 20, color: "#2a1a0a", fontFamily: fontMomento, fontWeight: 700 }}>
+              <div style={{ fontSize: u(34), color: "#C1713A", lineHeight: 1, marginBottom: u(7), fontFamily: fontMomento, fontWeight: 700 }}>✓</div>
+              <div style={{ fontSize: u(20), color: "#2a1a0a", fontFamily: fontMomento, fontWeight: 700 }}>
                 Merci Omar !
               </div>
-              <div style={{ fontSize: 12, color: "#8a6a5a", marginTop: 4, fontFamily: fontMomento }}>Votre réponse a bien été enregistrée.</div>
+              <div style={{ fontSize: u(12), color: "#8a6a5a", marginTop: u(4), fontFamily: fontMomento }}>Votre réponse a bien été enregistrée.</div>
             </div>
           )}
         </div>
