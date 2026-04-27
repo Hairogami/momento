@@ -96,9 +96,9 @@ export default function PublicCalendar({ slug, onDateClick }: Props) {
       </div>
 
       {loading ? (
-        <div style={{ padding: 24, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-xs)" }}>Chargement…</div>
+        <div style={{ padding: 24, textAlign: "center", color: "var(--dash-text-3)", fontSize: "var(--text-xs)" }}>Chargement…</div>
       ) : error ? (
-        <div style={{ padding: 24, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-xs)" }}>
+        <div style={{ padding: 24, textAlign: "center", color: "var(--dash-text-3)", fontSize: "var(--text-xs)" }}>
           Calendrier indisponible pour le moment.
         </div>
       ) : (

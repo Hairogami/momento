@@ -59,9 +59,9 @@ type Props = {
 
 // Tokens de thème — light par défaut, dark quand isAdminMode (zone admin lockée en dark).
 const T_LIGHT = {
-  panel: "#fff", panel2: "#fafbfd", input: "#fff",
-  text: "#121317", textBody: "#45474D", textMuted: "#6b7280", textDim: "#9a9aaa",
-  border: "rgba(183,191,217,0.18)", borderStrong: "#e5e7eb", borderInput: "#d1d5db",
+  panel: "var(--dash-surface)", panel2: "var(--dash-faint)", input: "var(--dash-surface)",
+  text: "var(--dash-text)", textBody: "var(--dash-text-2)", textMuted: "var(--dash-text-2)", textDim: "var(--dash-text-3)",
+  border: "var(--dash-border)", borderStrong: "var(--dash-border)", borderInput: "var(--dash-border)",
   blockBg: "#f3f4f6", blockBorder: "#d1d5db", blockText: "#374151",
   pastText: "#c7c9d2",
 }
@@ -196,7 +196,7 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
             style={{
               padding: "6px 12px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
               background: T.panel, color: T.textBody,
-              border: "1px solid rgba(183,191,217,0.3)",
+              border: "1px solid var(--dash-border)",
               cursor: "pointer", fontFamily: "inherit",
             }}
           >
@@ -238,7 +238,7 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
               if (isBooked)       { bg = "#E11D48"; fg = "#fff" }
               else if (isBlocked) { bg = "#374151"; fg = "#fff" }
               else if (isPending) { bg = "rgba(245,158,11,0.15)"; fg = "#B45309" }
-              if (isSelected) border = "2px solid #121317"
+              if (isSelected) border = "2px solid var(--dash-text)"
               else if (isToday) border = "1px solid #9333EA"
 
               // Désormais : tout jour non-passé est cliquable (pour bloquer/débloquer)
@@ -350,7 +350,7 @@ export default function CalendarWidget({ slugOverride, isAdminMode }: Props = {}
                       color: "#E11D48", textDecoration: "none", fontWeight: 600,
                     }}
                   >
-                    Voir dans l&apos;inbox →
+                    Voir les messages →
                   </Link>
                 )}
               </>
@@ -472,7 +472,7 @@ function NavBtn({ onClick, label, T }: { onClick: () => void; label: string; T: 
       style={{
         width: 30, height: 30, borderRadius: 8,
         background: T.panel, color: T.textBody,
-        border: "1px solid rgba(183,191,217,0.3)",
+        border: "1px solid var(--dash-border)",
         cursor: "pointer", fontFamily: "inherit",
         fontSize: "var(--text-md)", fontWeight: 600,
       }}

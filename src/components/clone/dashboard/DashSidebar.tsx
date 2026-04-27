@@ -78,15 +78,28 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
         if (Array.isArray(n)) setNotifUnreadLive(n.filter((x: { read: boolean }) => !x.read).length)
       } catch { /* silent */ }
     }
+    // Page Visibility : 5s actif (perçu temps réel), 60s caché (économie ressources).
+    let id: ReturnType<typeof setInterval> | null = null
+    function startPolling() {
+      if (id) clearInterval(id)
+      const interval = typeof document !== "undefined" && document.visibilityState === "visible" ? 5000 : 60000
+      id = setInterval(refresh, interval)
+    }
+    function onVisibility() {
+      startPolling()
+      if (document.visibilityState === "visible") void refresh()
+    }
     void refresh()
-    const id = setInterval(refresh, 30000)
+    startPolling()
+    document.addEventListener("visibilitychange", onVisibility)
     // Évent custom : pages qui marquent des messages comme lus (ex: ouvrir
-    // une conversation) déclenchent un re-fetch immédiat sans attendre 30s.
+    // une conversation) déclenchent un re-fetch immédiat sans attendre le tick.
     const onChanged = () => { void refresh() }
     window.addEventListener("momento-unread-changed", onChanged)
     return () => {
       cancelled = true
-      clearInterval(id)
+      if (id) clearInterval(id)
+      document.removeEventListener("visibilitychange", onVisibility)
       window.removeEventListener("momento-unread-changed", onChanged)
     }
   }, [])

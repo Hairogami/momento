@@ -24,15 +24,15 @@ export default function EmptyState({ icon, title, subtitle, cta, compact }: Prop
     <div style={{
       padding: pad,
       textAlign: "center",
-      color: "#6b7280",
+      color: "var(--dash-text-2)",
       display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
     }}>
       {icon && (
         <div style={{ fontSize: compact ? 28 : 40, opacity: 0.55, marginBottom: 4 }}>{icon}</div>
       )}
-      <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317" }}>{title}</div>
+      <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text)" }}>{title}</div>
       {subtitle && (
-        <div style={{ fontSize: "var(--text-sm)", color: "#6b7280", maxWidth: 420, lineHeight: 1.5 }}>{subtitle}</div>
+        <div style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2)", maxWidth: 420, lineHeight: 1.5 }}>{subtitle}</div>
       )}
       {cta && (
         cta.href ? (

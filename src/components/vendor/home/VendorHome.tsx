@@ -83,8 +83,8 @@ export default function VendorHome({ publicSlug, vendorName }: { publicSlug: str
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>Bonjour, {vendorName}</h1>
-          <p style={{ fontSize: "var(--text-sm)", color: "#6a6a71", margin: "4px 0 0" }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text)", margin: 0 }}>Bonjour, {vendorName}</h1>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2)", margin: "4px 0 0" }}>
             Voici l&apos;activité de votre fiche prestataire
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function VendorHome({ publicSlug, vendorName }: { publicSlug: str
         <Card title="Vues de votre fiche" subtitle={windowLabel(stats)}>
           <Sparkline series={stats?.series ?? []} bucket={stats?.window.bucket ?? "day"} />
         </Card>
-        <Card title="Inbox (tous statuts)" subtitle="Depuis la création">
+        <Card title="Messages (tous statuts)" subtitle="Depuis la création">
           <Donut donut={stats?.donut} />
         </Card>
       </div>
@@ -150,7 +150,7 @@ function PeriodSelector(props: {
     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
       <div style={{
         display: "inline-flex", padding: 3, borderRadius: 10,
-        background: "#f0f1f6", border: "1px solid rgba(183,191,217,0.22)",
+        background: "var(--dash-faint-2)", border: "1px solid var(--dash-border)",
       }}>
         {tabs.map(t => {
           const active = props.period === t.id
@@ -163,7 +163,7 @@ function PeriodSelector(props: {
                 padding: "6px 12px", borderRadius: 7,
                 fontSize: "var(--text-xs)", fontWeight: active ? 600 : 500,
                 color: active ? "#fff" : "#45474D",
-                background: active ? "#121317" : "transparent",
+                background: active ? "var(--dash-text)" : "transparent",
                 border: "none", cursor: "pointer",
                 transition: "background 120ms ease",
                 fontFamily: "inherit",
@@ -177,7 +177,7 @@ function PeriodSelector(props: {
       {props.period === "custom" && (
         <div style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
           <input type="date" value={props.from} onChange={e => props.setFrom(e.target.value)} style={dateInputStyle} />
-          <span style={{ color: "#8a8f9c", fontSize: "var(--text-xs)" }}>→</span>
+          <span style={{ color: "var(--dash-text-3)", fontSize: "var(--text-xs)" }}>→</span>
           <input type="date" value={props.to} onChange={e => props.setTo(e.target.value)} style={dateInputStyle} />
         </div>
       )}
@@ -187,8 +187,8 @@ function PeriodSelector(props: {
 
 const dateInputStyle: React.CSSProperties = {
   height: 32, padding: "0 8px", borderRadius: 8,
-  border: "1px solid rgba(183,191,217,0.35)", background: "#fff",
-  fontSize: "var(--text-xs)", color: "#121317", fontFamily: "inherit", outline: "none",
+  border: "1px solid var(--dash-border)", background: "var(--dash-surface)",
+  fontSize: "var(--text-xs)", color: "var(--dash-text)", fontFamily: "inherit", outline: "none",
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -209,14 +209,14 @@ function KPIStrip({ stats, loading, period }: { stats: StatsPayload | null; load
         const k = stats?.kpis[it.key]
         return (
           <div key={it.key} style={cardStyle(16)}>
-            <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#8a8f9c", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+            <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
               {it.label}
             </div>
-            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", marginTop: 8, fontVariantNumeric: "tabular-nums" }}>
+            <div style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text)", marginTop: 8, fontVariantNumeric: "tabular-nums" }}>
               {loading ? "—" : k ? it.format(k.current) : "0"}
             </div>
-            <div style={{ fontSize: "var(--text-xs)", color: "#6a6a71", marginTop: 4 }}>
-              {loading || !k ? "\u00A0" : <DeltaBadge delta={k.deltaPct} />} <span style={{ color: "#8a8f9c" }}>vs {prevPeriodLabel(period)}</span>
+            <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)", marginTop: 4 }}>
+              {loading || !k ? "\u00A0" : <DeltaBadge delta={k.deltaPct} />} <span style={{ color: "var(--dash-text-3)" }}>vs {prevPeriodLabel(period)}</span>
             </div>
           </div>
         )
@@ -226,8 +226,8 @@ function KPIStrip({ stats, loading, period }: { stats: StatsPayload | null; load
 }
 
 function DeltaBadge({ delta }: { delta: number | null }) {
-  if (delta === null) return <span style={{ color: "#8a8f9c" }}>N/A</span>
-  if (delta === 0)    return <span style={{ color: "#8a8f9c" }}>— 0%</span>
+  if (delta === null) return <span style={{ color: "var(--dash-text-3)" }}>N/A</span>
+  if (delta === 0)    return <span style={{ color: "var(--dash-text-3)" }}>— 0%</span>
   const up    = delta > 0
   const color = up ? "#16a34a" : "#ef4444"
   const arrow = up ? "▲" : "▼"
@@ -275,8 +275,8 @@ function Sparkline({ series, bucket }: { series: { label: string; views: number 
       {/* grid */}
       {yTicks.map((t, i) => (
         <g key={i}>
-          <line x1={PAD.l} x2={W - PAD.r} y1={t.y} y2={t.y} stroke="#eef0f5" strokeWidth="1" />
-          <text x={PAD.l - 6} y={t.y + 3} fontSize="10" fill="#8a8f9c" textAnchor="end">{t.v}</text>
+          <line x1={PAD.l} x2={W - PAD.r} y1={t.y} y2={t.y} stroke="var(--dash-divider)" strokeWidth="1" />
+          <text x={PAD.l - 6} y={t.y + 3} fontSize="10" fill="var(--dash-text-3)" textAnchor="end">{t.v}</text>
         </g>
       ))}
       {/* area + line */}
@@ -290,7 +290,7 @@ function Sparkline({ series, bucket }: { series: { label: string; views: number 
       ))}
       {/* x labels */}
       {xTicks.map((t, i) => (
-        <text key={i} x={t.x} y={H - 6} fontSize="10" fill="#8a8f9c" textAnchor="middle">
+        <text key={i} x={t.x} y={H - 6} fontSize="10" fill="var(--dash-text-3)" textAnchor="middle">
           {formatTick(t.label, bucket)}
         </text>
       ))}
@@ -330,15 +330,15 @@ function Funnel({ funnel }: { funnel?: StatsPayload["funnel"] }) {
         return (
           <div key={s.label}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-              <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "#45474D" }}>{s.label}</span>
-              <span style={{ fontSize: "var(--text-xs)", fontVariantNumeric: "tabular-nums", color: "#121317", fontWeight: 600 }}>
+              <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: "var(--dash-text-2)" }}>{s.label}</span>
+              <span style={{ fontSize: "var(--text-xs)", fontVariantNumeric: "tabular-nums", color: "var(--dash-text)", fontWeight: 600 }}>
                 {s.value.toLocaleString("fr-FR")}
-                {i > 0 && <span style={{ color: "#8a8f9c", fontWeight: 400, marginLeft: 6 }}>
+                {i > 0 && <span style={{ color: "var(--dash-text-3)", fontWeight: 400, marginLeft: 6 }}>
                   ({pct.toFixed(1)}%)
                 </span>}
               </span>
             </div>
-            <div style={{ height: 10, background: "#f0f1f6", borderRadius: 5, overflow: "hidden" }}>
+            <div style={{ height: 10, background: "var(--dash-faint-2)", borderRadius: 5, overflow: "hidden" }}>
               <div
                 style={{
                   width: `${(s.value / max) * 100}%`,
@@ -379,7 +379,7 @@ function Donut({ donut }: { donut?: StatsPayload["donut"] }) {
   return (
     <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
       <svg viewBox={`0 0 ${size} ${size}`} style={{ width: size, height: size, flexShrink: 0 }}>
-        <circle cx={size / 2} cy={size / 2} r={R} stroke="#f0f1f6" strokeWidth={stroke} fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={R} stroke="var(--dash-faint-2)" strokeWidth={stroke} fill="none" />
         {items.map(it => {
           const frac = it.value / total
           const dash = frac * C
@@ -397,10 +397,10 @@ function Donut({ donut }: { donut?: StatsPayload["donut"] }) {
             />
           )
         })}
-        <text x={size / 2} y={size / 2 - 4} textAnchor="middle" fontSize="22" fontWeight="700" fill="#121317">
+        <text x={size / 2} y={size / 2 - 4} textAnchor="middle" fontSize="22" fontWeight="700" fill="var(--dash-text)">
           {total}
         </text>
-        <text x={size / 2} y={size / 2 + 14} textAnchor="middle" fontSize="10" fill="#8a8f9c">
+        <text x={size / 2} y={size / 2 + 14} textAnchor="middle" fontSize="10" fill="var(--dash-text-3)">
           demandes
         </text>
       </svg>
@@ -408,8 +408,8 @@ function Donut({ donut }: { donut?: StatsPayload["donut"] }) {
         {items.map(it => (
           <li key={it.key} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-xs)" }}>
             <span style={{ width: 8, height: 8, borderRadius: 2, background: it.color, flexShrink: 0 }} />
-            <span style={{ color: "#45474D", flex: 1 }}>{it.label}</span>
-            <span style={{ color: "#121317", fontVariantNumeric: "tabular-nums", fontWeight: 600 }}>{it.value}</span>
+            <span style={{ color: "var(--dash-text-2)", flex: 1 }}>{it.label}</span>
+            <span style={{ color: "var(--dash-text)", fontVariantNumeric: "tabular-nums", fontWeight: 600 }}>{it.value}</span>
           </li>
         ))}
       </ul>
@@ -430,16 +430,16 @@ function ScoreCard({ completion }: { completion: CompletionPayload | null }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <span style={{ fontSize: "var(--text-xl)", fontWeight: 700, color: "#121317", fontVariantNumeric: "tabular-nums" }}>{pct}%</span>
-          <span style={{ fontSize: "var(--text-xs)", color: "#6a6a71" }}>{completion.itemsDone} / {completion.itemsTotal} complétés</span>
+          <span style={{ fontSize: "var(--text-xl)", fontWeight: 700, color: "var(--dash-text)", fontVariantNumeric: "tabular-nums" }}>{pct}%</span>
+          <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)" }}>{completion.itemsDone} / {completion.itemsTotal} complétés</span>
         </div>
-        <div style={{ height: 8, background: "#f0f1f6", borderRadius: 4, overflow: "hidden", marginTop: 8 }}>
+        <div style={{ height: 8, background: "var(--dash-faint-2)", borderRadius: 4, overflow: "hidden", marginTop: 8 }}>
           <div style={{ width: `${pct}%`, height: "100%", background: color, transition: "width 280ms ease" }} />
         </div>
       </div>
       {completion.nextSteps.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#8a8f9c", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
             À faire maintenant
           </div>
           {completion.nextSteps.map(s => (
@@ -449,13 +449,13 @@ function ScoreCard({ completion }: { completion: CompletionPayload | null }) {
               style={{
                 display: "flex", alignItems: "center", gap: 8,
                 padding: "8px 10px", borderRadius: 8,
-                background: "#fafbfe", border: "1px solid rgba(183,191,217,0.22)",
-                textDecoration: "none", fontSize: "var(--text-xs)", color: "#121317",
+                background: "var(--dash-faint)", border: "1px solid var(--dash-border)",
+                textDecoration: "none", fontSize: "var(--text-xs)", color: "var(--dash-text)",
               }}
             >
               <span style={{ flex: 1 }}>{s.label}</span>
-              <span style={{ fontSize: "var(--text-2xs)", color: "#8a8f9c" }}>+{s.weight} pts</span>
-              <span style={{ color: "#8a8f9c" }}>→</span>
+              <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3)" }}>+{s.weight} pts</span>
+              <span style={{ color: "var(--dash-text-3)" }}>→</span>
             </Link>
           ))}
         </div>
@@ -480,10 +480,10 @@ function PreviewCard({ publicSlug }: { publicSlug: string }) {
         🎉
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "var(--text-sm)", color: "#45474D" }}>
+        <div style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2)" }}>
           Votre fiche est visible publiquement à tous les organisateurs qui recherchent un prestataire.
         </div>
-        <div style={{ fontSize: "var(--text-xs)", color: "#8a8f9c", marginTop: 4 }}>
+        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3)", marginTop: 4 }}>
           Chaque modification est reflétée en temps réel sur la page publique.
         </div>
       </div>
@@ -512,8 +512,8 @@ function Card({ title, subtitle, children }: { title: string; subtitle?: string;
   return (
     <section style={cardStyle(20)}>
       <header style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 14 }}>
-        <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317", margin: 0 }}>{title}</h3>
-        {subtitle && <span style={{ fontSize: "var(--text-xs)", color: "#8a8f9c" }}>{subtitle}</span>}
+        <h3 style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text)", margin: 0 }}>{title}</h3>
+        {subtitle && <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3)" }}>{subtitle}</span>}
       </header>
       {children}
     </section>
@@ -541,7 +541,7 @@ function EmptyBlock({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
       padding: "32px 12px", textAlign: "center",
-      color: "#8a8f9c", fontSize: "var(--text-xs)",
+      color: "var(--dash-text-3)", fontSize: "var(--text-xs)",
     }}>
       {children}
     </div>
@@ -550,9 +550,9 @@ function EmptyBlock({ children }: { children: React.ReactNode }) {
 
 function cardStyle(padding: number): React.CSSProperties {
   return {
-    background: "#fff", padding,
+    background: "var(--dash-surface)", padding,
     borderRadius: 14,
-    border: "1px solid rgba(183,191,217,0.22)",
+    border: "1px solid var(--dash-border)",
   }
 }
 

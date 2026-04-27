@@ -6,7 +6,7 @@
  */
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 type NavItem = {
   href: string
@@ -21,7 +21,7 @@ const SECTIONS: NavSection[] = [
   {
     items: [
       { href: "/vendor/dashboard",           label: "Accueil",     icon: "home" },
-      { href: "/vendor/dashboard/inbox",     label: "Inbox",       icon: "inbox" },
+      { href: "/vendor/dashboard/inbox",     label: "Messages",    icon: "chat_bubble" },
       { href: "/vendor/dashboard/stats",     label: "Statistiques", icon: "analytics" },
     ],
   },
@@ -43,18 +43,56 @@ const SECTIONS: NavSection[] = [
 
 export default function VendorSidebar({ publicSlug }: { publicSlug: string | null }) {
   const pathname = usePathname()
+  const [messageUnread, setMessageUnread] = useState<number>(0)
 
   const isActive = useMemo(() => (href: string) => {
     if (href === "/vendor/dashboard") return pathname === href
     return pathname?.startsWith(href) ?? false
   }, [pathname])
 
+  // Polling 30s + listener "momento-unread-changed" pour décrément immédiat
+  // à l'ouverture d'une conversation. Cohérent avec DashSidebar côté client.
+  useEffect(() => {
+    let cancelled = false
+    async function refresh() {
+      try {
+        const r = await fetch("/api/unread", { cache: "no-store" })
+        if (r.ok) {
+          const d = await r.json()
+          if (!cancelled && typeof d?.messages === "number") setMessageUnread(d.messages)
+        }
+      } catch {}
+    }
+    // Page Visibility : 5s actif (perçu temps réel), 60s caché.
+    let id: ReturnType<typeof setInterval> | null = null
+    function startPolling() {
+      if (id) clearInterval(id)
+      const interval = typeof document !== "undefined" && document.visibilityState === "visible" ? 5000 : 60000
+      id = setInterval(refresh, interval)
+    }
+    function onVisibility() {
+      startPolling()
+      if (document.visibilityState === "visible") void refresh()
+    }
+    void refresh()
+    startPolling()
+    document.addEventListener("visibilitychange", onVisibility)
+    const onChanged = () => { void refresh() }
+    window.addEventListener("momento-unread-changed", onChanged)
+    return () => {
+      cancelled = true
+      if (id) clearInterval(id)
+      document.removeEventListener("visibilitychange", onVisibility)
+      window.removeEventListener("momento-unread-changed", onChanged)
+    }
+  }, [])
+
   return (
     <aside
       style={{
         width: 240, flexShrink: 0,
-        background: "#ffffff",
-        borderRight: "1px solid rgba(183,191,217,0.22)",
+        background: "var(--dash-surface)",
+        borderRight: "1px solid var(--dash-border)",
         display: "flex", flexDirection: "column",
         position: "sticky", top: 56, height: "calc(100vh - 56px)",
         overflowY: "auto",
@@ -65,7 +103,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
           <div key={idx} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {section.title && (
               <div style={{
-                fontSize: "var(--text-2xs)", fontWeight: 600, color: "#8a8f9c",
+                fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3)",
                 textTransform: "uppercase", letterSpacing: "0.06em",
                 padding: "8px 12px 4px",
               }}>
@@ -74,6 +112,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
             )}
             {section.items.map(item => {
               const active = isActive(item.href)
+              const liveBadge = item.href === "/vendor/dashboard/inbox" ? messageUnread : (item.badge ?? 0)
               return (
                 <Link
                   key={item.href}
@@ -82,7 +121,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
                     display: "flex", alignItems: "center", gap: 10,
                     padding: "8px 12px", borderRadius: 8,
                     fontSize: "var(--text-sm)", fontWeight: active ? 600 : 500,
-                    color: active ? "#fff" : "#2b2d33",
+                    color: active ? "#fff" : "var(--dash-text)",
                     background: active
                       ? "linear-gradient(135deg,#E11D48,#9333EA)"
                       : "transparent",
@@ -90,16 +129,16 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
                     transition: "background 120ms ease",
                   }}
                 >
-                  <Icon name={item.icon} size={18} color={active ? "#fff" : "#6a6a71"} />
+                  <Icon name={item.icon} size={18} color={active ? "#fff" : "var(--dash-text-2)"} />
                   <span style={{ flex: 1 }}>{item.label}</span>
-                  {typeof item.badge === "number" && item.badge > 0 && (
+                  {liveBadge > 0 && (
                     <span style={{
                       fontSize: "var(--text-2xs)", fontWeight: 700,
                       padding: "2px 7px", borderRadius: 999,
                       background: active ? "rgba(255,255,255,0.25)" : "#E11D48",
                       color: "#fff",
                     }}>
-                      {item.badge}
+                      {liveBadge}
                     </span>
                   )}
                 </Link>
@@ -111,7 +150,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
 
       {/* Public profile link — distinct bottom card */}
       {publicSlug && (
-        <div style={{ padding: 10, borderTop: "1px solid rgba(183,191,217,0.22)" }}>
+        <div style={{ padding: 10, borderTop: "1px solid var(--dash-border)" }}>
           <Link
             href={`/vendor/${publicSlug}`}
             target="_blank"
@@ -119,12 +158,12 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
             style={{
               display: "flex", alignItems: "center", gap: 10,
               padding: "10px 12px", borderRadius: 8,
-              background: "#f4f5f9",
+              background: "var(--dash-faint-2)",
               textDecoration: "none",
-              fontSize: "var(--text-xs)", color: "#2b2d33",
+              fontSize: "var(--text-xs)", color: "var(--dash-text)",
             }}
           >
-            <Icon name="open_in_new" size={16} color="#6a6a71" />
+            <Icon name="open_in_new" size={16} color="var(--dash-text-2)" />
             <span style={{ flex: 1 }}>Voir ma fiche publique</span>
           </Link>
         </div>

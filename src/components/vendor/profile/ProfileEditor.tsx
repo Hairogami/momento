@@ -166,7 +166,7 @@ export default function ProfileEditor() {
   const set = <K extends keyof Vendor>(k: K, v: Vendor[K]) => setVendor(s => ({ ...s, [k]: v }))
 
   if (loading) {
-    return <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-sm)" }}>Chargement…</div>
+    return <div style={{ padding: 40, textAlign: "center", color: "var(--dash-text-3)", fontSize: "var(--text-sm)" }}>Chargement…</div>
   }
 
   return (
@@ -174,8 +174,8 @@ export default function ProfileEditor() {
       {/* Header */}
       <header style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>Mon profil</h1>
-          <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "4px 0 0" }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text)", margin: 0 }}>Mon profil</h1>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2)", margin: "4px 0 0" }}>
             Les informations visibles publiquement sur{" "}
             <Link href={`/vendor/${vendor.slug}`} target="_blank" style={{ color: "#E11D48", textDecoration: "none", fontWeight: 600 }}>
               /vendor/{vendor.slug} ↗
@@ -213,8 +213,8 @@ export default function ProfileEditor() {
                 disabled={saving}
                 style={{
                   padding: "7px 14px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
-                  background: "#fff", color: "#45474D",
-                  border: "1px solid rgba(183,191,217,0.3)",
+                  background: "var(--dash-surface)", color: "var(--dash-text-2)",
+                  border: "1px solid var(--dash-border)",
                   cursor: "pointer", fontFamily: "inherit",
                 }}
               >
@@ -267,7 +267,7 @@ export default function ProfileEditor() {
             placeholder="Décris ton activité, ton style, ton expérience… (100 caractères min pour valider le score)"
             style={{ ...inp, resize: "vertical", lineHeight: 1.5 }}
           />
-          <div style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", marginTop: 4, textAlign: "right" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3)", marginTop: 4, textAlign: "right" }}>
             {(vendor.description ?? "").length} caractères
             {(vendor.description ?? "").length < 100 && " (min. 100)"}
           </div>
@@ -336,7 +336,7 @@ export default function ProfileEditor() {
             </select>
           </Field>
         </Row>
-        <p style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", marginTop: -4 }}>
+        <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3)", marginTop: -4 }}>
           Renseignez au moins la gamme OU une fourchette pour valider le score.
         </p>
       </Section>
@@ -359,12 +359,12 @@ export default function ProfileEditor() {
           padding: 14, borderRadius: 10,
           background: "linear-gradient(135deg,#fdf2f8,#faf5ff)",
           border: "1px solid rgba(233,213,255,0.5)",
-          fontSize: "var(--text-sm)", color: "#45474D",
+          fontSize: "var(--text-sm)", color: "var(--dash-text-2)",
           display: "flex", gap: 12, alignItems: "flex-start",
         }}>
           <span style={{ fontSize: "var(--text-lg)", lineHeight: 1 }}>📸</span>
           <div>
-            <div style={{ fontWeight: 600, color: "#121317", marginBottom: 4 }}>Upload de photos : bientôt</div>
+            <div style={{ fontWeight: 600, color: "var(--dash-text)", marginBottom: 4 }}>Upload de photos : bientôt</div>
             <div>
               En attendant, ajoute quelques photos sur ton Instagram ou Facebook puis connecte-les
               dans la section <a href="#social" style={{ color: "#E11D48", textDecoration: "none", fontWeight: 500 }}>Réseaux sociaux</a>
@@ -409,8 +409,8 @@ export default function ProfileEditor() {
                   {item.done ? "✓" : ""}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "#121317" }}>{item.label}</div>
-                  <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>+{item.weight} pts</div>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text)" }}>{item.label}</div>
+                  <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)" }}>+{item.weight} pts</div>
                 </div>
               </div>
             ))}
@@ -430,8 +430,8 @@ function ScoreHeader({ completion }: { completion: Completion }) {
   const color = pct >= 80 ? "#166534" : pct >= 50 ? "#B45309" : "#991B1B"
   return (
     <div style={{
-      background: "#fff", borderRadius: 12, padding: 14,
-      border: "1px solid rgba(183,191,217,0.18)",
+      background: "var(--dash-surface)", borderRadius: 12, padding: 14,
+      border: "1px solid var(--dash-border)",
       display: "flex", alignItems: "center", gap: 14,
     }}>
       {/* Circular */}
@@ -453,10 +453,10 @@ function ScoreHeader({ completion }: { completion: Completion }) {
         }}>{pct}</div>
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317" }}>
+        <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text)" }}>
           Complétude du profil
         </div>
-        <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>
+        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)" }}>
           {completion.itemsDone}/{completion.itemsTotal} éléments validés · {completion.score}/{completion.maxScore} points
         </div>
       </div>
@@ -474,8 +474,8 @@ function Section({ id, title, icon, children }: {
     <section
       id={id}
       style={{
-        background: "#fff", borderRadius: 14, padding: 18,
-        border: "1px solid rgba(183,191,217,0.18)",
+        background: "var(--dash-surface)", borderRadius: 14, padding: 18,
+        border: "1px solid var(--dash-border)",
         marginBottom: 14, scrollMarginTop: 120,
       }}
     >
@@ -486,7 +486,7 @@ function Section({ id, title, icon, children }: {
             fontSize: "var(--text-md)", color: "#9333EA",
           }}>{icon}</span>
         )}
-        <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317", margin: 0 }}>{title}</h2>
+        <h2 style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text)", margin: 0 }}>{title}</h2>
       </div>
       {children}
     </section>
@@ -508,7 +508,7 @@ function Field({ label, children, col }: {
 }) {
   return (
     <div style={{ gridColumn: col ? `span ${col}` : undefined, marginBottom: 10 }}>
-      <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+      <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 4 }}>
         {label}
       </label>
       {children}
@@ -518,6 +518,6 @@ function Field({ label, children, col }: {
 
 const inp: React.CSSProperties = {
   width: "100%", padding: "9px 12px", borderRadius: 8,
-  border: "1px solid rgba(183,191,217,0.3)",
-  fontSize: "var(--text-sm)", fontFamily: "inherit", background: "#fff", color: "#121317",
+  border: "1px solid var(--dash-border)",
+  fontSize: "var(--text-sm)", fontFamily: "inherit", background: "var(--dash-surface)", color: "var(--dash-text)",
 }

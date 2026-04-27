@@ -169,10 +169,10 @@ export default function InboxClient() {
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
       <header style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>
-          Inbox
+        <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text)", margin: 0 }}>
+          Messages
         </h1>
-        <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "4px 0 0" }}>
+        <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2)", margin: "4px 0 0" }}>
           Gérez vos demandes clients — du premier contact à la réservation.
         </p>
       </header>
@@ -215,9 +215,9 @@ export default function InboxClient() {
           style={{
             width: "100%", maxWidth: 420,
             padding: "10px 14px", borderRadius: 10,
-            border: "1px solid rgba(183,191,217,0.3)",
+            border: "1px solid var(--dash-border)",
             fontSize: "var(--text-sm)", fontFamily: "inherit",
-            background: "#fff", color: "#121317",
+            background: "var(--dash-surface)", color: "var(--dash-text)",
           }}
         />
       </div>
@@ -235,13 +235,13 @@ export default function InboxClient() {
 
       {/* Table */}
       <div style={{
-        background: "#fff", borderRadius: 14,
-        border: "1px solid rgba(183,191,217,0.18)",
+        background: "var(--dash-surface)", borderRadius: 14,
+        border: "1px solid var(--dash-border)",
         overflow: "hidden",
         overflowX: "auto",
       }}>
         {loading ? (
-          <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-sm)" }}>
+          <div style={{ padding: 40, textAlign: "center", color: "var(--dash-text-3)", fontSize: "var(--text-sm)" }}>
             Chargement…
           </div>
         ) : requests.length === 0 ? (
@@ -262,7 +262,7 @@ export default function InboxClient() {
         ) : (
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--text-sm)" }}>
             <thead>
-              <tr style={{ background: "#fafbfd", textAlign: "left" }}>
+              <tr style={{ background: "var(--dash-faint)", textAlign: "left" }}>
                 <Th>Client</Th>
                 <Th>Événement</Th>
                 <Th>Reçu</Th>
@@ -281,25 +281,25 @@ export default function InboxClient() {
                     background: isNew ? "rgba(245,158,11,0.03)" : "transparent",
                   }}>
                     <Td>
-                      <div style={{ fontWeight: isNew ? 700 : 600, color: "#121317" }}>
+                      <div style={{ fontWeight: isNew ? 700 : 600, color: "var(--dash-text)" }}>
                         {r.clientName}
                       </div>
-                      <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>
+                      <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)" }}>
                         {r.clientEmail}{r.clientPhone ? ` · ${r.clientPhone}` : ""}
                       </div>
                     </Td>
                     <Td>
                       <div>{r.eventType ?? "—"}</div>
                       {r.eventDate && (
-                        <div style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>
+                        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)" }}>
                           📅 {new Date(r.eventDate).toLocaleDateString("fr-MA", { day: "numeric", month: "long", year: "numeric" })}
                         </div>
                       )}
                     </Td>
                     <Td>
-                      <div style={{ fontSize: "var(--text-xs)", color: "#45474D" }}>{fmtDate(r.createdAt)}</div>
+                      <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)" }}>{fmtDate(r.createdAt)}</div>
                       {r.readAt && (
-                        <div style={{ fontSize: "var(--text-xs)", color: "#9a9aaa" }}>Vue {fmtDate(r.readAt)}</div>
+                        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3)" }}>Vue {fmtDate(r.readAt)}</div>
                       )}
                     </Td>
                     <Td>
@@ -353,7 +353,7 @@ function Th({ children, style }: { children: React.ReactNode; style?: React.CSSP
     <th style={{
       padding: "12px 16px", fontSize: "var(--text-xs)", fontWeight: 700,
       textTransform: "uppercase", letterSpacing: "0.05em",
-      color: "#6b7280", ...style,
+      color: "var(--dash-text-2)", ...style,
     }}>{children}</th>
   )
 }
@@ -392,7 +392,7 @@ function ActionMenu({
       {!terminal && btn("Répondre", onReply, "#E11D48")}
       {!terminal && btn("Gagnée", onWon, "#166534")}
       {!terminal && btn("Perdue", onLost, "#991B1B")}
-      {terminal && <span style={{ fontSize: "var(--text-xs)", color: "#9a9aaa" }}>—</span>}
+      {terminal && <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3)" }}>—</span>}
     </div>
   )
 }
@@ -452,28 +452,28 @@ function ReplyModal({
         onClick={e => e.stopPropagation()}
         style={{
           width: "100%", maxWidth: 640, maxHeight: "90vh", overflow: "auto",
-          background: "#fff", borderRadius: 16, padding: 24,
+          background: "var(--dash-surface)", borderRadius: 16, padding: 24,
           boxShadow: "0 24px 60px rgba(0,0,0,0.3)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
           <div>
-            <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: 0, color: "#121317" }}>
+            <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: 0, color: "var(--dash-text)" }}>
               Répondre à {request.clientName}
             </h2>
-            <p style={{ fontSize: "var(--text-xs)", color: "#6b7280", margin: "2px 0 0" }}>{request.clientEmail}</p>
+            <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)", margin: "2px 0 0" }}>{request.clientEmail}</p>
           </div>
           <button onClick={onClose} style={{
             background: "none", border: "none", fontSize: "var(--text-lg)", cursor: "pointer",
-            color: "#9a9aaa", padding: 0, lineHeight: 1,
+            color: "var(--dash-text-3)", padding: 0, lineHeight: 1,
           }}>×</button>
         </div>
 
         {/* Message original */}
         <div style={{
-          background: "#fafbfd", borderRadius: 10, padding: 12, marginBottom: 16,
+          background: "var(--dash-faint)", borderRadius: 10, padding: 12, marginBottom: 16,
           border: "1px solid rgba(183,191,217,0.14)", fontSize: "var(--text-sm)",
-          color: "#45474D", lineHeight: 1.5, maxHeight: 120, overflow: "auto",
+          color: "var(--dash-text-2)", lineHeight: 1.5, maxHeight: 120, overflow: "auto",
         }}>
           {request.message}
         </div>
@@ -482,7 +482,7 @@ function ReplyModal({
         {templates.length > 0 && (
           <>
             <div style={{ marginBottom: 10 }}>
-              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 6 }}>
                 Langue
               </div>
               <div style={{ display: "flex", gap: 6 }}>
@@ -494,7 +494,7 @@ function ReplyModal({
                       padding: "5px 11px", borderRadius: 99, fontSize: "var(--text-xs)", fontWeight: 600,
                       background: lang === l ? "#121317" : "#fff",
                       color: lang === l ? "#fff" : "#45474D",
-                      border: "1px solid rgba(183,191,217,0.3)",
+                      border: "1px solid var(--dash-border)",
                       cursor: "pointer", fontFamily: "inherit",
                     }}
                   >
@@ -506,7 +506,7 @@ function ReplyModal({
 
             {/* Templates pour la langue courante */}
             <div style={{ marginBottom: 14 }}>
-              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
+              <div style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 6 }}>
                 Templates
               </div>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -526,7 +526,7 @@ function ReplyModal({
                   </button>
                 ))}
                 {(byLang[lang] ?? []).length === 0 && (
-                  <span style={{ fontSize: "var(--text-xs)", color: "#9a9aaa", fontStyle: "italic" }}>
+                  <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3)", fontStyle: "italic" }}>
                     Aucun template dans cette langue. Créez-en dans Templates.
                   </span>
                 )}
@@ -547,7 +547,7 @@ function ReplyModal({
 
         {/* Sujet + corps */}
         <div style={{ marginBottom: 10 }}>
-          <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+          <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 4 }}>
             Sujet
           </label>
           <input
@@ -555,14 +555,14 @@ function ReplyModal({
             onChange={e => setSubject(e.target.value)}
             style={{
               width: "100%", padding: "9px 12px", borderRadius: 8,
-              border: "1px solid rgba(183,191,217,0.3)",
+              border: "1px solid var(--dash-border)",
               fontSize: "var(--text-sm)", fontFamily: "inherit",
             }}
           />
         </div>
 
         <div style={{ marginBottom: 16 }}>
-          <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+          <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 4 }}>
             Message
           </label>
           <textarea
@@ -573,7 +573,7 @@ function ReplyModal({
             placeholder="Rédigez votre réponse ou sélectionnez un template ci-dessus…"
             style={{
               width: "100%", padding: "10px 12px", borderRadius: 8,
-              border: "1px solid rgba(183,191,217,0.3)",
+              border: "1px solid var(--dash-border)",
               fontSize: "var(--text-sm)", fontFamily: "inherit", lineHeight: 1.5,
               resize: "vertical",
             }}
@@ -585,8 +585,8 @@ function ReplyModal({
             onClick={onClose}
             style={{
               padding: "9px 16px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 600,
-              background: "#fff", color: "#45474D",
-              border: "1px solid rgba(183,191,217,0.3)",
+              background: "var(--dash-surface)", color: "var(--dash-text-2)",
+              border: "1px solid var(--dash-border)",
               cursor: "pointer", fontFamily: "inherit",
             }}
           >

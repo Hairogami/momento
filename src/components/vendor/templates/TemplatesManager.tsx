@@ -246,14 +246,14 @@ export default function TemplatesManager() {
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
       <header style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "#121317", margin: 0 }}>
+          <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text)", margin: 0 }}>
             Templates de réponse
           </h1>
-          <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "4px 0 0" }}>
-            Répondez en 1 clic depuis votre inbox. Variables disponibles :
-            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{name}}"}</code>
-            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{eventType}}"}</code>
-            <code style={{ background: "#f0f1f6", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{eventDate}}"}</code>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2)", margin: "4px 0 0" }}>
+            Répondez en 1 clic depuis vos messages. Variables disponibles :
+            <code style={{ background: "var(--dash-faint-2)", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{name}}"}</code>
+            <code style={{ background: "var(--dash-faint-2)", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{eventType}}"}</code>
+            <code style={{ background: "var(--dash-faint-2)", padding: "1px 5px", borderRadius: 4, fontSize: "var(--text-xs)", margin: "0 3px" }}>{"{{eventDate}}"}</code>
           </p>
         </div>
         {templates && templates.length < 20 && (
@@ -307,7 +307,7 @@ export default function TemplatesManager() {
       )}
 
       {loading && (
-        <div style={{ padding: 40, textAlign: "center", color: "#9a9aaa", fontSize: "var(--text-sm)" }}>
+        <div style={{ padding: 40, textAlign: "center", color: "var(--dash-text-3)", fontSize: "var(--text-sm)" }}>
           Chargement…
         </div>
       )}
@@ -315,13 +315,13 @@ export default function TemplatesManager() {
       {/* Empty state + starter pack */}
       {templates && templates.length === 0 && !draft && (
         <div style={{
-          background: "#fff", borderRadius: 14, padding: 24,
-          border: "1px solid rgba(183,191,217,0.18)", textAlign: "center",
+          background: "var(--dash-surface)", borderRadius: 14, padding: 24,
+          border: "1px solid var(--dash-border)", textAlign: "center",
         }}>
-          <div style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "#121317", marginBottom: 6 }}>
+          <div style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text)", marginBottom: 6 }}>
             Démarrez avec un starter pack
           </div>
-          <p style={{ fontSize: "var(--text-sm)", color: "#6b7280", margin: "0 0 16px", maxWidth: 540, marginInline: "auto" }}>
+          <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2)", margin: "0 0 16px", maxWidth: 540, marginInline: "auto" }}>
             3 templates prêts à l&apos;emploi par langue (disponible / indisponible / demande d&apos;infos).
             Modifiables ensuite à volonté.
           </p>
@@ -333,8 +333,8 @@ export default function TemplatesManager() {
                 onClick={() => bootstrap(l)}
                 style={{
                   padding: "9px 16px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 600,
-                  background: "#fafbfd", color: "#121317",
-                  border: "1px solid rgba(183,191,217,0.3)",
+                  background: "var(--dash-faint)", color: "var(--dash-text)",
+                  border: "1px solid var(--dash-border)",
                   cursor: bootLang !== null ? "not-allowed" : "pointer", fontFamily: "inherit",
                 }}
               >
@@ -354,16 +354,16 @@ export default function TemplatesManager() {
               <div
                 key={t.id}
                 style={{
-                  background: "#fff", borderRadius: 14, padding: 16,
-                  border: "1px solid rgba(183,191,217,0.18)",
+                  background: "var(--dash-surface)", borderRadius: 14, padding: 16,
+                  border: "1px solid var(--dash-border)",
                   display: "flex", flexDirection: "column",
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 8 }}>
-                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "#121317" }}>{t.title}</div>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text)" }}>{t.title}</div>
                   <span style={{
-                    fontSize: "var(--text-2xs)", fontWeight: 700, color: "#6b7280",
-                    background: "#f0f1f6", padding: "2px 7px", borderRadius: 99,
+                    fontSize: "var(--text-2xs)", fontWeight: 700, color: "var(--dash-text-2)",
+                    background: "var(--dash-faint-2)", padding: "2px 7px", borderRadius: 99,
                     textTransform: "uppercase", letterSpacing: "0.05em",
                   }}>
                     {t.lang === "fr" ? "FR" : t.lang === "ar" ? "AR" : t.lang === "darija" ? "DAR" : t.lang}
@@ -372,7 +372,7 @@ export default function TemplatesManager() {
                 <p
                   dir={rtl ? "rtl" : "ltr"}
                   style={{
-                    fontSize: "var(--text-xs)", color: "#45474D", lineHeight: 1.6,
+                    fontSize: "var(--text-xs)", color: "var(--dash-text-2)", lineHeight: 1.6,
                     whiteSpace: "pre-line", margin: 0, flex: 1,
                     maxHeight: 180, overflow: "hidden", textOverflow: "ellipsis",
                   }}
@@ -384,8 +384,8 @@ export default function TemplatesManager() {
                     onClick={() => startEdit(t)}
                     style={{
                       flex: 1, padding: "7px 10px", borderRadius: 8, fontSize: "var(--text-xs)", fontWeight: 600,
-                      background: "#fff", color: "#45474D",
-                      border: "1px solid rgba(183,191,217,0.3)",
+                      background: "var(--dash-surface)", color: "var(--dash-text-2)",
+                      border: "1px solid var(--dash-border)",
                       cursor: "pointer", fontFamily: "inherit",
                     }}
                   >
@@ -410,7 +410,7 @@ export default function TemplatesManager() {
       )}
 
       {filtered.length === 0 && templates && templates.length > 0 && filter !== "all" && (
-        <div style={{ background: "#fff", borderRadius: 14, border: "1px solid rgba(183,191,217,0.18)" }}>
+        <div style={{ background: "var(--dash-surface)", borderRadius: 14, border: "1px solid var(--dash-border)" }}>
           <EmptyState
             icon="💬"
             title="Aucun template dans cette langue"
@@ -463,23 +463,23 @@ function DraftEditor({
         onClick={e => e.stopPropagation()}
         style={{
           width: "100%", maxWidth: 560, maxHeight: "90vh", overflow: "auto",
-          background: "#fff", borderRadius: 16, padding: 24,
+          background: "var(--dash-surface)", borderRadius: 16, padding: 24,
           boxShadow: "0 24px 60px rgba(0,0,0,0.3)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: 0, color: "#121317" }}>
+          <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, margin: 0, color: "var(--dash-text)" }}>
             {isNew ? "Nouveau template" : "Modifier le template"}
           </h2>
           <button onClick={onCancel} style={{
             background: "none", border: "none", fontSize: "var(--text-lg)", cursor: "pointer",
-            color: "#9a9aaa", padding: 0, lineHeight: 1,
+            color: "var(--dash-text-3)", padding: 0, lineHeight: 1,
           }}>×</button>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 140px", gap: 10, marginBottom: 12 }}>
           <div>
-            <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 4 }}>
               Titre
             </label>
             <input
@@ -490,7 +490,7 @@ function DraftEditor({
             />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+            <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 4 }}>
               Langue
             </label>
             <select
@@ -507,7 +507,7 @@ function DraftEditor({
 
         {/* Variables insertables */}
         <div style={{ marginBottom: 8, display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
-          <span style={{ fontSize: "var(--text-xs)", color: "#6b7280" }}>Insérer :</span>
+          <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2)" }}>Insérer :</span>
           {VARIABLES.map(v => (
             <button
               key={v.code}
@@ -515,7 +515,7 @@ function DraftEditor({
               title={v.label}
               style={{
                 padding: "3px 8px", borderRadius: 6, fontSize: "var(--text-xs)", fontWeight: 600,
-                background: "#f0f1f6", color: "#45474D",
+                background: "var(--dash-faint-2)", color: "var(--dash-text-2)",
                 border: "1px solid rgba(183,191,217,0.2)",
                 cursor: "pointer", fontFamily: "ui-monospace, monospace",
               }}
@@ -525,7 +525,7 @@ function DraftEditor({
           ))}
         </div>
 
-        <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+        <label style={{ display: "block", fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2)", marginBottom: 4 }}>
           Corps du message
         </label>
         <textarea
@@ -543,8 +543,8 @@ function DraftEditor({
             disabled={saving}
             style={{
               padding: "9px 16px", borderRadius: 8, fontSize: "var(--text-sm)", fontWeight: 600,
-              background: "#fff", color: "#45474D",
-              border: "1px solid rgba(183,191,217,0.3)",
+              background: "var(--dash-surface)", color: "var(--dash-text-2)",
+              border: "1px solid var(--dash-border)",
               cursor: "pointer", fontFamily: "inherit",
             }}
           >
@@ -570,6 +570,6 @@ function DraftEditor({
 
 const inputStyle: React.CSSProperties = {
   width: "100%", padding: "9px 12px", borderRadius: 8,
-  border: "1px solid rgba(183,191,217,0.3)",
-  fontSize: "var(--text-sm)", fontFamily: "inherit", background: "#fff", color: "#121317",
+  border: "1px solid var(--dash-border)",
+  fontSize: "var(--text-sm)", fontFamily: "inherit", background: "var(--dash-surface)", color: "var(--dash-text)",
 }

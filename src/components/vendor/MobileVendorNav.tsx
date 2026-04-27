@@ -2,7 +2,7 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -18,14 +18,14 @@ function GIcon({ name, size = 22, color }: { name: string; size?: number; color?
 
 const PRIMARY = [
   { icon: "home",        label: "Accueil",    href: "/vendor/dashboard"           },
-  { icon: "chat_bubble", label: "Demandes",   href: "/vendor/dashboard/inbox"     },
+  { icon: "chat_bubble", label: "Messages",   href: "/vendor/dashboard/inbox"     },
   { icon: "inventory_2", label: "Packages",   href: "/vendor/dashboard/packages"  },
   { icon: "person",      label: "Profil",     href: "/vendor/dashboard/profil"    },
 ]
 
 const ALL = [
   { icon: "home",        label: "Accueil",      href: "/vendor/dashboard"           },
-  { icon: "chat_bubble", label: "Demandes",     href: "/vendor/dashboard/inbox"     },
+  { icon: "chat_bubble", label: "Messages",     href: "/vendor/dashboard/inbox"     },
   { icon: "inventory_2", label: "Packages",     href: "/vendor/dashboard/packages"  },
   { icon: "description", label: "Templates",    href: "/vendor/dashboard/templates" },
   { icon: "person",      label: "Mon profil",   href: "/vendor/dashboard/profil"    },
@@ -35,6 +35,42 @@ const ALL = [
 export default function MobileVendorNav() {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [messageUnread, setMessageUnread] = useState<number>(0)
+
+  useEffect(() => {
+    let cancelled = false
+    async function refresh() {
+      try {
+        const r = await fetch("/api/unread", { cache: "no-store" })
+        if (r.ok) {
+          const d = await r.json()
+          if (!cancelled && typeof d?.messages === "number") setMessageUnread(d.messages)
+        }
+      } catch {}
+    }
+    // Page Visibility : 5s actif, 60s caché.
+    let id: ReturnType<typeof setInterval> | null = null
+    function startPolling() {
+      if (id) clearInterval(id)
+      const interval = typeof document !== "undefined" && document.visibilityState === "visible" ? 5000 : 60000
+      id = setInterval(refresh, interval)
+    }
+    function onVisibility() {
+      startPolling()
+      if (document.visibilityState === "visible") void refresh()
+    }
+    void refresh()
+    startPolling()
+    document.addEventListener("visibilitychange", onVisibility)
+    const onChanged = () => { void refresh() }
+    window.addEventListener("momento-unread-changed", onChanged)
+    return () => {
+      cancelled = true
+      if (id) clearInterval(id)
+      document.removeEventListener("visibilitychange", onVisibility)
+      window.removeEventListener("momento-unread-changed", onChanged)
+    }
+  }, [])
 
   return (
     <>
@@ -47,12 +83,24 @@ export default function MobileVendorNav() {
       }}>
         {PRIMARY.map(item => {
           const active = pathname === item.href
+          const showBadge = item.href === "/vendor/dashboard/inbox" && messageUnread > 0
           return (
             <Link key={item.href + item.label} href={item.href} style={{
               flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
               justifyContent: "center", gap: 3, textDecoration: "none", position: "relative",
             }}>
-              <GIcon name={item.icon} size={22} color={active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)"} />
+              <div style={{ position: "relative" }}>
+                <GIcon name={item.icon} size={22} color={active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)"} />
+                {showBadge && (
+                  <span style={{
+                    position: "absolute", top: -4, right: -8, minWidth: 16, height: 16, padding: "0 4px",
+                    borderRadius: 999, background: G, color: "#fff",
+                    fontSize: "var(--text-2xs)", fontWeight: 800,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    lineHeight: 1,
+                  }}>{messageUnread}</span>
+                )}
+              </div>
               <span style={{ fontSize: "var(--text-2xs)", fontWeight: active ? 600 : 400, color: active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)" }}>{item.label}</span>
               {active && <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 24, height: 2, borderRadius: 99, background: G }} />}
             </Link>
