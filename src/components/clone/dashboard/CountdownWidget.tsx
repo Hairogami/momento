@@ -79,7 +79,7 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
             pointerEvents: "none",
           }}>
             <span style={{
-              fontSize: "var(--text-xl)", fontWeight: 900, lineHeight: 1,
+              fontSize: "var(--text-lg)", fontWeight: 900, lineHeight: 1,
               backgroundImage: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}>{t.days}</span>

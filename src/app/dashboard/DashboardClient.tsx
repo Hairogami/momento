@@ -888,7 +888,7 @@ function RepartitionBudgetWidget({ budgetItems }: { budgetItems: BudgetItem[] })
       <div style={{ display: "flex", justifyContent: "center" }}>
         <svg width={90} height={90} viewBox="0 0 100 100">
           {paths.map((p, i) => <path key={i} d={p.path} fill={p.color} opacity={0.9} />)}
-          <text x={50} y={54} textAnchor="middle" fontSize={9} fontWeight="700" fill="var(--dash-text,#121317)">{Math.round(total / 1000)}k</text>
+          <text x={50} y={54} textAnchor="middle" fontSize={7} fontWeight="700" fill="var(--dash-text,#121317)">{Math.round(total / 1000)}k</text>
         </svg>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
