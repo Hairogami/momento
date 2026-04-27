@@ -237,7 +237,7 @@ export default function CloneMessagesPage() {
                 ) : msgs.map(msg => {
                   const isMe = msg.senderId === myId
                   return (
-                    <div key={msg.id} style={{ display: "flex", justifyContent: isMe ? "flex-start" : "flex-end" }}>
+                    <div key={msg.id} style={{ display: "flex", justifyContent: isMe ? "flex-end" : "flex-start" }}>
                       <div style={{
                         maxWidth: "70%", padding: "10px 14px", borderRadius: 14,
                         background: isMe ? G : "var(--dash-faint-2,rgba(183,191,217,0.15))",
