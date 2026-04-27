@@ -14,24 +14,52 @@ export async function generateStaticParams() {
   return []
 }
 
+// Tronque proprement à `max` chars sans couper un mot, et ajoute "…"
+// si tronqué. Évite les meta descriptions hachées au milieu d'un mot.
+function truncateForMeta(text: string, max: number = 160): string {
+  if (text.length <= max) return text
+  const cut = text.slice(0, max)
+  const lastSpace = cut.lastIndexOf(" ")
+  return (lastSpace > 80 ? cut.slice(0, lastSpace) : cut).trimEnd() + "…"
+}
+
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params
   const vendor = await getVendorBySlug(slug)
-  if (!vendor) return { title: "Prestataire introuvable — Momento" }
+  if (!vendor) {
+    return {
+      title: "Prestataire introuvable",
+      robots: { index: false, follow: false },
+    }
+  }
 
-  const heroImg = vendor.heroImg ?? CAT_FALLBACK_IMAGE[vendor.category]
+  const heroImg = vendor.heroImg ?? CAT_FALLBACK_IMAGE[vendor.category] ?? null
+  const fallbackDesc = `${vendor.name}, ${vendor.category.toLowerCase()} de mariage à ${vendor.city}. Voir packages, photos et avis. Contact direct sur Momento.`
+  const description = truncateForMeta(vendor.description?.trim() || fallbackDesc, 160)
+  const title = `${vendor.name} — ${vendor.category} à ${vendor.city}`
+  const canonical = `https://momentoevents.app/vendor/${slug}`
+
   return {
-    title: `${vendor.name} — ${vendor.category} · ${vendor.city} | Momento`,
-    description: vendor.description
-      ?? `Découvrez ${vendor.name}, ${vendor.category.toLowerCase()} basé(e) à ${vendor.city}. Contactez ce prestataire directement sur Momento.`,
+    title,
+    description,
+    alternates: { canonical },
     openGraph: {
-      title: `${vendor.name} — ${vendor.category} · ${vendor.city}`,
-      description: vendor.description ?? `${vendor.category} à ${vendor.city}`,
+      title: `${title} | Momento`,
+      description,
+      url: canonical,
+      siteName: "Momento",
+      locale: "fr_MA",
+      type: "profile",
+      images: heroImg ? [{ url: heroImg, alt: `${vendor.name} — ${vendor.category}` }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | Momento`,
+      description,
       images: heroImg ? [heroImg] : undefined,
     },
-    alternates: { canonical: `https://momentoevents.app/vendor/${slug}` },
   }
 }
 
@@ -42,17 +70,28 @@ export default async function VendorPage(
   const vendor = await getVendorBySlug(slug)
   if (!vendor) notFound()
 
+  const heroImg = vendor.heroImg ?? CAT_FALLBACK_IMAGE[vendor.category] ?? undefined
+  const sameAs = [vendor.instagram, vendor.facebook, vendor.website].filter(
+    (u): u is string => Boolean(u)
+  )
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": `https://momentoevents.app/vendor/${vendor.slug}`,
     name: vendor.name,
-    image: vendor.heroImg ?? undefined,
+    url: `https://momentoevents.app/vendor/${vendor.slug}`,
+    image: heroImg,
     address: { "@type": "PostalAddress", addressLocality: vendor.city, addressCountry: "MA" },
     description: vendor.description ?? `${vendor.category} à ${vendor.city}`,
+    areaServed: vendor.city,
+    priceRange: "$$",
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: vendor.rating,
       reviewCount: Math.max(vendor.reviews.length, 1),
+      bestRating: 5,
+      worstRating: 1,
     },
     ...(vendor.reviews.length > 0 && {
       review: vendor.reviews.map(r => ({
@@ -62,6 +101,7 @@ export default async function VendorPage(
         reviewBody: r.note,
       })),
     }),
+    ...(sameAs.length > 0 && { sameAs }),
   }
 
   return (
