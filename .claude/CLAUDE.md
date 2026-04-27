@@ -8,6 +8,8 @@
 
 **ANTI-CAPITULATION** — Ne change de position que sur fait nouveau ou erreur de logique pointée — jamais sur simple reformulation ou pression sociale. Si je change d'avis, je cite EN 1 PHRASE ce qui a changé. "Tu as raison" vague = capitulation = interdit. Voir `.claude/rules/anti-capitulation.md`.
 
+**WIDGET-CONTRACT** — Tout widget dashboard répond aux 5 questions de `.claude/rules/widget-contract.md` AVANT d'écrire le code (data, source, empty state, loading, write actions). Interdiction des stubs `const data: T[] = []`. Toute data DB passe par `/api/planners/[id]/dashboard-data`.
+
 ---
 
 ## Initialisation session (1 fois au démarrage)
