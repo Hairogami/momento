@@ -189,7 +189,7 @@ export default function GuestsPage() {
               {activeEvent.name || "—"}
             </p>
           </div>
-          <div className="no-print" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <div className="no-print" style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
             <ViewToggle value={view} onChange={setView} />
             {activeEventId && <GuestsExportMenu plannerId={activeEventId} />}
           </div>
