@@ -37,7 +37,7 @@ function PillSelect({ value, onChange, options, placeholder }: {
           background: value
             ? "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
             : open ? "var(--dash-faint-2,rgba(183,191,217,0.18))" : "transparent",
-          fontSize: 13, fontWeight: value ? 600 : 500,
+          fontSize: "var(--text-sm)", fontWeight: value ? 600 : 500,
           color: value ? "#fff" : "var(--dash-text-3,#9a9aaa)",
           cursor: "pointer", fontFamily: "inherit",
           display: "flex", alignItems: "center", gap: 6,
@@ -71,7 +71,7 @@ function PillSelect({ value, onChange, options, placeholder }: {
                 width: "100%", padding: "9px 14px",
                 background: opt.value === value ? "rgba(225,29,72,0.08)" : "transparent",
                 border: "none", textAlign: "left",
-                fontSize: 13, color: opt.value === value ? "#E11D48" : "var(--dash-text,#121317)",
+                fontSize: "var(--text-sm)", color: opt.value === value ? "#E11D48" : "var(--dash-text,#121317)",
                 fontWeight: opt.value === value ? 600 : 400,
                 cursor: "pointer", fontFamily: "inherit",
                 whiteSpace: "nowrap", borderRadius: 12,
@@ -301,7 +301,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           <div style={{ flex: 1, minWidth: 0, position: "relative" }}>
             <span style={{
               position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)",
-              fontSize: 16, color: "var(--dash-text-3,#9a9aaa)", pointerEvents: "none",
+              fontSize: "var(--text-base)", color: "var(--dash-text-3,#9a9aaa)", pointerEvents: "none",
               fontFamily: "'Google Symbols','Material Symbols Outlined'", fontWeight: "normal",
             }}>search</span>
             <input
@@ -315,7 +315,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                 borderRadius: 999,
                 border: "1.5px solid var(--dash-border,rgba(183,191,217,0.4))",
                 background: "var(--dash-input-bg,#fafafa)",
-                fontSize: 14, color: "var(--dash-text,#121317)",
+                fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)",
                 outline: "none", boxSizing: "border-box", fontFamily: "inherit",
                 transition: "border-color 0.15s",
               }}
@@ -373,7 +373,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               <button onClick={clearFilters} style={{
                 height: 40, padding: "0 14px", borderRadius: 999,
                 border: "1px solid rgba(225,29,72,0.3)", background: "rgba(225,29,72,0.05)",
-                color: "#E11D48", fontSize: 12, fontWeight: 500,
+                color: "#E11D48", fontSize: "var(--text-xs)", fontWeight: 500,
                 cursor: "pointer", fontFamily: "inherit", flexShrink: 0, whiteSpace: "nowrap",
               }}>✕</button>
             )}
@@ -407,7 +407,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                 ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))"
                 : "var(--dash-surface,#fff)",
               color: activeMajor !== "Tous" ? "#fff" : "var(--dash-text-2,#45474D)",
-              fontSize: 13, fontWeight: activeMajor !== "Tous" ? 600 : 400,
+              fontSize: "var(--text-sm)", fontWeight: activeMajor !== "Tous" ? 600 : 400,
               cursor: "pointer", fontFamily: "inherit",
               boxShadow: activeMajor !== "Tous" ? "0 2px 12px color-mix(in srgb, var(--g1,#E11D48) 25%, transparent)" : "none",
             }}
@@ -415,7 +415,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             <span>{MAJOR_CATS.find(c => c.label === activeMajor)?.emoji ?? "✦"}</span>
             {activeMajor !== "Tous" ? activeMajor : "Catégorie"}
             {activeMajor !== "Tous" && (
-              <span style={{ background: "rgba(255,255,255,0.25)", borderRadius: 99, padding: "1px 7px", fontSize: 11, fontWeight: 700 }}>
+              <span style={{ background: "rgba(255,255,255,0.25)", borderRadius: 99, padding: "1px 7px", fontSize: "var(--text-xs)", fontWeight: 700 }}>
                 {filtered.length}
               </span>
             )}
@@ -425,7 +425,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
-            cursor: "pointer", fontSize: 14, lineHeight: 1,
+            cursor: "pointer", fontSize: "var(--text-sm)", lineHeight: 1,
           }}>‹</button>
           <style>{`.clone-explore-cats::-webkit-scrollbar { display: none; }`}</style>
           <div ref={catsRef} className="clone-explore-cats hidden md:flex" style={{ gap: 6, overflowX: "auto", scrollbarWidth: "none", flex: 1 }}>
@@ -443,7 +443,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                       ? "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))"
                       : "transparent",
                     color: active ? "#fff" : "var(--dash-text-3,#9a9aaa)",
-                    fontSize: 13, fontWeight: active ? 700 : 500,
+                    fontSize: "var(--text-sm)", fontWeight: active ? 700 : 500,
                     cursor: "pointer", transition: "all 0.25s cubic-bezier(.4,0,.2,1)",
                     fontFamily: "inherit",
                     whiteSpace: "nowrap",
@@ -453,12 +453,12 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                   onMouseEnter={e => { if (!active) { e.currentTarget.style.background = "var(--dash-faint-2,rgba(183,191,217,0.18))"; e.currentTarget.style.color = "var(--dash-text,#121317)" } }}
                   onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--dash-text-3,#9a9aaa)" } }}
                 >
-                  <span style={{ fontSize: 13 }}>{cat.emoji}</span>
+                  <span style={{ fontSize: "var(--text-sm)" }}>{cat.emoji}</span>
                   {cat.label}
                   {active && (
                     <span style={{
                       background: "rgba(255,255,255,0.25)", borderRadius: 99,
-                      padding: "1px 7px", fontSize: 11, fontWeight: 700,
+                      padding: "1px 7px", fontSize: "var(--text-xs)", fontWeight: 700,
                     }}>
                       {filtered.length}
                     </span>
@@ -472,7 +472,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             flexShrink: 0, width: 28, height: 28, borderRadius: "50%",
             border: "1px solid var(--dash-border,rgba(183,191,217,0.3))",
             background: "var(--dash-surface,#fff)", color: "var(--dash-text-2,#45474D)",
-            cursor: "pointer", fontSize: 14, lineHeight: 1,
+            cursor: "pointer", fontSize: "var(--text-sm)", lineHeight: 1,
           }}>›</button>
 
           {/* ── Dark toggle + Filtres (groupés à droite) ── */}
@@ -485,7 +485,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                 background: "var(--dash-surface,#fff)",
                 color: "var(--dash-text-2,#45474D)",
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 15,
+                fontSize: "var(--text-base)",
               }}
               title={dark ? "Mode clair" : "Mode sombre"}
             >
@@ -507,7 +507,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                     ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))"
                     : "var(--dash-surface,#fff)",
                   color: advCount > 0 ? "#fff" : "var(--dash-text-2,#6a6a71)",
-                  fontSize: 12, fontWeight: advCount > 0 ? 600 : 400,
+                  fontSize: "var(--text-xs)", fontWeight: advCount > 0 ? 600 : 400,
                   cursor: "pointer", fontFamily: "inherit",
                   display: "flex", alignItems: "center", gap: 5,
                   transition: "all 0.15s",
@@ -519,7 +519,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                   {advCount > 0 && (
                     <span style={{
                       background: "rgba(255,255,255,0.3)", borderRadius: 99,
-                      padding: "0 5px", fontSize: 10, fontWeight: 700,
+                      padding: "0 5px", fontSize: "var(--text-2xs)", fontWeight: 700,
                     }}>{advCount}</span>
                   )}
                 </button>
@@ -539,7 +539,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               }}>
                 {/* Section réseaux sociaux */}
                 <div style={{ padding: "14px 16px 10px" }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  <p style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                     Réseaux sociaux
                   </p>
                   <div style={{ display: "flex", gap: 6 }}>
@@ -551,7 +551,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                           if (active) next.delete(s); else next.add(s)
                           return next
                         })} style={{
-                          flex: 1, height: 32, borderRadius: 10, fontSize: 12,
+                          flex: 1, height: 32, borderRadius: 10, fontSize: "var(--text-xs)",
                           fontWeight: active ? 600 : 400,
                           border: active ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
                           background: active
@@ -573,11 +573,11 @@ export default function ExploreClient({ initialVendors, totalCount }: {
 
                 {/* Section médias */}
                 <div style={{ padding: "10px 16px 14px" }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  <p style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 8px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                     Médias
                   </p>
                   <button onClick={() => setPhotoOnly(p => !p)} style={{
-                    width: "100%", height: 32, borderRadius: 10, fontSize: 12,
+                    width: "100%", height: 32, borderRadius: 10, fontSize: "var(--text-xs)",
                     fontWeight: photoOnly ? 600 : 400,
                     border: photoOnly ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
                     background: photoOnly
@@ -598,7 +598,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                     <button onClick={() => { setSocialFilter(new Set()); setPhotoOnly(false) }} style={{
                       width: "100%", padding: "10px 16px",
                       background: "transparent", border: "none",
-                      fontSize: 12, color: "#E11D48",
+                      fontSize: "var(--text-xs)", color: "#E11D48",
                       cursor: "pointer", fontFamily: "inherit",
                       textAlign: "left",
                     }}>
@@ -644,7 +644,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             {/* Load more */}
             {hasMore && (
               <div style={{ textAlign: "center", marginTop: 40 }}>
-                <p className="clone-muted" style={{ fontSize: 13, color: "var(--dash-text-2,#6a6a71)", marginBottom: 16 }}>
+                <p className="clone-muted" style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", marginBottom: 16 }}>
                   {visible.length} sur {filtered.length} prestataires
                 </p>
                 <button
@@ -653,7 +653,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                     padding: "12px 32px", borderRadius: 999,
                     background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))",
                     color: "#fff", border: "none",
-                    fontSize: 14, fontWeight: 600,
+                    fontSize: "var(--text-sm)", fontWeight: 600,
                     cursor: "pointer", fontFamily: "inherit",
                     transition: "opacity 0.15s",
                   }}
@@ -667,11 +667,11 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           </>
         ) : (
           <div style={{ textAlign: "center", padding: "80px 20px" }}>
-            <p style={{ fontSize: 48, margin: "0 0 16px" }}>🔍</p>
-            <h2 className="clone-heading" style={{ fontSize: 18, fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>
+            <p style={{ fontSize: "var(--text-3xl)", margin: "0 0 16px" }}>🔍</p>
+            <h2 className="clone-heading" style={{ fontSize: "var(--text-md)", fontWeight: 600, color: "var(--dash-text,#121317)", margin: 0 }}>
               Aucun prestataire trouvé
             </h2>
-            <p className="clone-muted" style={{ fontSize: 14, color: "var(--dash-text-2,#6a6a71)", marginTop: 8 }}>
+            <p className="clone-muted" style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)", marginTop: 8 }}>
               Essayez de modifier vos filtres ou votre recherche
             </p>
             <button
@@ -680,7 +680,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                 marginTop: 24, padding: "10px 28px", borderRadius: 999,
                 background: "linear-gradient(135deg, var(--g1, #E11D48), var(--g2, #9333EA))",
                 color: "#fff", border: "none",
-                fontSize: 14, fontWeight: 500,
+                fontSize: "var(--text-sm)", fontWeight: 500,
                 cursor: "pointer", fontFamily: "inherit",
               }}
             >
@@ -696,7 +696,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
         padding: "20px 24px",
         textAlign: "center",
       }}>
-        <p className="clone-muted" style={{ fontSize: 12, color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>
+        <p className="clone-muted" style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>
           {totalCount}+ prestataires vérifiés · 41 villes · Contact direct
         </p>
       </div>
@@ -714,10 +714,10 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Catégorie</h3>
+              <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Catégorie</h3>
               <button
                 onClick={() => setCatModalOpen(false)}
-                style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}
+                style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: "var(--text-sm)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}
               >✕</button>
             </div>
             {/* Grid 3 colonnes */}
@@ -742,8 +742,8 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                       minHeight: 80,
                     }}
                   >
-                    <span style={{ fontSize: 24 }}>{cat.emoji}</span>
-                    <span style={{ fontSize: 11, fontWeight: active ? 600 : 500, textAlign: "center", lineHeight: 1.3 }}>{cat.label}</span>
+                    <span style={{ fontSize: "var(--text-lg)" }}>{cat.emoji}</span>
+                    <span style={{ fontSize: "var(--text-xs)", fontWeight: active ? 600 : 500, textAlign: "center", lineHeight: 1.3 }}>{cat.label}</span>
                   </button>
                 )
               })}
@@ -765,12 +765,12 @@ export default function ExploreClient({ initialVendors, totalCount }: {
           }}>
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Filtres</h3>
-              <button onClick={() => setFiltersModalOpen(false)} style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}>✕</button>
+              <h3 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Filtres</h3>
+              <button onClick={() => setFiltersModalOpen(false)} style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,#f7f7fb)", cursor: "pointer", fontSize: "var(--text-sm)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#45474D)", fontFamily: "inherit" }}>✕</button>
             </div>
 
             {/* Réseaux sociaux */}
-            <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Réseaux sociaux</p>
+            <p style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Réseaux sociaux</p>
             <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
               {(["instagram", "facebook"] as const).map(s => {
                 const active = socialFilter.has(s)
@@ -778,7 +778,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                   <button key={s} onClick={() => setSocialFilter(prev => {
                     const next = new Set(prev); if (active) next.delete(s); else next.add(s); return next
                   })} style={{
-                    flex: 1, height: 48, borderRadius: 14, fontSize: 14,
+                    flex: 1, height: 48, borderRadius: 14, fontSize: "var(--text-sm)",
                     fontWeight: active ? 600 : 400,
                     border: active ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
                     background: active
@@ -794,9 +794,9 @@ export default function ExploreClient({ initialVendors, totalCount }: {
             </div>
 
             {/* Médias */}
-            <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Médias</p>
+            <p style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>Médias</p>
             <button onClick={() => setPhotoOnly(p => !p)} style={{
-              width: "100%", height: 48, borderRadius: 14, fontSize: 14,
+              width: "100%", height: 48, borderRadius: 14, fontSize: "var(--text-sm)",
               fontWeight: photoOnly ? 600 : 400,
               border: photoOnly ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.3))",
               background: photoOnly ? "linear-gradient(135deg,var(--g1,#E11D48),var(--g2,#9333EA))" : "var(--dash-faint-2,#f4f4f8)",
@@ -812,7 +812,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
               <button onClick={() => { setSocialFilter(new Set()); setPhotoOnly(false) }} style={{
                 width: "100%", marginTop: 16, padding: "12px 0",
                 background: "transparent", border: "1px solid rgba(225,29,72,0.3)",
-                borderRadius: 14, fontSize: 13, color: "#E11D48",
+                borderRadius: 14, fontSize: "var(--text-sm)", color: "#E11D48",
                 cursor: "pointer", fontFamily: "inherit",
               }}>
                 ✕ Réinitialiser

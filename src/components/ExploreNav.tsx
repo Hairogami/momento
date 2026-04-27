@@ -115,7 +115,7 @@ export default function ExploreNav({
               value={search}
               onChange={e => onSearch(e.target.value)}
               className="w-full bg-transparent outline-none leading-none"
-              style={{ color: C.white, fontSize: 14 }}
+              style={{ color: C.white, fontSize: "var(--text-sm)" }}
             />
           </label>
 
@@ -131,7 +131,7 @@ export default function ExploreNav({
                 value={activeDate}
                 onChange={e => onDateChange(e.target.value)}
                 className="bg-transparent outline-none cursor-pointer leading-none"
-                style={{ color: activeDate ? C.white : C.steel, fontSize: 14, colorScheme: isDark ? "dark" : "light" }}
+                style={{ color: activeDate ? C.white : C.steel, fontSize: "var(--text-sm)", colorScheme: isDark ? "dark" : "light" }}
               />
             </label>
           )}
@@ -143,7 +143,7 @@ export default function ExploreNav({
             style={{ borderRight: `1px solid ${C.anthracite}`, backgroundColor: showFilterPanel ? C.dark : "transparent" }}
           >
             <span className="text-[12px] font-medium leading-none mb-1" style={{ color: C.white }}>Filtres</span>
-            <span className="leading-none" style={{ color: filtersActive ? C.white : C.steel, fontSize: 14 }}>
+            <span className="leading-none" style={{ color: filtersActive ? C.white : C.steel, fontSize: "var(--text-sm)" }}>
               {filtersActive ? (activeCity !== "Toutes les villes" ? activeCity : "Actifs") : "Ajouter des filtres"}
             </span>
           </button>
