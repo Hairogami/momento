@@ -2151,8 +2151,9 @@ export default function AntVideoSection() {
                 </p>
               </div>
 
-              {/* Grille 3×2 desktop / 2×3 mid / 1×6 mobile — cf @media */}
-              <div className="ant-bento-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3,1fr)", gridTemplateRows: "1fr 1fr", gap: "1vw", minHeight: 0 }}>
+              {/* Grille 3×2 fixe — minmax(0,1fr) empêche le contenu intrinsèque
+                  des animations zoom de pousser les rows et déformer les cartes */}
+              <div className="ant-bento-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gridTemplateRows: "minmax(0, 1fr) minmax(0, 1fr)", gap: "1vw", minHeight: 0 }}>
                 {BENTO_FEATURES.map((f, i) => (
                   <Link key={i} href={f.href} style={{ textDecoration: "none", display: "flex", flexDirection: "column" }}>
                     <div
@@ -2189,17 +2190,10 @@ export default function AntVideoSection() {
               @keyframes badgeRingPulse{0%{transform:scale(0.7);opacity:0.8}100%{transform:scale(2.6);opacity:0}}
               .ai-chat-scroll::-webkit-scrollbar{display:none}
 
-              /* Petit écran (MacBook 13" et moins) : on garde l'animation
-                 cinématique sticky mais on passe la grille en 2×3 pour
-                 que les 6 cartes tiennent dans 100dvh. Cartes plus larges,
-                 plus hautes, contenu lisible. */
-              @media (max-height: 899px) and (min-width: 768px),
-                     (max-width: 1099px) and (min-width: 768px) {
-                .ant-bento-grid {
-                  grid-template-columns: repeat(2, 1fr) !important;
-                  grid-template-rows: repeat(3, 1fr) !important;
-                }
-              }
+              /* Grille 3×2 conservée sur TOUS les écrans desktop/tablet
+                 pour garantir une forme et un aspect ratio constants des
+                 cartes. Le canvas scale-to-fit (cf JS canvasRef) ajuste
+                 l'échelle pour que les 6 cartes tiennent dans 100dvh. */
               /* Mobile vertical : 1 colonne × 6 lignes, full natural scroll */
               @media (max-width: 767px) {
                 .ant-video-shell { height: auto !important; }
