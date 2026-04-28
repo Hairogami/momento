@@ -46,10 +46,7 @@ export default function DashboardShell({
     <div
       style={{
         display: "flex",
-        // 100svh = small viewport (URL bar Chrome visible) — la hauteur ne
-        // grandit PAS quand l'URL bar collapse au scroll, donc pas de
-        // re-layout brutal qui fait sauter la bottom nav.
-        minHeight: "100svh",
+        minHeight: "100dvh",
         background: "var(--dash-bg, #f7f7fb)",
         color: "var(--dash-text, #121317)",
       }}

@@ -76,9 +76,6 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  // Force le viewport à se resizer quand l'URL bar Chrome / clavier change,
-  // au lieu d'overlay (visual viewport) — évite les sauts de la bottom nav fixe.
-  interactiveWidget: "resizes-content",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f7f7fb" },
     { media: "(prefers-color-scheme: dark)",  color: "#0d0e14" },
