@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { BUDGET_CATEGORIES, getCategory } from "@/lib/budgetCategories"
+import BottomSheet from "@/components/mobile/BottomSheet"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -65,23 +66,7 @@ export function BudgetExpenseModal({
   }, [open, initialValues])
 
   // Escape pour fermer
-  useEffect(() => {
-    if (!open) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel()
-    }
-    window.addEventListener("keydown", handler)
-    return () => window.removeEventListener("keydown", handler)
-  }, [open, onCancel])
-
-  // Lock body scroll quand le modal est ouvert (mobile : empêche le scroll
-  // de la page derrière le modal sur tap accidentel).
-  useEffect(() => {
-    if (!open || typeof document === "undefined") return
-    const prev = document.body.style.overflow
-    document.body.style.overflow = "hidden"
-    return () => { document.body.style.overflow = prev }
-  }, [open])
+  // ESC + body scroll lock gérés par BottomSheet wrapper.
 
   if (!open) return null
 
@@ -129,39 +114,22 @@ export function BudgetExpenseModal({
   }
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="expense-modal-title"
-      onClick={onCancel}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1500,
-        padding: "var(--space-md, 16px)",
-        animation: "fade-in 0.15s ease-out",
-      }}
+    <BottomSheet
+      open={open}
+      onClose={onCancel}
+      title={mode === "add" ? "Nouvelle dépense" : "Modifier la dépense"}
+      maxWidth={480}
+      ariaLabelledBy="expense-modal-title"
     >
       <form
         onSubmit={handleSubmit}
-        onClick={(e) => e.stopPropagation()}
         style={{
-          background: "var(--dash-surface, #fff)",
-          color: "var(--dash-text, #121317)",
-          border: "1px solid var(--dash-border, rgba(183,191,217,0.15))",
-          borderRadius: 16,
-          padding: "clamp(20px, 3vw, 28px)",
-          maxWidth: 480,
-          width: "100%",
-          boxShadow: "var(--shadow-modal, 0 12px 40px rgba(0,0,0,0.2))",
-          animation: "slide-in 0.2s ease-out",
+          padding: "clamp(16px, 4vw, 24px)",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
           <div
             style={{
               width: 36,
@@ -185,18 +153,16 @@ export function BudgetExpenseModal({
               {cat.icon}
             </span>
           </div>
-          <h2
+          <span
             id="expense-modal-title"
             style={{
-              fontSize: "var(--text-lg)",
-              fontWeight: 700,
-              margin: 0,
-              color: "var(--dash-text, #121317)",
-              letterSpacing: "-0.02em",
+              fontSize: "var(--text-sm)",
+              fontWeight: 600,
+              color: "var(--dash-text-2, #6a6a71)",
             }}
           >
-            {mode === "add" ? "Nouvelle dépense" : "Modifier la dépense"}
-          </h2>
+            Catégorie : {cat.label}
+          </span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -310,17 +276,12 @@ export function BudgetExpenseModal({
         </div>
 
         <style jsx>{`
-          @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
-          @keyframes slide-in {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-          }
           input:focus, select:focus {
             outline: 2px solid var(--g1, #E11D48);
             outline-offset: 1px;
           }
         `}</style>
       </form>
-    </div>
+    </BottomSheet>
   )
 }
