@@ -584,13 +584,13 @@ function ContactModal({ slug, vendorName, prefillDate, onClose }: { slug: string
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <Field label="Votre nom" required>
-                <input required value={form.clientName} onChange={e => setForm(p => ({ ...p, clientName: e.target.value }))} style={inputStyle} />
+                <input required autoComplete="name" name="clientName" value={form.clientName} onChange={e => setForm(p => ({ ...p, clientName: e.target.value }))} style={inputStyle} />
               </Field>
               <Field label="Email" required>
-                <input required type="email" value={form.clientEmail} onChange={e => setForm(p => ({ ...p, clientEmail: e.target.value }))} style={inputStyle} />
+                <input required type="email" inputMode="email" autoComplete="email" name="clientEmail" value={form.clientEmail} onChange={e => setForm(p => ({ ...p, clientEmail: e.target.value }))} style={inputStyle} />
               </Field>
               <Field label="Téléphone (optionnel)">
-                <input type="tel" value={form.clientPhone} onChange={e => setForm(p => ({ ...p, clientPhone: e.target.value }))} style={inputStyle} />
+                <input type="tel" inputMode="tel" autoComplete="tel" name="clientPhone" value={form.clientPhone} onChange={e => setForm(p => ({ ...p, clientPhone: e.target.value }))} style={inputStyle} />
               </Field>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10 }}>
                 <Field label="Type d'événement">

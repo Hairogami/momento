@@ -151,7 +151,7 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, alignItems: "center" }}>
                   <span style={{ fontSize: "var(--text-2xs)", fontWeight: 500, color: "var(--dash-text-2,#45474D)" }}>{item.label}</span>
                   {isEditing ? (
-                    <input ref={inputRef} type="number" value={editValue}
+                    <input ref={inputRef} type="number" inputMode="decimal" value={editValue}
                       onChange={e => setEditValue(e.target.value)}
                       onBlur={() => commitEdit(idx)}
                       onKeyDown={e => { if (e.key === "Enter") commitEdit(idx); if (e.key === "Escape") setEditingIdx(null) }}

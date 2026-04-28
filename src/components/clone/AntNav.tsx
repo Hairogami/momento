@@ -198,6 +198,19 @@ export default function AntNav({
     return () => document.removeEventListener("mousedown", handler)
   }, [])
 
+  // Mobile menu : ESC to close + body scroll lock (full-screen sheet UX)
+  useEffect(() => {
+    if (!menuOpen) return
+    function onKey(e: KeyboardEvent) { if (e.key === "Escape") setMenuOpen(false) }
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [menuOpen])
+
   // Nav stable pour tous les états d'auth — seul le href de "Dashboard" change.
   // Pour les prestataires, on remplace la CTA "Vous êtes prestataire ?" par le shortcut Espace pro.
   const dashboardHref = !isLoggedIn ? "/login" : isVendor ? "/vendor/dashboard" : "/dashboard"
@@ -253,7 +266,14 @@ export default function AntNav({
     <>
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        style={{ backgroundColor: bg, backdropFilter: "blur(14px)", borderBottom: border }}
+        style={{
+          backgroundColor: bg,
+          backdropFilter: "blur(14px)",
+          borderBottom: border,
+          // Réserve la zone notch/Dynamic Island sur iOS — le contenu de la nav
+          // ne disparaît plus sous l'encoche en landscape ou plein écran.
+          paddingTop: "env(safe-area-inset-top)",
+        }}
       >
         <div className="px-6 h-14 flex items-center gap-4" style={{ position: "relative" }}>
 
@@ -442,59 +462,113 @@ export default function AntNav({
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden" style={{ background: bg, borderTop: border, padding: "12px 24px 20px" }}>
-            <div className="flex flex-col gap-1">
-              {isLoggedIn && (
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px 14px", borderBottom: `1px solid ${dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.15)"}`, marginBottom: 8 }}>
-                  <Avatar name={session.user?.name} image={session.user?.image} size={32} />
-                  <div>
-                    {!isVendor && (
-                      <span
-                        style={{
-                          display: "inline-block",
-                          fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-                          color: planColor, background: planBg,
-                          padding: "2px 7px", borderRadius: 99,
-                          border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
-                          marginBottom: 3,
-                        }}
-                      >
-                        {planLabel}
-                      </span>
-                    )}
-                    <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0]}</p>
-                  </div>
+      </header>
+
+      {/* Mobile menu — full-screen sheet avec backdrop (md:hidden) */}
+      {menuOpen && (
+        <div
+          className="md:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 60,
+            background: dark ? "rgba(0,0,0,0.65)" : "rgba(18,19,23,0.45)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            display: "flex",
+            flexDirection: "column",
+            paddingTop: "env(safe-area-inset-top)",
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              flex: 1,
+              background: surf,
+              borderBottom: surfBorder,
+              padding: "16px 24px calc(24px + env(safe-area-inset-bottom)) 24px",
+              overflowY: "auto",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 6,
+            }}
+          >
+            {/* Header avec close button */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+              <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: heading, letterSpacing: "-0.01em" }}>Menu</span>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Fermer le menu"
+                style={{
+                  width: 36, height: 36, borderRadius: "50%",
+                  background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.15)",
+                  border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)",
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  touchAction: "manipulation",
+                }}
+              >
+                <GsIcon icon="close" size={16} color={text} />
+              </button>
+            </div>
+
+            {isLoggedIn && (
+              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px 14px", borderBottom: `1px solid ${dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.15)"}`, marginBottom: 8 }}>
+                <Avatar name={session.user?.name} image={session.user?.image} size={36} />
+                <div>
+                  {!isVendor && (
+                    <span
+                      style={{
+                        display: "inline-block",
+                        fontSize: "var(--text-2xs)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+                        color: planColor, background: planBg,
+                        padding: "2px 7px", borderRadius: 99,
+                        border: plan === "free" ? `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(183,191,217,0.3)"}` : "none",
+                        marginBottom: 3,
+                      }}
+                    >
+                      {planLabel}
+                    </span>
+                  )}
+                  <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: heading, margin: 0 }}>{session.user?.name?.split(" ")[0]}</p>
                 </div>
-              )}
+              </div>
+            )}
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {isLoggedIn
                 ? renderDropdownItems(dropdown, () => setMenuOpen(false))
                 : NAV_LINKS_PUBLIC.map(link => (
                     <Link key={link.label} href={link.href} onClick={() => setMenuOpen(false)}
-                      style={{ display: "flex", alignItems: "center", padding: "10px 12px", borderRadius: 10, textDecoration: "none", color: text, fontSize: "var(--text-sm)" }}>
+                      style={{ display: "flex", alignItems: "center", padding: "12px 16px", borderRadius: 10, textDecoration: "none", color: text, fontSize: "var(--text-sm)" }}>
                       {link.label}
                     </Link>
                   ))
               }
-              {!isLoggedIn && (
-                <>
-                  <Link href="/login" onClick={() => setMenuOpen(false)}
-                    className="mt-2 inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-medium"
-                    style={{ color: text, background: dark ? "rgba(255,255,255,0.07)" : "rgba(183,191,217,0.14)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.25)" }}>
-                    Connexion
-                  </Link>
-                  <Link href="/signup" onClick={() => setMenuOpen(false)}
-                    className="mt-2 inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-medium"
-                    style={{ background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", color: "#fff" }}>
-                    S&apos;inscrire
-                  </Link>
-                </>
-              )}
             </div>
+
+            {!isLoggedIn && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>
+                <Link href="/login" onClick={() => setMenuOpen(false)}
+                  className="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-medium"
+                  style={{ color: text, background: dark ? "rgba(255,255,255,0.07)" : "rgba(183,191,217,0.14)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.25)" }}>
+                  Connexion
+                </Link>
+                <Link href="/signup" onClick={() => setMenuOpen(false)}
+                  className="inline-flex items-center justify-center px-4 py-2.5 rounded-full text-sm font-medium"
+                  style={{ background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))", color: "#fff" }}>
+                  S&apos;inscrire
+                </Link>
+              </div>
+            )}
           </div>
-        )}
-      </header>
+        </div>
+      )}
 
       {/* ── Global CSS (dark mode + palette) ── */}
       <style>{`

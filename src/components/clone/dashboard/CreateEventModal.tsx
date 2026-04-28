@@ -411,7 +411,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                 </div>
                 <div>
                   <label style={labelStyle}>👥 Invités</label>
-                  <input type="number" value={guestCount} onChange={e => setGuestCount(e.target.value)} placeholder="120" min={0} style={inputStyle} />
+                  <input type="number" inputMode="numeric" value={guestCount} onChange={e => setGuestCount(e.target.value)} placeholder="120" min={0} style={inputStyle} />
                 </div>
               </div>
 
@@ -541,7 +541,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                         <span style={{ fontSize: "var(--text-xs)", fontWeight: 600 }}>{cat}</span>
                         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                           <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3, #8888aa)", fontWeight: 600, width: 32, textAlign: "right" }}>{pct}%</span>
-                          <input type="number" min={0} max={budgetTotal * 2} step={500} value={amount}
+                          <input type="number" inputMode="numeric" min={0} max={budgetTotal * 2} step={500} value={amount}
                             onChange={e => updateCatBudget(cat, parseInt(e.target.value, 10) || 0)}
                             style={{ width: 80, padding: "5px 7px", borderRadius: 7, border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))", background: "var(--dash-bg, #0d0e14)", color: "var(--dash-text, #eeeef5)", fontSize: "var(--text-xs)", fontWeight: 700, textAlign: "right", fontFamily: "inherit" }} />
                           <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3, #8888aa)" }}>Dhs</span>

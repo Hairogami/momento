@@ -278,14 +278,14 @@ export default function ProfileEditor() {
       <Section id="contact" title="Contact" icon="call">
         <Row>
           <Field label="Téléphone">
-            <input value={vendor.phone ?? ""} onChange={e => set("phone", e.target.value)} placeholder="+212 6 XX XX XX XX" style={inp} />
+            <input type="tel" inputMode="tel" autoComplete="tel" value={vendor.phone ?? ""} onChange={e => set("phone", e.target.value)} placeholder="+212 6 XX XX XX XX" style={inp} />
           </Field>
           <Field label="Email public">
-            <input value={vendor.email ?? ""} onChange={e => set("email", e.target.value)} type="email" placeholder="contact@exemple.ma" style={inp} />
+            <input type="email" inputMode="email" autoComplete="email" value={vendor.email ?? ""} onChange={e => set("email", e.target.value)} placeholder="contact@exemple.ma" style={inp} />
           </Field>
         </Row>
         <Field label="Site web">
-          <input value={vendor.website ?? ""} onChange={e => set("website", e.target.value)} type="url" placeholder="https://…" style={inp} />
+          <input type="url" inputMode="url" autoComplete="url" value={vendor.website ?? ""} onChange={e => set("website", e.target.value)} placeholder="https://…" style={inp} />
         </Field>
       </Section>
 
@@ -293,14 +293,14 @@ export default function ProfileEditor() {
       <Section id="location" title="Localisation" icon="location_on">
         <Row>
           <Field label="Ville">
-            <input value={vendor.city ?? ""} onChange={e => set("city", e.target.value)} placeholder="Marrakech" style={inp} />
+            <input autoComplete="address-level2" value={vendor.city ?? ""} onChange={e => set("city", e.target.value)} placeholder="Marrakech" style={inp} />
           </Field>
           <Field label="Région">
-            <input value={vendor.region ?? ""} onChange={e => set("region", e.target.value)} placeholder="Marrakech-Safi" style={inp} />
+            <input autoComplete="address-level1" value={vendor.region ?? ""} onChange={e => set("region", e.target.value)} placeholder="Marrakech-Safi" style={inp} />
           </Field>
         </Row>
         <Field label="Adresse (optionnel, visible publiquement)">
-          <input value={vendor.address ?? ""} onChange={e => set("address", e.target.value)} style={inp} />
+          <input autoComplete="street-address" value={vendor.address ?? ""} onChange={e => set("address", e.target.value)} style={inp} />
         </Field>
       </Section>
 

@@ -56,7 +56,8 @@ export default function CloneForgotPasswordPage() {
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <input
-                  type="email" placeholder="toi@exemple.com" value={email}
+                  type="email" inputMode="email" autoComplete="email" name="email"
+                  placeholder="toi@exemple.com" value={email}
                   onChange={e => setEmail(e.target.value)} required
                   style={{
                     height: 46, padding: "0 14px", borderRadius: 12,

@@ -199,6 +199,9 @@ export default function GuestsPage() {
 
           <div className="no-print" style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
             <input
+              type="text"
+              autoComplete="off"
+              name="newGuestName"
               value={newGuestName}
               onChange={e => setNewGuestName(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") addGuest() }}

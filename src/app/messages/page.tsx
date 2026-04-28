@@ -302,6 +302,9 @@ export default function CloneMessagesPage() {
                 background: "var(--dash-surface,#fff)", display: "flex", gap: 10, alignItems: "center",
               }} className="clone-surface">
                 <input
+                  type="text"
+                  autoComplete="off"
+                  name="messageInput"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}

@@ -213,11 +213,11 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
 
         <form onSubmit={handleSubmit}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
-            <input placeholder="Prénom" value={firstName} onChange={e => setFirstName(e.target.value)} style={inputStyle} />
-            <input placeholder="Nom" value={lastName} onChange={e => setLastName(e.target.value)} style={inputStyle} />
+            <input name="firstName" autoComplete="given-name" placeholder="Prénom" value={firstName} onChange={e => setFirstName(e.target.value)} style={inputStyle} />
+            <input name="lastName" autoComplete="family-name" placeholder="Nom" value={lastName} onChange={e => setLastName(e.target.value)} style={inputStyle} />
           </div>
-          <input type="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} style={{ ...inputStyle, marginBottom: 8 }} />
-          <input type="password" required placeholder="Mot de passe" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle} />
+          <input type="email" inputMode="email" autoComplete="email" name="email" required placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} style={{ ...inputStyle, marginBottom: 8 }} />
+          <input type="password" autoComplete="new-password" name="password" required placeholder="Mot de passe" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle} />
 
           <label style={{ display: "flex", gap: 10, marginTop: 14, fontSize: "var(--text-xs)", color: "var(--dash-text-2, #b0b0cc)", cursor: "pointer", lineHeight: 1.5 }}>
             <input type="checkbox" checked={tos} onChange={e => setTos(e.target.checked)} style={{ marginTop: 2 }} />

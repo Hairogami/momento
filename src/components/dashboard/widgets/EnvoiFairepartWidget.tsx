@@ -56,7 +56,7 @@ export default function EnvoiFairepartWidget({ guests, eventId }: { guests: Gues
             <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
           </div>
           <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
-            <input type="number" min={1} value={input} onChange={e => setInput(e.target.value)}
+            <input type="number" inputMode="numeric" min={1} value={input} onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") handleAdd() }}
               placeholder="Combien envoyés…"
               style={{ flex: 1, fontSize: "var(--text-xs)", padding: "5px 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-faint,rgba(183,191,217,0.04))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)" }} />

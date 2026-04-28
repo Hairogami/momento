@@ -139,7 +139,7 @@ export default function AntLoginForm() {
         )}
         <label htmlFor="auth-email" className="sr-only">Email</label>
         <input id="auth-email" name="email" autoComplete="email"
-          type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
+          type="email" inputMode="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)}
           required style={inputStyle}
           onFocus={e => (e.target.style.borderColor = "#E11D48")}
           onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />

@@ -227,6 +227,7 @@ export default function ProfilePage() {
                   <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
                     <label style={labelStyle}>Prénom / Nom</label>
                     <input
+                      autoComplete="name" name="name"
                       value={name} onChange={e => setName(e.target.value)} style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "var(--g1,#E11D48)")}
                       onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
@@ -236,13 +237,14 @@ export default function ProfilePage() {
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   <label style={labelStyle}>Adresse e-mail</label>
-                  <input value={me?.email ?? ""} disabled style={{ ...inputStyle, opacity: 0.5, cursor: "not-allowed" }} />
+                  <input type="email" inputMode="email" autoComplete="email" name="email" value={me?.email ?? ""} disabled style={{ ...inputStyle, opacity: 0.5, cursor: "not-allowed" }} />
                 </div>
 
                 <div style={{ display: "flex", gap: 12 }}>
                   <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
                     <label style={labelStyle}>Téléphone</label>
                     <input
+                      type="tel" inputMode="tel" autoComplete="tel" name="phone"
                       value={phone} onChange={e => setPhone(e.target.value)} placeholder="+212 6…" style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "var(--g1,#E11D48)")}
                       onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
@@ -251,6 +253,7 @@ export default function ProfilePage() {
                   <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
                     <label style={labelStyle}>Ville</label>
                     <input
+                      autoComplete="address-level2" name="city"
                       value={location} onChange={e => setLocation(e.target.value)} placeholder="Casablanca" style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "var(--g1,#E11D48)")}
                       onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
@@ -262,6 +265,7 @@ export default function ProfilePage() {
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     <label style={labelStyle}>Nom de l&apos;entreprise / activité</label>
                     <input
+                      autoComplete="organization" name="companyName"
                       value={companyName} onChange={e => setCompanyName(e.target.value)} placeholder="Mon Studio Photo…" style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "var(--g1,#E11D48)")}
                       onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
@@ -298,20 +302,20 @@ export default function ProfilePage() {
                 <form onSubmit={handlePasswordChange} style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 20 }}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     <label style={labelStyle}>Mot de passe actuel</label>
-                    <input type="password" value={currentPw} onChange={e => setCurrentPw(e.target.value)} required style={inputStyle}
+                    <input type="password" autoComplete="current-password" name="currentPassword" value={currentPw} onChange={e => setCurrentPw(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "var(--g1,#E11D48)")}
                       onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                   </div>
                   <div style={{ display: "flex", gap: 12 }}>
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
                       <label style={labelStyle}>Nouveau mot de passe</label>
-                      <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} required minLength={8} style={inputStyle}
+                      <input type="password" autoComplete="new-password" name="newPassword" value={newPw} onChange={e => setNewPw(e.target.value)} required minLength={8} style={inputStyle}
                         onFocus={e => (e.target.style.borderColor = "var(--g1,#E11D48)")}
                         onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     </div>
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
                       <label style={labelStyle}>Confirmer</label>
-                      <input type="password" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} required style={inputStyle}
+                      <input type="password" autoComplete="new-password" name="newPasswordConfirm" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} required style={inputStyle}
                         onFocus={e => (e.target.style.borderColor = "var(--g1,#E11D48)")}
                         onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     </div>

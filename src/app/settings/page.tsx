@@ -262,7 +262,7 @@ export default function SettingsPage() {
     : []
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
+    <div className="ant-root" style={{ display: "flex", minHeight: "100dvh", background: "var(--dash-bg,#f7f7fb)" }}>
       <div className="hidden lg:flex">
         <DashSidebar events={events} activeEventId={activeEventId} onEventChange={() => {}} />
       </div>
@@ -374,10 +374,10 @@ export default function SettingsPage() {
               </button>
               {pwOpen && (
                 <form onSubmit={changePassword} style={{ display: "flex", flexDirection: "column", gap: 10, padding: "14px 4px 18px" }}>
-                  <input type="password" value={currentPw} onChange={e => setCurrentPw(e.target.value)} placeholder="Mot de passe actuel" required style={inputStyle} />
+                  <input type="password" autoComplete="current-password" name="currentPassword" value={currentPw} onChange={e => setCurrentPw(e.target.value)} placeholder="Mot de passe actuel" required style={inputStyle} />
                   <div style={{ display: "flex", gap: 10 }}>
-                    <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Nouveau (min 8)" required minLength={8} style={inputStyle} />
-                    <input type="password" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} placeholder="Confirmer" required style={inputStyle} />
+                    <input type="password" autoComplete="new-password" name="newPassword" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Nouveau (min 8)" required minLength={8} style={inputStyle} />
+                    <input type="password" autoComplete="new-password" name="newPasswordConfirm" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} placeholder="Confirmer" required style={inputStyle} />
                   </div>
                   {pwErr && <p style={{ fontSize: "var(--text-xs)", color: "#ef4444", margin: 0 }}>{pwErr}</p>}
                   <button type="submit" disabled={pwSaving} style={{ ...btnPrimary, opacity: pwSaving ? 0.7 : 1 }}>
@@ -501,7 +501,7 @@ export default function SettingsPage() {
                       </div>
                       <div>
                         <label style={labelStyle}>Mot de passe (si applicable)</label>
-                        <input type="password" value={delPassword} onChange={e => setDelPassword(e.target.value)} style={{ ...inputStyle, marginTop: 6 }} />
+                        <input type="password" autoComplete="current-password" name="password" value={delPassword} onChange={e => setDelPassword(e.target.value)} style={{ ...inputStyle, marginTop: 6 }} />
                       </div>
                       {delErr && <p style={{ fontSize: "var(--text-xs)", color: "#ef4444", margin: 0 }}>{delErr}</p>}
                       <div style={{ display: "flex", gap: 8, marginTop: 4 }}>

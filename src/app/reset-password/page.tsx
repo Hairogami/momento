@@ -78,12 +78,12 @@ function ResetForm() {
               </p>
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                <input type="password" placeholder="Nouveau mot de passe" value={newPassword}
+                <input type="password" autoComplete="new-password" name="newPassword" placeholder="Nouveau mot de passe" value={newPassword}
                   onChange={e => setNewPassword(e.target.value)} required minLength={8} style={inputStyle}
                   onFocus={e => (e.target.style.borderColor = "#E11D48")}
                   onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}
                 />
-                <input type="password" placeholder="Confirmer" value={confirm}
+                <input type="password" autoComplete="new-password" name="newPasswordConfirm" placeholder="Confirmer" value={confirm}
                   onChange={e => setConfirm(e.target.value)} required minLength={8} style={inputStyle}
                   onFocus={e => (e.target.style.borderColor = "#E11D48")}
                   onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")}

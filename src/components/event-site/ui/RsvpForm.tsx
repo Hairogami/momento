@@ -102,7 +102,7 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
 
       <label style={labelStyle}>
         <span>Nom complet</span>
-        <input type="text" required value={name} onChange={e => setName(e.target.value)} placeholder="Prénom Nom" style={inputStyle} />
+        <input type="text" autoComplete="name" name="guestName" required value={name} onChange={e => setName(e.target.value)} placeholder="Prénom Nom" style={inputStyle} />
       </label>
 
       <div style={{ display: "flex", gap: 12, flexDirection: "column" }}>
@@ -128,6 +128,8 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
           <span>Nom de votre +1 <span style={{ opacity: 0.5, fontStyle: "italic" }}>(facultatif)</span></span>
           <input
             type="text"
+            autoComplete="off"
+            name="plusOneName"
             value={plusOneName}
             onChange={e => setPlusOneName(e.target.value)}
             placeholder="Prénom Nom de votre accompagnant·e"
@@ -141,12 +143,12 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
         <>
           <label style={labelStyle}>
             <span>Allergies / régime alimentaire</span>
-            <input type="text" value={dietaryNeeds} onChange={e => setDietaryNeeds(e.target.value)} placeholder="Végétarien, sans gluten..." style={inputStyle} />
+            <input type="text" autoComplete="off" name="dietaryNeeds" value={dietaryNeeds} onChange={e => setDietaryNeeds(e.target.value)} placeholder="Végétarien, sans gluten..." style={inputStyle} />
           </label>
 
           <label style={labelStyle}>
             <span>Un mot pour les mariés (facultatif)</span>
-            <textarea value={message} onChange={e => setMessage(e.target.value)} rows={2} style={{ ...inputStyle, resize: "vertical" }} />
+            <textarea autoComplete="off" name="message" value={message} onChange={e => setMessage(e.target.value)} rows={2} style={{ ...inputStyle, resize: "vertical" }} />
           </label>
         </>
       )}

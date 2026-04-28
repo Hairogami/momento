@@ -116,7 +116,7 @@ export default function CloneSignupPage() {
 
   return (
     <main id="main-content" className="ant-root" style={{
-      minHeight: "100vh", background: "#f7f7fb",
+      minHeight: "100dvh", background: "#f7f7fb",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "48px 20px",
       fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
@@ -329,7 +329,7 @@ export default function CloneSignupPage() {
                     </div>
                     <label htmlFor="signup-email" className="sr-only">Email</label>
                     <input id="signup-email" name="email" autoComplete="email"
-                      type="email" placeholder="Email *" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle}
+                      type="email" inputMode="email" placeholder="Email *" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     <label htmlFor="signup-password" className="sr-only">Mot de passe</label>
                     <input id="signup-password" name="password" autoComplete="new-password"
@@ -360,10 +360,10 @@ export default function CloneSignupPage() {
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     <label htmlFor="signup-vendor-email" className="sr-only">Email professionnel</label>
                     <input id="signup-vendor-email" name="vendorEmail" autoComplete="email"
-                      type="email" placeholder="Email *" value={vEmail} onChange={e => setVEmail(e.target.value)} required style={inputStyle}
+                      type="email" inputMode="email" placeholder="Email *" value={vEmail} onChange={e => setVEmail(e.target.value)} required style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     <label htmlFor="signup-phone" className="sr-only">Numéro de téléphone</label>
-                    <input id="signup-phone" name="phone" type="tel" autoComplete="tel"
+                    <input id="signup-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel"
                       placeholder="Téléphone" value={telephone} onChange={e => setTelephone(e.target.value)} style={inputStyle}
                       onFocus={e => (e.target.style.borderColor = "#E11D48")} onBlur={e => (e.target.style.borderColor = "rgba(183,191,217,0.4)")} />
                     <label htmlFor="signup-vendor-password" className="sr-only">Mot de passe</label>

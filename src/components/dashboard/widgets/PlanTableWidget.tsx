@@ -57,7 +57,7 @@ export default function PlanTableWidget({ guests }: { guests: Guest[] }) {
             <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Nouvelle table</span>
             <button onClick={() => setShowPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>✕</button>
           </div>
-          <input value={tableNum} onChange={e => setTableNum(e.target.value)} placeholder="Numéro de table" type="number"
+          <input value={tableNum} onChange={e => setTableNum(e.target.value)} placeholder="Numéro de table" type="number" inputMode="numeric"
             style={{ width: "100%", height: 28, padding: "0 8px", borderRadius: 8, border: "1px solid var(--dash-border,rgba(183,191,217,0.3))", background: "var(--dash-input-bg,#fafafa)", fontSize: "var(--text-xs)", outline: "none", fontFamily: "inherit", boxSizing: "border-box", marginBottom: 8 }} />
           <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 120, overflowY: "auto", marginBottom: 8 }}>
             {unassigned.slice(0, 10).map(g => (
