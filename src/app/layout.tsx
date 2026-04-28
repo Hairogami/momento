@@ -45,8 +45,15 @@ export const metadata: Metadata = {
   keywords: ["prestataires événementiels Maroc", "mariage Maroc", "DJ Marrakech", "traiteur Casablanca", "photographe mariage Maroc", "décoration événement Maroc", "organisateur événement Maroc"],
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   icons: {
-    icon: "/favicon-momento.png",
-    apple: "/favicon-momento.png",
+    icon: [
+      { url: "/favicon-momento.png", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/favicon-momento.png",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   manifest: "/manifest.json",
   openGraph: {
