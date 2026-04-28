@@ -211,7 +211,10 @@ function ComingSoonInner() {
           {/* Countdown */}
           {!launched && (
             <div style={{
-              display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
+              display: "grid",
+              // Mobile : auto-fit min 70px évite l'écrasement sur iPhone SE 320px.
+              // Desktop : 4 colonnes nettes via clamp implicite (4 items max).
+              gridTemplateColumns: "repeat(auto-fit, minmax(70px, 1fr))",
               gap: 10, marginBottom: 24,
             }}>
               {units.map(({ label, value }) => (
@@ -363,6 +366,7 @@ function ComingSoonInner() {
         <div style={{
           position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50,
           padding: "16px 24px",
+          paddingBottom: "max(16px, env(safe-area-inset-bottom))",
           background: "var(--dash-surface,#fff)",
           borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.4))",
           display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12,

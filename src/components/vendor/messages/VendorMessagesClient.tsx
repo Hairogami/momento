@@ -282,6 +282,7 @@ export default function VendorMessagesClient() {
 
             <div style={{
               padding: "14px 20px",
+              paddingBottom: "max(14px, env(safe-area-inset-bottom))",
               borderTop: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
               background: "var(--dash-surface,#fff)", display: "flex", gap: 10, alignItems: "center",
             }} className="clone-surface">
