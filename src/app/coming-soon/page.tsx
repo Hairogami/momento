@@ -89,7 +89,8 @@ function ComingSoonInner() {
   ]
 
   return (
-    <div
+    <main
+      id="main-content"
       className="ant-root"
       style={{
         minHeight: "100dvh",
@@ -414,7 +415,7 @@ function ComingSoonInner() {
           80%      { transform: translateX(4px); }
         }
       `}</style>
-    </div>
+    </main>
   )
 }
 
