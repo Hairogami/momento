@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import DashboardShell from "@/components/dashboard/DashboardShell"
 import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
@@ -550,6 +550,19 @@ function OrphanPickerModal({
   creating: boolean
   error: string | null
 }) {
+  // Escape pour fermer + lock body scroll (mobile)
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      window.removeEventListener("keydown", onKey)
+      document.body.style.overflow = prev
+    }
+  }, [onClose])
+
   return (
     <div
       role="dialog"

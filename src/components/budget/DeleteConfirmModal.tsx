@@ -37,6 +37,14 @@ export function DeleteConfirmModal({
     return () => window.removeEventListener("keydown", handler)
   }, [open, onCancel])
 
+  // Lock body scroll quand le modal est ouvert (mobile)
+  useEffect(() => {
+    if (!open || typeof document === "undefined") return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [open])
+
   if (!open) return null
 
   return (

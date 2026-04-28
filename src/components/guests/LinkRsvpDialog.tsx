@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type CSSProperties } from "react"
+import { useState, useEffect, type CSSProperties } from "react"
 import type { Guest } from "./types"
 
 type Props = {
@@ -17,9 +17,25 @@ export function LinkRsvpDialog({ rsvpId, guests, onLink, onClose }: Props) {
     await onLink(selected, rsvpId)
     onClose()
   }
+
+  // Escape pour fermer + lock body scroll (mobile : empêche le scroll
+  // de la page derrière le modal)
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      window.removeEventListener("keydown", onKey)
+      document.body.style.overflow = prev
+    }
+  }, [onClose])
+
   return (
     <div
       role="dialog"
+      aria-modal="true"
       style={{
         position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
         display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100,

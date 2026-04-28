@@ -74,6 +74,15 @@ export function BudgetExpenseModal({
     return () => window.removeEventListener("keydown", handler)
   }, [open, onCancel])
 
+  // Lock body scroll quand le modal est ouvert (mobile : empêche le scroll
+  // de la page derrière le modal sur tap accidentel).
+  useEffect(() => {
+    if (!open || typeof document === "undefined") return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [open])
+
   if (!open) return null
 
   const handleSubmit = async (e?: React.FormEvent) => {

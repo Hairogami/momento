@@ -52,6 +52,14 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
     return () => window.removeEventListener("keydown", onKey)
   }, [open, onClose])
 
+  // Lock body scroll quand le modal est ouvert (mobile)
+  useEffect(() => {
+    if (!open || typeof document === "undefined") return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [open])
+
   if (!open) return null
 
   async function handleSubmit(e: React.FormEvent) {
