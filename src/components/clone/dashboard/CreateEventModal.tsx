@@ -237,7 +237,7 @@ export default function CreateEventModal({ open, onClose, onCreated }: Props) {
                     return (
                       <button key={f.id} onClick={() => switchFamily(f.id)} type="button"
                         style={{
-                          padding: "11px 4px", borderRadius: 12, fontSize: "var(--text-2xs)", fontWeight: 600,
+                          padding: "12px 4px", borderRadius: 12, fontSize: "var(--text-2xs)", fontWeight: 600,
                           border: "1.5px solid",
                           borderColor: active ? "transparent" : "var(--dash-border, rgba(255,255,255,0.07))",
                           background: active ? "rgba(225,29,72,0.12)" : "var(--dash-faint, rgba(255,255,255,0.04))",
@@ -621,21 +621,21 @@ const labelStyle: React.CSSProperties = {
 const subtleStyle: React.CSSProperties = { color: "var(--dash-text-3, #8888aa)", fontWeight: 500, textTransform: "none", letterSpacing: 0 }
 
 const inputStyle: React.CSSProperties = {
-  width: "100%", padding: "11px 14px", borderRadius: 12, fontSize: "var(--text-sm)",
+  width: "100%", padding: "12px 14px", borderRadius: 12, fontSize: "var(--text-sm)",
   border: "1.5px solid var(--dash-border, rgba(0,0,0,0.08))", outline: "none",
   fontFamily: "inherit", color: "var(--dash-text, #121317)",
   background: "var(--dash-input-bg, #fafafa)", boxSizing: "border-box",
 }
 
 const btnPrimary: React.CSSProperties = {
-  padding: "13px 22px", borderRadius: 99, border: "none",
+  padding: "12px 22px", borderRadius: 99, border: "none",
   background: G, color: "#fff", fontSize: "var(--text-sm)", fontWeight: 700,
   cursor: "pointer", fontFamily: "inherit", transition: "opacity 0.15s",
   boxShadow: "0 6px 18px color-mix(in srgb, var(--g1,#E11D48) 30%, transparent)",
 }
 
 const btnSecondary: React.CSSProperties = {
-  padding: "13px 22px", borderRadius: 99,
+  padding: "12px 22px", borderRadius: 99,
   border: "1.5px solid var(--dash-border, rgba(255,255,255,0.07))",
   background: "var(--dash-faint, rgba(255,255,255,0.04))", color: "var(--dash-text-2, #b0b0cc)",
   fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",

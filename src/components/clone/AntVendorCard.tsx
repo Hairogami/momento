@@ -206,7 +206,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
         </div>
 
         {/* Card body */}
-        <div style={{ padding: "13px 16px 16px" }}>
+        <div style={{ padding: "12px 16px 16px" }}>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
             <p className="clone-heading" style={{
               fontWeight: 600, fontSize: "var(--text-sm)", color: "#121317",

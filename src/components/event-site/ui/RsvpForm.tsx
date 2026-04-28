@@ -184,7 +184,7 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
 function radioBtn(active: boolean, accent: string): React.CSSProperties {
   return {
     flex: 1,
-    padding: "11px 16px",
+    padding: "12px 16px",
     borderRadius: 12,
     border: active ? `1.5px solid ${accent}` : "1px solid color-mix(in srgb, var(--evt-main) 25%, transparent)",
     background: active ? accent : "transparent",
@@ -214,7 +214,7 @@ const labelTextStyle: React.CSSProperties = {
 }
 
 const inputStyle: React.CSSProperties = {
-  padding: "11px 14px",
+  padding: "12px 14px",
   borderRadius: 10,
   border: "1px solid color-mix(in srgb, var(--evt-main) 25%, transparent)",
   background: "var(--evt-bg, #fff)",

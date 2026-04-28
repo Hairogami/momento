@@ -816,7 +816,7 @@ export default function DashboardClient({
             const s    = STATUS_STYLES[b.status]
             const slug = b.vendor.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
             return (
-              <Link key={b.id} href={`/vendor/${slug}`} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: "1px solid var(--dash-divider)", textDecoration: "none" }}>
+              <Link key={b.id} href={`/vendor/${slug}`} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid var(--dash-divider)", textDecoration: "none" }}>
                 <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: `${s.color}15`, border: `1px solid ${s.color}22`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-2xs)", fontWeight: 700, color: s.color }}>
                   {b.vendor.split(" ").map((w: string) => w[0]).join("").slice(0, 2)}
                 </div>
@@ -829,7 +829,7 @@ export default function DashboardClient({
             )
           })}
         </div>
-        <Link href="/explore" style={{ marginTop: 8, display: "block", padding: "7px", borderRadius: 99, textAlign: "center", background: G, color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none" }}>
+        <Link href="/explore" style={{ marginTop: 8, display: "block", padding: "8px", borderRadius: 99, textAlign: "center", background: G, color: "#fff", fontSize: "var(--text-xs)", fontWeight: 600, textDecoration: "none" }}>
           + Ajouter un prestataire
         </Link>
       </div>
@@ -864,7 +864,7 @@ export default function DashboardClient({
             </Link>
           ))}
         </div>
-        <Link href="/messages" style={{ marginTop: 8, display: "block", padding: "7px", borderRadius: 99, textAlign: "center", border: "1px solid var(--dash-border)", color: "var(--dash-text-2,#45474D)", fontSize: "var(--text-xs)", fontWeight: 500, textDecoration: "none" }}>
+        <Link href="/messages" style={{ marginTop: 8, display: "block", padding: "8px", borderRadius: 99, textAlign: "center", border: "1px solid var(--dash-border)", color: "var(--dash-text-2,#45474D)", fontSize: "var(--text-xs)", fontWeight: 500, textDecoration: "none" }}>
           Voir tous les messages →
         </Link>
       </div>
@@ -1114,7 +1114,7 @@ export default function DashboardClient({
               { icon: "check_circle",           val: `${completedTasks}/${tasks.length}`,           label: "tâches",   href: "/planner" },
               { icon: "account_balance_wallet", val: `${edata.budget > 0 ? Math.round((edata.budgetSpent / edata.budget) * 100) : 0}%`, label: "budget", href: "/budget" },
             ].map(({ icon, val, label, href }) => (
-              <Link key={label} href={href} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 13px", borderRadius: 999, textDecoration: "none", background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border)", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }} className="clone-card-white">
+              <Link key={label} href={href} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 999, textDecoration: "none", background: "var(--dash-surface,#fff)", border: "1px solid var(--dash-border)", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }} className="clone-card-white">
                 <GIcon name={icon} size={13} color="var(--g1,#E11D48)" />
                 <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>{val}</span>
                 <span style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>{label}</span>

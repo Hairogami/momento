@@ -43,14 +43,14 @@ export default async function VendorDashboardLayout({
     <div className="dark" style={{ minHeight: "100dvh", background: "var(--dash-bg)", color: "var(--dash-text)" }}>
       <VendorTopBar email={user.email} />
       <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <VendorSidebar publicSlug={user.vendorSlug} />
         </div>
-        <main className="pb-20 md:pb-0" style={{ flex: 1, minWidth: 0, padding: "16px 16px 24px" }}>
+        <main className="pb-20 lg:pb-0" style={{ flex: 1, minWidth: 0, padding: "16px 16px 24px" }}>
           {children}
         </main>
       </div>
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <MobileVendorNav />
       </div>
     </div>

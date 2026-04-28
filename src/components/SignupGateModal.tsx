@@ -178,7 +178,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
             disabled={!tos}
             title={!tos ? "Acceptez les conditions pour continuer" : ""}
             style={{
-              width: "100%", padding: "13px",
+              width: "100%", padding: "12px",
               background: tos ? "#fff" : "rgba(255,255,255,0.35)",
               color: tos ? "#121317" : "rgba(18,19,23,0.4)",
               border: "none", borderRadius: 12, fontSize: "var(--text-sm)", fontWeight: 700,
@@ -198,7 +198,7 @@ export default function SignupGateModal({ open, onClose, vendorSlug, title, subt
             disabled={!tos}
             title={!tos ? "Acceptez les conditions pour continuer" : ""}
             style={{
-              width: "100%", padding: "13px",
+              width: "100%", padding: "12px",
               background: tos ? "#1877F2" : "rgba(24,119,242,0.35)",
               color: tos ? "#fff" : "rgba(255,255,255,0.5)",
               border: "none", borderRadius: 12, fontSize: "var(--text-sm)", fontWeight: 700,

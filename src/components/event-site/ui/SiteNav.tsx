@@ -162,7 +162,7 @@ export default function SiteNav({ title, items }: Props) {
       )}
 
       <style>{`
-        @media (max-width: 720px) {
+        @media (max-width: 767px) {
           .site-nav-desktop { display: none !important; }
           .site-nav-burger { display: flex !important; order: -1 !important; margin-right: auto !important; }
         }

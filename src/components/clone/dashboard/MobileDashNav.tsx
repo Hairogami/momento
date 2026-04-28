@@ -276,7 +276,7 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
                   aria-current={active ? "page" : undefined}
                   style={{
                   display: "flex", alignItems: "center", gap: 14,
-                  padding: "13px 24px", textDecoration: "none",
+                  padding: "12px 24px", textDecoration: "none",
                   background: active ? "linear-gradient(135deg,rgba(225,29,72,0.07),rgba(147,51,234,0.05))" : "transparent",
                 }}>
                   <GIcon name={item.icon} size={20} color={active ? "var(--g1,#E11D48)" : "var(--dash-text-2,#6a6a71)"} />
