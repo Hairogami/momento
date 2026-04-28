@@ -2,7 +2,7 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
@@ -56,9 +56,44 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [dragY, setDragY] = useState(0)
+  const touchStartY = useRef<number | null>(null)
 
   // Portal cible = document.body (évite containing-block parent qui casse position:fixed sur iOS)
   useEffect(() => { setMounted(true) }, [])
+
+  // Escape pour fermer
+  useEffect(() => {
+    if (!drawerOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setDrawerOpen(false) }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [drawerOpen])
+
+  // Reset dragY quand drawer fermé
+  useEffect(() => { if (!drawerOpen) setDragY(0) }, [drawerOpen])
+
+  // Lock body scroll quand drawer ouvert
+  useEffect(() => {
+    if (!drawerOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [drawerOpen])
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartY.current = e.touches[0].clientY
+  }
+  function handleTouchMove(e: React.TouchEvent) {
+    if (touchStartY.current == null) return
+    const delta = e.touches[0].clientY - touchStartY.current
+    if (delta > 0) setDragY(delta)
+  }
+  function handleTouchEnd() {
+    if (dragY > 80) setDrawerOpen(false)
+    else setDragY(0)
+    touchStartY.current = null
+  }
 
   if (!mounted) return null
 
@@ -123,21 +158,39 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
         </button>
       </nav>
 
-      {/* Drawer overlay */}
-      {drawerOpen && (
-        <>
-          <div
-            onClick={() => setDrawerOpen(false)}
-            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 200 }}
-          />
-          <div style={{
-            position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 201,
-            background: "var(--dash-surface,#fff)",
-            borderRadius: "20px 20px 0 0",
-            padding: "20px 0 calc(24px + env(safe-area-inset-bottom))",
-            maxHeight: "80vh", overflowY: "auto",
-          }}>
-            <div style={{ width: 36, height: 4, borderRadius: 99, background: "var(--dash-border,rgba(183,191,217,0.4))", margin: "0 auto 20px" }} />
+      {/* Drawer overlay — toujours dans le DOM pour les transitions */}
+      <div
+        onClick={() => setDrawerOpen(false)}
+        style={{
+          position: "fixed", inset: 0,
+          background: "rgba(0,0,0,0.4)",
+          zIndex: 200,
+          opacity: drawerOpen ? Math.max(0, 1 - dragY / 300) : 0,
+          pointerEvents: drawerOpen ? "auto" : "none",
+          transition: dragY > 0 ? "none" : "opacity 200ms ease-out",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!drawerOpen}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 201,
+          background: "var(--dash-surface,#fff)",
+          borderRadius: "20px 20px 0 0",
+          padding: "20px 0 calc(24px + env(safe-area-inset-bottom))",
+          maxHeight: "80vh", overflowY: "auto",
+          transform: drawerOpen ? `translateY(${dragY}px)` : "translateY(100%)",
+          transition: dragY > 0 ? "none" : "transform 280ms cubic-bezier(0.4, 0, 0.2, 1)",
+          boxShadow: drawerOpen ? "0 -8px 32px rgba(0,0,0,0.18)" : "none",
+          touchAction: "pan-y",
+        }}
+      >
+        <div style={{ width: 36, height: 4, borderRadius: 99, background: "var(--dash-border,rgba(183,191,217,0.4))", margin: "0 auto 20px", touchAction: "none" }} />
 
             {/* Event switcher (header) — visible si events fournis */}
             {events.length > 0 && onEventChange && (
@@ -185,9 +238,7 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
                 </Link>
               )
             })}
-          </div>
-        </>
-      )}
+      </div>
     </>
   )
 
