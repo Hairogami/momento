@@ -45,6 +45,7 @@ export default function SiteNav({ title, items }: Props) {
           top: 0, left: 0, right: 0,
           zIndex: 100,
           padding: "14px 24px",
+          paddingTop: "calc(14px + env(safe-area-inset-top))",
           display: "flex", alignItems: "center", justifyContent: "space-between",
           background: scrolled
             ? "color-mix(in srgb, var(--evt-bg) 92%, transparent)"

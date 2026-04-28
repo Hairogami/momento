@@ -74,6 +74,7 @@ export default function EmailVerificationBanner() {
       backdropFilter: "blur(8px)",
       color: "var(--dash-text, #121317)",
       fontSize: "var(--text-sm)", padding: "10px 20px",
+      paddingTop: "calc(10px + env(safe-area-inset-top))",
       display: "flex", flexWrap: "wrap", alignItems: "center",
       justifyContent: "center", gap: 12, fontFamily: "inherit",
       boxShadow: "0 1px 3px rgba(0,0,0,0.04)",

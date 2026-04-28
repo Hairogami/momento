@@ -131,6 +131,7 @@ export function DashTopbarMobileSkel() {
         alignItems: "center",
         gap: 12,
         padding: "12px 16px",
+        paddingTop: "calc(12px + env(safe-area-inset-top))",
         background: "var(--dash-surface, #fff)",
         borderBottom: "1px solid var(--dash-border, rgba(183,191,217,0.15))",
         position: "sticky",

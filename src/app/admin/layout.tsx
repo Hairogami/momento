@@ -37,6 +37,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         style={{
           position: "sticky", top: 0, zIndex: 50,
           height: 56, padding: "0 24px",
+          paddingTop: "env(safe-area-inset-top)",
           display: "flex", alignItems: "center", justifyContent: "space-between",
           background: C.topbar, color: C.text,
           borderBottom: `1px solid ${C.border}`,
