@@ -61,12 +61,39 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [dragY, setDragY] = useState(0)
+  const [liveUnread, setLiveUnread] = useState(messageUnread)
   const touchStartY = useRef<number | null>(null)
   const drawerRef = useRef<HTMLDivElement | null>(null)
   const dragEnabledRef = useRef<boolean>(false)
 
   // Portal cible = document.body (évite containing-block parent qui casse position:fixed sur iOS)
   useEffect(() => { setMounted(true) }, [])
+
+  // Poll /api/unread — même pattern que VendorMobileNav (5s actif, 60s caché)
+  useEffect(() => {
+    let id: ReturnType<typeof setInterval> | null = null
+    let cancelled = false
+    async function refresh() {
+      try {
+        const data = await fetch("/api/unread", { cache: "no-store" }).then(r => r.ok ? r.json() : null)
+        if (!cancelled && data?.messages != null) setLiveUnread(data.messages)
+      } catch {}
+    }
+    function startPoll() {
+      if (id) clearInterval(id)
+      id = setInterval(refresh, document.visibilityState === "visible" ? 5000 : 60000)
+    }
+    void refresh()
+    startPoll()
+    document.addEventListener("visibilitychange", startPoll)
+    window.addEventListener("momento-unread-changed", refresh)
+    return () => {
+      cancelled = true
+      if (id) clearInterval(id)
+      document.removeEventListener("visibilitychange", startPoll)
+      window.removeEventListener("momento-unread-changed", refresh)
+    }
+  }, [])
 
   // Escape pour fermer
   useEffect(() => {
@@ -139,7 +166,7 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
           return (
             <Link key={item.href} href={item.href}
               aria-current={active ? "page" : undefined}
-              aria-label={item.href === "/messages" && messageUnread > 0 ? `${item.label} (${messageUnread} non lus)` : undefined}
+              aria-label={item.href === "/messages" && liveUnread > 0 ? `${item.label} (${liveUnread} non lus)` : undefined}
               style={{
               flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
               justifyContent: "center", gap: 3, textDecoration: "none",
@@ -150,14 +177,14 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
                   name={item.icon} size={22}
                   color={active ? "var(--g1,#E11D48)" : "var(--dash-text-3,#9a9aaa)"}
                 />
-                {item.href === "/messages" && messageUnread > 0 && (
+                {item.href === "/messages" && liveUnread > 0 && (
                   <span style={{
                     position: "absolute", top: -4, right: -6,
                     width: 14, height: 14, borderRadius: "50%",
                     background: G, color: "#fff",
                     fontSize: "var(--text-2xs)", fontWeight: 700,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>{messageUnread}</span>
+                  }}>{liveUnread}</span>
                 )}
               </div>
               <span style={{

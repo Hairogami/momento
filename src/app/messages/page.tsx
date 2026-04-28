@@ -83,7 +83,32 @@ export default function CloneMessagesPage() {
     } catch {}
   }, [])
 
-  useEffect(() => { fetchConvs().finally(() => setLoadC(false)) }, [fetchConvs])
+  useEffect(() => {
+    fetchConvs().finally(() => setLoadC(false))
+    // Conv list polling — 30s, visibility-aware (comme VendorMessagesClient)
+    let id: ReturnType<typeof setInterval> | null = null
+    function startPolling() {
+      if (id) clearInterval(id)
+      if (typeof document !== "undefined" && document.visibilityState !== "visible") { id = null; return }
+      id = setInterval(fetchConvs, 30000)
+    }
+    function onVisibility() {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        void fetchConvs()
+        startPolling()
+      } else {
+        if (id) { clearInterval(id); id = null }
+      }
+    }
+    startPolling()
+    document.addEventListener("visibilitychange", onVisibility)
+    window.addEventListener("momento-unread-changed", fetchConvs as EventListener)
+    return () => {
+      if (id) clearInterval(id)
+      document.removeEventListener("visibilitychange", onVisibility)
+      window.removeEventListener("momento-unread-changed", fetchConvs as EventListener)
+    }
+  }, [fetchConvs])
 
   // Fetch messages for active conversation + polling
   const fetchMsgs = useCallback(async (id: string) => {
@@ -294,6 +319,12 @@ export default function CloneMessagesPage() {
                 ) : msgs.length === 0 ? (
                   <div style={{ textAlign: "center", padding: "40px 0" }}>
                     <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)" }}>Aucun message. Envoyez le premier !</p>
+                  </div>
+                ) : myId === null ? (
+                  <div style={{ padding: "40px 24px", display: "flex", flexDirection: "column", gap: 8 }}>
+                    {[1,2,3].map(i => (
+                      <div key={i} style={{ height: 36, borderRadius: 12, background: "var(--dash-faint-2,rgba(183,191,217,0.15))", width: i % 2 === 0 ? "60%" : "40%", alignSelf: i % 2 === 0 ? "flex-end" : "flex-start" }} />
+                    ))}
                   </div>
                 ) : msgs.map(msg => {
                   const isMe = msg.senderId === myId

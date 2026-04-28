@@ -259,6 +259,12 @@ export default function VendorMessagesClient() {
                 <div style={{ textAlign: "center", padding: "40px 0" }}>
                   <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-3,#9a9aaa)" }}>Aucun message. Envoyez le premier !</p>
                 </div>
+              ) : myId === null ? (
+                <div style={{ padding: "40px 24px", display: "flex", flexDirection: "column", gap: 8 }}>
+                  {[1,2,3].map(i => (
+                    <div key={i} style={{ height: 36, borderRadius: 12, background: "var(--dash-faint-2,rgba(183,191,217,0.15))", width: i % 2 === 0 ? "60%" : "40%", alignSelf: i % 2 === 0 ? "flex-end" : "flex-start" }} />
+                  ))}
+                </div>
               ) : msgs.map(msg => {
                 const isMe = msg.senderId === myId
                 return (

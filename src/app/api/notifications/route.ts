@@ -32,7 +32,7 @@ export async function GET() {
         id: true,
         content: true,
         createdAt: true,
-        conversation: { select: { vendorSlug: true } },
+        conversation: { select: { id: true, vendorSlug: true } },
       },
     })
 
@@ -51,10 +51,44 @@ export async function GET() {
         type: "message",
         title: nameBySlug.get(m.conversation.vendorSlug) ?? m.conversation.vendorSlug,
         snippet: m.content.slice(0, 120),
-        href: "/messages",
+        href: `/messages?id=${m.conversation.id}`,
         createdAt: m.createdAt.toISOString(),
         read: false,
       })
+    }
+  } catch { /* silent */ }
+
+  // Vendor : messages non-lus envoyés par des clients
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, vendorSlug: true } })
+    if (user?.role === "vendor" && user.vendorSlug) {
+      const vendorMsgs = await prisma.message.findMany({
+        where: {
+          read: false,
+          senderId: { not: userId },
+          conversation: { vendorSlug: user.vendorSlug },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          conversation: { select: { id: true, client: { select: { name: true, email: true } } } },
+        },
+      })
+      for (const m of vendorMsgs) {
+        const clientName = m.conversation.client?.name || m.conversation.client?.email?.split("@")[0] || "Client"
+        items.push({
+          id: `msg-${m.id}`,
+          type: "message",
+          title: clientName,
+          snippet: m.content.slice(0, 120),
+          href: "/vendor/dashboard/inbox",
+          createdAt: m.createdAt.toISOString(),
+          read: false,
+        })
+      }
     }
   } catch { /* silent */ }
 
