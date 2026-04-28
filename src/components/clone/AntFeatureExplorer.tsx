@@ -248,7 +248,10 @@ export default function AntFeatureExplorer() {
       if (!el) return null
       const obs = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) setActive(i) },
-        { threshold: 0.35, rootMargin: "0px 0px -10% 0px" }
+        // Section devient active quand son centre traverse le centre du viewport.
+        // Bande centrale 10% (haut −45%, bas −45%) → transitions nettes, pas de
+        // freeze sur la dernière, pas de switch trop précoce vers la suivante.
+        { threshold: 0, rootMargin: "-45% 0px -45% 0px" }
       )
       obs.observe(el)
       return obs
