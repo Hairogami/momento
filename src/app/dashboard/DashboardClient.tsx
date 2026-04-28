@@ -1040,7 +1040,7 @@ export default function DashboardClient({
       {showPicker  && <WidgetPickerModal active={widgetOrder} onAdd={addWidget} onClose={() => setShowPicker(false)} />}
       {showPalette && <PalettePickerModal current={palette} onChange={setPalette} onClose={() => setShowPalette(false)} />}
 
-      <main id="main-content" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+      <main id="main-content" className="dashboard-shell-main" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
         {/* Event header — 3 zones cohérentes brand: titre · progression centre · KPI pills */}
         <div style={{ padding: "24px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <div style={{ flexShrink: 0 }}>
