@@ -7,28 +7,48 @@ import { buildDashboardData, type DashboardData } from "@/lib/dashboardData"
 export const dynamic = "force-dynamic"
 
 export default async function DashboardPage() {
-  const session = await auth()
+  let session
+  try {
+    session = await auth()
+  } catch (err) {
+    console.error("[dashboard/page] auth() threw, redirecting to login:", err)
+    redirect("/login?next=/dashboard")
+  }
   if (!session?.user?.id) redirect("/login?next=/dashboard")
   const userId = session.user.id
 
-  const [planners, user] = await Promise.all([
-    prisma.planner.findMany({
-      where: { userId, trashedAt: null },
-      select: {
-        id: true,
-        title: true,
-        coupleNames: true,
-        weddingDate: true,
-        coverColor: true,
-        categories: true,
-      },
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.user.findUnique({
-      where: { id: userId },
-      select: { name: true },
-    }),
-  ])
+  let planners: Array<{
+    id: string
+    title: string
+    coupleNames: string
+    weddingDate: Date | null
+    coverColor: string
+    categories: string[]
+  }> = []
+  let user: { name: string | null } | null = null
+
+  try {
+    ;[planners, user] = await Promise.all([
+      prisma.planner.findMany({
+        where: { userId, trashedAt: null },
+        select: {
+          id: true,
+          title: true,
+          coupleNames: true,
+          weddingDate: true,
+          coverColor: true,
+          categories: true,
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: { name: true },
+      }),
+    ])
+  } catch (err) {
+    console.error("[dashboard/page] planners/user query failed, rendering empty shell:", err)
+  }
 
   const initialPlanners = planners.map(p => ({
     ...p,
