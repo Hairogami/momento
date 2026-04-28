@@ -2,9 +2,11 @@ import type { Metadata } from "next"
 import { getAllVendorsForExplore } from "@/lib/vendorQueries"
 import ExploreClient from "./ExploreClient"
 
-// Revalidation ISR : liste publique rafraîchie toutes les heures,
-// ou immédiatement via revalidatePath depuis l'admin.
-export const revalidate = 3600
+// Dynamic rendering : Supabase pooler en session mode (port 5432) cap à 15
+// connexions, et le prerender Vercel parallèle saturait le pool en build.
+// Cache Upstash 5min dans /api/vendors compense côté runtime perf.
+// À ré-évaluer si on passe à un pool size > 50 (Supabase Pro tier).
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Tous les prestataires mariage au Maroc",
