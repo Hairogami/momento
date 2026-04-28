@@ -2,7 +2,7 @@ import { DashSidebarSkel, DashTopbarMobileSkel, SkelBlock, SkelLine, SkelCircle,
 
 export default function SettingsLoading() {
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg, #f7f7fb)", fontFamily: "'Geist', sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100dvh", background: "var(--dash-bg, #f7f7fb)", fontFamily: "'Geist', sans-serif" }}>
       <DashSidebarSkel />
       <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
         <DashTopbarMobileSkel />

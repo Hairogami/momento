@@ -9,7 +9,7 @@ export default function DashboardLoading() {
     <div
       style={{
         display: "flex",
-        minHeight: "100vh",
+        minHeight: "100dvh",
         background: "var(--dash-bg, #f7f7fb)",
         fontFamily: "'Geist', sans-serif",
       }}

@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
+    <div style={{ display: "flex", minHeight: "100dvh", background: "var(--dash-bg,#f7f7fb)" }}>
       {/* DashSidebar skeleton — 240px, desktop only */}
       <aside
         style={{

@@ -6,7 +6,7 @@ import { SkelBlock, SkelLine, SkelCircle, SkelPill, SkelCard } from "@/component
  */
 export default function AccueilLoading() {
   return (
-    <div style={{ background: "var(--dash-bg, #f7f7fb)", minHeight: "100vh", fontFamily: "'Geist', sans-serif" }}>
+    <div style={{ background: "var(--dash-bg, #f7f7fb)", minHeight: "100dvh", fontFamily: "'Geist', sans-serif" }}>
       {/* Top nav */}
       <div
         style={{

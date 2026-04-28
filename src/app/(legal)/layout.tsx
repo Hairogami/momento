@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 export default function LegalLayout({ children }: { children: ReactNode }) {
   return (
     <div style={{
-      minHeight: "100vh",
+      minHeight: "100dvh",
       background: "#f7f7fb",
       fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       color: "#121317",

@@ -127,7 +127,7 @@ export default function VendorMessagesClient() {
   }
 
   return (
-    <main style={{ flex: 1, display: "flex", minHeight: 0, height: "calc(100vh - 56px)", overflow: "hidden", background: "var(--dash-bg,#f7f7fb)" }}>
+    <main style={{ flex: 1, display: "flex", minHeight: 0, height: "calc(100dvh - 56px)", overflow: "hidden", background: "var(--dash-bg,#f7f7fb)" }}>
       {/* Liste conversations */}
       <div style={{
         width: 300, flexShrink: 0,

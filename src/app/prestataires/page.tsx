@@ -50,7 +50,7 @@ const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
 export default function ClonePrestatairesPage() {
   return (
-    <div className="ant-root" style={{ minHeight: "100vh", background: "#fff", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <div className="ant-root" style={{ minHeight: "100dvh", background: "#fff", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <AntNav />
 
       {/* ── Hero ── */}

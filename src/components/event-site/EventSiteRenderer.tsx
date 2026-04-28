@@ -69,7 +69,7 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
     "--evt-text-muted": palette.textMuted,
     "--evt-font-heading": fontH.stack,
     "--evt-font-body": fontB.stack,
-    minHeight: "100vh",
+    minHeight: "100dvh",
     background: "var(--evt-bg)",
     color: "var(--evt-text)",
     fontFamily: "var(--evt-font-body)",

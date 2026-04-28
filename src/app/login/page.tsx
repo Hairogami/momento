@@ -5,7 +5,7 @@ import SpotlightBackground from "@/components/clone/SpotlightBackground"
 
 export default function CloneLoginPage() {
   return (
-    <div className="ant-root" style={{ minHeight: "100vh", display: "flex", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <div className="ant-root" style={{ minHeight: "100dvh", display: "flex", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
 
       {/* ── Left panel — brand ── */}
       <div

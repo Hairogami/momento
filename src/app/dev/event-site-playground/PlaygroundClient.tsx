@@ -115,8 +115,8 @@ export default function PlaygroundClient() {
   const hero = (site.content.hero as Record<string, string> | undefined) ?? {}
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0a0a0a", color: "#eee" }}>
-      <aside style={{ width: 360, flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.1)", padding: 20, overflow: "auto", maxHeight: "100vh", position: "sticky", top: 0 }}>
+    <div style={{ display: "flex", minHeight: "100dvh", background: "#0a0a0a", color: "#eee" }}>
+      <aside style={{ width: 360, flexShrink: 0, borderRight: "1px solid rgba(255,255,255,0.1)", padding: 20, overflow: "auto", maxHeight: "100dvh", position: "sticky", top: 0 }}>
         <h1 style={{ fontSize: "var(--text-md)", margin: "0 0 16px", fontWeight: 700 }}>🧪 Event Site Playground</h1>
         <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.5)", margin: "0 0 24px", lineHeight: 1.5 }}>
           Page dev-only. Modifie le code dans src/components/event-site/** → HMR recharge.
@@ -283,7 +283,7 @@ export default function PlaygroundClient() {
         </div>
       </aside>
 
-      <main style={{ flex: 1, overflow: "auto", maxHeight: "100vh", position: "relative", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: viewport === "mobile" ? "20px 0" : 0 }}>
+      <main style={{ flex: 1, overflow: "auto", maxHeight: "100dvh", position: "relative", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: viewport === "mobile" ? "20px 0" : 0 }}>
         <style>{`html.evt-force-mobile .site-nav-desktop{display:none !important}html.evt-force-mobile .site-nav-burger{display:inline-flex !important;order:-1 !important;margin-right:auto !important}`}</style>
         <div style={{
           position: "fixed",
@@ -339,8 +339,8 @@ export default function PlaygroundClient() {
 
         <div style={{
           width: viewport === "mobile" ? 390 : "100%",
-          height: viewport === "mobile" ? "min(844px, calc(100vh - 60px))" : "auto",
-          minHeight: viewport === "mobile" ? undefined : "100vh",
+          height: viewport === "mobile" ? "min(844px, calc(100dvh - 60px))" : "auto",
+          minHeight: viewport === "mobile" ? undefined : "100dvh",
           background: "#000",
           borderRadius: viewport === "mobile" ? 28 : 0,
           overflow: viewport === "mobile" ? "hidden" : "visible",

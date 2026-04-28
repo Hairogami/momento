@@ -36,7 +36,7 @@ export default function DevPanelClient() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--dash-bg, #0d0e14)", color: "var(--dash-text, #eeeef5)", fontFamily: "'Geist', sans-serif", padding: "48px 24px" }}>
+    <div style={{ minHeight: "100dvh", background: "var(--dash-bg, #0d0e14)", color: "var(--dash-text, #eeeef5)", fontFamily: "'Geist', sans-serif", padding: "48px 24px" }}>
       <div style={{ maxWidth: 680, margin: "0 auto" }}>
         <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 800, margin: "0 0 6px" }}>Dev Panel</h1>
         <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2, #b0b0cc)", margin: "0 0 36px" }}>

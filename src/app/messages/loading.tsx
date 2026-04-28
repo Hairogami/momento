@@ -5,7 +5,7 @@ import { SkelBlock, SkelLine, SkelCircle } from "@/components/skeleton/Skeleton"
  */
 export default function MessagesLoading() {
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg, #f7f7fb)", fontFamily: "'Geist', sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100dvh", background: "var(--dash-bg, #f7f7fb)", fontFamily: "'Geist', sans-serif" }}>
       {/* Sidebar (lg+) */}
       <aside
         className="hidden lg:flex"

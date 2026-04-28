@@ -275,7 +275,7 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   return (
     <div
       className="ant-root"
-      style={{ minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", paddingTop: 56 }}
+      style={{ minHeight: "100dvh", background: "var(--dash-bg,#f7f7fb)", paddingTop: 56 }}
     >
       <AntNav hideLinks centerSlot={
         <div className="flex items-center gap-2" style={{ width: "100%", maxWidth: 680 }}>

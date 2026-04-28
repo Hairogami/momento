@@ -65,7 +65,7 @@ const STEPS = [
 
 export default function ProPage() {
   return (
-    <div className="ant-root" style={{ background: "var(--dash-bg,#fff)", minHeight: "100vh" }}>
+    <div className="ant-root" style={{ background: "var(--dash-bg,#fff)", minHeight: "100dvh" }}>
       <AntNav />
 
       {/* ── HERO ── */}

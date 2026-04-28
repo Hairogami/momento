@@ -53,7 +53,7 @@ export default function UpgradeClient({
 
   return (
     <div style={{
-      minHeight: "100vh",
+      minHeight: "100dvh",
       background: "var(--dash-bg,#f7f7fb)",
       color: "var(--dash-text,#121317)",
       fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",

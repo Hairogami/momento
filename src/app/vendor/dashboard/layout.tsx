@@ -40,7 +40,7 @@ export default async function VendorDashboardLayout({
   return (
     // Dark forcé sur tout le scope vendor — usage pro intensif (CRM/messagerie/
     // calendrier), souvent le soir après prestas. Le scope client garde son toggle.
-    <div className="dark" style={{ minHeight: "100vh", background: "var(--dash-bg)", color: "var(--dash-text)" }}>
+    <div className="dark" style={{ minHeight: "100dvh", background: "var(--dash-bg)", color: "var(--dash-text)" }}>
       <VendorTopBar email={user.email} />
       <div style={{ display: "flex", alignItems: "flex-start" }}>
         <div className="hidden md:block">

@@ -42,7 +42,7 @@ export default function AProposPage() {
   const teamReveal = useReveal<HTMLDivElement>()
 
   return (
-    <div className="ant-root" style={{ background: "var(--dash-bg,#fff)", minHeight: "100vh" }}>
+    <div className="ant-root" style={{ background: "var(--dash-bg,#fff)", minHeight: "100dvh" }}>
       <AntNav />
 
       {/* ── HERO ── */}

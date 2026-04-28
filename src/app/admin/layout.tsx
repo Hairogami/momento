@@ -29,7 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, color: C.text }}>
+    <div style={{ minHeight: "100dvh", background: C.bg, color: C.text }}>
       <AdminThemeLock />
 
       {/* Top bar */}

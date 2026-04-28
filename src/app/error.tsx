@@ -11,7 +11,7 @@ export default function ErrorPage({
 }) {
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4"
+      className="min-h-screen-mobile flex items-center justify-center px-4"
       style={{ backgroundColor: C.ink }}
     >
       <div className="text-center max-w-md">

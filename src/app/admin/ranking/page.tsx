@@ -58,7 +58,7 @@ export default function AdminRankingPage() {
 
   return (
     <div style={{
-      minHeight: "100vh", background: C.bg, color: C.text,
+      minHeight: "100dvh", background: C.bg, color: C.text,
       fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       padding: "32px 24px",
     }}>

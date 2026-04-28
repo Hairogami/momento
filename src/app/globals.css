@@ -39,6 +39,10 @@ input, textarea {
   height: 100vh;
   height: 100dvh;
 }
+.min-h-screen-mobile {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 
 /* Réduire delay tap sur éléments interactifs */
 button, a, [role="button"], input, select, textarea {

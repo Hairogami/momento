@@ -139,7 +139,7 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
     <>
     <aside style={{
       width: "clamp(200px, min(18vw, 32vh), 260px)", flexShrink: 0,
-      height: "100vh", position: "sticky", top: 0,
+      height: "100dvh", position: "sticky", top: 0,
       display: "flex", flexDirection: "column",
       background: "var(--dash-surface, #fff)",
       borderRight: "1px solid var(--dash-border, rgba(183,191,217,0.15))",

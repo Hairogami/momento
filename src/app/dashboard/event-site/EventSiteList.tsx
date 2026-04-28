@@ -678,7 +678,7 @@ const chipStyle: React.CSSProperties = {
 }
 
 const pageStyle: React.CSSProperties = {
-  display: "flex", minHeight: "100vh",
+  display: "flex", minHeight: "100dvh",
   background: "var(--dash-bg,#f7f7fb)",
   fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
 }

@@ -94,7 +94,7 @@ export default function VendorSidebar({ publicSlug }: { publicSlug: string | nul
         background: "var(--dash-surface)",
         borderRight: "1px solid var(--dash-border)",
         display: "flex", flexDirection: "column",
-        position: "sticky", top: 56, height: "calc(100vh - 56px)",
+        position: "sticky", top: 56, height: "calc(100dvh - 56px)",
         overflowY: "auto",
       }}
     >

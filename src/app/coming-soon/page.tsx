@@ -92,7 +92,7 @@ function ComingSoonInner() {
     <div
       className="ant-root"
       style={{
-        minHeight: "100vh",
+        minHeight: "100dvh",
         display: "flex",
         fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
         background: "var(--dash-bg,#f7f7fb)",

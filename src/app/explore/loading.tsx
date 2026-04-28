@@ -5,7 +5,7 @@ import { SkelBlock, SkelLine, SkelPill, SkelCard } from "@/components/skeleton/S
  */
 export default function ExploreLoading() {
   return (
-    <div style={{ background: "var(--dash-bg, #f7f7fb)", minHeight: "100vh", fontFamily: "'Geist', sans-serif" }}>
+    <div style={{ background: "var(--dash-bg, #f7f7fb)", minHeight: "100dvh", fontFamily: "'Geist', sans-serif" }}>
       {/* Header / nav */}
       <div
         style={{

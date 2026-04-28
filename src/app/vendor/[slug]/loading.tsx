@@ -5,7 +5,7 @@ import { SkelBlock, SkelLine, SkelCircle, SkelPill, SkelCard } from "@/component
  */
 export default function VendorLoading() {
   return (
-    <div style={{ background: "var(--dash-bg, #f7f7fb)", minHeight: "100vh", fontFamily: "'Geist', sans-serif" }}>
+    <div style={{ background: "var(--dash-bg, #f7f7fb)", minHeight: "100dvh", fontFamily: "'Geist', sans-serif" }}>
       {/* Hero */}
       <div style={{ position: "relative", width: "100%", height: 360, overflow: "hidden" }}>
         <SkelBlock style={{ width: "100%", height: "100%", borderRadius: 0 }} />
