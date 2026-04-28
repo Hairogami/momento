@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react"
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import { ViewToggle, type GuestsView } from "@/components/guests/ViewToggle"
@@ -8,6 +8,7 @@ import { GuestsExportMenu } from "@/components/guests/GuestsExportMenu"
 import { LinkRsvpDialog } from "@/components/guests/LinkRsvpDialog"
 import type { Rsvp, Guest } from "@/components/guests/types"
 import { dedupRsvps } from "@/lib/rsvpDedup"
+import StickyCta from "@/components/mobile/StickyCta"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -37,6 +38,7 @@ export default function GuestsPage() {
   const [view, setView] = useState<GuestsView>("cards")
   const [linkingRsvpId, setLinkingRsvpId] = useState<string | null>(null)
   const [newGuestName, setNewGuestName] = useState("")
+  const guestInputRef = useRef<HTMLInputElement | null>(null)
 
   function handleEventChange(id: string) {
     setActiveEventId(id)
@@ -199,6 +201,7 @@ export default function GuestsPage() {
 
           <div className="no-print" style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
             <input
+              ref={guestInputRef}
               type="text"
               autoComplete="off"
               name="newGuestName"
@@ -379,6 +382,18 @@ export default function GuestsPage() {
           onClose={() => setLinkingRsvpId(null)}
         />
       )}
+
+      {/* Sticky CTA mobile — focus l'input invité */}
+      <StickyCta
+        label="Inviter"
+        icon="+"
+        disabled={!activeEventId}
+        hint={guests.length > 0 ? `${guests.length} invité${guests.length > 1 ? "s" : ""}` : undefined}
+        onClick={() => {
+          guestInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+          guestInputRef.current?.focus()
+        }}
+      />
     </DashboardShell>
   )
 }

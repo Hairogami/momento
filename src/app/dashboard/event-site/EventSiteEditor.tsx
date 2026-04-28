@@ -8,6 +8,7 @@ import { PALETTES, FONTS, MOODS, type FontId } from "@/lib/eventSiteTokens"
 import PatternPicker, { type PatternId } from "./PatternPicker"
 import { compressImage } from "@/lib/imageCompress"
 import { isAdminEmail } from "@/lib/adminConstants"
+import StickyCta from "@/components/mobile/StickyCta"
 
 type Planner = {
   id: string
@@ -312,6 +313,29 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
           />
         </div>
       </section>
+
+      {/* Sticky CTA mobile — Publier / dépublier le site */}
+      {isNarrow && (
+        <StickyCta
+          label={site.published ? "Voir le site" : "Publier le site"}
+          icon={site.published ? "👁" : "🚀"}
+          disabled={publishing}
+          bottomOffset={0}
+          hint={
+            saveState === "saving" ? "Sauvegarde…"
+            : saveState === "saved" ? "✓ Enregistré"
+            : saveState === "error" ? "⚠ Erreur"
+            : site.published ? "🟢 En ligne" : "🔒 Brouillon"
+          }
+          onClick={() => {
+            if (site.published) {
+              window.open(publicUrl, "_blank", "noopener,noreferrer")
+            } else {
+              togglePublish()
+            }
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { ToastProvider, useToast } from "@/components/Toast"
 import { BudgetExpenseModal, type BudgetExpenseValues } from "@/components/budget/BudgetExpenseModal"
 import { DeleteConfirmModal } from "@/components/budget/DeleteConfirmModal"
 import { getCategory } from "@/lib/budgetCategories"
+import StickyCta from "@/components/mobile/StickyCta"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -746,6 +747,15 @@ function BudgetPageInner() {
           )}
         </div>
       </main>
+
+      {/* Sticky CTA mobile — primary action en bas */}
+      <StickyCta
+        label="Ajouter une dépense"
+        icon="+"
+        onClick={() => setModal({ kind: "add" })}
+        disabled={!activeEventId || loading}
+        hint={budgetTotal > 0 ? `${spent.toLocaleString("fr-MA")} / ${budgetTotal.toLocaleString("fr-MA")} Dhs` : undefined}
+      />
 
       {/* Modals */}
       <BudgetExpenseModal
