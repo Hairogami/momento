@@ -46,7 +46,15 @@ export default async function DashboardPage() {
   let initialActivePlannerId: string | null = null
   if (planners.length > 0) {
     initialActivePlannerId = planners[0].id
-    initialDashboardData = await buildDashboardData(initialActivePlannerId, userId)
+    try {
+      initialDashboardData = await buildDashboardData(initialActivePlannerId, userId)
+    } catch (err) {
+      // RSC pre-fetch best-effort: if any sub-query throws, let the client
+      // re-fetch via /api/planners/[id]/dashboard-data on mount. The dashboard
+      // must never crash from this optimization.
+      console.error("[dashboard/page] buildDashboardData failed, falling back to client fetch:", err)
+      initialDashboardData = null
+    }
   }
 
   return (
