@@ -1,9 +1,11 @@
 "use client"
 import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
 import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import PageSkeleton from "@/components/clone/PageSkeleton"
+import { useIsMobile } from "@/hooks/useIsMobile"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -39,10 +41,27 @@ function fmtTime(iso: string) {
 }
 
 export default function CloneMessagesPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const isMobile = useIsMobile(768)
   const { events, activeEventId } = usePlanners()
   const [myId, setMyId]     = useState<string | null>(null)
   const [convs, setConvs]   = useState<Conversation[]>([])
-  const [active, setActive] = useState<string | null>(null)
+  const [active, setActiveState] = useState<string | null>(searchParams.get("id"))
+
+  // Sync URL ↔ state
+  const setActive = useCallback((id: string | null) => {
+    setActiveState(id)
+    const url = id ? `/messages?id=${id}` : "/messages"
+    router.replace(url, { scroll: false })
+  }, [router])
+
+  // Si l'URL change (back button browser), resync state
+  useEffect(() => {
+    const urlId = searchParams.get("id")
+    if (urlId !== active) setActiveState(urlId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
   const [msgs, setMsgs]     = useState<Message[]>([])
   const [input, setInput]   = useState("")
   const [loadC, setLoadC]   = useState(true)
@@ -129,12 +148,14 @@ export default function CloneMessagesPage() {
     <DashboardShell events={events} activeEventId={activeEventId} onEventChange={() => {}}>
 
       <main className="pb-20 md:pb-0" style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
-        {/* Liste conversations */}
+        {/* Liste conversations — full width sur mobile sans active, 300px sur ≥md */}
         <div style={{
-          width: 300, flexShrink: 0,
-          borderRight: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
-          background: "var(--dash-surface,#fff)", display: "flex", flexDirection: "column",
-        }} className="clone-surface hidden sm:flex">
+          width: isMobile ? "100%" : 300, flexShrink: 0,
+          borderRight: isMobile ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+          background: "var(--dash-surface,#fff)",
+          display: (isMobile && active) ? "none" : "flex",
+          flexDirection: "column",
+        }} className="clone-surface">
           <div style={{ padding: "20px 20px 12px", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.1))" }}>
             <h2 style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>Messages</h2>
           </div>
@@ -195,16 +216,35 @@ export default function CloneMessagesPage() {
           </div>
         </div>
 
-        {/* Zone de chat */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
+        {/* Zone de chat — masquée sur mobile sans active */}
+        <div style={{
+          flex: 1, display: (isMobile && !active) ? "none" : "flex",
+          flexDirection: "column", minWidth: 0,
+        }}>
           {conv ? (
             <>
-              {/* Header */}
+              {/* Header avec back button mobile */}
               <div style={{
                 padding: "16px 24px",
                 borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.12))",
                 background: "var(--dash-surface,#fff)", display: "flex", alignItems: "center", gap: 12,
               }} className="clone-surface">
+                {isMobile && (
+                  <button
+                    type="button"
+                    onClick={() => setActive(null)}
+                    aria-label="Retour aux conversations"
+                    style={{
+                      width: 32, height: 32, borderRadius: 8,
+                      background: "var(--dash-faint,rgba(183,191,217,0.08))",
+                      border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+                      cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                      flexShrink: 0, fontFamily: "inherit",
+                    }}
+                  >
+                    <span style={{ fontFamily: "'Google Symbols','Material Symbols Outlined'", fontSize: 18, color: "var(--dash-text-2,#6a6a71)" }}>arrow_back</span>
+                  </button>
+                )}
                 <div style={{
                   width: 36, height: 36, borderRadius: "50%",
                   background: G, display: "flex", alignItems: "center", justifyContent: "center",
