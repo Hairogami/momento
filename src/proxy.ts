@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Paths always allowed through regardless of gates
-const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon", "/evt/", "/.well-known/"]
+const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon", "/evt/", "/.well-known/", "/sitemap.xml", "/robots.txt", "/manifest.json"]
 const PROTECTED          = ["/dashboard", "/accueil", "/profile", "/planner", "/favorites",
                              "/budget", "/guests", "/messages", "/notifications", "/settings",
                              "/vendors", "/vendor/dashboard", "/prestataire/dashboard", "/admin",
@@ -59,5 +59,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.ico$).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.json|.*\\.png$|.*\\.ico$|.*\\.xml$|.*\\.txt$).*)"],
 }
