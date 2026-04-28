@@ -169,6 +169,7 @@ function WidgetCard({
   dragging, dropTarget,
   onDragStart, onDragOver, onDrop, onDragEnd, onDragLeave,
   isTouch, canMoveUp, canMoveDown, onMoveUp, onMoveDown,
+  collapsed,
   children,
 }: {
   id: string; title: string; href?: string
@@ -185,6 +186,8 @@ function WidgetCard({
   canMoveDown?: boolean
   onMoveUp?: () => void
   onMoveDown?: () => void
+  /** Mode compact mobile : n'affiche que la barre de titre (~56 px). Drag & resize désactivés. */
+  collapsed?: boolean
   children: React.ReactNode
 }) {
   const [hovered, setHovered] = useState(false)
@@ -260,7 +263,8 @@ function WidgetCard({
       onMouseLeave={() => setHovered(false)}
       style={{
         gridColumn: `span ${colSpan(size)}`,
-        gridRow:    rowSpan > 1 ? `span ${rowSpan}` : undefined,
+        gridRow:    collapsed ? "span 1" : rowSpan > 1 ? `span ${rowSpan}` : undefined,
+        ...(collapsed ? { minHeight: 0, height: "auto", alignSelf: "start" } : null),
         borderRadius: 20,
         background: "var(--dash-surface,#fff)",
         border: dropTarget
@@ -325,7 +329,12 @@ function WidgetCard({
         </div>
       )}
 
-      <div style={{ flex: 1, minHeight: 0, overflow: "hidden", borderRadius: 20 }}>{children}</div>
+      {collapsed && (
+        <div style={{ display: "flex", alignItems: "center", padding: "12px 16px", minHeight: 56, gap: 8, fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>
+          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, flex: 1, paddingRight: 96 /* laisse la place pour les boutons d'overlay top:8 right:8 */ }}>{title}</span>
+        </div>
+      )}
+      <div style={{ flex: 1, minHeight: 0, overflow: "hidden", borderRadius: 20, display: collapsed ? "none" : undefined }}>{children}</div>
 
       {dropTarget && (
         <div style={{ position: "absolute", top: 10, right: 10, zIndex: 10, pointerEvents: "none", fontSize: "var(--text-2xs)", fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: G, color: "#fff" }}>
@@ -333,7 +342,10 @@ function WidgetCard({
         </div>
       )}
 
-      {/* Resize edge handles — wider strips with visible hover indicator */}
+      {/* Resize edge handles — wider strips with visible hover indicator. Masqués en mode compact (rien à redimensionner). */}
+      {!collapsed && (
+      <>
+
       {/* Right edge */}
       <div onPointerDown={e => handleResizeStart(e, "right")}
         style={{ position: "absolute", top: 12, bottom: 12, right: -2, width: 14, cursor: "ew-resize", opacity: hovered ? 1 : 0, transition: "opacity 0.15s", touchAction: "none", zIndex: 8, display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -364,6 +376,8 @@ function WidgetCard({
           <rect x="4"  y="5"  width="2.5" height="12" rx="1.25"/>
         </svg>
       </div>
+      </>
+      )}
     </div>
   )
 }
@@ -534,6 +548,8 @@ export default function DashboardClient({
   const [widgetSizes,   setWidgetSizes]   = useState<Record<string, WidgetSize>>(DEFAULT_SIZES)
   const [widgetRows,    setWidgetRows]    = useState<Record<string, number>>({})
   const [extraWidgets,  setExtraWidgets]  = useState<string[]>([])
+  // Mode compact mobile : préférence globale (UI), pas par-event. Hydratée côté client après mount pour éviter mismatch SSR.
+  const [allCollapsed,  setAllCollapsed]  = useState(false)
   // Source unique : ThemeProvider — plus de classList observers locaux ni de
   // localStorage doublons. Le toggle ci-dessous délègue au provider.
   const { resolved, setTheme } = useTheme()
@@ -636,6 +652,14 @@ export default function DashboardClient({
 
   // Dark mode : géré entièrement par ThemeProvider (classe .dark + colorScheme
   // + localStorage `momento_theme`). Le toggle ci-dessous appelle setTheme().
+
+  // ── Compact mode mobile : préférence globale persistée ────────────────────
+  useEffect(() => {
+    try { setAllCollapsed(localStorage.getItem("dashboard_all_collapsed") === "1") } catch {}
+  }, [])
+  useEffect(() => {
+    try { localStorage.setItem("dashboard_all_collapsed", allCollapsed ? "1" : "0") } catch {}
+  }, [allCollapsed])
 
   // ── Palette — CSS vars sur <html> ─────────────────────────────────────────
   useEffect(() => {
@@ -1127,6 +1151,17 @@ export default function DashboardClient({
         <div style={{ padding: "8px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
           <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#c9cad0)" }}>{isTouch ? "Boutons ↑ ↓ pour réorganiser · Pincer pour redimensionner" : "Glisser · Redimensionner (poignée bas-droite)"}</span>
           <div style={{ display: "flex", gap: 6 }}>
+            {/* Mobile uniquement : tout réduire / tout déplier (limite le scroll 4000px+ sur dashboard) */}
+            {isTouch && (
+              <button type="button" onClick={() => setAllCollapsed(c => !c)}
+                title={allCollapsed ? "Tout déplier" : "Tout réduire"}
+                aria-label={allCollapsed ? "Déplier tous les widgets" : "Réduire tous les widgets"}
+                aria-pressed={allCollapsed}
+                style={{ display: "flex", alignItems: "center", gap: 5, padding: "0 10px", height: 30, borderRadius: 99, background: allCollapsed ? `${palette.g1}18` : "var(--dash-faint,rgba(183,191,217,0.08))", border: allCollapsed ? `1px solid ${palette.g1}40` : "1px solid var(--dash-border)", fontSize: "var(--text-xs)", fontWeight: 600, color: allCollapsed ? palette.g1 : "var(--dash-text-2,#45474D)", cursor: "pointer", fontFamily: "inherit", touchAction: "manipulation" }}>
+                <GIcon name={allCollapsed ? "unfold_more" : "unfold_less"} size={14} color={allCollapsed ? palette.g1 : "var(--dash-text-2,#45474D)"} />
+                {allCollapsed ? "Déplier" : "Réduire"}
+              </button>
+            )}
             <button type="button" onClick={() => setTheme(darkMode ? "light" : "dark")} title={darkMode ? "Mode clair" : "Mode sombre"}
               aria-label={darkMode ? "Activer le mode clair" : "Activer le mode sombre"}
               aria-pressed={darkMode}
@@ -1172,6 +1207,7 @@ export default function DashboardClient({
                   canMoveDown={idx < widgetOrder.length - 1}
                   onMoveUp={() => moveWidget(id, -1)}
                   onMoveDown={() => moveWidget(id, 1)}
+                  collapsed={isTouch && allCollapsed}
                 >
                   {renderWidgetContent(id)}
                 </WidgetCard>
