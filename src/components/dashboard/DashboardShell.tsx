@@ -78,7 +78,12 @@ export default function DashboardShell({
       </main>
 
       {/* Mobile bottom nav — auto-portal vers body, auto-hide ≥1024px via lg:!hidden */}
-      <MobileDashNav messageUnread={messageUnread} />
+      <MobileDashNav
+        messageUnread={messageUnread}
+        events={events}
+        activeEventId={activeEventId}
+        onEventChange={onEventChange}
+      />
     </div>
   )
 }

@@ -39,7 +39,20 @@ function GIcon({ name, size = 22, color }: { name: string; size?: number; color?
   )
 }
 
-export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: number }) {
+export interface MobileDashNavEvent {
+  id: string
+  name: string
+  color: string
+}
+
+export interface MobileDashNavProps {
+  messageUnread?: number
+  events?: MobileDashNavEvent[]
+  activeEventId?: string
+  onEventChange?: (id: string) => void
+}
+
+export default function MobileDashNav({ messageUnread = 0, events = [], activeEventId, onEventChange }: MobileDashNavProps) {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -125,6 +138,37 @@ export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: n
             maxHeight: "80vh", overflowY: "auto",
           }}>
             <div style={{ width: 36, height: 4, borderRadius: 99, background: "var(--dash-border,rgba(183,191,217,0.4))", margin: "0 auto 20px" }} />
+
+            {/* Event switcher (header) — visible si events fournis */}
+            {events.length > 0 && onEventChange && (
+              <div style={{ padding: "0 20px 14px", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.10))", marginBottom: 14 }}>
+                <p style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Mes événements</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {events.map(e => {
+                    const active = e.id === activeEventId
+                    return (
+                      <button
+                        key={e.id}
+                        type="button"
+                        onClick={() => { onEventChange(e.id); setDrawerOpen(false) }}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 10,
+                          padding: "10px 12px", borderRadius: 10,
+                          background: active ? "var(--dash-faint,rgba(183,191,217,0.09))" : "transparent",
+                          border: "none", cursor: "pointer", fontFamily: "inherit",
+                          textAlign: "left", width: "100%",
+                        }}
+                      >
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: e.color, flexShrink: 0 }} />
+                        <span style={{ flex: 1, fontSize: "var(--text-sm)", fontWeight: active ? 600 : 500, color: "var(--dash-text,#121317)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.name}</span>
+                        {active && <GIcon name="check" size={16} color="var(--g1,#E11D48)" />}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             {ALL_ITEMS.map(item => {
               const active = pathname === item.href
               return (

@@ -5,7 +5,6 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
 import { useTheme } from "@/components/ThemeProvider"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import DashboardShell from "@/components/dashboard/DashboardShell"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import type { BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
@@ -521,7 +520,6 @@ export default function DashboardClient({
   const [swipeLikeCount, setSwipeLikeCount] = useState(0)
   const [swipeCategory, setSwipeCategory] = useState<string | undefined>(undefined)
   const [swipeVendorSlug, setSwipeVendorSlug] = useState<string | undefined>(undefined)
-  const [mobileOpen,    setMobileOpen]    = useState(false)
   const [firstName,     setFirstName]     = useState(initialFirstName)
   const [addingTask,    setAddingTask]    = useState(false)
   const [newTaskLabel,  setNewTaskLabel]  = useState("")
@@ -1024,16 +1022,6 @@ export default function DashboardClient({
 
   return (
     <DashboardShell events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} firstName={firstName} messageUnread={totalUnread}>
-      {/* Mobile sidebar drawer (event switcher — déclenché par hamburger) */}
-      {mobileOpen && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex" }}>
-          <div style={{ flex: 1, background: "rgba(0,0,0,0.45)" }} onClick={() => setMobileOpen(false)} />
-          <div style={{ width: 240, height: "100%" }}>
-            <DashSidebar events={events} activeEventId={activeEventId} onEventChange={id => { setActiveEventId(id); setMobileOpen(false) }} firstName={firstName} messageUnread={totalUnread} />
-          </div>
-        </div>
-      )}
-
       {/* VendorSwipeModal */}
       {swipeOpen && (
         <div style={{ position: "fixed", inset: 0, zIndex: 70, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", background: "rgba(18,19,23,0.7)" }} onClick={() => setSwipeOpen(false)}>
@@ -1053,19 +1041,6 @@ export default function DashboardClient({
       {showPalette && <PalettePickerModal current={palette} onChange={setPalette} onClose={() => setShowPalette(false)} />}
 
       <main id="main-content" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", minHeight: "100vh" }} className="pb-20 md:pb-0">
-        {/* Mobile header */}
-        <div className="flex lg:hidden" style={{ alignItems: "center", gap: 12, padding: "12px 16px", background: "var(--dash-surface,#fff)", borderBottom: "1px solid var(--dash-border)", position: "sticky", top: 0, zIndex: 20 }}>
-          <button type="button" onClick={() => setMobileOpen(true)} aria-label="Ouvrir le menu de navigation" style={{ width: 34, height: 34, borderRadius: 9, background: "var(--dash-faint,rgba(183,191,217,0.08))", border: "1px solid var(--dash-border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <GIcon name="menu" size={18} color="var(--dash-text-2,#45474D)" />
-          </button>
-          <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)", letterSpacing: "-0.02em" }}>Momento</span>
-          {totalUnread > 0 && (
-            <Link href="/messages" style={{ marginLeft: "auto", fontSize: "var(--text-2xs)", fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: G, color: "#fff", textDecoration: "none" }}>
-              {totalUnread} non lu{totalUnread !== 1 ? "s" : ""}
-            </Link>
-          )}
-        </div>
-
         {/* Event header — 3 zones cohérentes brand: titre · progression centre · KPI pills */}
         <div style={{ padding: "24px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <div style={{ flexShrink: 0 }}>
