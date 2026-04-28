@@ -51,6 +51,16 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
   const [publishing, setPublishing] = useState(false)
   const [previewKey, setPreviewKey] = useState(0)
   const [viewport, setViewport] = useState<"web" | "mobile">("web")
+  // Mobile (≤900px) : afficher uniquement édition OU aperçu via tabs.
+  // Sur desktop, le state est ignoré (les 2 panels visibles).
+  const [mobilePane, setMobilePane] = useState<"edit" | "preview">("edit")
+  const [isNarrow, setIsNarrow] = useState(false)
+  useEffect(() => {
+    function check() { setIsNarrow(window.innerWidth <= 900) }
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
 
   // Sync state quand la prop change (router.refresh côté serveur)
   useEffect(() => { setSite(eventSite) }, [eventSite])
@@ -115,18 +125,42 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
 
   return (
     <div style={{
-      minHeight: "100vh",
+      minHeight: "100dvh",
       display: "grid",
-      gridTemplateColumns: "420px 1fr",
+      gridTemplateColumns: isNarrow ? "1fr" : "420px 1fr",
+      gridTemplateRows: isNarrow ? "auto 1fr" : undefined,
       fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       background: "var(--dash-bg,#f7f7fb)",
     }}>
+      {/* Mobile tabs — switch édition / aperçu */}
+      {isNarrow && (
+        <div style={{
+          position: "sticky", top: 0, zIndex: 20,
+          display: "flex", gap: 4, padding: "10px 12px",
+          background: "var(--dash-surface,#fff)",
+          borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+        }}>
+          <button
+            type="button"
+            onClick={() => setMobilePane("edit")}
+            style={mobileTabStyle(mobilePane === "edit")}
+            aria-pressed={mobilePane === "edit"}
+          >📝 Édition</button>
+          <button
+            type="button"
+            onClick={() => setMobilePane("preview")}
+            style={mobileTabStyle(mobilePane === "preview")}
+            aria-pressed={mobilePane === "preview"}
+          >👁️ Aperçu</button>
+        </div>
+      )}
+
       {/* ── Panel gauche : contrôles ── */}
       <aside style={{
         background: "var(--dash-surface,#fff)",
-        borderRight: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+        borderRight: isNarrow ? "none" : "1px solid var(--dash-border,rgba(183,191,217,0.2))",
         overflow: "auto",
-        display: "flex",
+        display: isNarrow && mobilePane !== "edit" ? "none" : "flex",
         flexDirection: "column",
       }}>
         <header style={{ padding: "18px 20px", borderBottom: "1px solid var(--dash-border,rgba(183,191,217,0.15))" }}>
@@ -208,7 +242,15 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
       </aside>
 
       {/* ── Panel droit : preview live ── */}
-      <section style={{ position: "relative", background: "var(--dash-bg,#f7f7fb)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <section style={{
+        position: "relative",
+        background: "var(--dash-bg,#f7f7fb)",
+        overflow: "hidden",
+        display: isNarrow && mobilePane !== "preview" ? "none" : "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: isNarrow ? "calc(100dvh - 60px)" : undefined,
+      }}>
         <div style={{
           position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 10,
           display: "flex", gap: 8, alignItems: "center",
@@ -251,9 +293,9 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
 
         <div
           style={{
-            width: viewport === "mobile" ? 390 : "100%",
+            width: viewport === "mobile" ? "min(390px, calc(100% - 24px))" : "100%",
             maxWidth: viewport === "mobile" ? 390 : "100%",
-            height: viewport === "mobile" ? "min(844px, calc(100vh - 80px))" : "100%",
+            height: viewport === "mobile" ? "min(844px, calc(100dvh - 80px))" : "100%",
             background: "#000",
             borderRadius: viewport === "mobile" ? 28 : 0,
             overflow: "hidden",
@@ -1517,6 +1559,22 @@ function viewportBtnStyle(active: boolean): React.CSSProperties {
     cursor: "pointer",
     fontFamily: "inherit",
     transition: "all 120ms ease",
+  }
+}
+
+function mobileTabStyle(active: boolean): React.CSSProperties {
+  return {
+    flex: 1,
+    padding: "10px 12px",
+    borderRadius: 10,
+    border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+    background: active ? "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))" : "var(--dash-surface,#fff)",
+    color: active ? "#fff" : "var(--dash-text-2,#6a6a71)",
+    fontSize: "var(--text-sm)",
+    fontWeight: 600,
+    cursor: "pointer",
+    fontFamily: "inherit",
+    transition: "all 150ms ease",
   }
 }
 
