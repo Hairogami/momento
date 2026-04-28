@@ -77,10 +77,8 @@ export default function DashboardShell({
         {children}
       </main>
 
-      {/* Mobile bottom nav — masquée à partir de 1024px */}
-      <div className="lg:hidden">
-        <MobileDashNav messageUnread={messageUnread} />
-      </div>
+      {/* Mobile bottom nav — auto-portal vers body, auto-hide ≥1024px via lg:!hidden */}
+      <MobileDashNav messageUnread={messageUnread} />
     </div>
   )
 }

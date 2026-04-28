@@ -2,7 +2,8 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -41,10 +42,16 @@ function GIcon({ name, size = 22, color }: { name: string; size?: number; color?
 export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: number }) {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  return (
+  // Portal cible = document.body (évite containing-block parent qui casse position:fixed sur iOS)
+  useEffect(() => { setMounted(true) }, [])
+
+  if (!mounted) return null
+
+  const node = (
     <>
-      {/* Bottom nav bar */}
+      {/* Bottom nav bar — position fixed sur viewport (rendu au niveau body via portal) */}
       <nav style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
         background: "var(--dash-surface,#fff)",
@@ -52,7 +59,9 @@ export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: n
         display: "flex", alignItems: "stretch",
         height: 64,
         paddingBottom: "env(safe-area-inset-bottom)",
-      }}>
+      }}
+      className="lg:!hidden"
+      aria-label="Navigation mobile">
         {PRIMARY_ITEMS.map(item => {
           const active = pathname === item.href
           return (
@@ -95,7 +104,7 @@ export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: n
           flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
           justifyContent: "center", gap: 3, background: "none", border: "none",
           cursor: "pointer", fontFamily: "inherit",
-        }}>
+        }} aria-label="Ouvrir le menu de navigation">
           <GIcon name="menu" size={22} color="var(--dash-text-3,#9a9aaa)" />
           <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Menu</span>
         </button>
@@ -137,4 +146,6 @@ export default function MobileDashNav({ messageUnread = 0 }: { messageUnread?: n
       )}
     </>
   )
+
+  return createPortal(node, document.body)
 }
