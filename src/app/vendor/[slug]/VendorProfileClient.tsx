@@ -111,7 +111,7 @@ export default function VendorProfileClient({
           background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)",
         }} />
         {/* Back link */}
-        <div style={{ position: "absolute", top: 72, left: 0, right: 0, padding: "0 24px" }}>
+        <div style={{ position: "absolute", top: "calc(72px + env(safe-area-inset-top))", left: 0, right: 0, padding: "0 24px" }}>
           <button onClick={() => window.history.back()} style={{
             display: "inline-flex", alignItems: "center", gap: 6,
             padding: "7px 14px", borderRadius: 999,
@@ -124,7 +124,7 @@ export default function VendorProfileClient({
           </button>
         </div>
         {/* Floating actions (top right) */}
-        <div style={{ position: "absolute", top: 72, right: 24, display: "flex", gap: 8 }}>
+        <div style={{ position: "absolute", top: "calc(72px + env(safe-area-inset-top))", right: 24, display: "flex", gap: 8 }}>
           <button
             onClick={toggleFavorite}
             aria-label={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}

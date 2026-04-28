@@ -222,8 +222,8 @@ export default function AntHero() {
       </div>
 
       <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-40"
-        style={{ color: "var(--dash-text-2,#45474D)" }}
+        className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-40"
+        style={{ color: "var(--dash-text-2,#45474D)", bottom: "max(32px, calc(env(safe-area-inset-bottom) + 16px))" }}
       >
         <div className="w-0.5 h-8 bg-current rounded-full animate-bounce" />
       </div>
