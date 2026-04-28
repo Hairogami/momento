@@ -44,7 +44,6 @@ export default function DashboardShell({
 }: DashboardShellProps) {
   return (
     <div
-      className={noBottomPadding ? undefined : "dashboard-shell-pb"}
       style={{
         display: "flex",
         minHeight: "100dvh",
@@ -62,9 +61,18 @@ export default function DashboardShell({
         />
       </div>
 
-      {/* Main content — padding-bottom mobile géré par .dashboard-shell-pb sur wrapper outer */}
-      <main style={{ flex: 1, minWidth: 0 }}>
+      {/* Main content */}
+      <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
         {children}
+        {/* Spacer mobile : garantit ~84px d'espace sous le contenu pour la bottom nav fixe (64px + safe-area).
+            Déterministe quel que soit le layout interne — pas de dépendance au padding parent / flex. */}
+        {!noBottomPadding && (
+          <div
+            aria-hidden="true"
+            className="lg:hidden"
+            style={{ flexShrink: 0, height: "calc(64px + env(safe-area-inset-bottom) + 16px)" }}
+          />
+        )}
       </main>
 
       {/* Mobile bottom nav — auto-portal vers body, auto-hide ≥1024px via lg:!hidden */}
