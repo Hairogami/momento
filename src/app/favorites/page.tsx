@@ -1,8 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
-import AntNav from "@/components/clone/AntNav"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
@@ -37,11 +36,7 @@ export default function CloneFavoritesPage() {
   }
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={() => {}} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={() => {}}>
 
       <main style={{ flex: 1, padding: "32px 28px 64px", overflowY: "auto" }}>
         {/* Header */}
@@ -159,6 +154,6 @@ export default function CloneFavoritesPage() {
           </div>
         )}
       </main>
-    </div>
+    </DashboardShell>
   )
 }

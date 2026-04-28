@@ -1,8 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
-import AntNav from "@/components/clone/AntNav"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import PageSkeleton from "@/components/clone/PageSkeleton"
 
@@ -70,11 +69,7 @@ export default function NotificationsPage() {
   const unreadCount = notifs.filter(n => !n.read).length
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg, #f7f7fb)" }}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={handleEventChange} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={handleEventChange}>
 
       <main style={{ flex: 1, padding: "clamp(20px, 4vw, 32px) clamp(16px, 4vw, 24px)", maxWidth: 720, margin: "0 auto", width: "100%" }}>
         <header style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
@@ -165,6 +160,6 @@ export default function NotificationsPage() {
           </div>
         )}
       </main>
-    </div>
+    </DashboardShell>
   )
 }

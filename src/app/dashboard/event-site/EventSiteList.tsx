@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import AntNav from "@/components/clone/AntNav"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
 import { usePlanners } from "@/hooks/usePlanners"
 import { PALETTES, FONTS } from "@/lib/eventSiteTokens"
@@ -128,11 +127,7 @@ export default function EventSiteList({ sites, orphans }: Props) {
   // Empty state — aucun planner du tout
   if (sites.length === 0 && orphans.length === 0) {
     return (
-      <div className="ant-root" style={pageStyle}>
-        <div className="hidden lg:flex">
-          <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
-        </div>
-        <div className="lg:hidden"><AntNav /></div>
+      <DashboardShell events={events} activeEventId={activeEventId} onEventChange={setActiveEventId}>
         <main className="pb-20 md:pb-0" style={contentStyle}>
           <EmptyHero onCreate={openCreateEventModal} />
         </main>
@@ -141,16 +136,12 @@ export default function EventSiteList({ sites, orphans }: Props) {
           onClose={() => setShowCreateEventModal(false)}
           onCreated={handleEventCreated}
         />
-      </div>
+      </DashboardShell>
     )
   }
 
   return (
-    <div className="ant-root" style={pageStyle}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={setActiveEventId}>
       <main className="pb-20 md:pb-0" style={contentStyle}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           {/* Header */}
@@ -268,7 +259,7 @@ export default function EventSiteList({ sites, orphans }: Props) {
         onClose={() => setShowCreateEventModal(false)}
         onCreated={handleEventCreated}
       />
-    </div>
+    </DashboardShell>
   )
 
   // ── helpers locaux ─────────────────────────────────────────────────────

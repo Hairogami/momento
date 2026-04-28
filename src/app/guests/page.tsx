@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, type CSSProperties } from "react"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
-import AntNav from "@/components/clone/AntNav"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import { ViewToggle, type GuestsView } from "@/components/guests/ViewToggle"
 import { GuestsExportMenu } from "@/components/guests/GuestsExportMenu"
@@ -144,7 +143,7 @@ export default function GuestsPage() {
   }
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={handleEventChange}>
       <style jsx global>{`
         @media print {
           nav, .no-print { display: none !important; }
@@ -155,12 +154,7 @@ export default function GuestsPage() {
         }
       `}</style>
 
-      <div className="hidden lg:flex no-print">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={handleEventChange} />
-      </div>
-      <div className="lg:hidden no-print"><AntNav /></div>
-
-      <main className="pb-20 md:pb-0" style={{
+      <main className="pb-20 md:pb-0 no-print" style={{
         flex: 1,
         padding: "clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px) 64px",
         overflowY: "auto",
@@ -382,7 +376,7 @@ export default function GuestsPage() {
           onClose={() => setLinkingRsvpId(null)}
         />
       )}
-    </div>
+    </DashboardShell>
   )
 }
 

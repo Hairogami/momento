@@ -1,8 +1,7 @@
 "use client"
 import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
-import AntNav from "@/components/clone/AntNav"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import PageSkeleton from "@/components/clone/PageSkeleton"
 
@@ -127,11 +126,7 @@ export default function CloneMessagesPage() {
   }
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={() => {}} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={() => {}}>
 
       <main className="pb-20 md:pb-0" style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
         {/* Liste conversations */}
@@ -305,6 +300,6 @@ export default function CloneMessagesPage() {
           )}
         </div>
       </main>
-    </div>
+    </DashboardShell>
   )
 }

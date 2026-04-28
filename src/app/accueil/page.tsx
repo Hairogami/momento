@@ -19,7 +19,7 @@ import { useEffect, useState, useRef, useMemo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import CreateEventModal from "@/components/clone/dashboard/CreateEventModal"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -159,10 +159,8 @@ export default function CloneAccueilPage() {
   }
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-      <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} firstName={firstName} />
-
-      <div style={{ flex: 1, maxWidth: 1100, margin: "0 auto", padding: "32px 24px 80px", width: "100%" }}>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} firstName={firstName}>
+      <div style={{ width: "100%", maxWidth: 1100, margin: "0 auto", padding: "clamp(20px, 4vw, 32px) clamp(16px, 3vw, 24px) 80px", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
 
         {/* Greeting */}
         <div style={{ marginBottom: 36 }}>
@@ -422,6 +420,6 @@ export default function CloneAccueilPage() {
           router.push("/dashboard")
         }}
       />
-    </div>
+    </DashboardShell>
   )
 }

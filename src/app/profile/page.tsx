@@ -1,8 +1,7 @@
 "use client"
 import { useState, useEffect, useRef, FormEvent, ChangeEvent } from "react"
 import { useSession } from "next-auth/react"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
-import AntNav from "@/components/clone/AntNav"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import PageSkeleton from "@/components/clone/PageSkeleton"
 
@@ -163,11 +162,7 @@ export default function ProfilePage() {
   const isVendor = me?.role === "vendor"
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={() => {}} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={() => {}}>
 
       <main style={{ flex: 1, padding: "32px 24px", maxWidth: 620, margin: "0 auto", width: "100%" }}>
         <h1 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
@@ -338,6 +333,6 @@ export default function ProfilePage() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
-    </div>
+    </DashboardShell>
   )
 }

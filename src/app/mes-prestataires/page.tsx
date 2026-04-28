@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState, useCallback, useRef } from "react"
-import AntNav from "@/components/clone/AntNav"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import VendorDiscoverCard, { type DiscoverVendor } from "@/components/prestataires/VendorDiscoverCard"
 import RecommandedCarousel from "@/components/prestataires/RecommandedCarousel"
 import { usePlanners } from "@/hooks/usePlanners"
@@ -185,11 +184,7 @@ export default function MesPrestatairesPage() {
 
   if (!activeEventId && events.length === 0) {
     return (
-      <div className="ant-root" style={pageStyle}>
-        <div className="hidden lg:flex">
-          <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
-        </div>
-        <div className="lg:hidden"><AntNav /></div>
+      <DashboardShell events={events} activeEventId={activeEventId ?? ""} onEventChange={setActiveEventId}>
         <main className="pb-20 md:pb-0" style={contentStyle}>
           <div style={{ textAlign: "center", padding: "80px 24px" }}>
             <p style={{ fontSize: "var(--text-2xl)", marginBottom: 16 }}>🎉</p>
@@ -197,16 +192,12 @@ export default function MesPrestatairesPage() {
             <p style={{ fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)" }}>Créez un événement pour commencer à sélectionner vos prestataires.</p>
           </div>
         </main>
-      </div>
+      </DashboardShell>
     )
   }
 
   return (
-    <div className="ant-root" style={pageStyle}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
+    <DashboardShell events={events} activeEventId={activeEventId ?? ""} onEventChange={setActiveEventId}>
       <main className="pb-20 md:pb-0" style={contentStyle}>
         {/* Header */}
         <div style={{ marginBottom: 32, display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
@@ -495,7 +486,7 @@ export default function MesPrestatairesPage() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardShell>
   )
 }
 

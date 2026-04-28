@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
-import AntNav from "@/components/clone/AntNav"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import {
   CalendarHeader, CalendarMonth, CalendarWeek, CalendarDay, CalendarSkeleton,
@@ -119,12 +118,7 @@ export default function PlannerClient({ initialDetail }: { initialDetail: Planne
   const coupleLabel = detail?.coupleNames || detail?.title || ""
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={sidebarEvents} activeEventId={activeEventId} onEventChange={setActiveEventId} />
-      </div>
-      <div className="lg:hidden"><AntNav /></div>
-
+    <DashboardShell events={sidebarEvents} activeEventId={activeEventId} onEventChange={setActiveEventId}>
       <main className="pb-20 md:pb-0" style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
         <CalendarHeader
           view={view}
@@ -189,6 +183,6 @@ export default function PlannerClient({ initialDetail }: { initialDetail: Planne
           onRefresh={() => { if (activeEventId) loadPlanner(activeEventId) }}
         />
       )}
-    </div>
+    </DashboardShell>
   )
 }

@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useMemo } from "react"
-import DashSidebar from "@/components/clone/dashboard/DashSidebar"
-import AntNav from "@/components/clone/AntNav"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import { usePlanners } from "@/hooks/usePlanners"
 import { ToastProvider, useToast } from "@/components/Toast"
 import { BudgetExpenseModal, type BudgetExpenseValues } from "@/components/budget/BudgetExpenseModal"
@@ -299,14 +298,7 @@ function BudgetPageInner() {
   ]
 
   return (
-    <div className="ant-root" style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}>
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={handleEventChange} />
-      </div>
-      <div className="lg:hidden">
-        <AntNav />
-      </div>
-
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={handleEventChange}>
       <main
         className="pb-20 md:pb-0"
         style={{ flex: 1, padding: "clamp(16px, 4vw, 32px) clamp(16px, 4vw, 32px) 64px", overflowY: "auto" }}
@@ -792,7 +784,7 @@ function BudgetPageInner() {
         onCancel={() => setModal({ kind: "none" })}
         busy={submitting}
       />
-    </div>
+    </DashboardShell>
   )
 }
 
