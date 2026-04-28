@@ -22,21 +22,50 @@ export default function MoodboardWidget({ eventId }: { eventId: string }) {
     fileRef.current?.click()
   }
 
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+  async function compressImage(file: File): Promise<string> {
+    const dataUrl = await new Promise<string>((res, rej) => {
+      const r = new FileReader()
+      r.onload = ev => res(ev.target?.result as string)
+      r.onerror = rej
+      r.readAsDataURL(file)
+    })
+    const img = await new Promise<HTMLImageElement>((res, rej) => {
+      const i = new Image()
+      i.onload = () => res(i)
+      i.onerror = rej
+      i.src = dataUrl
+    })
+    const MAX = 800
+    const scale = Math.min(1, MAX / Math.max(img.width, img.height))
+    const w = Math.round(img.width * scale)
+    const h = Math.round(img.height * scale)
+    const canvas = document.createElement("canvas")
+    canvas.width = w
+    canvas.height = h
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return dataUrl
+    ctx.drawImage(img, 0, 0, w, h)
+    return canvas.toDataURL("image/jpeg", 0.7)
+  }
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file || slotRef.current === null) return
-    const reader = new FileReader()
-    reader.onload = ev => {
-      setImages(prev => {
-        const next = [...prev]
-        next[slotRef.current!] = ev.target?.result as string
-        try { localStorage.setItem(MOODBOARD_KEY, JSON.stringify(next)) } catch {}
-        return next
-      })
-    }
-    reader.readAsDataURL(file)
+    const slot = slotRef.current
     e.target.value = ""
     slotRef.current = null
+    try {
+      const compressed = await compressImage(file)
+      setImages(prev => {
+        const next = [...prev]
+        next[slot] = compressed
+        try { localStorage.setItem(MOODBOARD_KEY, JSON.stringify(next)) }
+        catch (err) { console.error("Moodboard localStorage quota exceeded:", err) }
+        return next
+      })
+    } catch (err) {
+      console.error("Moodboard image compression failed:", err)
+    }
   }
 
   function removeImage(i: number) {
