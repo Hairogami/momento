@@ -2,7 +2,13 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 // Paths always allowed through regardless of gates
-const COMING_SOON_EXEMPT = ["/coming-soon", "/api/", "/_next/", "/favicon", "/evt/", "/.well-known/", "/sitemap.xml", "/robots.txt", "/manifest.json"]
+const COMING_SOON_EXEMPT = [
+  "/coming-soon", "/api/", "/_next/", "/favicon", "/evt/", "/.well-known/",
+  // SEO crawlers
+  "/sitemap.xml", "/robots.txt", "/manifest.json",
+  // Next.js App Router metadata images (servies sans extension par next dynamic)
+  "/opengraph-image", "/twitter-image", "/icon", "/apple-icon",
+]
 const PROTECTED          = ["/dashboard", "/accueil", "/profile", "/planner", "/favorites",
                              "/budget", "/guests", "/messages", "/notifications", "/settings",
                              "/vendors", "/vendor/dashboard", "/prestataire/dashboard", "/admin",
