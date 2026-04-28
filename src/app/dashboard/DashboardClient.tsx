@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
 import { useTheme } from "@/components/ThemeProvider"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
+import DashboardShell from "@/components/dashboard/DashboardShell"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import type { BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
 import { getEventLabel } from "@/lib/eventLabel"
@@ -1022,16 +1023,8 @@ export default function DashboardClient({
   )
 
   return (
-    <div
-      className="ant-root"
-      style={{ display: "flex", minHeight: "100vh", background: "var(--dash-bg,#f7f7fb)" }}
-    >
-      {/* Desktop sidebar */}
-      <div className="hidden lg:flex">
-        <DashSidebar events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} firstName={firstName} messageUnread={totalUnread} />
-      </div>
-
-      {/* Mobile sidebar drawer */}
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={setActiveEventId} firstName={firstName} messageUnread={totalUnread}>
+      {/* Mobile sidebar drawer (event switcher — déclenché par hamburger) */}
       {mobileOpen && (
         <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex" }}>
           <div style={{ flex: 1, background: "rgba(0,0,0,0.45)" }} onClick={() => setMobileOpen(false)} />
@@ -1165,6 +1158,6 @@ export default function DashboardClient({
           </div>
         </div>
       </main>
-    </div>
+    </DashboardShell>
   )
 }
