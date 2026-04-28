@@ -5,6 +5,7 @@ import Image from "next/image";
 import { X, XCircle, Star, MapPin, ChevronLeft, ChevronRight, ArrowUpRight, RotateCcw } from "lucide-react";
 import { C } from "@/lib/colors";
 import { LS_LIKED, LS_SKIPPED, lsGet, lsAdd, lsRemove } from "@/lib/swipeStorage";
+import { useDeclareFullscreen } from "@/components/dashboard/FullscreenModalContext";
 
 export interface VendorCard {
   id: string;
@@ -93,6 +94,9 @@ function Stars({ rating, size = 11 }: { rating: number; size?: number }) {
 }
 
 export default function VendorSwipeModal({ workspaceId, plannerId, categories, initialCategory, initialVendorSlug, onClose, onBooked }: Props) {
+  // Signale qu'une modal fullscreen est active → MobileDashNav se masque
+  useDeclareFullscreen(true)
+
   const [vendors, setVendors]         = useState<VendorCard[]>([]);
   const [index, setIndex]             = useState(0);
   const [loading, setLoading]         = useState(true);

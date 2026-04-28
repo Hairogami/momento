@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { FullscreenModalProvider } from "@/components/dashboard/FullscreenModalContext";
 
 /**
  * Anti-FOUC theme bootstrap — IIFE inline exécutée AVANT le premier paint.
@@ -202,7 +203,9 @@ export default function RootLayout({
           Aller au contenu principal
         </a>
         <ThemeProvider>
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <FullscreenModalProvider>{children}</FullscreenModalProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

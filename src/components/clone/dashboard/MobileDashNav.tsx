@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
+import { useFullscreenModal } from "@/components/dashboard/FullscreenModalContext"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -54,6 +55,7 @@ export interface MobileDashNavProps {
 
 export default function MobileDashNav({ messageUnread = 0, events = [], activeEventId, onEventChange }: MobileDashNavProps) {
   const pathname = usePathname()
+  const { active: fullscreenActive } = useFullscreenModal()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [dragY, setDragY] = useState(0)
@@ -96,6 +98,8 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
   }
 
   if (!mounted) return null
+  // Hide complètement pendant une modal fullscreen (VendorSwipe, etc.)
+  if (fullscreenActive) return null
 
   const node = (
     <>
