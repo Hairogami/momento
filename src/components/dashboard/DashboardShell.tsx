@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode } from "react"
+import { ReactNode, useEffect } from "react"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import MobileDashNav from "@/components/clone/dashboard/MobileDashNav"
 
@@ -42,6 +42,15 @@ export default function DashboardShell({
   children,
   noBottomPadding = false,
 }: DashboardShellProps) {
+  // Padding-bottom mobile sur <body> — la solution la plus déterministe pour
+  // que la bottom nav fixe (MobileDashNav) ne recouvre jamais le contenu,
+  // quel que soit le navigateur, le layout interne ou les containers de scroll.
+  useEffect(() => {
+    if (noBottomPadding) return
+    document.body.classList.add("has-mobile-bottom-nav")
+    return () => document.body.classList.remove("has-mobile-bottom-nav")
+  }, [noBottomPadding])
+
   return (
     <div
       style={{

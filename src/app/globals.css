@@ -839,3 +839,14 @@ summary:focus-visible {
   }
 }
 
+
+/* DashboardShell — padding-bottom global sur <body> quand l'espace client est monté.
+   Garantit que la bottom nav fixe (MobileDashNav, 64px + safe-area) ne recouvre
+   jamais le contenu, quel que soit le navigateur (Chrome, Safari, Firefox mobile)
+   ou les containers de scroll internes. La classe est ajoutée par DashboardShell
+   au mount via useEffect, retirée au unmount. */
+@media (max-width: 1023px) {
+  body.has-mobile-bottom-nav {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}
