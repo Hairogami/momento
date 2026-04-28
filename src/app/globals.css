@@ -838,3 +838,15 @@ summary:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* DashboardShell — padding-bottom mobile pour la bottom nav fixe (MobileDashNav, 64px + safe-area).
+   Appliqué sur le wrapper outer pour garantir que le scroll laisse de l'espace
+   entre le dernier widget et la nav, indépendamment du layout interne. */
+.dashboard-shell-pb {
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
+}
+@media (min-width: 1024px) {
+  .dashboard-shell-pb {
+    padding-bottom: 0;
+  }
+}

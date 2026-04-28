@@ -44,6 +44,7 @@ export default function DashboardShell({
 }: DashboardShellProps) {
   return (
     <div
+      className={noBottomPadding ? undefined : "dashboard-shell-pb"}
       style={{
         display: "flex",
         minHeight: "100dvh",
@@ -61,19 +62,8 @@ export default function DashboardShell({
         />
       </div>
 
-      {/* Main content */}
-      <main
-        style={{
-          flex: 1,
-          minWidth: 0,
-          display: "flex",
-          flexDirection: "column",
-          paddingBottom: noBottomPadding
-            ? 0
-            : "calc(64px + env(safe-area-inset-bottom))",
-        }}
-        className="lg:!pb-0"
-      >
+      {/* Main content — padding-bottom mobile géré par .dashboard-shell-pb sur wrapper outer */}
+      <main style={{ flex: 1, minWidth: 0 }}>
         {children}
       </main>
 
