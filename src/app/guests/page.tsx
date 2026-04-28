@@ -250,13 +250,16 @@ export default function GuestsPage() {
                   {g.linkedRsvpId && <p style={{ marginTop: 6, marginBottom: 0, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>→ Lié à une réponse site</p>}
                   <button type="button" onClick={() => deleteGuest(g.id)} className="no-print" style={{
                     marginTop: 6, alignSelf: "flex-start", background: "transparent", border: "none",
-                    color: "var(--dash-text-3,#9a9aaa)", fontSize: "var(--text-xs)", cursor: "pointer", padding: 0,
+                    color: "var(--dash-text-3,#9a9aaa)", fontSize: "var(--text-xs)", cursor: "pointer",
+                    padding: "8px 4px", minHeight: 36, touchAction: "manipulation",
                   }}>Supprimer</button>
                 </div>
               ))}
             </div>
           ) : (
-            <div style={{ ...cardStyle, padding: 0, overflow: "hidden" }}>
+            <div style={{ ...cardStyle, padding: 0, overflow: "hidden", position: "relative" }}>
+              {/* Indice visuel scroll horizontal mobile (audit P2) — gradient sur le bord droit */}
+              <div aria-hidden style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 24, pointerEvents: "none", background: "linear-gradient(to left, var(--dash-surface,#fff) 0%, transparent 100%)", zIndex: 1 }} />
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(12px,0.9vw,13px)" }}>
                   <thead style={{ background: "var(--dash-faint,rgba(183,191,217,0.07))" }}>
@@ -340,7 +343,9 @@ export default function GuestsPage() {
               ))}
             </div>
           ) : (
-            <div style={{ ...cardStyle, padding: 0, overflow: "hidden" }}>
+            <div style={{ ...cardStyle, padding: 0, overflow: "hidden", position: "relative" }}>
+              {/* Indice visuel scroll horizontal mobile (audit P2) — gradient sur le bord droit */}
+              <div aria-hidden style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 24, pointerEvents: "none", background: "linear-gradient(to left, var(--dash-surface,#fff) 0%, transparent 100%)", zIndex: 1 }} />
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "clamp(12px,0.9vw,13px)" }}>
                   <thead style={{ background: "var(--dash-faint,rgba(183,191,217,0.07))" }}>
