@@ -1,6 +1,13 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 
+// Dynamic generation : sitemap fetches 1000+ vendors via Prisma.
+// At build time, parallel prerender workers saturated the Supabase
+// session-mode pool (port 5432, cap 15). On-demand generation = each request
+// reuses pgbouncer transaction-mode connections (high concurrency).
+// Google re-crawls the sitemap periodically; runtime cost is acceptable.
+export const dynamic = "force-dynamic";
+
 const BASE = "https://momentoevents.app";
 
 // Routes statiques publiques indexables. Toute nouvelle page publique doit
