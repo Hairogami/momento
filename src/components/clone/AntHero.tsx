@@ -1,8 +1,12 @@
 "use client"
 import { useEffect, useState } from "react"
-import AntConfetti from "./AntConfetti"
-import AntFireworks from "./AntFireworks"
+import dynamic from "next/dynamic"
 import Link from "next/link"
+
+// Animations décoratives : code-split pour ne pas bloquer le LCP du H1 hero.
+// ssr:false → pas de SSR sur du canvas/animation purement client.
+const AntConfetti  = dynamic(() => import("./AntConfetti"),  { ssr: false, loading: () => null })
+const AntFireworks = dynamic(() => import("./AntFireworks"), { ssr: false, loading: () => null })
 
 type WordDef = { text: string; color: string }
 
