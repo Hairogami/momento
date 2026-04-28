@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { useFullscreenModal } from "@/components/dashboard/FullscreenModalContext"
+import { useTheme } from "@/components/ThemeProvider"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -56,10 +57,13 @@ export interface MobileDashNavProps {
 export default function MobileDashNav({ messageUnread = 0, events = [], activeEventId, onEventChange }: MobileDashNavProps) {
   const pathname = usePathname()
   const { active: fullscreenActive } = useFullscreenModal()
+  const { resolved, toggleTheme } = useTheme()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [dragY, setDragY] = useState(0)
   const touchStartY = useRef<number | null>(null)
+  const drawerRef = useRef<HTMLDivElement | null>(null)
+  const dragEnabledRef = useRef<boolean>(false)
 
   // Portal cible = document.body (évite containing-block parent qui casse position:fixed sur iOS)
   useEffect(() => { setMounted(true) }, [])
@@ -83,18 +87,34 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
     return () => { document.body.style.overflow = prev }
   }, [drawerOpen])
 
+  // Comportement 2 étages (style Chrome bottom sheet) :
+  // - Si drawer scrollé (scrollTop > 0) → swipe-down ne ferme PAS, scroll natif.
+  // - Si drawer au top (scrollTop === 0) ET swipe-down → drag fermeture activé.
   function handleTouchStart(e: React.TouchEvent) {
     touchStartY.current = e.touches[0].clientY
+    dragEnabledRef.current = (drawerRef.current?.scrollTop ?? 0) <= 0
   }
   function handleTouchMove(e: React.TouchEvent) {
     if (touchStartY.current == null) return
     const delta = e.touches[0].clientY - touchStartY.current
+    if (!dragEnabledRef.current) {
+      // Le drawer est en cours de scroll interne — re-vérifier scroll position
+      // pour ne pas re-engager le drag accidentellement
+      if ((drawerRef.current?.scrollTop ?? 0) <= 0 && delta > 0) {
+        // L'user a scrollé jusqu'au top et continue à swipe-down → activer drag
+        dragEnabledRef.current = true
+        touchStartY.current = e.touches[0].clientY
+        setDragY(0)
+      }
+      return
+    }
     if (delta > 0) setDragY(delta)
   }
   function handleTouchEnd() {
-    if (dragY > 80) setDrawerOpen(false)
+    if (dragEnabledRef.current && dragY > 80) setDrawerOpen(false)
     else setDragY(0)
     touchStartY.current = null
+    dragEnabledRef.current = false
   }
 
   if (!mounted) return null
@@ -176,6 +196,7 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
         aria-hidden="true"
       />
       <div
+        ref={drawerRef}
         role="dialog"
         aria-modal="true"
         aria-hidden={!drawerOpen}
@@ -196,10 +217,26 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
       >
         <div style={{ width: 36, height: 4, borderRadius: 99, background: "var(--dash-border,rgba(183,191,217,0.4))", margin: "0 auto 20px", touchAction: "none" }} />
 
-            {/* Event switcher (header) — visible si events fournis */}
+            {/* Event switcher (header) + toggle theme — visible si events fournis */}
             {events.length > 0 && onEventChange && (
               <div style={{ padding: "0 20px 14px", borderBottom: "1px solid var(--dash-divider,rgba(183,191,217,0.10))", marginBottom: 14 }}>
-                <p style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Mes événements</p>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "0 0 8px" }}>
+                  <p style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Mes événements</p>
+                  <button
+                    type="button"
+                    onClick={toggleTheme}
+                    aria-label={resolved === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
+                    style={{
+                      width: 32, height: 32, borderRadius: 8,
+                      background: "var(--dash-faint,rgba(183,191,217,0.08))",
+                      border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+                      cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                      fontFamily: "inherit", flexShrink: 0,
+                    }}
+                  >
+                    <GIcon name={resolved === "dark" ? "light_mode" : "dark_mode"} size={16} color="var(--dash-text-2,#6a6a71)" />
+                  </button>
+                </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   {events.map(e => {
                     const active = e.id === activeEventId

@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useEffect } from "react"
+import { ReactNode } from "react"
 import DashSidebar from "@/components/clone/dashboard/DashSidebar"
 import MobileDashNav from "@/components/clone/dashboard/MobileDashNav"
 
@@ -42,15 +42,6 @@ export default function DashboardShell({
   children,
   noBottomPadding = false,
 }: DashboardShellProps) {
-  // Padding-bottom mobile sur <body> — la solution la plus déterministe pour
-  // que la bottom nav fixe (MobileDashNav) ne recouvre jamais le contenu,
-  // quel que soit le navigateur, le layout interne ou les containers de scroll.
-  useEffect(() => {
-    if (noBottomPadding) return
-    document.body.classList.add("has-mobile-bottom-nav")
-    return () => document.body.classList.remove("has-mobile-bottom-nav")
-  }, [noBottomPadding])
-
   return (
     <div
       style={{
@@ -70,18 +61,12 @@ export default function DashboardShell({
         />
       </div>
 
-      {/* Main content */}
-      <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+      {/* Main content — padding-bottom mobile via class CSS native (cf. globals.css) */}
+      <main
+        className={noBottomPadding ? undefined : "dashboard-shell-main"}
+        style={{ flex: 1, minWidth: 0 }}
+      >
         {children}
-        {/* Spacer mobile : garantit ~84px d'espace sous le contenu pour la bottom nav fixe (64px + safe-area).
-            Déterministe quel que soit le layout interne — pas de dépendance au padding parent / flex. */}
-        {!noBottomPadding && (
-          <div
-            aria-hidden="true"
-            className="lg:hidden"
-            style={{ flexShrink: 0, height: "calc(64px + env(safe-area-inset-bottom) + 16px)" }}
-          />
-        )}
       </main>
 
       {/* Mobile bottom nav — auto-portal vers body, auto-hide ≥1024px via lg:!hidden */}
