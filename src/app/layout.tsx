@@ -48,6 +48,7 @@ export const metadata: Metadata = {
     icon: "/favicon-momento.png",
     apple: "/favicon-momento.png",
   },
+  manifest: "/manifest.json",
   openGraph: {
     title: "Momento — Prestataires événementiels au Maroc",
     description: "Trouvez et réservez les meilleurs DJ, traiteurs, photographes pour votre événement au Maroc.",
@@ -76,6 +77,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: "cover", // CRITICAL pour iOS notch / safe-area-inset-*
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f7f7fb" },
     { media: "(prefers-color-scheme: dark)",  color: "#0d0e14" },

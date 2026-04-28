@@ -1,0 +1,14 @@
+{
+  "name": "Momento",
+  "short_name": "Momento",
+  "description": "L'événementiel sans le chaos — marketplace au Maroc",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1014",
+  "theme_color": "#E11D48",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
