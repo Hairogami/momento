@@ -4,8 +4,6 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 import { signOut, useSession } from "next-auth/react"
 import { useTheme } from "@/components/ThemeProvider"
-import { useIsMobile } from "@/hooks/useIsMobile"
-import MobileDashNav from "./MobileDashNav"
 import CreateEventModal from "./CreateEventModal"
 import ProUpgradeModal from "@/components/ProUpgradeModal"
 import { usePlan } from "@/hooks/usePlan"
@@ -120,11 +118,6 @@ export default function DashSidebar({ events, activeEventId, onEventChange, firs
   const [menuOpen,  setMenuOpen]  = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const activeEvent = events.find(e => e.id === activeEventId) ?? events[0]
-  const isMobile = useIsMobile()
-
-  if (isMobile) {
-    return <MobileDashNav messageUnread={messageUnread} />
-  }
 
   // Fermer le menu sur clic extérieur
   useEffect(() => {
