@@ -614,22 +614,27 @@ export default function ExploreClient({ initialVendors, totalCount }: {
         {/* Grid */}
         {visible.length > 0 ? (
           <>
+            {/* content-visibility: auto défère le rendu des cards hors viewport
+                — gain perf significatif sur mobile avec >100 cards visibles.
+                contain-intrinsic-size évite les sauts de scroll. */}
+            <style>{`.explore-vcard-wrap { content-visibility: auto; contain-intrinsic-size: 360px; }`}</style>
             <div style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))",
               gap: 20,
             }}>
               {visible.map(v => (
-                <AntVendorCard
-                  key={v.id}
-                  id={v.id}
-                  name={v.name}
-                  category={v.category}
-                  city={v.city}
-                  rating={v.rating}
-                  photo={v.photo}
-                  onGatedClick={isAuthenticated ? undefined : handleGatedVendorClick}
-                />
+                <div key={v.id} className="explore-vcard-wrap">
+                  <AntVendorCard
+                    id={v.id}
+                    name={v.name}
+                    category={v.category}
+                    city={v.city}
+                    rating={v.rating}
+                    photo={v.photo}
+                    onGatedClick={isAuthenticated ? undefined : handleGatedVendorClick}
+                  />
+                </div>
               ))}
             </div>
 

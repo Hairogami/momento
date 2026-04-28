@@ -29,9 +29,19 @@ export default function VendorTopBar({ email }: { email: string | null }) {
         </Link>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 0, flexShrink: 1 }}>
         {email && (
-          <span style={{ fontSize: "var(--text-xs)", color: "#9aa0ad" }}>{email}</span>
+          <span
+            className="hidden sm:inline-block"
+            style={{
+              fontSize: "var(--text-xs)", color: "#9aa0ad",
+              maxWidth: 200, overflow: "hidden",
+              textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}
+            title={email}
+          >
+            {email}
+          </span>
         )}
         <Link
           href="/"
@@ -41,6 +51,7 @@ export default function VendorTopBar({ email }: { email: string | null }) {
             padding: "6px 10px",
             borderRadius: 6,
             border: "1px solid #1f2430",
+            whiteSpace: "nowrap", flexShrink: 0,
           }}
         >
           ← Retour au site

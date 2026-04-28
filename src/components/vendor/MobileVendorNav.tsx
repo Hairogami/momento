@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 
 const G = "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))"
 
@@ -36,6 +37,23 @@ export default function MobileVendorNav() {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [messageUnread, setMessageUnread] = useState<number>(0)
+  const [mounted, setMounted] = useState(false)
+
+  // createPortal ne fonctionne qu'après mount côté client (SSR-safe)
+  useEffect(() => { setMounted(true) }, [])
+
+  // Lock body scroll quand le drawer mobile est ouvert + Escape pour fermer
+  useEffect(() => {
+    if (!drawerOpen || typeof document === "undefined") return
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setDrawerOpen(false) }
+    window.addEventListener("keydown", onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      window.removeEventListener("keydown", onKey)
+      document.body.style.overflow = prev
+    }
+  }, [drawerOpen])
 
   useEffect(() => {
     let cancelled = false
@@ -72,7 +90,12 @@ export default function MobileVendorNav() {
     }
   }, [])
 
-  return (
+  // Portal vers document.body pour éviter les containing-block parents
+  // (transform/filter sur layout) qui cassent position:fixed sur iOS Safari.
+  // Pattern aligné sur MobileDashNav.
+  if (!mounted || typeof document === "undefined") return null
+
+  const navTree = (
     <>
       <nav style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
@@ -144,4 +167,6 @@ export default function MobileVendorNav() {
       )}
     </>
   )
+
+  return createPortal(navTree, document.body)
 }
