@@ -842,13 +842,16 @@ summary:focus-visible {
 
 /* DashboardShell — padding-bottom natif sur le <main> du shell mobile-only.
    Garantit que la bottom nav fixe (MobileDashNav, 64px + safe-area) ne
-   recouvre jamais le dernier widget. Class CSS native (pas Tailwind) pour
-   éviter les surprises de purge. Buffer 100px = 64 nav + 36 marge visuelle. */
+   recouvre jamais le dernier widget — même quand l'URL bar Chrome
+   collapse au scroll down (visual viewport change → padding doit absorber).
+
+   Utilise max() pour garantir AU MOINS 120px de buffer, et + env() pour
+   l'iPhone home indicator si présent. Buffer généreux = 64 nav + 56 marge. */
 .dashboard-shell-main {
   padding-bottom: 0;
 }
 @media (max-width: 1023px) {
   .dashboard-shell-main {
-    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    padding-bottom: max(120px, calc(96px + env(safe-area-inset-bottom)));
   }
 }
