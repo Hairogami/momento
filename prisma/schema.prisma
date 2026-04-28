@@ -165,20 +165,23 @@ model Task {
 
 model BudgetItem {
   id          String   @id @default(cuid())
-  workspaceId String
+  workspaceId String?
   category    String
   label       String
   estimated   Float
   actual      Float?
   paid        Boolean  @default(false)
   vendorId    String?
-  plannerId   String?
+  plannerId   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  vendor    Vendor?   @relation(fields: [vendorId], references: [id])
-  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  vendor    Vendor?    @relation(fields: [vendorId], references: [id])
+  planner   Planner    @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+
+  @@index([plannerId])
+  @@index([vendorId])
 }
 
 model Guest {

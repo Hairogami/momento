@@ -852,7 +852,7 @@ export default function DashboardClient({
           case "plantable":    return <PlanTableWidget guests={guests} />
           case "rsvplive":     return <RSVPLiveWidget rsvpStats={dashboardData?.rsvpStats} />
           case "regimes":      return <RegimesWidget guests={guests} />
-          case "depenses":     return <DepensesRecentesWidget budgetItems={recentExpenses} />
+          case "depenses":     return <DepensesRecentesWidget budgetItems={recentExpenses} plannerId={activeEventId} />
           case "epargne":      return <ObjectifEpargneWidget budget={edata.budget} budgetSpent={edata.budgetSpent} eventDate={event.date} />
           case "repartition":  return <RepartitionBudgetWidget budgetItems={budgetItems} />
           case "contrats":     return <ContratsWidget bookings={bookings} />

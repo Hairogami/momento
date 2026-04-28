@@ -40,7 +40,18 @@ export const BudgetItemPatchSchema = z.object({
   actual: z.number().nonnegative().finite().nullable().optional(),
   estimated: z.number().nonnegative().finite().optional(),
   label: z.string().min(1).max(200).optional(),
+  category: z.string().min(1).max(50).optional(),
   paid: z.boolean().optional(),
+  vendorId: z.string().nullable().optional(),
+})
+
+export const BudgetItemCreateSchema = z.object({
+  label: z.string().min(1).max(200),
+  category: z.string().min(1).max(50),
+  estimated: z.number().nonnegative().finite(),
+  actual: z.number().nonnegative().finite().nullable().optional(),
+  paid: z.boolean().optional(),
+  vendorId: z.string().nullable().optional(),
 })
 
 // ── Planner ──────────────────────────────────────────────────────────────────

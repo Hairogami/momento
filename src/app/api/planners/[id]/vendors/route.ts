@@ -28,6 +28,7 @@ export async function GET(
     include: {
       vendor: {
         select: {
+          id: true,
           slug: true,
           name: true,
           category: true,
