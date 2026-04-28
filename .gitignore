@@ -74,3 +74,21 @@ explore-*.png
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Local audit/QA screenshots (root) — not prod assets
+/audit-*.jpeg
+/audit-*.jpg
+/.claude/qa-screenshots/
+
+# Local backups
+*.bak
+*.backup
+
+# Dev cookies/sessions exports
+/cookies.txt
+
+# Worktrees & local-only planning
+/.claude/worktrees/
+/.planning/RESPONSIVE-WORK-IN-PROGRESS.md
+/.planning/SECURITY-AUDIT-*.md
+/DASHBOARD-AUDIT.md
