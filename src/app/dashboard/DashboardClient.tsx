@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import AntNav from "@/components/clone/AntNav"
 import { useTheme } from "@/components/ThemeProvider"
 import DashboardShell from "@/components/dashboard/DashboardShell"
+import { useIsMobile } from "@/hooks/useIsMobile"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import type { BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
 import { getEventLabel } from "@/lib/eventLabel"
@@ -167,6 +168,7 @@ function WidgetCard({
   onResize, onResizeRow, onRemove, removable,
   dragging, dropTarget,
   onDragStart, onDragOver, onDrop, onDragEnd, onDragLeave,
+  isTouch, canMoveUp, canMoveDown, onMoveUp, onMoveDown,
   children,
 }: {
   id: string; title: string; href?: string
@@ -177,6 +179,12 @@ function WidgetCard({
   dragging: boolean; dropTarget: boolean
   onDragStart: () => void; onDragOver: (e: React.DragEvent) => void
   onDrop: () => void; onDragEnd: () => void; onDragLeave: () => void
+  /** Mode tactile : remplace HTML5 drag-and-drop par les boutons Monter/Descendre. */
+  isTouch?: boolean
+  canMoveUp?: boolean
+  canMoveDown?: boolean
+  onMoveUp?: () => void
+  onMoveDown?: () => void
   children: React.ReactNode
 }) {
   const [hovered, setHovered] = useState(false)
@@ -242,12 +250,12 @@ function WidgetCard({
   return (
     <div
       ref={cardRef}
-      draggable
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
-      onDragEnd={onDragEnd}
-      onDragLeave={onDragLeave}
+      draggable={!isTouch}
+      onDragStart={isTouch ? undefined : onDragStart}
+      onDragOver={isTouch ? undefined : onDragOver}
+      onDrop={isTouch ? undefined : onDrop}
+      onDragEnd={isTouch ? undefined : onDragEnd}
+      onDragLeave={isTouch ? undefined : onDragLeave}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -272,20 +280,38 @@ function WidgetCard({
         transition: snapped
           ? "transform 0.14s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.14s ease, border-color 0.14s ease"
           : "opacity 0.15s, box-shadow 0.15s, transform 0.18s, border-color 0.15s",
-        cursor:   dragging ? "grabbing" : "grab",
+        cursor:   isTouch ? "default" : dragging ? "grabbing" : "grab",
         position: "relative", display: "flex", flexDirection: "column",
         overflow: "visible", minHeight: 0,
       }}
       className="clone-surface"
     >
-      {/* Overlay actions — visible on hover only */}
-      {(removable || href) && (
-        <div style={{ position: "absolute", top: 8, right: 8, zIndex: 5, display: "flex", gap: 4, opacity: hovered ? 1 : 0, transition: "opacity 0.15s" }}>
+      {/* Overlay actions — visible on hover only (toujours visibles en mode tactile) */}
+      {(removable || href || isTouch) && (
+        <div style={{ position: "absolute", top: 8, right: 8, zIndex: 5, display: "flex", gap: 4, opacity: isTouch || hovered ? 1 : 0, transition: "opacity 0.15s" }}>
+          {isTouch && onMoveUp && (
+            <button
+              type="button"
+              aria-label={`Monter ${title}`}
+              disabled={!canMoveUp}
+              onClick={e => { e.preventDefault(); e.stopPropagation(); onMoveUp() }}
+              style={{ width: 36, height: 36, borderRadius: 8, background: "var(--dash-faint-2,rgba(183,191,217,0.18))", border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", cursor: canMoveUp ? "pointer" : "not-allowed", opacity: canMoveUp ? 1 : 0.4, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#6a6a71)", touchAction: "manipulation" }}
+            ><GIcon name="arrow_upward" size={16} /></button>
+          )}
+          {isTouch && onMoveDown && (
+            <button
+              type="button"
+              aria-label={`Descendre ${title}`}
+              disabled={!canMoveDown}
+              onClick={e => { e.preventDefault(); e.stopPropagation(); onMoveDown() }}
+              style={{ width: 36, height: 36, borderRadius: 8, background: "var(--dash-faint-2,rgba(183,191,217,0.18))", border: "1px solid var(--dash-border,rgba(183,191,217,0.25))", cursor: canMoveDown ? "pointer" : "not-allowed", opacity: canMoveDown ? 1 : 0.4, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-2,#6a6a71)", touchAction: "manipulation" }}
+            ><GIcon name="arrow_downward" size={16} /></button>
+          )}
           {href && (
             <Link href={href} onClick={e => e.stopPropagation()}
               aria-label={`Ouvrir ${title}`}
-              style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: 6, background: "rgba(183,191,217,0.15)", color: "var(--dash-text-3,#9a9aaa)" }}>
-              <GIcon name="open_in_new" size={12} />
+              style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", width: isTouch ? 36 : 22, height: isTouch ? 36 : 22, borderRadius: isTouch ? 8 : 6, background: "rgba(183,191,217,0.15)", color: "var(--dash-text-3,#9a9aaa)" }}>
+              <GIcon name="open_in_new" size={isTouch ? 16 : 12} />
             </Link>
           )}
           {removable && onRemove && (
@@ -293,8 +319,8 @@ function WidgetCard({
               type="button"
               aria-label={`Retirer le widget ${title}`}
               onMouseDown={e => { e.preventDefault(); e.stopPropagation(); onRemove(id) }}
-              style={{ width: 22, height: 22, borderRadius: 6, background: "rgba(183,191,217,0.15)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-3,#9a9aaa)" }}
-            ><GIcon name="close" size={10} /></button>
+              style={{ width: isTouch ? 36 : 22, height: isTouch ? 36 : 22, borderRadius: isTouch ? 8 : 6, background: "rgba(183,191,217,0.15)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--dash-text-3,#9a9aaa)", touchAction: "manipulation" }}
+            ><GIcon name="close" size={isTouch ? 16 : 10} /></button>
           )}
         </div>
       )}
@@ -471,6 +497,7 @@ export default function DashboardClient({
   initialActivePlannerId = null,
 }: DashboardClientProps) {
   const router = useRouter()
+  const isTouch = useIsMobile(900)
   const [showCreateModal, setShowCreateModal] = useState(false)
   // Active event — persisté en localStorage pour synchroniser toutes les pages
   const [events,        setEvents]        = useState<EventMeta[]>(() =>
@@ -628,6 +655,21 @@ export default function DashboardClient({
     setWidgetOrder(next); draggingId.current = null; setDropTarget(null); setIsDragging(false)
   }
   function onDragEnd() { draggingId.current = null; setDropTarget(null); setIsDragging(false) }
+
+  // Touch fallback : remplace HTML5 drag par boutons up/down (drag natif non
+  // supporté correctement sur iOS/Android). Préserve la même source de vérité.
+  function moveWidget(id: string, dir: -1 | 1) {
+    setWidgetOrder(prev => {
+      const idx = prev.indexOf(id)
+      if (idx < 0) return prev
+      const target = idx + dir
+      if (target < 0 || target >= prev.length) return prev
+      const next = [...prev]
+      const [moved] = next.splice(idx, 1)
+      next.splice(target, 0, moved!)
+      return next
+    })
+  }
 
   // ── Widget management ─────────────────────────────────────────────────────
   function onResize(id: string, size: WidgetSize) { setWidgetSizes(prev => ({ ...prev, [id]: size })) }
@@ -1083,7 +1125,7 @@ export default function DashboardClient({
 
         {/* Toolbar */}
         <div style={{ padding: "8px 24px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 6 }}>
-          <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#c9cad0)" }}>Glisser · Redimensionner (poignée bas-droite)</span>
+          <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#c9cad0)" }}>{isTouch ? "Boutons ↑ ↓ pour réorganiser · Pincer pour redimensionner" : "Glisser · Redimensionner (poignée bas-droite)"}</span>
           <div style={{ display: "flex", gap: 6 }}>
             <button type="button" onClick={() => setTheme(darkMode ? "light" : "dark")} title={darkMode ? "Mode clair" : "Mode sombre"}
               aria-label={darkMode ? "Activer le mode clair" : "Activer le mode sombre"}
@@ -1112,7 +1154,7 @@ export default function DashboardClient({
         {/* Widget grid */}
         <div style={{ padding: "12px 24px 64px", flex: 1 }}>
           <div className="dash-widget-grid" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 14, gridAutoRows: "minmax(220px, auto)" }}>
-            {widgetOrder.map(id => {
+            {widgetOrder.map((id, idx) => {
               const meta = getWidgetMeta(id)
               if (!meta) return null
               const size   = (widgetSizes[id] ?? 1) as WidgetSize
@@ -1125,6 +1167,11 @@ export default function DashboardClient({
                   onDragStart={() => onDragStart(id)} onDragOver={e => onDragOver(e, id)}
                   onDrop={() => onDrop(id)} onDragEnd={onDragEnd}
                   onDragLeave={() => { if (dropTarget === id) setDropTarget(null) }}
+                  isTouch={isTouch}
+                  canMoveUp={idx > 0}
+                  canMoveDown={idx < widgetOrder.length - 1}
+                  onMoveUp={() => moveWidget(id, -1)}
+                  onMoveDown={() => moveWidget(id, 1)}
                 >
                   {renderWidgetContent(id)}
                 </WidgetCard>
