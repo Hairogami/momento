@@ -344,6 +344,7 @@ export default function AntNav({
             {!hideDarkToggle && <button onClick={() => setTheme(dark ? "light" : "dark")}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
               style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}
+              aria-label={dark ? "Passer en mode clair" : "Passer en mode sombre"}
               title={dark ? "Mode clair" : "Mode sombre"}>
               <GsIcon icon={dark ? "light_mode" : "dark_mode"} size={15} color={text} />
             </button>}
@@ -353,6 +354,9 @@ export default function AntNav({
               <button onClick={() => setPaletteOpen(o => !o)}
                 className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
                 style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}
+                aria-label="Choisir une palette de couleurs"
+                aria-expanded={paletteOpen}
+                aria-haspopup="menu"
                 title="Palette de couleurs">
                 <GsIcon icon="palette" size={15} color={text} />
               </button>
@@ -375,7 +379,11 @@ export default function AntNav({
             {/* Hamburger — mobile */}
             <button onClick={() => setMenuOpen(o => !o)}
               className="md:hidden w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}>
+              style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)" }}
+              aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-expanded={menuOpen}
+              aria-controls="ant-mobile-menu"
+              aria-haspopup="menu">
               <GsIcon icon={menuOpen ? "close" : "menu"} size={16} color={text} />
             </button>
 
@@ -403,6 +411,9 @@ export default function AntNav({
               /* Avatar + dropdown */
               <div ref={profileRef} className="relative hidden md:block">
                 <button onClick={() => setProfileOpen(o => !o)}
+                  aria-label="Menu de mon compte"
+                  aria-expanded={profileOpen}
+                  aria-haspopup="menu"
                   style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 10px 4px 4px", borderRadius: 999, background: dark ? "rgba(255,255,255,0.08)" : "rgba(183,191,217,0.12)", border: dark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(183,191,217,0.22)", cursor: "pointer" }}>
                   <Avatar name={session.user?.name} image={session.user?.image} size={24} />
                   <span style={{ fontSize: "var(--text-xs)", fontWeight: 500, color: text, maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -467,6 +478,7 @@ export default function AntNav({
       {/* Mobile menu — full-screen sheet avec backdrop (md:hidden) */}
       {menuOpen && (
         <div
+          id="ant-mobile-menu"
           className="md:hidden"
           role="dialog"
           aria-modal="true"

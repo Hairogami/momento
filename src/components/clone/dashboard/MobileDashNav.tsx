@@ -137,7 +137,10 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
         {PRIMARY_ITEMS.map(item => {
           const active = pathname === item.href
           return (
-            <Link key={item.href} href={item.href} style={{
+            <Link key={item.href} href={item.href}
+              aria-current={active ? "page" : undefined}
+              aria-label={item.href === "/messages" && messageUnread > 0 ? `${item.label} (${messageUnread} non lus)` : undefined}
+              style={{
               flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
               justifyContent: "center", gap: 3, textDecoration: "none",
               position: "relative",
@@ -176,7 +179,10 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
           flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
           justifyContent: "center", gap: 3, background: "none", border: "none",
           cursor: "pointer", fontFamily: "inherit",
-        }} aria-label="Ouvrir le menu de navigation">
+        }}
+          aria-label="Ouvrir le menu de navigation"
+          aria-expanded={drawerOpen}
+          aria-haspopup="dialog">
           <GIcon name="menu" size={22} color="var(--dash-text-3,#9a9aaa)" />
           <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Menu</span>
         </button>
@@ -266,7 +272,9 @@ export default function MobileDashNav({ messageUnread = 0, events = [], activeEv
             {ALL_ITEMS.map(item => {
               const active = pathname === item.href
               return (
-                <Link key={item.href} href={item.href} onClick={() => setDrawerOpen(false)} style={{
+                <Link key={item.href} href={item.href} onClick={() => setDrawerOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  style={{
                   display: "flex", alignItems: "center", gap: 14,
                   padding: "13px 24px", textDecoration: "none",
                   background: active ? "linear-gradient(135deg,rgba(225,29,72,0.07),rgba(147,51,234,0.05))" : "transparent",
