@@ -45,8 +45,27 @@ export default function MessageThread({ conversationId, currentUserId }: Message
 
   useEffect(() => {
     fetchMessages()
-    const interval = setInterval(fetchMessages, 5000)
-    return () => clearInterval(interval)
+    // Polling visibility-aware : pause quand l'onglet est caché.
+    let id: ReturnType<typeof setInterval> | null = null
+    function startPolling() {
+      if (id) clearInterval(id)
+      if (typeof document !== "undefined" && document.visibilityState !== "visible") { id = null; return }
+      id = setInterval(fetchMessages, 5000)
+    }
+    function onVisibility() {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        fetchMessages()
+        startPolling()
+      } else {
+        if (id) { clearInterval(id); id = null }
+      }
+    }
+    startPolling()
+    if (typeof document !== "undefined") document.addEventListener("visibilitychange", onVisibility)
+    return () => {
+      if (id) clearInterval(id)
+      if (typeof document !== "undefined") document.removeEventListener("visibilitychange", onVisibility)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId])
 

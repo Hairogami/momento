@@ -67,8 +67,27 @@ export default function VendorMessagesClient() {
 
   useEffect(() => {
     fetchConvs().finally(() => setLoadC(false))
-    const id = setInterval(fetchConvs, 30000)
-    return () => clearInterval(id)
+    // Liste convs : 30s, pause quand l'onglet est caché.
+    let id: ReturnType<typeof setInterval> | null = null
+    function startPolling() {
+      if (id) clearInterval(id)
+      if (typeof document !== "undefined" && document.visibilityState !== "visible") { id = null; return }
+      id = setInterval(fetchConvs, 30000)
+    }
+    function onVisibility() {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        fetchConvs()
+        startPolling()
+      } else {
+        if (id) { clearInterval(id); id = null }
+      }
+    }
+    startPolling()
+    if (typeof document !== "undefined") document.addEventListener("visibilitychange", onVisibility)
+    return () => {
+      if (id) clearInterval(id)
+      if (typeof document !== "undefined") document.removeEventListener("visibilitychange", onVisibility)
+    }
   }, [fetchConvs])
 
   const fetchMsgs = useCallback(async (id: string) => {
@@ -87,8 +106,27 @@ export default function VendorMessagesClient() {
       // pour qu'elle re-fetch /api/unread immédiatement (sans attendre 30s).
       try { window.dispatchEvent(new CustomEvent("momento-unread-changed")) } catch {}
     })
-    pollRef.current = setInterval(() => fetchMsgs(active), 5000)
-    return () => { if (pollRef.current) clearInterval(pollRef.current) }
+
+    // Polling messages actifs : 5s, pause quand l'onglet est caché.
+    function startPolling() {
+      if (pollRef.current) clearInterval(pollRef.current)
+      if (typeof document !== "undefined" && document.visibilityState !== "visible") { pollRef.current = null; return }
+      pollRef.current = setInterval(() => fetchMsgs(active!), 5000)
+    }
+    function onVisibility() {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        fetchMsgs(active!)
+        startPolling()
+      } else {
+        if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
+      }
+    }
+    startPolling()
+    if (typeof document !== "undefined") document.addEventListener("visibilitychange", onVisibility)
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current)
+      if (typeof document !== "undefined") document.removeEventListener("visibilitychange", onVisibility)
+    }
   }, [active, fetchMsgs])
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }) }, [msgs])

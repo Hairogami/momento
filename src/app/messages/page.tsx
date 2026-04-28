@@ -102,8 +102,29 @@ export default function CloneMessagesPage() {
       // pour qu'elle re-fetch /api/unread immédiatement (sans attendre 30s).
       try { window.dispatchEvent(new CustomEvent("momento-unread-changed")) } catch {}
     })
-    pollRef.current = setInterval(() => fetchMsgs(active), 5000)
-    return () => { if (pollRef.current) clearInterval(pollRef.current) }
+
+    // Polling visibility-aware : 5s actif, pause quand l'onglet est caché.
+    // Économie batterie mobile + serveur quand l'app est en arrière-plan.
+    function startPolling() {
+      if (pollRef.current) clearInterval(pollRef.current)
+      if (typeof document !== "undefined" && document.visibilityState !== "visible") return
+      pollRef.current = setInterval(() => fetchMsgs(active!), 5000)
+    }
+    function onVisibility() {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        // Refresh immédiat au retour de visibilité (perçu temps réel)
+        fetchMsgs(active!)
+        startPolling()
+      } else {
+        if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
+      }
+    }
+    startPolling()
+    if (typeof document !== "undefined") document.addEventListener("visibilitychange", onVisibility)
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current)
+      if (typeof document !== "undefined") document.removeEventListener("visibilitychange", onVisibility)
+    }
   }, [active, fetchMsgs])
 
   // Auto-scroll
