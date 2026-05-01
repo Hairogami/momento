@@ -18,8 +18,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!parsed.success)
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Données invalides." }, { status: 400 })
 
-  const guest = await prisma.guest.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
-  if (!guest || guest.workspace.userId !== userId)
+  const guest = await prisma.guest.findUnique({ where: { id }, select: { userId: true } })
+  if (!guest || guest.userId !== userId)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const updated = await prisma.guest.update({ where: { id }, data: parsed.data })
@@ -32,8 +32,8 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const userId = await getUserId()
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const guest = await prisma.guest.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
-  if (!guest || guest.workspace.userId !== userId)
+  const guest = await prisma.guest.findUnique({ where: { id }, select: { userId: true } })
+  if (!guest || guest.userId !== userId)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   await prisma.guest.delete({ where: { id } })

@@ -2,33 +2,31 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
-// GET /api/workspace — get current user's workspace
+// GET /api/workspace — compat shim: returns primary planner data in workspace shape
 export async function GET() {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
 
-  const workspace = await prisma.workspace.findUnique({
+  const planner = await prisma.planner.findFirst({
     where: { userId: session.user.id },
-    select: {
-      id: true,
-      eventName: true,
-      eventDate: true,
-      budget: true,
-      guestCount: true,
-      location: true,
-      neededCategories: true,
-    },
+    select: { id: true, title: true, weddingDate: true, budget: true, guestCount: true, location: true },
+    orderBy: { createdAt: "asc" },
   })
 
-  if (!workspace) return NextResponse.json({ error: "Workspace introuvable." }, { status: 404 })
+  if (!planner) return NextResponse.json({ error: "Aucun planner trouvé." }, { status: 404 })
 
   return NextResponse.json({
-    ...workspace,
-    eventDate: workspace.eventDate?.toISOString() ?? null,
+    id: planner.id,
+    eventName: planner.title,
+    eventDate: planner.weddingDate?.toISOString() ?? null,
+    budget: planner.budget,
+    guestCount: planner.guestCount,
+    location: planner.location,
+    neededCategories: "[]",
   })
 }
 
-// PATCH /api/workspace — update workspace details
+// PATCH /api/workspace — compat shim: updates primary planner
 export async function PATCH(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: "Non authentifié." }, { status: 401 })
@@ -38,75 +36,60 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
   }
 
-  const workspace = await prisma.workspace.findUnique({
+  const planner = await prisma.planner.findFirst({
     where: { userId: session.user.id },
     select: { id: true },
+    orderBy: { createdAt: "asc" },
   })
-  if (!workspace) return NextResponse.json({ error: "Workspace introuvable." }, { status: 404 })
+  if (!planner) return NextResponse.json({ error: "Aucun planner trouvé." }, { status: 404 })
 
   const updates: {
-    eventName?: string
-    eventDate?: Date | null
+    title?: string
+    weddingDate?: Date | null
     budget?: number | null
     guestCount?: number | null
     location?: string | null
-    neededCategories?: string
   } = {}
 
   if ("eventName" in body && typeof body.eventName === "string") {
-    updates.eventName = body.eventName.trim().slice(0, 200) || "Mon événement"
+    updates.title = body.eventName.trim().slice(0, 200) || "Mon événement"
   }
   if ("eventDate" in body) {
     if (body.eventDate === null) {
-      updates.eventDate = null
+      updates.weddingDate = null
     } else if (typeof body.eventDate === "string" && body.eventDate) {
       const d = new Date(body.eventDate)
-      if (!isNaN(d.getTime())) updates.eventDate = d
+      if (!isNaN(d.getTime())) updates.weddingDate = d
     }
   }
   if ("budget" in body) {
-    // CR-004: cap at 1 billion to prevent DB/frontend overflow
     updates.budget = typeof body.budget === "number" && body.budget > 0 && body.budget <= 1_000_000_000
-      ? body.budget
-      : null
+      ? body.budget : null
   }
   if ("guestCount" in body) {
-    // CR-004: cap at 100,000 to prevent DB/frontend overflow
     updates.guestCount = typeof body.guestCount === "number" && body.guestCount > 0 && body.guestCount <= 100_000
-      ? Math.floor(body.guestCount)
-      : null
+      ? Math.floor(body.guestCount) : null
   }
   if ("location" in body && typeof body.location === "string") {
     updates.location = body.location.trim().slice(0, 200) || null
-  }
-  // CR-04: Validate each element of neededCategories — no arbitrary values or oversized strings
-  if ("neededCategories" in body && Array.isArray(body.neededCategories)) {
-    const cats = (body.neededCategories as unknown[])
-      .filter((c): c is string => typeof c === "string")
-      .map(c => c.trim().slice(0, 100))
-      .slice(0, 50)
-    updates.neededCategories = JSON.stringify(cats)
   }
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: "Aucun champ à mettre à jour." }, { status: 400 })
   }
 
-  const updated = await prisma.workspace.update({
-    where: { id: workspace.id },
+  const updated = await prisma.planner.update({
+    where: { id: planner.id },
     data: updates,
-    select: {
-      id: true,
-      eventName: true,
-      eventDate: true,
-      budget: true,
-      guestCount: true,
-      location: true,
-    },
+    select: { id: true, title: true, weddingDate: true, budget: true, guestCount: true, location: true },
   })
 
   return NextResponse.json({
-    ...updated,
-    eventDate: updated.eventDate?.toISOString() ?? null,
+    id: updated.id,
+    eventName: updated.title,
+    eventDate: updated.weddingDate?.toISOString() ?? null,
+    budget: updated.budget,
+    guestCount: updated.guestCount,
+    location: updated.location,
   })
 }

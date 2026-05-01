@@ -1,37 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { dedupRsvps } from "@/lib/rsvpDedup"
-
-const CATEGORY_COLORS: Record<string, string> = {
-  lieu: "#E11D48", // brand --g1
-  traiteur: "#D4733A",
-  photo: "#A03820",
-  musique: "#E08050",
-  deco: "#B84830",
-  fleurs: "#CC6040",
-  robe: "#F09060",
-  autre: "#8C6A5A",
-}
-
-const CATEGORY_ICONS: Record<string, string> = {
-  lieu: "place",
-  traiteur: "restaurant",
-  photo: "photo_camera",
-  musique: "music_note",
-  deco: "palette",
-  fleurs: "local_florist",
-  robe: "checkroom",
-  autre: "category",
-}
-
-function colorFor(category: string): string {
-  const k = category.toLowerCase().trim()
-  return CATEGORY_COLORS[k] ?? "#8C6A5A"
-}
-
-function iconFor(category: string): string {
-  const k = category.toLowerCase().trim()
-  return CATEGORY_ICONS[k] ?? "category"
-}
+import { getCategory } from "@/lib/budgetCategories"
 
 export type DashboardData = {
   guests: Array<{
@@ -200,8 +169,8 @@ export async function buildDashboardData(
     label: category.charAt(0).toUpperCase() + category.slice(1),
     allocated: v.allocated,
     spent: v.spent,
-    color: colorFor(category),
-    icon: iconFor(category),
+    color: getCategory(category).color,
+    icon: getCategory(category).icon,
   }))
 
   const totalSpent = budgetItems.reduce((s, b) => s + (b.actual ?? 0), 0)
@@ -212,13 +181,13 @@ export async function buildDashboardData(
   // garde son label spécifique, contrairement au budgetItems agrégé qui groupe
   // tout par catégorie pour le donut.
   const recentExpenses = budgetItems
-    .filter(b => (b.actual ?? 0) > 0)
+    .filter(b => (b.estimated ?? 0) > 0 || (b.actual ?? 0) > 0)
     .map(b => ({
       label: b.label,
       allocated: b.estimated,
       spent: b.actual ?? 0,
-      color: colorFor(b.category),
-      icon: iconFor(b.category),
+      color: getCategory(b.category).color,
+      icon: getCategory(b.category).icon,
     }))
 
   // Stats RSVP du site événement — dédup par email > phone > nom (cohérence

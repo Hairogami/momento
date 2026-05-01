@@ -36,7 +36,9 @@ model User {
 
   accounts            Account[]
   sessions            Session[]
-  workspace           Workspace?
+  tasks               Task[]
+  guests              Guest[]
+  bookings            Booking[]
   vendor              Vendor?
   vendorProfile       VendorProfile?
   planners            Planner[]
@@ -125,30 +127,9 @@ model EmailVerification {
   createdAt DateTime  @default(now())
 }
 
-// ─── WORKSPACE CLIENT (Notion-style) ─────────────────────────────────────────
-
-model Workspace {
-  id         String    @id @default(cuid())
-  userId     String    @unique
-  eventName  String    @default("Mon événement")
-  eventDate  DateTime?
-  location   String?
-  budget     Float?
-  guestCount        Int?
-  neededCategories  String    @default("")
-  createdAt         DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks       Task[]
-  budgetItems BudgetItem[]
-  guests      Guest[]
-  bookings    Booking[]
-}
-
 model Task {
   id          String    @id @default(cuid())
-  workspaceId String
+  userId      String?
   plannerId   String?
   title       String
   description String?
@@ -159,13 +140,12 @@ model Task {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  planner Planner? @relation(fields: [plannerId], references: [id], onDelete: SetNull)
 }
 
 model BudgetItem {
   id          String   @id @default(cuid())
-  workspaceId String?
   category    String
   label       String
   estimated   Float
@@ -176,7 +156,6 @@ model BudgetItem {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
   vendor    Vendor?    @relation(fields: [vendorId], references: [id])
   planner   Planner    @relation(fields: [plannerId], references: [id], onDelete: Cascade)
 
@@ -186,7 +165,7 @@ model BudgetItem {
 
 model Guest {
   id          String   @id @default(cuid())
-  workspaceId String
+  userId      String?
   plannerId   String?
   name        String
   email       String?
@@ -200,8 +179,8 @@ model Guest {
   linkedRsvpId String?
   createdAt   DateTime @default(now())
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  planner Planner? @relation(fields: [plannerId], references: [id], onDelete: SetNull)
 }
 
 // ─── ANNUAIRE PRESTATAIRES ────────────────────────────────────────────────────
@@ -329,7 +308,7 @@ model Package {
 
 model Booking {
   id          String    @id @default(cuid())
-  workspaceId String
+  userId      String?
   plannerId   String?
   vendorId    String
   packageId   String?
@@ -340,9 +319,9 @@ model Booking {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  planner   Planner?  @relation(fields: [plannerId], references: [id], onDelete: SetNull)
-  vendor    Vendor    @relation(fields: [vendorId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  planner Planner? @relation(fields: [plannerId], references: [id], onDelete: SetNull)
+  vendor  Vendor   @relation(fields: [vendorId], references: [id])
   package   Package?  @relation(fields: [packageId], references: [id])
 }
 

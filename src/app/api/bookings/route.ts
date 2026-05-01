@@ -5,7 +5,6 @@ import { z } from "zod";
 
 const CreateBookingSchema = z.object({
   vendorId:    z.string().min(1).max(100),
-  workspaceId: z.string().min(1).max(100),
   plannerId:   z.string().optional(),
   status:      z.enum(["inquiry", "interested", "confirmed", "cancelled"]).default("inquiry"),
 });
@@ -26,16 +25,8 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Données invalides.", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { vendorId, workspaceId, plannerId, status } = parsed.data;
-
-  // Vérifier que le workspace appartient à l'utilisateur
-  const workspace = await prisma.workspace.findUnique({
-    where: { id: workspaceId },
-    select: { userId: true },
-  });
-  if (!workspace || workspace.userId !== session.user.id) {
-    return Response.json({ error: "Workspace introuvable." }, { status: 403 });
-  }
+  const { vendorId, plannerId, status } = parsed.data;
+  const userId = session.user.id;
 
   // Vérifier que le vendor existe
   const vendor = await prisma.vendor.findUnique({
@@ -46,9 +37,9 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Prestataire introuvable." }, { status: 404 });
   }
 
-  // Éviter les doublons (même workspace + vendor)
+  // Éviter les doublons (même user + vendor)
   const existing = await prisma.booking.findFirst({
-    where: { workspaceId, vendorId },
+    where: { userId, vendorId },
     select: { id: true, status: true },
   });
   if (existing) {
@@ -57,7 +48,7 @@ export async function POST(req: NextRequest) {
 
   const booking = await prisma.booking.create({
     data: {
-      workspaceId,
+      userId,
       vendorId,
       plannerId: plannerId ?? null,
       status,
@@ -80,9 +71,9 @@ export async function DELETE(req: NextRequest) {
 
   const booking = await prisma.booking.findUnique({
     where: { id },
-    select: { workspace: { select: { userId: true } } },
+    select: { userId: true },
   });
-  if (!booking || booking.workspace.userId !== session.user.id) {
+  if (!booking || booking.userId !== session.user.id) {
     return Response.json({ error: "Non autorisé." }, { status: 403 });
   }
 

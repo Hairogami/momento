@@ -40,9 +40,6 @@ async function main() {
         },
       },
       vendor: { select: { id: true, slug: true, name: true } },
-      vendorProfile: { select: { id: true } },
-      workspace: { select: { id: true } },
-      settings: { select: { id: true } },
     },
   })
 
@@ -67,9 +64,6 @@ async function main() {
   for (const [k, v] of Object.entries(user._count)) {
     console.log(`  ${k.padEnd(22)} : ${v}`)
   }
-  console.log(`  workspace              : ${user.workspace ? "1" : "0"}`)
-  console.log(`  vendorProfile          : ${user.vendorProfile ? "1" : "0"}`)
-  console.log(`  settings               : ${user.settings ? "1" : "0"}`)
   console.log(`  vendor (lien)          : ${user.vendor ? `${user.vendor.slug} (${user.vendor.name})` : "0"}`)
 
   console.log("\n⚠️  GESTION SPÉCIALE :")

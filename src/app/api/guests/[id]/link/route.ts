@@ -19,9 +19,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
   const guest = await prisma.guest.findUnique({
     where: { id: guestId },
-    select: { workspace: { select: { userId: true } } },
+    select: { userId: true },
   })
-  if (!guest || guest.workspace.userId !== userId)
+  if (!guest || guest.userId !== userId)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const rsvp = await prisma.eventRsvp.findUnique({
@@ -48,9 +48,9 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
 
   const guest = await prisma.guest.findUnique({
     where: { id: guestId },
-    select: { workspace: { select: { userId: true } } },
+    select: { userId: true },
   })
-  if (!guest || guest.workspace.userId !== userId)
+  if (!guest || guest.userId !== userId)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const updated = await prisma.guest.update({

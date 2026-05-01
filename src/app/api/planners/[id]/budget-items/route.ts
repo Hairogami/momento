@@ -58,17 +58,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
   const data = parsed.data
 
-  // Note transition Workspace → Planner : le schema actuel a workspaceId required sur BudgetItem.
-  // On lookup le Workspace du user (1 par user) pour satisfaire cette contrainte.
-  // La phase 4.2 supprimera Workspace et rendra plannerId required.
-  const ws = await prisma.workspace.findUnique({ where: { userId }, select: { id: true } })
-  if (!ws) return NextResponse.json({ error: "Workspace introuvable." }, { status: 500 })
-  const workspaceId = ws.id
-
   const item = await prisma.budgetItem.create({
     data: {
       plannerId,
-      workspaceId,
       label: data.label,
       category: data.category,
       estimated: data.estimated,

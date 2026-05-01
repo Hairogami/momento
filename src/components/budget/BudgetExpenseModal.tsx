@@ -10,6 +10,7 @@ export interface BudgetExpenseValues {
   label: string
   category: string
   estimated: number
+  actual?: number | null
   vendorId?: string | null
   paid?: boolean
 }
@@ -51,6 +52,9 @@ export function BudgetExpenseModal({
   const [estimated, setEstimated] = useState(
     initialValues?.estimated != null ? String(initialValues.estimated) : ""
   )
+  const [actual, setActual] = useState(
+    initialValues?.actual != null ? String(initialValues.actual) : ""
+  )
   const [vendorId, setVendorId] = useState<string | null>(initialValues?.vendorId ?? null)
   const [error, setError] = useState<string | null>(null)
 
@@ -60,6 +64,7 @@ export function BudgetExpenseModal({
       setLabel(initialValues?.label ?? "")
       setCategory(initialValues?.category ?? "divers")
       setEstimated(initialValues?.estimated != null ? String(initialValues.estimated) : "")
+      setActual(initialValues?.actual != null ? String(initialValues.actual) : "")
       setVendorId(initialValues?.vendorId ?? null)
       setError(null)
     }
@@ -83,10 +88,12 @@ export function BudgetExpenseModal({
       setError("Le montant doit être un nombre positif.")
       return
     }
+    const actualAmount = actual.trim() ? parseFloat(actual) : null
     await onSubmit({
       label: trimmedLabel,
       category,
       estimated: amount,
+      actual: actualAmount != null && isFinite(actualAmount) ? actualAmount : null,
       vendorId: vendorId || null,
     })
   }
@@ -194,19 +201,35 @@ export function BudgetExpenseModal({
             </select>
           </div>
 
-          <div>
-            <label htmlFor="exp-amount" style={labelStyle}>Montant (Dhs) <span style={{ color: "#ef4444" }}>*</span></label>
-            <input
-              id="exp-amount"
-              type="number"
-              inputMode="decimal"
-              min="0"
-              step="0.01"
-              value={estimated}
-              onChange={(e) => setEstimated(e.target.value)}
-              placeholder="0"
-              style={inputStyle}
-            />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div>
+              <label htmlFor="exp-amount" style={labelStyle}>Budget prévu (Dhs) <span style={{ color: "#ef4444" }}>*</span></label>
+              <input
+                id="exp-amount"
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="0.01"
+                value={estimated}
+                onChange={(e) => setEstimated(e.target.value)}
+                placeholder="0"
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label htmlFor="exp-actual" style={labelStyle}>Réel dépensé (Dhs)</label>
+              <input
+                id="exp-actual"
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="0.01"
+                value={actual}
+                onChange={(e) => setActual(e.target.value)}
+                placeholder="0"
+                style={inputStyle}
+              />
+            </div>
           </div>
 
           {vendors.length > 0 && (

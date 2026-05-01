@@ -13,8 +13,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 })
   }
 
-  const task = await prisma.task.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
-  if (!task || task.workspace.userId !== userId)
+  const task = await prisma.task.findUnique({ where: { id }, select: { userId: true } })
+  if (!task || task.userId !== userId)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const data: Record<string, unknown> = {}
@@ -46,8 +46,8 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const userId = await getUserId()
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const task = await prisma.task.findUnique({ where: { id }, select: { workspace: { select: { userId: true } } } })
-  if (!task || task.workspace.userId !== userId)
+  const task = await prisma.task.findUnique({ where: { id }, select: { userId: true } })
+  if (!task || task.userId !== userId)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   await prisma.task.delete({ where: { id } })

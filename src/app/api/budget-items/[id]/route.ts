@@ -18,17 +18,11 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!parsed.success)
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Données invalides." }, { status: 400 })
 
-  // IDOR check : on vérifie via planner.userId (modèle moderne).
-  // Fallback workspace.userId conservé pour rétrocompat des items legacy non encore migrés.
   const item = await prisma.budgetItem.findUnique({
     where: { id },
-    select: {
-      planner: { select: { userId: true } },
-      workspace: { select: { userId: true } },
-    },
+    select: { planner: { select: { userId: true } } },
   })
-  const ownerId = item?.planner?.userId ?? item?.workspace?.userId
-  if (!item || ownerId !== userId)
+  if (!item || item.planner?.userId !== userId)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
   const updated = await prisma.budgetItem.update({ where: { id }, data: parsed.data })

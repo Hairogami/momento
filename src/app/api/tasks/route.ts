@@ -15,15 +15,6 @@ export async function POST(req: Request) {
   if (typeof body.title !== "string" || !body.title.trim())
     return NextResponse.json({ error: "title requis." }, { status: 400 })
 
-  let workspace = await prisma.workspace.findUnique({ where: { userId }, select: { id: true } })
-  if (!workspace) {
-    // Auto-create : un user peut être créé sans workspace (signup OAuth, etc.)
-    workspace = await prisma.workspace.create({
-      data: { userId },
-      select: { id: true },
-    })
-  }
-
   let plannerId: string | null = null
   if (body.plannerId !== undefined && body.plannerId !== null) {
     if (typeof body.plannerId !== "string") return NextResponse.json({ error: "plannerId invalide." }, { status: 400 })
@@ -36,7 +27,7 @@ export async function POST(req: Request) {
 
   const task = await prisma.task.create({
     data: {
-      workspaceId: workspace.id,
+      userId,
       plannerId,
       title: body.title.trim().slice(0, 300),
       category: typeof body.category === "string" ? body.category.trim().slice(0, 100) : null,
