@@ -1,4 +1,5 @@
 @AGENTS.md
+@feedback.md
 
 ## ⚡ RÈGLES PERMANENTES (actives à chaque réponse, pas seulement au démarrage)
 

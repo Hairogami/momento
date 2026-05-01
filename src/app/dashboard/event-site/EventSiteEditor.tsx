@@ -753,12 +753,12 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
           <CustomPaletteButton
             active={Boolean((style as { customColors?: unknown }).customColors)}
             mainValue={(style as { customColors?: { main?: string } }).customColors?.main ?? currentPalette?.main ?? "#C1713A"}
-            accentValue={(style as { customColors?: { accent?: string } }).customColors?.accent ?? currentPalette?.accent ?? "#8B4513"}
+            accentValue={(style as { customColors?: { accent?: string } }).customColors?.accent ?? currentPalette?.accent ?? "#E11D48"}
             onActivate={() => {
               // Active le mode custom en seed avec la palette actuelle (batch en 1 seul patch — évite race condition)
               onUpdateContent("style.customColors", {
                 main: currentPalette?.main ?? "#C1713A",
-                accent: currentPalette?.accent ?? "#8B4513",
+                accent: currentPalette?.accent ?? "#E11D48",
               })
             }}
             onChangeColor={(field, value) => onUpdateContent(`style.customColors.${field}`, value)}

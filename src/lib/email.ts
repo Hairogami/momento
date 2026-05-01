@@ -25,7 +25,7 @@ function escapeHtml(s: string): string {
 
 const BASE_STYLE = `
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background: #F5EDD6;
+  background: #f7f7fb;
   color: #1A1208;
 `
 
@@ -34,11 +34,11 @@ function emailWrapper(content: string) {
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;${BASE_STYLE}">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5EDD6;padding:40px 20px">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f7f7fb;padding:40px 20px">
     <tr><td align="center">
       <table width="520" cellpadding="0" cellspacing="0" style="background:#EDE4CC;border-radius:20px;overflow:hidden;border:1px solid #DDD4BC">
         <tr><td style="background:#1A1208;padding:28px 40px;text-align:center">
-          <span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#F5EDD6;text-transform:uppercase">MOMENTO</span>
+          <span style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#ffffff;text-transform:uppercase">MOMENTO</span>
         </td></tr>
         <tr><td style="padding:40px">
           ${content}
@@ -80,7 +80,7 @@ export async function sendVerificationEmail({
         Merci de rejoindre <strong style="color:#1A1208">Momento</strong>. Cliquez sur le bouton ci-dessous pour vérifier votre adresse e-mail et activer votre compte.
       </p>
       <p style="text-align:center;margin:0 0 24px">
-        <a href="${link}" style="display:inline-block;background:#C4532A;color:#fff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:12px;text-decoration:none">
+        <a href="${link}" style="display:inline-block;background:#E11D48;color:#fff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:12px;text-decoration:none">
           Vérifier mon e-mail
         </a>
       </p>
@@ -118,7 +118,7 @@ export async function sendPasswordResetEmail({
         Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
       </p>
       <p style="text-align:center;margin:0 0 24px">
-        <a href="${link}" style="display:inline-block;background:#C4532A;color:#fff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:12px;text-decoration:none">
+        <a href="${link}" style="display:inline-block;background:#E11D48;color:#fff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:12px;text-decoration:none">
           Réinitialiser mon mot de passe
         </a>
       </p>

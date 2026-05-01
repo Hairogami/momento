@@ -248,77 +248,6 @@ button, a, [role="button"], input, select, textarea {
   --sidebar-ring:         #E11D48;
 }
 
-/* ── Legacy sépia/terracotta palette — opt-in via `.legacy-page` class ──
-   Pages that still depend on the old crème/terra design must add `class="legacy-page"`
-   on their root element. New pages inherit the brand-aligned defaults above. */
-.legacy-page {
-  --background:           #F5EDD6;
-  --foreground:           #1A1208;
-  --card:                 #EDE4CC;
-  --card-foreground:      #1A1208;
-  --popover:              #EDE4CC;
-  --popover-foreground:   #1A1208;
-  --primary:              #2C1A0E;
-  --primary-foreground:   #F5EDD6;
-  --secondary:            #DDD4BC;
-  --secondary-foreground: #1A1208;
-  --muted:                #E5DCCA;
-  --muted-foreground:     #6A5F4A;
-  --accent:               #C4532A;
-  --accent-foreground:    #F5EDD6;
-  --border:               #DDD4BC;
-  --input:                #DDD4BC;
-  --ring:                 #C4532A;
-  --sidebar:              #EDE4CC;
-  --sidebar-foreground:   #1A1208;
-  --sidebar-primary:      #2C1A0E;
-  --sidebar-primary-foreground: #F5EDD6;
-  --sidebar-accent:       #DDD4BC;
-  --sidebar-accent-foreground: #1A1208;
-  --sidebar-border:       #DDD4BC;
-  --sidebar-ring:         #2C1A0E;
-  --chart-1: #2C1A0E;
-  --chart-2: #6A5F4A;
-  --chart-3: #9A907A;
-  --chart-4: #DDD4BC;
-  --chart-5: #1A1208;
-  --bg: #F5EDD6;
-  --bg-card: #EDE4CC;
-  --text: #1A1208;
-  --text-muted: #6A5F4A;
-}
-.legacy-page.dark,
-.dark .legacy-page {
-  --background:           #1A1208;
-  --foreground:           #F5EDD6;
-  --card:                 #2C1A0E;
-  --card-foreground:      #F5EDD6;
-  --popover:              #2C1A0E;
-  --popover-foreground:   #F5EDD6;
-  --primary:              #F5EDD6;
-  --primary-foreground:   #1A1208;
-  --secondary:            #3A2E1E;
-  --secondary-foreground: #F5EDD6;
-  --muted:                #2C1A0E;
-  --muted-foreground:     #9A907A;
-  --accent:               #C4532A;
-  --accent-foreground:    #F5EDD6;
-  --border:               #3A2E1E;
-  --input:                #3A2E1E;
-  --ring:                 #C4532A;
-  --sidebar:              #2C1A0E;
-  --sidebar-foreground:   #F5EDD6;
-  --sidebar-primary:      #C4532A;
-  --sidebar-primary-foreground: #F5EDD6;
-  --sidebar-accent:       #3A2E1E;
-  --sidebar-accent-foreground: #F5EDD6;
-  --sidebar-border:       #3A2E1E;
-  --sidebar-ring:         #C4532A;
-  --bg: #1A1208;
-  --bg-card: #2C1A0E;
-  --text: #F5EDD6;
-  --text-muted: #D4C9B4;
-}
 
 /* ── Ocean palette ── */
 .palette-ocean {
@@ -515,31 +444,6 @@ button, a, [role="button"], input, select, textarea {
   font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
 }
 
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.animate-spin-slow {
-  animation: spin-slow 30s linear infinite;
-}
-.animate-spin-slow-reverse {
-  animation: spin-slow 60s linear infinite reverse;
-}
-
-/* ── Hero 3D floating cards ── */
-@keyframes float-a {
-  0%, 100% { transform: perspective(600px) rotateY(15deg) rotateX(5deg) translateY(0px); }
-  50%       { transform: perspective(600px) rotateY(15deg) rotateX(5deg) translateY(-12px); }
-}
-@keyframes float-b {
-  0%, 100% { transform: perspective(600px) rotateY(-12deg) rotateX(8deg) translateY(0px); }
-  50%       { transform: perspective(600px) rotateY(-12deg) rotateX(8deg) translateY(-16px); }
-}
-@keyframes float-c {
-  0%, 100% { transform: perspective(600px) rotateY(-8deg) rotateX(-5deg) translateY(0px); }
-  50%       { transform: perspective(600px) rotateY(-8deg) rotateX(-5deg) translateY(-10px); }
-}
-
 /* ── Shimmer badge (Top Prestataire) ── */
 /* Force mobile preview mode (playground viewport toggle) — override SiteNav's @media query */
 html.evt-force-mobile .site-nav-desktop { display: none !important; }
@@ -622,34 +526,6 @@ html.evt-force-mobile .site-nav-burger { display: flex !important; }
 .animate-fade-up-delay-2 { animation: fade-up 0.6s ease 0.2s both; }
 .animate-fade-up-delay-3 { animation: fade-up 0.6s ease 0.3s both; }
 
-/* ── Ticker (horizontal scroll band) ── */
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.ticker-track {
-  display: flex;
-  white-space: nowrap;
-  animation: ticker-scroll 32s linear infinite;
-}
-.ticker-track:hover { animation-play-state: paused; }
-
-/* ── Category card bottom-line hover ── */
-.cat-card-hover {
-  position: relative;
-  overflow: hidden;
-}
-.cat-card-hover::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--momento-terra);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-.cat-card-hover:hover::after { transform: scaleX(1); }
 
 /* ── Vendor featured card ── */
 .vendor-featured { grid-row: span 2; }
@@ -696,33 +572,6 @@ body:has(.snap-scroll-container) {
 [data-visible="true"] .anim-item {
   opacity: 1;
   transform: translateY(0);
-}
-
-/* ── Hero animations (auto-play on load) ── */
-@keyframes heroFadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.hero-anim {
-  opacity: 0;
-  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* ── Scroll indicator ── */
-@keyframes scrollBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.45; }
-  50%       { transform: translateX(-50%) translateY(8px); opacity: 0.9;  }
-}
-.scroll-indicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  animation: scrollBounce 2.2s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .anim-item, .hero-anim { transition: none; animation: none; opacity: 1; transform: none; }
-  .scroll-indicator       { animation: none; }
 }
 
 /* ── Dashboard color system (CSS vars for dark mode) ── */

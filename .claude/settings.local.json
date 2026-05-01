@@ -20,7 +20,9 @@
       "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/moume/.claude/skills/skill-creator/scripts/init_skill.py\" compactreview --path \"C:/Users/moume/.claude/skills\")",
       "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/moume/.claude/skills/skill-creator/scripts/quick_validate.py\" \"C:/Users/moume/.claude/skills/compactreview\")",
       "Bash(awk 'NR==582,/^}$/{print NR\": \"$0}' src/app/dashboard/DashboardClient.tsx)",
-      "Bash(python scripts/fluid_type.py src/app/vendor/\\\\[slug\\\\]/VendorProfileClient.tsx)"
+      "Bash(python scripts/fluid_type.py src/app/vendor/\\\\[slug\\\\]/VendorProfileClient.tsx)",
+      "Bash(grep -nA 20 \"^model BudgetItem\" /c/Users/moume/Documents/momento/prisma/schema.prisma)",
+      "Bash(grep -vE \"^\\(api|\\\\\\\\\\(|admin|coming-soon|legal|login|signup|forgot-password|reset-password|verify-email|explore|prestataires|vendor|evt|welcome-preview|pro|mentions-legales|sitemap|robots|opengraph|globals|favicon|icon|layout|page|loading|not-found\\)\")"
     ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [
