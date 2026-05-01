@@ -93,7 +93,7 @@ export async function buildDashboardData(
     prisma.guest.findMany({
       where: { plannerId },
       select: {
-        id: true, name: true, rsvp: true, tableNumber: true, city: true, notes: true,
+        id: true, name: true, rsvp: true, tableNumber: true, city: true, notes: true, linkedRsvpId: true,
       },
       orderBy: { createdAt: "asc" },
     }),
@@ -155,6 +155,19 @@ export async function buildDashboardData(
     select: { slug: true, name: true },
   }) : []
   const vendorMap = new Map(vendors.map(v => [v.slug, v]))
+
+  // Régimes alimentaires : récupère dietaryNeeds depuis EventRsvp via linkedRsvpId
+  const linkedRsvpIds = guests.map(g => g.linkedRsvpId).filter(Boolean) as string[]
+  const rsvpDietMap = new Map<string, string>()
+  if (linkedRsvpIds.length > 0) {
+    const rsvpRows = await prisma.eventRsvp.findMany({
+      where: { id: { in: linkedRsvpIds } },
+      select: { id: true, dietaryNeeds: true },
+    })
+    for (const r of rsvpRows) {
+      if (r.dietaryNeeds) rsvpDietMap.set(r.id, r.dietaryNeeds)
+    }
+  }
 
   // Aggrégation budget par catégorie pour le widget Budget
   const byCategory = new Map<string, { allocated: number; spent: number }>()
@@ -231,7 +244,7 @@ export async function buildDashboardData(
       name: g.name,
       rsvp: (g.rsvp === "yes" || g.rsvp === "no" ? g.rsvp : "pending") as "yes" | "no" | "pending",
       tableNumber: g.tableNumber ?? undefined,
-      diet: undefined,
+      diet: g.linkedRsvpId ? rsvpDietMap.get(g.linkedRsvpId) : undefined,
       city: g.city ?? undefined,
     })),
     budgetItems: budgetWidgetItems,

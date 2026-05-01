@@ -10,12 +10,10 @@ const DIET_OPTIONS_LIST = [
   { key: "Allergie",   icon: "⚠️", color: "#ef4444" },
 ]
 
-// WIDGET-CONTRACT VIOLATION (diets) :
-// Guest a un champ `diet?` dans le type front mais l'API dashboard-data ne
-// le hydrate pas (`diet: undefined` côté serveur). Les diets restent en local
-// state, perdus au refresh. TODO future : étendre Guest schema + dashboard-data.
 export default function RegimesWidget({ guests }: { guests: Guest[] }) {
-  const [diets, setDiets] = useState<Record<string, string>>({})
+  const [diets, setDiets] = useState<Record<string, string>>(() =>
+    Object.fromEntries(guests.filter(g => g.diet).map(g => [g.id, g.diet as string]))
+  )
   const [showPopup, setShowPopup] = useState(false)
   const counts: Record<string, number> = {}
   Object.values(diets).filter(Boolean).forEach(d => { counts[d] = (counts[d] ?? 0) + 1 })
