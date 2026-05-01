@@ -836,9 +836,7 @@ summary:focus-visible {
   width: 100%;
   height: 50%;
   top: 0;
-  transform-origin: bottom center;
   transform-style: preserve-3d;
-  backface-visibility: hidden;
 }
 .flipper__top {
   position: absolute;
@@ -856,6 +854,7 @@ summary:focus-visible {
   border-radius: 4px 4px 0 0;
   border-bottom: 1px solid var(--dash-border);
   backface-visibility: hidden;
+  transform-origin: center bottom;
 }
 .flipper__bottom {
   position: absolute;
@@ -871,13 +870,20 @@ summary:focus-visible {
   font-weight: 900;
   font-family: monospace;
   border-radius: 0 0 4px 4px;
-  transform: rotateX(180deg);
+  transform: rotateX(-180deg);
   backface-visibility: hidden;
+  transform-origin: center bottom;
 }
-.is-flipping {
-  animation: flipDown 0.35s ease-in-out forwards;
+.is-flipping .flipper__top {
+  animation: flip-top 0.35s ease-in-out forwards;
 }
-@keyframes flipDown {
-  0%   { transform: rotateX(0deg); }
+.is-flipping .flipper__bottom {
+  animation: flip-bottom 0.35s ease-in-out forwards;
+}
+@keyframes flip-top {
   100% { transform: rotateX(-180deg); }
+}
+@keyframes flip-bottom {
+  0%   { transform: rotateX(-180deg); }
+  100% { transform: rotateX(0deg); }
 }
