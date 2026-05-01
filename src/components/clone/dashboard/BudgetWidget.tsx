@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+import Link from "next/link"
 
 export type BudgetItem = {
   label: string
@@ -16,33 +16,14 @@ interface BudgetWidgetProps {
 }
 
 export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps) {
-  const circleRef = useRef<SVGCircleElement>(null)
-  const inputRef  = useRef<HTMLInputElement>(null)
-  const [spentOverrides, setSpentOverrides] = useState<Record<number, number>>({})
-  const [editingIdx, setEditingIdx] = useState<number | null>(null)
-  const [editValue, setEditValue]   = useState("")
-
-  function startEdit(idx: number, currentSpent: number) {
-    setEditingIdx(idx); setEditValue(String(currentSpent))
-    setTimeout(() => inputRef.current?.select(), 10)
-  }
-  function commitEdit(idx: number) {
-    const v = parseFloat(editValue)
-    if (!isNaN(v) && v >= 0) setSpentOverrides(p => ({ ...p, [idx]: v }))
-    setEditingIdx(null)
-  }
-  const remaining = Math.max(0, total - spent)
-  const pct = total > 0 ? Math.min(1, spent / total) : 0
-  const isOverBudget = spent > total
+  const totalAllocated = items.reduce((s, i) => s + i.allocated, 0)
+  const allocPct = total > 0 ? Math.min(1, totalAllocated / total) : 0
+  const isOverBudget = totalAllocated > total
+  const freeRemaining = Math.max(0, total - totalAllocated)
 
   const R = 42
   const CIRC = 2 * Math.PI * R
-  const dash = CIRC * pct
-
-  useEffect(() => {
-    if (!circleRef.current) return
-    circleRef.current.style.strokeDashoffset = String(CIRC - dash)
-  }, [CIRC, dash])
+  const dash = CIRC * allocPct
 
   return (
     <div style={{ padding: "22px 24px", height: "100%", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
@@ -80,16 +61,15 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
               stroke="var(--dash-ring-track,rgba(183,191,217,0.20))"
               strokeWidth={11}
             />
-            {/* Progress */}
+            {/* Progress — allocated vs total */}
             <circle
-              ref={circleRef}
               cx={50} cy={50} r={R}
               fill="none"
               stroke={isOverBudget ? "#ef4444" : "url(#bgt-used-grad)"}
               strokeWidth={11}
               strokeLinecap="round"
               strokeDasharray={CIRC}
-              strokeDashoffset={CIRC}
+              strokeDashoffset={CIRC - dash}
               transform="rotate(-90 50 50)"
               style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)" }}
             />
@@ -101,67 +81,65 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
           }}>
             <span style={{
               fontSize: "var(--text-sm)", fontWeight: 800, lineHeight: 1,
-              backgroundImage: isOverBudget
-                ? "none"
-                : "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+              backgroundImage: isOverBudget ? "none" : "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               WebkitBackgroundClip: isOverBudget ? undefined : "text",
               WebkitTextFillColor: isOverBudget ? "#ef4444" : "transparent",
               backgroundClip: isOverBudget ? undefined : "text",
               color: isOverBudget ? "#ef4444" : undefined,
-            }}>{Math.round(pct * 100)}%</span>
-            <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", marginTop: 1 }}>utilisé</span>
+            }}>{Math.round(allocPct * 100)}%</span>
+            <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", marginTop: 1 }}>planifié</span>
           </div>
         </div>
 
         {/* Numbers */}
         <div style={{ flex: 1 }}>
           <div style={{ marginBottom: 10 }}>
-            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Dépensé</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Alloué</div>
             <div style={{
               fontSize: "var(--text-md)", fontWeight: 800, lineHeight: 1,
               backgroundImage: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}>
-              {spent.toLocaleString("fr-MA")}
+              {totalAllocated.toLocaleString("fr-MA")}
             </div>
             <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", marginTop: 1 }}>Dhs</div>
           </div>
           <div>
-            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Restant</div>
+            <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>Libre</div>
             <div style={{
               fontSize: "var(--text-sm)", fontWeight: 700,
-              color: remaining < total * 0.1 ? "#ef4444" : "var(--dash-text,#121317)",
+              color: freeRemaining < total * 0.1 ? "#ef4444" : "var(--dash-text,#121317)",
             }}>
-              {remaining.toLocaleString("fr-MA")} Dhs
+              {freeRemaining.toLocaleString("fr-MA")} Dhs
             </div>
           </div>
+          {spent > 0 && (
+            <div style={{ marginTop: 6 }}>
+              <div style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
+                Réel dépensé : <strong style={{ color: "var(--dash-text-2)" }}>{spent.toLocaleString("fr-MA")} Dhs</strong>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Category breakdown — click montant pour éditer */}
+      {/* Category breakdown */}
       <div style={{ flex: 1, overflow: "auto", scrollbarWidth: "none" }}>
-        {items.slice(0, 5).map((item, idx) => {
-          const effectiveSpent = spentOverrides[idx] ?? item.spent
-          const itemPct = item.allocated > 0 ? Math.min(1, effectiveSpent / item.allocated) : 0
-          const isEditing = editingIdx === idx
+        {items.length === 0 ? (
+          <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "16px 0", margin: 0 }}>
+            Aucune dépense · <Link href="/budget" style={{ color: "var(--g1,#E11D48)" }}>Ajouter →</Link>
+          </p>
+        ) : items.slice(0, 5).map((item) => {
+          const itemPct = totalAllocated > 0 ? Math.min(1, item.allocated / totalAllocated) : 0
           return (
             <div key={item.label} style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontSize: "var(--text-sm)", flexShrink: 0 }}>{item.icon}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, alignItems: "center" }}>
                   <span style={{ fontSize: "var(--text-2xs)", fontWeight: 500, color: "var(--dash-text-2,#45474D)" }}>{item.label}</span>
-                  {isEditing ? (
-                    <input ref={inputRef} type="number" inputMode="decimal" value={editValue}
-                      onChange={e => setEditValue(e.target.value)}
-                      onBlur={() => commitEdit(idx)}
-                      onKeyDown={e => { if (e.key === "Enter") commitEdit(idx); if (e.key === "Escape") setEditingIdx(null) }}
-                      style={{ width: 72, fontSize: "var(--text-2xs)", padding: "1px 5px", borderRadius: 6, border: "1.5px solid var(--g1,#E11D48)", background: "var(--dash-faint,rgba(183,191,217,0.06))", outline: "none", fontFamily: "inherit", color: "var(--dash-text,#121317)", textAlign: "right" }} />
-                  ) : (
-                    <button onClick={() => startEdit(idx, effectiveSpent)} title="Modifier"
-                      style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: item.color, background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", padding: "1px 4px", borderRadius: 4 }}>
-                      {effectiveSpent.toLocaleString("fr-MA")} ✎
-                    </button>
-                  )}
+                  <span style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: item.color }}>
+                    {item.allocated.toLocaleString("fr-MA")}
+                  </span>
                 </div>
                 <div style={{ height: 3, background: "rgba(183,191,217,0.12)", borderRadius: 99, overflow: "hidden" }}>
                   <div style={{
@@ -182,7 +160,12 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
         paddingTop: 12, borderTop: "1px solid rgba(183,191,217,0.1)",
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}>
-        <span style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Total budget</span>
+        <Link href="/budget" style={{
+          fontSize: "var(--text-2xs)", color: "var(--g1,#E11D48)",
+          textDecoration: "none", fontWeight: 600,
+        }}>
+          Gérer le budget →
+        </Link>
         <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>
           {total.toLocaleString("fr-MA")} Dhs
         </span>
