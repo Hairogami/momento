@@ -1,10 +1,10 @@
 import { prisma } from "../src/lib/prisma"
 
 async function main() {
-  await prisma.user.update({ where: { email: "moumene486@gmail.com" }, data: { role: "client" } })
+  await prisma.user.updateMany({ where: { email: "moumene486@gmail.com" }, data: { role: "client" } })
   console.log("✓ moumene486 → role client")
 
-  const targetUser = await prisma.user.findUnique({ where: { email: "yazid.moumene@glovoapp.com" }, select: { id: true } })
+  const targetUser = await prisma.user.findFirst({ where: { email: "yazid.moumene@glovoapp.com" }, select: { id: true } })
   if (!targetUser) { console.log("Target user introuvable"); return }
   const planner = await prisma.planner.findFirst({ where: { userId: targetUser.id }, select: { id: true } })
   const vendor = await prisma.vendor.upsert({
@@ -16,7 +16,7 @@ async function main() {
   let realSender = vendor.userId
   if (!realSender || realSender === targetUser.id) {
     const ghost = await prisma.user.upsert({
-      where: { email: "ghost-yazid-vendor@momento.local" },
+      where: { email_role: { email: "ghost-yazid-vendor@momento.local", role: "vendor" } },
       create: { email: "ghost-yazid-vendor@momento.local", name: "Yazid Moumene", role: "vendor" },
       update: {},
       select: { id: true },

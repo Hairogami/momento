@@ -31,7 +31,7 @@ const DEV_EMAIL = "moumene486@gmail.com"
 
 async function main() {
   // 1. Trouver le user dev
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { email: DEV_EMAIL },
     include: { vendor: true, vendorProfile: true },
   })

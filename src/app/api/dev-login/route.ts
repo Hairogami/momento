@@ -13,8 +13,8 @@ export async function GET() {
 
   // Dev-login cible en priorité moumene486 (owner), fallback sur premier user créé
   const user =
-    (await prisma.user.findUnique({
-      where: { email: "moumene486@gmail.com" },
+    (await prisma.user.findFirst({
+      where: { email: "moumene486@gmail.com", role: "client" },
       select: { id: true, email: true, name: true, image: true, role: true },
     })) ??
     (await prisma.user.findFirst({

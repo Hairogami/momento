@@ -1,8 +1,8 @@
 import { prisma } from "../src/lib/prisma"
 
 async function main() {
-  const moumene = await prisma.user.findUnique({ where: { email: "moumene486@gmail.com" }, select: { id: true } })
-  const ghost   = await prisma.user.findUnique({ where: { email: "ghost-yazid-vendor@momento.local" }, select: { id: true } })
+  const moumene = await prisma.user.findFirst({ where: { email: "moumene486@gmail.com" }, select: { id: true } })
+  const ghost   = await prisma.user.findFirst({ where: { email: "ghost-yazid-vendor@momento.local" }, select: { id: true } })
   if (!moumene) throw new Error("moumene486 not found")
 
   // 0. Le user moumene486 a déjà un vendor "dev-yazid" (sans conv) qui occupe la
@@ -42,7 +42,7 @@ async function main() {
   }
 
   // 5. Marquer la conv test (yazid.moumene@glovoapp.com → vendor) avec un message non-lu fresh
-  const yazid = await prisma.user.findUnique({ where: { email: "yazid.moumene@glovoapp.com" }, select: { id: true } })
+  const yazid = await prisma.user.findFirst({ where: { email: "yazid.moumene@glovoapp.com" }, select: { id: true } })
   if (yazid) {
     const conv = await prisma.conversation.findUnique({
       where: { clientId_vendorSlug: { clientId: yazid.id, vendorSlug: "yazid-moumene-test" } },

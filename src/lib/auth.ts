@@ -20,7 +20,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: false,
   secret: process.env.AUTH_SECRET,
   // DEV: no DB adapter → pure JWT, no Prisma connection needed locally
-  ...(IS_DEV ? {} : { adapter: PrismaAdapter(prisma) }),
+  ...(IS_DEV ? {} : {
+    adapter: {
+      ...PrismaAdapter(prisma),
+      // Multi-role support: same email can have role=client AND role=admin.
+      // OAuth always targets the client account.
+      getUserByEmail: (email: string) =>
+        prisma.user.findFirst({ where: { email: email.toLowerCase(), role: "client" } }),
+    },
+  }),
   session: {
     strategy: "jwt",
     maxAge: REMEMBER_ME_MAX_AGE, // max possible — le JWT peut expirer plus tôt
@@ -72,6 +80,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email:      { label: "Email",          type: "email"    },
         password:   { label: "Mot de passe",   type: "password" },
         rememberMe: { label: "Se souvenir",    type: "text"     },
+        role:       { label: "Role",           type: "text"     },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
@@ -91,8 +100,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           // headers() peut throw hors contexte request — fallback sans rate-limit (mieux que casser le login)
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: (credentials.email as string).toLowerCase().trim() },
+        const role = ((credentials.role as string) || "client").trim()
+        const user = await prisma.user.findFirst({
+          where: {
+            email: (credentials.email as string).toLowerCase().trim(),
+            role,
+          },
           select: { id: true, name: true, email: true, image: true, passwordHash: true, emailVerified: true },
         });
         if (!user?.passwordHash) return null;

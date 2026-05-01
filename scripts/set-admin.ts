@@ -15,7 +15,7 @@ async function main() {
 
   const { prisma } = await import("../src/lib/prisma")
 
-  const before = await prisma.user.findUnique({
+  const before = await prisma.user.findFirst({
     where: { email: email.toLowerCase().trim() },
     select: { id: true, email: true, role: true, name: true },
   })

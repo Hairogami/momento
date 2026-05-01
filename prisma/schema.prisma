@@ -11,13 +11,15 @@ datasource db {
 
 model User {
   id              String    @id @default(cuid())
-  email           String    @unique
+  email           String
   name            String?
   image           String?
   emailVerified   DateTime?
   passwordHash    String?
   googleId        String?   @unique
   role            String    @default("client") // client | vendor | admin
+
+  @@unique([email, role])
   firstName       String?
   lastName        String?
   phone           String?

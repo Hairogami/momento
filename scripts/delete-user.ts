@@ -21,7 +21,7 @@ async function main() {
   const { prisma } = await import("../src/lib/prisma")
   const confirm = process.env.CONFIRM === "YES"
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: { email },
     include: {
       _count: {

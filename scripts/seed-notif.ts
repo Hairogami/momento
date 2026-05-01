@@ -2,7 +2,7 @@ import { prisma } from "../src/lib/prisma"
 
 async function main() {
   const userEmail = "moumene486@gmail.com"
-  const user = await prisma.user.findUnique({ where: { email: userEmail }, select: { id: true } })
+  const user = await prisma.user.findFirst({ where: { email: userEmail }, select: { id: true } })
   if (!user) { console.error("User not found:", userEmail); process.exit(1) }
 
   const vendorName = "Yazid Moumene"
@@ -18,7 +18,7 @@ async function main() {
   let realSender = vendor.userId
   if (!realSender || realSender === user.id) {
     const ghost = await prisma.user.upsert({
-      where: { email: "ghost-yazid-vendor@momento.local" },
+      where: { email_role: { email: "ghost-yazid-vendor@momento.local", role: "vendor" } },
       create: { email: "ghost-yazid-vendor@momento.local", name: vendorName, role: "vendor" },
       update: {},
       select: { id: true },

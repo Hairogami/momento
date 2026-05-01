@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     }
     if (rawEmail && typeof rawEmail === "string" && rawEmail.length <= 320) {
       const email = rawEmail.toLowerCase().trim()
-      const user = await prisma.user.findUnique({ where: { email } })
+      const user = await prisma.user.findFirst({ where: { email, role: "client" } })
 
       if (user) {
         const token = randomUUID()

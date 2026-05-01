@@ -60,6 +60,7 @@ function AdminLoginForm() {
       const res = await signIn("credentials", {
         email: email.trim().toLowerCase(),
         password,
+        role: "admin",
         redirect: false,
       })
       if (res?.error) {

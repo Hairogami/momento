@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     }
     const email = rawEmail.toLowerCase().trim()
 
-    const user = await prisma.user.findUnique({ where: { email } })
+    const user = await prisma.user.findFirst({ where: { email, role: "client" } })
 
     if (user && !user.emailVerified) {
       // W06: atomic delete + create inside a transaction to prevent race condition

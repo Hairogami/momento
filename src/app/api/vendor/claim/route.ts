@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
 
     const { email, firstName, lastName, phone } = mlParsed.data
 
-    const existingUser = await prisma.user.findUnique({ where: { email: email.toLowerCase() }, select: { id: true } })
+    const existingUser = await prisma.user.findFirst({ where: { email: email.toLowerCase() }, select: { id: true } })
     if (existingUser) {
       return NextResponse.json({ error: "Cet email est déjà utilisé. Connectez-vous pour revendiquer." }, { status: 409 })
     }
