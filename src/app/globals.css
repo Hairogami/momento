@@ -799,8 +799,8 @@ summary:focus-visible {
 /* ── Flip Countdown (easemize/21st.dev) ─────────────────────────────────── */
 .flip-unit {
   position: relative;
-  width: 32px;
-  height: 44px;
+  width: 40px;
+  height: 56px;
   perspective: 200px;
 }
 .flip-card {
@@ -811,7 +811,7 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
+  font-size: 1.6rem;
   font-weight: 900;
   font-family: monospace;
   background: var(--flip-card-bg, var(--dash-faint-2, rgba(183,191,217,0.20)));
@@ -850,7 +850,7 @@ summary:focus-visible {
   padding-bottom: 1px;
   background: var(--flip-card-bg, var(--dash-faint-2, rgba(183,191,217,0.20)));
   color: var(--flip-card-text, var(--dash-text, #121317));
-  font-size: 1.35rem;
+  font-size: 1.6rem;
   font-weight: 900;
   font-family: monospace;
   border-radius: 4px 4px 0 0;
@@ -867,7 +867,7 @@ summary:focus-visible {
   padding-top: 1px;
   background: var(--flip-card-bg, var(--dash-faint-2, rgba(183,191,217,0.20)));
   color: var(--flip-card-text, var(--dash-text, #121317));
-  font-size: 1.35rem;
+  font-size: 1.6rem;
   font-weight: 900;
   font-family: monospace;
   border-radius: 0 0 4px 4px;

@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react"
 import dynamic from "next/dynamic"
 
-const ShiftingCountdown = dynamic(() => import("./countdown/ShiftingCountdown"), { ssr: false })
-const FlipCountdown     = dynamic(() => import("./countdown/FlipCountdown"),     { ssr: false })
+const ShiftingCountdown = dynamic<{ date: string }>(() => import("./countdown/ShiftingCountdown"), { ssr: false })
+const FlipCountdown     = dynamic<{ date: string }>(() => import("./countdown/FlipCountdown"),     { ssr: false })
 const BlocksCountdown   = dynamic(() => import("./countdown/BlocksCountdown"),   { ssr: false })
 const MinimalCountdown  = dynamic(() => import("./countdown/MinimalCountdown"),  { ssr: false })
 const TicketCountdown   = dynamic(() => import("./countdown/TicketCountdown"),   { ssr: false })
@@ -61,7 +61,7 @@ function RingCountdown({ name, date, guestCount = 0, guestConfirmed = 0 }: Omit<
   const guestPct = guestCount > 0 ? guestConfirmed / guestCount : 0
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "center" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 20, flex: 1 }}>
         <div style={{ position: "relative", flexShrink: 0 }}>
           <div style={{
@@ -248,12 +248,12 @@ export default function CountdownWidget({ name, date, guestCount = 0, guestConfi
         </div>
       </div>
 
-      {/* Centered countdown content */}
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: "100%", height: "100%" }}>
+      {/* Centered countdown content — always centered regardless of resize */}
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: 0 }}>
+        <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
           {theme === "ring"     && <RingCountdown     {...innerProps} />}
-          {theme === "shifting" && <ShiftingCountdown name={name} date={date} />}
-          {theme === "flip"     && <FlipCountdown     name={name} date={date} />}
+          {theme === "shifting" && <ShiftingCountdown date={date} />}
+          {theme === "flip"     && <FlipCountdown     date={date} />}
           {theme === "blocks"   && <BlocksCountdown   name={name} date={date} />}
           {theme === "minimal"  && <MinimalCountdown  name={name} date={date} />}
           {theme === "ticket"   && <TicketCountdown   name={name} date={date} />}
