@@ -22,10 +22,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const session = await auth()
   const user = session?.user as { id?: string; email?: string; role?: string } | undefined
   if (!user?.id) {
-    redirect("/login?next=/admin/vendors")
+    redirect("/admin/login")
   }
-  if (user.role !== "admin") {
-    redirect("/dashboard")
+  const { isAdminEmail } = await import("@/lib/adminConstants")
+  if (user.role !== "admin" && !isAdminEmail(user.email)) {
+    redirect("/admin/login?error=access_denied")
   }
 
   return (
