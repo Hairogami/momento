@@ -129,10 +129,7 @@ export async function buildDashboardData(
     }),
     // Conversations du user (dont messages les plus récents) pour widget Messages
     prisma.conversation.findMany({
-      // Inclure conversations rattachées au planner ET conversations globales
-      // (sans plannerId, ex: contact vendor avant création planner). Sinon
-      // un user qui contacte un vendor en premier ne voit jamais la conv.
-      where: { clientId: userId, OR: [{ plannerId }, { plannerId: null }] },
+      where: { clientId: userId },
       include: {
         messages: { orderBy: { createdAt: "desc" }, take: 1 },
         _count: { select: { messages: { where: { read: false, senderId: { not: userId } } } } },
