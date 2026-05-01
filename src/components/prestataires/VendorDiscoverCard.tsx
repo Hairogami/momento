@@ -66,6 +66,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
       background: "var(--dash-surface,#fff)", borderRadius: 20, overflow: "hidden",
       border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
       boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+      height: "100%", display: "flex", flexDirection: "column",
     }}>
       {/* Photo area */}
       <div style={{ position: "relative", height: 180, background: "var(--dash-border,#f0f0f5)", overflow: "hidden" }}>
@@ -116,7 +117,7 @@ export default function VendorDiscoverCard({ vendor, plannerId, onInterest, hide
       </div>
 
       {/* Content */}
-      <div style={{ padding: "14px 16px 16px" }}>
+      <div style={{ padding: "14px 16px 16px", flex: 1 }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 6 }}>
           <div>
             <p style={{ fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: "0 0 2px" }}>{vendor.name}</p>
