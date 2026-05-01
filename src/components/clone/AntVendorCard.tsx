@@ -11,6 +11,10 @@ type Props = {
   photo?: string | null
   /** If provided, called with slug instead of navigating — used to gate anonymous users */
   onGatedClick?: (slug: string) => void
+  /** If provided, shows "+" button to add vendor to event */
+  onAddToEvent?: (slug: string) => void
+  /** Show checkmark — vendor already added to active planner */
+  isAdded?: boolean
 }
 
 const CAT_IMAGES: Record<string, string> = {
@@ -75,7 +79,7 @@ function getGradient(category: string): [string, string] {
   return ["#E11D48", "#9333EA"]
 }
 
-export default function AntVendorCard({ id, name, category, city, rating, photo, onGatedClick }: Props) {
+export default function AntVendorCard({ id, name, category, city, rating, photo, onGatedClick, onAddToEvent, isAdded }: Props) {
   const [fav, setFav] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
 
@@ -158,6 +162,32 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
             position: "absolute", inset: 0, pointerEvents: "none",
             background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 50%)",
           }} />
+
+          {/* Add-to-event button — top left, shown only when onAddToEvent is provided */}
+          {onAddToEvent && (
+            <button
+              type="button"
+              onClick={e => { e.preventDefault(); e.stopPropagation(); if (!isAdded) onAddToEvent(id) }}
+              aria-label={isAdded ? `${name} déjà ajouté à votre événement` : `Ajouter ${name} à votre événement`}
+              aria-pressed={isAdded}
+              style={{
+                position: "absolute", top: 12, left: 12,
+                width: 34, height: 34, borderRadius: "50%",
+                background: isAdded ? "rgba(34,197,94,0.88)" : "rgba(255,255,255,0.35)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                border: "none", cursor: isAdded ? "default" : "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: "var(--text-sm)", fontWeight: 700, color: isAdded ? "#fff" : "#fff",
+                transition: "transform 0.15s, background 0.2s",
+                zIndex: 2,
+              }}
+              onMouseEnter={e => { if (!isAdded) (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.12)" }}
+              onMouseLeave={e => { if (!isAdded) (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)" }}
+            >
+              <span aria-hidden="true">{isAdded ? "✓" : "+"}</span>
+            </button>
+          )}
 
           {/* Fav button */}
           <button

@@ -6,6 +6,7 @@ import AntNav from "@/components/clone/AntNav"
 import AntVendorCard from "@/components/clone/AntVendorCard"
 import SignupGateModal from "@/components/SignupGateModal"
 import type { VendorListItem } from "@/lib/vendorQueries"
+import { usePlanners, type SidebarEvent } from "@/hooks/usePlanners"
 
 // ── PillSelect — custom dropdown styled avec les tokens de la page ───────────
 function PillSelect({ value, onChange, options, placeholder }: {
@@ -192,6 +193,34 @@ export default function ExploreClient({ initialVendors, totalCount }: {
     setGateSlug(slug)
     setGateOpen(true)
   }
+
+  // ── Ajouter prestataire à un événement ────────────────────────────────────
+  const { events } = usePlanners()
+  const [addedVendors, setAddedVendors] = useState<Set<string>>(new Set())
+  const [selectorVendorSlug, setSelectorVendorSlug] = useState<string | null>(null)
+  const [addingSlug, setAddingSlug] = useState<string | null>(null)
+
+  async function addVendorToPlanner(plannerId: string, vendorSlug: string) {
+    setAddingSlug(vendorSlug)
+    try {
+      const res = await fetch(`/api/planners/${plannerId}/vendors`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vendorSlug }),
+      })
+      if (res.ok) setAddedVendors(prev => new Set(prev).add(vendorSlug))
+    } catch {}
+    setAddingSlug(null)
+  }
+
+  function handleAddToEvent(vendorSlug: string) {
+    if (!isAuthenticated) { handleGatedVendorClick(vendorSlug); return }
+    if (addedVendors.has(vendorSlug)) return
+    if (events.length === 0) return
+    if (events.length === 1) { void addVendorToPlanner(events[0].id, vendorSlug); return }
+    setSelectorVendorSlug(vendorSlug)
+  }
+
   const [filtersModalOpen, setFiltersModalOpen] = useState(false)
   const filtersRef = useRef<HTMLDivElement>(null)
   const [page, setPage]           = useState(1)
@@ -633,6 +662,8 @@ export default function ExploreClient({ initialVendors, totalCount }: {
                     rating={v.rating}
                     photo={v.photo}
                     onGatedClick={isAuthenticated ? undefined : handleGatedVendorClick}
+                    onAddToEvent={events.length > 0 || !isAuthenticated ? handleAddToEvent : undefined}
+                    isAdded={addedVendors.has(v.id)}
                   />
                 </div>
               ))}
@@ -829,6 +860,106 @@ export default function ExploreClient({ initialVendors, totalCount }: {
         title={<>Connectez-vous pour voir ce prestataire</>}
         subtitle="Créer un compte Momento vous débloque le profil complet et les outils d'organisation."
       />
+
+      {/* Sélecteur d'événement — affiché quand l'utilisateur a plusieurs planners */}
+      {selectorVendorSlug && (
+        <EventSelectorOverlay
+          events={events}
+          isLoading={addingSlug === selectorVendorSlug}
+          onSelect={async (eventId) => {
+            await addVendorToPlanner(eventId, selectorVendorSlug)
+            setSelectorVendorSlug(null)
+          }}
+          onClose={() => setSelectorVendorSlug(null)}
+        />
+      )}
+    </div>
+  )
+}
+
+// ── Event selector overlay ───────────────────────────────────────────────────
+function EventSelectorOverlay({ events, onSelect, onClose, isLoading }: {
+  events: SidebarEvent[]
+  onSelect: (eventId: string) => void
+  onClose: () => void
+  isLoading: boolean
+}) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Choisir un événement"
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 1500,
+        background: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "16px",
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "var(--dash-surface,#fff)",
+          borderRadius: 20,
+          padding: "24px",
+          width: "100%", maxWidth: 360,
+          boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+        }}
+      >
+        <h3 style={{ margin: "0 0 6px", fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>
+          Ajouter à quel événement ?
+        </h3>
+        <p style={{ margin: "0 0 20px", fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)" }}>
+          Sélectionnez l&apos;événement où ajouter ce prestataire.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {events.map(ev => (
+            <button
+              key={ev.id}
+              type="button"
+              onClick={() => onSelect(ev.id)}
+              disabled={isLoading}
+              style={{
+                display: "flex", alignItems: "center", gap: 12,
+                padding: "12px 16px", borderRadius: 12, border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+                background: "var(--dash-faint,rgba(183,191,217,0.07))",
+                cursor: isLoading ? "wait" : "pointer", textAlign: "left",
+                fontFamily: "inherit", width: "100%", transition: "background 0.15s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = "var(--dash-faint-2,rgba(183,191,217,0.18))")}
+              onMouseLeave={e => (e.currentTarget.style.background = "var(--dash-faint,rgba(183,191,217,0.07))")}
+            >
+              <span style={{
+                width: 10, height: 10, borderRadius: "50%", flexShrink: 0,
+                background: ev.color,
+                boxShadow: `0 0 0 3px ${ev.color}33`,
+              }} />
+              <div>
+                <p style={{ margin: 0, fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{ev.name}</p>
+                {ev.date && (
+                  <p style={{ margin: 0, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
+                    {new Date(ev.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                  </p>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          style={{
+            marginTop: 16, width: "100%", padding: "10px", borderRadius: 999,
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+            background: "transparent", color: "var(--dash-text-2,#6a6a71)",
+            fontSize: "var(--text-sm)", cursor: "pointer", fontFamily: "inherit",
+          }}
+        >
+          Annuler
+        </button>
+      </div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { useTrack } from "@/lib/useTrack"
 import PublicCalendar from "@/components/vendor/public/PublicCalendar"
 import ProUpgradeModal from "@/components/ProUpgradeModal"
 import { usePlan } from "@/hooks/usePlan"
+import { usePlanners, type SidebarEvent } from "@/hooks/usePlanners"
 
 type Review = { author: string; event: string; note: string; stars: number }
 
@@ -52,6 +53,31 @@ export default function VendorProfileClient({
   const [favLoading, setFavLoading] = useState(false)
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
   const { trackClick } = useTrack(slug)
+
+  // ── Ajouter à un événement ────────────────────────────────────────────────
+  const { events } = usePlanners()
+  const [isAdded, setIsAdded] = useState(false)
+  const [addingToEvent, setAddingToEvent] = useState(false)
+  const [eventSelectorOpen, setEventSelectorOpen] = useState(false)
+
+  async function addVendorToPlanner(plannerId: string) {
+    setAddingToEvent(true)
+    try {
+      const res = await fetch(`/api/planners/${plannerId}/vendors`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vendorSlug: slug }),
+      })
+      if (res.ok) setIsAdded(true)
+    } catch {}
+    setAddingToEvent(false)
+  }
+
+  function handleAddToEvent() {
+    if (isAdded || addingToEvent || events.length === 0) return
+    if (events.length === 1) { void addVendorToPlanner(events[0].id); return }
+    setEventSelectorOpen(true)
+  }
 
   // Lightbox keyboard navigation
   const lbNav = useCallback((e: KeyboardEvent) => {
@@ -269,7 +295,6 @@ export default function VendorProfileClient({
                   { label: "Note", value: `${rating.toFixed(1)} / 5` },
                   { label: "Ville", value: city },
                   { label: "Catégorie", value: category.length > 18 ? category.slice(0, 16) + "…" : category },
-                  { label: "Contact", value: "Direct" },
                 ].map(({ label, value }) => (
                   <div key={label} style={{
                     background: "var(--dash-faint,#f7f7fb)", borderRadius: 12, padding: "10px 12px",
@@ -294,6 +319,43 @@ export default function VendorProfileClient({
               >
                 ✉ Envoyer un message
               </button>
+
+              {/* Ajouter à mon événement — visible si l'utilisateur a au moins 1 planner */}
+              {events.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleAddToEvent}
+                  disabled={isAdded || addingToEvent}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    padding: "11px 20px", borderRadius: 999, width: "100%",
+                    background: isAdded ? "rgba(34,197,94,0.12)" : "var(--dash-surface,#fff)",
+                    color: isAdded ? "#22c55e" : "var(--dash-text,#121317)",
+                    border: `1px solid ${isAdded ? "rgba(34,197,94,0.35)" : "var(--dash-border,rgba(183,191,217,0.25))"}`,
+                    fontSize: "var(--text-sm)", fontWeight: 600,
+                    cursor: isAdded || addingToEvent ? "default" : "pointer",
+                    fontFamily: "inherit", marginBottom: 10,
+                    transition: "background 0.2s, color 0.2s, border-color 0.2s",
+                    opacity: addingToEvent ? 0.7 : 1,
+                  }}
+                >
+                  {isAdded ? "✓ Ajouté à votre événement" : addingToEvent ? "Ajout en cours…" : "＋ Ajouter à mon événement"}
+                </button>
+              )}
+
+              {/* Sélecteur d'événement */}
+              {eventSelectorOpen && (
+                <VendorEventSelectorOverlay
+                  events={events}
+                  isLoading={addingToEvent}
+                  onSelect={async (eventId) => {
+                    setEventSelectorOpen(false)
+                    await addVendorToPlanner(eventId)
+                  }}
+                  onClose={() => setEventSelectorOpen(false)}
+                />
+              )}
+
               {/* Téléphone retiré du HTML public ISR — accessible via /api/prestataires/interest (auth + ownership). */}
 
               {/* Social / web links */}
@@ -776,6 +838,93 @@ function ShareModal({ name, category, city, onClose }: { name: string; category:
           }}
         >
           {copied ? "✓ Lien copié !" : "🔗 Copier le lien"}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Sélecteur d'événement — portal fixe ──────────────────────────────────────
+function VendorEventSelectorOverlay({ events, onSelect, onClose, isLoading }: {
+  events: SidebarEvent[]
+  onSelect: (eventId: string) => void
+  onClose: () => void
+  isLoading: boolean
+}) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Choisir un événement"
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 1500,
+        background: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "16px",
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "var(--dash-surface,#fff)",
+          borderRadius: 20, padding: "24px",
+          width: "100%", maxWidth: 360,
+          boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
+          border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+        }}
+      >
+        <h3 style={{ margin: "0 0 6px", fontSize: "var(--text-base)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>
+          Ajouter à quel événement ?
+        </h3>
+        <p style={{ margin: "0 0 20px", fontSize: "var(--text-sm)", color: "var(--dash-text-2,#6a6a71)" }}>
+          Sélectionnez l&apos;événement où ajouter ce prestataire.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {events.map(ev => (
+            <button
+              key={ev.id}
+              type="button"
+              onClick={() => onSelect(ev.id)}
+              disabled={isLoading}
+              style={{
+                display: "flex", alignItems: "center", gap: 12,
+                padding: "12px 16px", borderRadius: 12,
+                border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+                background: "var(--dash-faint,rgba(183,191,217,0.07))",
+                cursor: isLoading ? "wait" : "pointer", textAlign: "left",
+                fontFamily: "inherit", width: "100%", transition: "background 0.15s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = "var(--dash-faint-2,rgba(183,191,217,0.18))")}
+              onMouseLeave={e => (e.currentTarget.style.background = "var(--dash-faint,rgba(183,191,217,0.07))")}
+            >
+              <span style={{
+                width: 10, height: 10, borderRadius: "50%", flexShrink: 0,
+                background: ev.color,
+                boxShadow: `0 0 0 3px ${ev.color}33`,
+              }} />
+              <div>
+                <p style={{ margin: 0, fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text,#121317)" }}>{ev.name}</p>
+                {ev.date && (
+                  <p style={{ margin: 0, fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>
+                    {new Date(ev.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                  </p>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          style={{
+            marginTop: 16, width: "100%", padding: "10px", borderRadius: 999,
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+            background: "transparent", color: "var(--dash-text-2,#6a6a71)",
+            fontSize: "var(--text-sm)", cursor: "pointer", fontFamily: "inherit",
+          }}
+        >
+          Annuler
         </button>
       </div>
     </div>
