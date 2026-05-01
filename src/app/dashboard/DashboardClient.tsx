@@ -22,7 +22,6 @@ import TransportWidget from "@/components/dashboard/widgets/TransportWidget"
 import ContratsWidget from "@/components/dashboard/widgets/ContratsWidget"
 import CitationWidget from "@/components/dashboard/widgets/CitationWidget"
 import ObjectifEpargneWidget from "@/components/dashboard/widgets/ObjectifEpargneWidget"
-import RepartitionBudgetWidget from "@/components/dashboard/widgets/RepartitionBudgetWidget"
 import TimelineWidget from "@/components/dashboard/widgets/TimelineWidget"
 import PlanTableWidget from "@/components/dashboard/widgets/PlanTableWidget"
 import RegimesWidget from "@/components/dashboard/widgets/RegimesWidget"
@@ -132,7 +131,6 @@ const WIDGET_CATALOG = [
   { id: "cartegeo",     title: "Carte géographique",     category: "Invités"       },
   { id: "envoi",        title: "Envoi faire-part",       category: "Invités"       },
   { id: "epargne",      title: "Objectif budget",        category: "Finance"       },
-  { id: "repartition",  title: "Répartition budget",     category: "Finance"       },
   { id: "contrats",     title: "Contrats à signer",      category: "Prestataires"  },
   { id: "moodboard",    title: "Mood board",              category: "Inspiration"   },
   { id: "weather",      title: "Météo du jour J",        category: "Inspiration"   },
@@ -918,7 +916,6 @@ export default function DashboardClient({
           case "rsvplive":     return <RSVPLiveWidget rsvpStats={dashboardData?.rsvpStats} />
           case "regimes":      return <RegimesWidget guests={guests} />
           case "epargne":      return <ObjectifEpargneWidget budget={edata.budget} budgetSpent={edata.budgetSpent} eventDate={event.date} />
-          case "repartition":  return <RepartitionBudgetWidget budgetItems={budgetItems} />
           case "contrats":     return <ContratsWidget bookings={bookings} />
           case "moodboard":    return <MoodboardWidget eventId={activeEventId} />
           case "weather":      return <WeatherWidget eventDate={event.date} />

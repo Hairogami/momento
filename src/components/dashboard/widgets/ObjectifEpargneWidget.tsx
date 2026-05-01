@@ -11,7 +11,7 @@ export default function ObjectifEpargneWidget({ budget, budgetSpent, eventDate }
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
           <p style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--g1,#E11D48)", margin: 0 }}>{remaining.toLocaleString("fr-FR")} Dhs</p>
-          <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>non engagé sur {budget.toLocaleString("fr-FR")} Dhs</p>
+          <p style={{ fontSize: "var(--text-2xs)", color: "var(--dash-text-3,#9a9aaa)", margin: 0 }}>non payé sur {budget.toLocaleString("fr-FR")} Dhs</p>
         </div>
         <div style={{ textAlign: "right" }}>
           <p style={{ fontSize: "var(--text-md)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>J-{days}</p>
@@ -22,8 +22,8 @@ export default function ObjectifEpargneWidget({ budget, budgetSpent, eventDate }
         <div style={{ width: `${pct}%`, height: "100%", background: pct > 90 ? "var(--g1,#E11D48)" : G, transition: "width 0.4s" }} />
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)" }}>
-        <span style={{ color: pct > 90 ? "var(--g1,#E11D48)" : "var(--dash-text-2,#45474D)", fontWeight: 600 }}>{pct}% engagé</span>
-        <span style={{ color: "var(--dash-text-3,#9a9aaa)" }}>{100 - pct}% libre</span>
+        <span style={{ color: pct > 90 ? "var(--g1,#E11D48)" : "var(--dash-text-2,#45474D)", fontWeight: 600 }}>{pct}% payé</span>
+        <span style={{ color: "var(--dash-text-3,#9a9aaa)" }}>{100 - pct}% non payé</span>
       </div>
     </div>
   )

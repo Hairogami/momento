@@ -162,7 +162,7 @@ export async function buildDashboardData(
     const k = item.category.toLowerCase().trim()
     const cur = byCategory.get(k) ?? { allocated: 0, spent: 0 }
     cur.allocated += item.estimated
-    cur.spent     += item.actual ?? 0
+    cur.spent     += item.paid ? item.estimated : 0
     byCategory.set(k, cur)
   }
   const budgetWidgetItems = Array.from(byCategory.entries()).map(([category, v]) => ({
@@ -173,7 +173,7 @@ export async function buildDashboardData(
     icon: getCategory(category).icon,
   }))
 
-  const totalSpent = budgetItems.reduce((s, b) => s + (b.actual ?? 0), 0)
+  const totalSpent = budgetItems.filter(b => b.paid).reduce((s, b) => s + b.estimated, 0)
   const guestCount = guests.length
   const guestConfirmed = guests.filter(g => g.rsvp === "yes").length
 
@@ -181,11 +181,11 @@ export async function buildDashboardData(
   // garde son label spécifique, contrairement au budgetItems agrégé qui groupe
   // tout par catégorie pour le donut.
   const recentExpenses = budgetItems
-    .filter(b => (b.estimated ?? 0) > 0 || (b.actual ?? 0) > 0)
+    .filter(b => b.estimated > 0)
     .map(b => ({
       label: b.label,
       allocated: b.estimated,
-      spent: b.actual ?? 0,
+      spent: b.paid ? b.estimated : 0,
       color: getCategory(b.category).color,
       icon: getCategory(b.category).icon,
     }))
