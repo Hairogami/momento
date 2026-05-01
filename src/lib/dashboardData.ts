@@ -93,7 +93,7 @@ export async function buildDashboardData(
     prisma.guest.findMany({
       where: { plannerId },
       select: {
-        id: true, name: true, rsvp: true, tableNumber: true, city: true, notes: true, linkedRsvpId: true,
+        id: true, name: true, email: true, rsvp: true, tableNumber: true, city: true, notes: true,
       },
       orderBy: { createdAt: "asc" },
     }),
@@ -139,7 +139,7 @@ export async function buildDashboardData(
         rsvps: {
           select: {
             id: true, guestName: true, guestEmail: true, guestPhone: true,
-            attendingMain: true, plusOneName: true, createdAt: true,
+            attendingMain: true, plusOneName: true, dietaryNeeds: true, createdAt: true,
           },
           orderBy: { createdAt: "desc" },
         },
@@ -156,17 +156,13 @@ export async function buildDashboardData(
   }) : []
   const vendorMap = new Map(vendors.map(v => [v.slug, v]))
 
-  // Régimes alimentaires : récupère dietaryNeeds depuis EventRsvp via linkedRsvpId
-  const linkedRsvpIds = guests.map(g => g.linkedRsvpId).filter(Boolean) as string[]
-  const rsvpDietMap = new Map<string, string>()
-  if (linkedRsvpIds.length > 0) {
-    const rsvpRows = await prisma.eventRsvp.findMany({
-      where: { id: { in: linkedRsvpIds } },
-      select: { id: true, dietaryNeeds: true },
-    })
-    for (const r of rsvpRows) {
-      if (r.dietaryNeeds) rsvpDietMap.set(r.id, r.dietaryNeeds)
-    }
+  // Régimes : matcher les EventRsvps aux Guests par email (priorité) puis par nom
+  const dietByEmail = new Map<string, string>()
+  const dietByName  = new Map<string, string>()
+  for (const r of (eventSiteWithRsvps?.rsvps ?? [])) {
+    if (!r.dietaryNeeds) continue
+    if (r.guestEmail) dietByEmail.set(r.guestEmail.toLowerCase(), r.dietaryNeeds)
+    dietByName.set(r.guestName.toLowerCase().trim(), r.dietaryNeeds)
   }
 
   // Aggrégation budget par catégorie pour le widget Budget
@@ -244,7 +240,9 @@ export async function buildDashboardData(
       name: g.name,
       rsvp: (g.rsvp === "yes" || g.rsvp === "no" ? g.rsvp : "pending") as "yes" | "no" | "pending",
       tableNumber: g.tableNumber ?? undefined,
-      diet: g.linkedRsvpId ? rsvpDietMap.get(g.linkedRsvpId) : undefined,
+      diet: (g.email ? dietByEmail.get(g.email.toLowerCase()) : undefined)
+        ?? dietByName.get(g.name.toLowerCase().trim())
+        ?? undefined,
       city: g.city ?? undefined,
     })),
     budgetItems: budgetWidgetItems,
