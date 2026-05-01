@@ -123,36 +123,36 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
         </div>
       </div>
 
-      {/* Category breakdown */}
-      <div style={{ flex: 1, overflow: "auto", scrollbarWidth: "none" }}>
+      {/* Category breakdown — 2 groupes agrégés */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 14 }}>
         {items.length === 0 ? (
           <p style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "16px 0", margin: 0 }}>
             Aucune dépense · <Link href="/budget" style={{ color: "var(--g1,#E11D48)" }}>Ajouter →</Link>
           </p>
-        ) : items.slice(0, 5).map((item) => {
-          const itemPct = totalAllocated > 0 ? Math.min(1, item.allocated / totalAllocated) : 0
-          return (
-            <div key={item.label} style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: "var(--text-sm)", flexShrink: 0 }}>{item.icon}</span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, alignItems: "center" }}>
-                  <span style={{ fontSize: "var(--text-2xs)", fontWeight: 500, color: "var(--dash-text-2,#45474D)" }}>{item.label}</span>
-                  <span style={{ fontSize: "var(--text-2xs)", fontWeight: 600, color: item.color }}>
-                    {item.allocated.toLocaleString("fr-MA")}
+        ) : (() => {
+          const presta = { label: "Prestataires", allocated: 0, color: "var(--g1,#E11D48)" }
+          const div    = { label: "Divers",        allocated: 0, color: "var(--g2,#9333EA)" }
+          for (const item of items) {
+            if (item.label.toLowerCase() === "divers") div.allocated += item.allocated
+            else presta.allocated += item.allocated
+          }
+          return [presta, div].map(group => {
+            const pct = totalAllocated > 0 ? Math.min(1, group.allocated / totalAllocated) : 0
+            return (
+              <div key={group.label}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, alignItems: "center" }}>
+                  <span style={{ fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2,#45474D)" }}>{group.label}</span>
+                  <span style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: group.color }}>
+                    {group.allocated.toLocaleString("fr-MA")} Dhs
                   </span>
                 </div>
-                <div style={{ height: 3, background: "rgba(183,191,217,0.12)", borderRadius: 99, overflow: "hidden" }}>
-                  <div style={{
-                    height: "100%", borderRadius: 99,
-                    width: `${itemPct * 100}%`,
-                    background: item.color,
-                    transition: "width 0.4s",
-                  }} />
+                <div style={{ height: 4, background: "rgba(183,191,217,0.12)", borderRadius: 99, overflow: "hidden" }}>
+                  <div style={{ height: "100%", borderRadius: 99, width: `${pct * 100}%`, background: group.color, transition: "width 0.6s" }} />
                 </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })
+        })()}
       </div>
 
       {/* Footer */}
