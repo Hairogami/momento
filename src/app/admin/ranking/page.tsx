@@ -16,6 +16,7 @@ const C = {
 }
 
 type Config = { id: string; signal: string; label: string; weight: number; updatedAt: string }
+type PriceRange = { id: string; category: string; tier1Max: number; tier2Max: number; tier3Max: number }
 
 const SIGNAL_INFO: Record<string, { desc: string; emoji: string }> = {
   featured:    { emoji: "⭐", desc: "Boost partenaire payant" },
@@ -29,6 +30,10 @@ export default function AdminRankingPage() {
   const [saving, setSaving]   = useState<string | null>(null)
   const [saved, setSaved]     = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [priceRanges, setPriceRanges] = useState<PriceRange[]>([])
+  const [editingPR, setEditingPR] = useState<Record<string, PriceRange>>({})
+  const [savingPR, setSavingPR] = useState<string | null>(null)
+  const [savedPR, setSavedPR] = useState<string | null>(null)
 
   useEffect(() => {
     fetch("/api/admin/ranking")
@@ -36,6 +41,38 @@ export default function AdminRankingPage() {
       .then((data: Config[] | null) => { if (Array.isArray(data)) setConfigs(data) })
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    fetch("/api/admin/price-ranges")
+      .then(r => r.ok ? r.json() : [])
+      .then((data: PriceRange[]) => {
+        setPriceRanges(data)
+        const map: Record<string, PriceRange> = {}
+        for (const r of data) map[r.category] = { ...r }
+        setEditingPR(map)
+      })
+  }, [])
+
+  async function savePriceRange(category: string) {
+    const r = editingPR[category]
+    if (!r) return
+    setSavingPR(category); setSavedPR(null)
+    try {
+      const res = await fetch("/api/admin/price-ranges", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category, tier1Max: r.tier1Max, tier2Max: r.tier2Max, tier3Max: r.tier3Max }),
+      })
+      if (res.ok) {
+        const updated: PriceRange = await res.json()
+        setPriceRanges(prev => prev.map(p => p.category === category ? updated : p))
+        setSavedPR(category)
+        setTimeout(() => setSavedPR(null), 2000)
+      }
+    } finally {
+      setSavingPR(null)
+    }
+  }
 
   async function update(signal: string, weight: number) {
     setSaving(signal); setSaved(null)
@@ -152,6 +189,75 @@ export default function AdminRankingPage() {
             + <code style={codeStyle}>log(reviewCount+1)×poids</code> + <code style={codeStyle}>log(mediaCount+1)×poids</code>.
             Les partenaires (⭐ featured) bénéficient du boost le plus fort par défaut.
           </p>
+        </div>
+
+        {/* ─── Price Tiers ─────────────────────────────────────────── */}
+        <div style={{ marginTop: 48 }}>
+          <h2 style={{ fontSize: "var(--text-md)", fontWeight: 700, color: C.text, margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+            Tranches de prix — $ $$ $$$ $$$$
+          </h2>
+          <p style={{ fontSize: "var(--text-sm)", color: C.textMuted, margin: "0 0 20px" }}>
+            Seuils en MAD par catégorie. $&nbsp;= en dessous de tier1, $$&nbsp;= entre tier1 et tier2, $$$&nbsp;= entre tier2 et tier3, $$$$&nbsp;= au-dessus de tier3.
+          </p>
+
+          {priceRanges.length === 0 ? (
+            <div style={{ padding: 40, textAlign: "center", color: C.textMuted, fontSize: "var(--text-sm)" }}>Chargement…</div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {priceRanges.map(r => {
+                const ed = editingPR[r.category] ?? r
+                const isSaving = savingPR === r.category
+                const isSaved  = savedPR  === r.category
+                return (
+                  <div key={r.category} style={{
+                    background: C.panel, borderRadius: 12, padding: "16px 20px",
+                    border: `1px solid ${C.border}`,
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: C.text, minWidth: 180 }}>{r.category}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        {(["tier1Max", "tier2Max", "tier3Max"] as const).map((key, i) => (
+                          <label key={key} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            <span style={{ fontSize: "var(--text-xs)", color: C.textMuted, whiteSpace: "nowrap" }}>
+                              {["$ max", "$$ max", "$$$ max"][i]}
+                            </span>
+                            <input
+                              type="number"
+                              min={0}
+                              value={ed[key]}
+                              onChange={e => setEditingPR(prev => ({
+                                ...prev,
+                                [r.category]: { ...prev[r.category]!, [key]: Number(e.target.value) },
+                              }))}
+                              style={{
+                                width: 90, padding: "5px 8px", borderRadius: 8,
+                                border: `1px solid ${C.border}`, background: C.bg,
+                                color: C.text, fontSize: "var(--text-xs)", fontWeight: 700,
+                                textAlign: "center", fontFamily: "inherit", outline: "none",
+                              }}
+                            />
+                          </label>
+                        ))}
+                        <button
+                          onClick={() => savePriceRange(r.category)}
+                          disabled={isSaving}
+                          style={{
+                            padding: "6px 16px", borderRadius: 99, border: "none",
+                            background: isSaved ? C.ok : `linear-gradient(135deg, ${C.accent2}, ${C.accent})`,
+                            color: "#fff", fontSize: "var(--text-xs)", fontWeight: 700,
+                            cursor: isSaving ? "not-allowed" : "pointer", opacity: isSaving ? 0.6 : 1,
+                            fontFamily: "inherit", whiteSpace: "nowrap", transition: "background 0.2s",
+                          }}
+                        >
+                          {isSaving ? "…" : isSaved ? "✓" : "Valider"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>

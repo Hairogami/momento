@@ -23,6 +23,7 @@ type Props = {
   facebook?: string | null
   website?: string | null
   reviews: Review[]
+  priceTier?: 1 | 2 | 3 | 4 | null
 }
 
 function StarRow({ count, size = 14 }: { count: number; size?: number }) {
@@ -37,7 +38,7 @@ function StarRow({ count, size = 14 }: { count: number; size?: number }) {
 
 export default function VendorProfileClient({
   slug, name, category, city, rating, photos, heroImg,
-  description, instagram, facebook, website, reviews,
+  description, instagram, facebook, website, reviews, priceTier,
 }: Props) {
   const [activePhoto, setActivePhoto] = useState(0)
   const [contactOpen, setContactOpen] = useState(false)
@@ -293,7 +294,7 @@ export default function VendorProfileClient({
                 {[
                   { label: "Note", value: `${rating.toFixed(1)} / 5` },
                   { label: "Ville", value: city },
-                  { label: "Catégorie", value: category.length > 18 ? category.slice(0, 16) + "…" : category },
+                  { label: "Prix", value: priceTier ? '$'.repeat(priceTier) : '—' },
                 ].map(({ label, value }) => (
                   <div key={label} style={{
                     background: "var(--dash-faint,#f7f7fb)", borderRadius: 12, padding: "10px 12px",

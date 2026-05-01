@@ -125,6 +125,7 @@ export default async function VendorPage(
         facebook={vendor.facebook}
         website={vendor.website}
         reviews={vendor.reviews}
+        priceTier={vendor.priceTier}
       />
     </>
   )

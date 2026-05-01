@@ -47,6 +47,9 @@ export type VendorDetail = {
   facebook: string | null
   website: string | null
   reviews: { author: string; event: string; note: string; stars: number }[]
+  priceMin: number | null
+  priceMax: number | null
+  priceTier: 1 | 2 | 3 | 4 | null
 }
 
 export type VendorListItem = {
@@ -80,6 +83,8 @@ export async function getVendorBySlug(slug: string): Promise<VendorDetail | null
       instagram: true,
       facebook: true,
       website: true,
+      priceMin: true,
+      priceMax: true,
       media: {
         select: { url: true, order: true },
         orderBy: { order: "asc" },
@@ -103,6 +108,19 @@ export async function getVendorBySlug(slug: string): Promise<VendorDetail | null
   const photos = v.media.map(m => m.url)
   const heroImg = photos[0] ?? CAT_FALLBACK_IMAGE[v.category] ?? null
 
+  const priceRange = await prisma.categoryPriceRange.findUnique({
+    where: { category: v.category },
+    select: { tier1Max: true, tier2Max: true, tier3Max: true },
+  })
+  const refPrice = v.priceMin ?? v.priceMax
+  let priceTier: 1 | 2 | 3 | 4 | null = null
+  if (refPrice != null && priceRange) {
+    if (refPrice < priceRange.tier1Max) priceTier = 1
+    else if (refPrice < priceRange.tier2Max) priceTier = 2
+    else if (refPrice < priceRange.tier3Max) priceTier = 3
+    else priceTier = 4
+  }
+
   return {
     slug: v.slug,
     name: v.name,
@@ -115,6 +133,9 @@ export async function getVendorBySlug(slug: string): Promise<VendorDetail | null
     instagram: v.instagram,
     facebook: v.facebook,
     website: v.website,
+    priceMin: v.priceMin,
+    priceMax: v.priceMax,
+    priceTier,
     reviews: v.reviews.map(r => ({
       author: r.author?.name ?? "Anonyme",
       event: r.eventType ?? "Événement",
