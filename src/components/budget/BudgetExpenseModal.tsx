@@ -52,9 +52,7 @@ export function BudgetExpenseModal({
   const [estimated, setEstimated] = useState(
     initialValues?.estimated != null ? String(initialValues.estimated) : ""
   )
-  const [actual, setActual] = useState(
-    initialValues?.actual != null ? String(initialValues.actual) : ""
-  )
+  const [paid, setPaid] = useState(initialValues?.paid ?? false)
   const [vendorId, setVendorId] = useState<string | null>(initialValues?.vendorId ?? null)
   const [error, setError] = useState<string | null>(null)
 
@@ -64,7 +62,7 @@ export function BudgetExpenseModal({
       setLabel(initialValues?.label ?? "")
       setCategory(initialValues?.category ?? "divers")
       setEstimated(initialValues?.estimated != null ? String(initialValues.estimated) : "")
-      setActual(initialValues?.actual != null ? String(initialValues.actual) : "")
+      setPaid(initialValues?.paid ?? false)
       setVendorId(initialValues?.vendorId ?? null)
       setError(null)
     }
@@ -88,12 +86,11 @@ export function BudgetExpenseModal({
       setError("Le montant doit être un nombre positif.")
       return
     }
-    const actualAmount = actual.trim() ? parseFloat(actual) : null
     await onSubmit({
       label: trimmedLabel,
       category,
       estimated: amount,
-      actual: actualAmount != null && isFinite(actualAmount) ? actualAmount : null,
+      paid,
       vendorId: vendorId || null,
     })
   }
@@ -201,36 +198,43 @@ export function BudgetExpenseModal({
             </select>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            <div>
-              <label htmlFor="exp-amount" style={labelStyle}>Budget prévu (Dhs) <span style={{ color: "#ef4444" }}>*</span></label>
-              <input
-                id="exp-amount"
-                type="number"
-                inputMode="decimal"
-                min="0"
-                step="0.01"
-                value={estimated}
-                onChange={(e) => setEstimated(e.target.value)}
-                placeholder="0"
-                style={inputStyle}
-              />
-            </div>
-            <div>
-              <label htmlFor="exp-actual" style={labelStyle}>Réel dépensé (Dhs)</label>
-              <input
-                id="exp-actual"
-                type="number"
-                inputMode="decimal"
-                min="0"
-                step="0.01"
-                value={actual}
-                onChange={(e) => setActual(e.target.value)}
-                placeholder="0"
-                style={inputStyle}
-              />
-            </div>
+          <div>
+            <label htmlFor="exp-amount" style={labelStyle}>Montant (Dhs) <span style={{ color: "#ef4444" }}>*</span></label>
+            <input
+              id="exp-amount"
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="0.01"
+              value={estimated}
+              onChange={(e) => setEstimated(e.target.value)}
+              placeholder="0"
+              style={inputStyle}
+            />
           </div>
+
+          <label
+            htmlFor="exp-paid"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              cursor: "pointer",
+              userSelect: "none",
+              padding: "4px 0",
+            }}
+          >
+            <input
+              id="exp-paid"
+              type="checkbox"
+              checked={paid}
+              onChange={(e) => setPaid(e.target.checked)}
+              style={{ width: 17, height: 17, accentColor: "var(--g1, #E11D48)", cursor: "pointer" }}
+            />
+            <span style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--dash-text, #121317)" }}>
+              Payé
+            </span>
+          </label>
 
           {vendors.length > 0 && (
             <div>
