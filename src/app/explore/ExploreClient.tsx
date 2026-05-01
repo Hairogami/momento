@@ -216,8 +216,6 @@ export default function ExploreClient({ initialVendors, totalCount }: {
   function handleAddToEvent(vendorSlug: string) {
     if (!isAuthenticated) { handleGatedVendorClick(vendorSlug); return }
     if (addedVendors.has(vendorSlug)) return
-    if (events.length === 0) return
-    if (events.length === 1) { void addVendorToPlanner(events[0].id, vendorSlug); return }
     setSelectorVendorSlug(vendorSlug)
   }
 
@@ -947,18 +945,32 @@ function EventSelectorOverlay({ events, onSelect, onClose, isLoading }: {
             </button>
           ))}
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          style={{
-            marginTop: 16, width: "100%", padding: "10px", borderRadius: 999,
-            border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
-            background: "transparent", color: "var(--dash-text-2,#6a6a71)",
-            fontSize: "var(--text-sm)", cursor: "pointer", fontFamily: "inherit",
-          }}
-        >
-          Annuler
-        </button>
+        <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+          <a
+            href="/planner"
+            style={{
+              flex: 1, padding: "10px", borderRadius: 999, textAlign: "center",
+              border: "1px solid rgba(225,29,72,0.3)",
+              background: "rgba(225,29,72,0.05)",
+              color: "var(--g1,#E11D48)", fontSize: "var(--text-sm)", fontWeight: 600,
+              textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+          >
+            + Nouvel événement
+          </a>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              flex: 1, padding: "10px", borderRadius: 999,
+              border: "1px solid var(--dash-border,rgba(183,191,217,0.15))",
+              background: "transparent", color: "var(--dash-text-2,#6a6a71)",
+              fontSize: "var(--text-sm)", cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            Annuler
+          </button>
+        </div>
       </div>
     </div>
   )

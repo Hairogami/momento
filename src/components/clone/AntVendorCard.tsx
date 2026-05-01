@@ -185,7 +185,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
               onMouseEnter={e => { if (!isAdded) (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.12)" }}
               onMouseLeave={e => { if (!isAdded) (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)" }}
             >
-              <span aria-hidden="true">{isAdded ? "✓" : "+"}</span>
+              <span aria-hidden="true" style={{ lineHeight: 1, display: "block" }}>{isAdded ? "✓" : "+"}</span>
             </button>
           )}
 
@@ -209,7 +209,7 @@ export default function AntVendorCard({ id, name, category, city, rating, photo,
             onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.12)")}
             onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <span aria-hidden="true">{fav ? "❤️" : "🤍"}</span>
+            <span aria-hidden="true" style={{ lineHeight: 1, display: "block" }}>{fav ? "❤️" : "🤍"}</span>
           </button>
 
           {/* Bottom info on image */}
