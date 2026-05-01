@@ -2,15 +2,13 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
-async function isAdmin(req: Request) {
+async function isAdmin() {
   const session = await auth()
-  if (!session?.user?.email) return false
-  const adminEmails = (process.env.ADMIN_EMAILS ?? "").split(",").map(e => e.trim().toLowerCase())
-  return adminEmails.includes(session.user.email.toLowerCase())
+  return (session?.user as { role?: string } | undefined)?.role === "admin"
 }
 
-export async function GET(req: Request) {
-  if (!(await isAdmin(req))) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+export async function GET() {
+  if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const ranges = await prisma.categoryPriceRange.findMany({
     orderBy: { category: "asc" },
@@ -19,7 +17,7 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  if (!(await isAdmin(req))) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const body = await req.json()
   const { category, tier1Max, tier2Max, tier3Max } = body
