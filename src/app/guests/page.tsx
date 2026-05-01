@@ -38,6 +38,7 @@ export default function GuestsPage() {
   const [view, setView] = useState<GuestsView>("cards")
   const [linkingRsvpId, setLinkingRsvpId] = useState<string | null>(null)
   const [newGuestName, setNewGuestName] = useState("")
+  const [showAddModal, setShowAddModal] = useState(false)
   const guestInputRef = useRef<HTMLInputElement | null>(null)
 
   function handleEventChange(id: string) {
@@ -197,38 +198,64 @@ export default function GuestsPage() {
             <h2 style={{ fontSize: "clamp(15px,1.2vw,18px)", fontWeight: 700, color: "var(--dash-text,#121317)", margin: 0 }}>
               Mes invités <span style={{ color: "var(--dash-text-3,#9a9aaa)", fontWeight: 500 }}>· {guests.length}</span>
             </h2>
+            <button
+              onClick={() => setShowAddModal(true)}
+              style={{
+                padding: "6px 16px", borderRadius: 99, border: "none",
+                background: G, color: "#fff",
+                fontSize: "var(--text-xs)", fontWeight: 700, fontFamily: "inherit",
+                cursor: "pointer", flexShrink: 0,
+                boxShadow: "0 2px 8px color-mix(in srgb, var(--g1) 25%, transparent)",
+              }}
+            >+ Invité</button>
           </div>
 
-          <div className="no-print" style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
-            <input
-              ref={guestInputRef}
-              type="text"
-              autoComplete="off"
-              name="newGuestName"
-              value={newGuestName}
-              onChange={e => setNewGuestName(e.target.value)}
-              onKeyDown={e => { if (e.key === "Enter") addGuest() }}
-              placeholder="Ajouter (ex: Tante Fatima)"
-              style={{
-                flex: "1 1 220px", minWidth: 200,
-                padding: "9px 14px", borderRadius: 10,
-                border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
-                background: "var(--dash-surface,#fff)",
-                color: "var(--dash-text,#121317)",
-                fontSize: "clamp(12px,0.95vw,14px)",
-                fontFamily: "inherit", outline: "none",
-              }}
-            />
-            <button type="button" onClick={addGuest} style={{
-              padding: "9px 20px", borderRadius: 10, background: G, color: "#fff",
-              border: "none", fontSize: "clamp(12px,0.9vw,13px)", fontWeight: 600,
-              cursor: "pointer", fontFamily: "inherit",
-            }}>+ Ajouter</button>
-          </div>
+          {/* Modal ajout invité */}
+          {showAddModal && (
+            <div
+              style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.45)" }}
+              onClick={() => { setShowAddModal(false); setNewGuestName("") }}
+            >
+              <div
+                onClick={e => e.stopPropagation()}
+                style={{ background: "var(--dash-surface,#fff)", borderRadius: 18, padding: "24px 24px 20px", width: "min(90vw,400px)", boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }}
+              >
+                <p style={{ margin: "0 0 14px", fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Nouvel invité</p>
+                <input
+                  ref={guestInputRef}
+                  autoFocus
+                  type="text"
+                  autoComplete="off"
+                  value={newGuestName}
+                  onChange={e => setNewGuestName(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && newGuestName.trim()) { void addGuest(); setShowAddModal(false) }
+                    if (e.key === "Escape") { setShowAddModal(false); setNewGuestName("") }
+                  }}
+                  placeholder="ex: Tante Fatima"
+                  style={{
+                    width: "100%", padding: "10px 14px", borderRadius: 10, boxSizing: "border-box",
+                    border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+                    background: "var(--dash-faint,rgba(183,191,217,0.06))",
+                    color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)",
+                    fontFamily: "inherit", outline: "none",
+                  }}
+                />
+                <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+                  <button onClick={() => { setShowAddModal(false); setNewGuestName("") }} style={{ padding: "8px 16px", borderRadius: 10, border: "1px solid var(--dash-border)", background: "transparent", color: "var(--dash-text-2)", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Annuler</button>
+                  <button
+                    onClick={() => { if (newGuestName.trim()) { void addGuest(); setShowAddModal(false) } }}
+                    disabled={!newGuestName.trim()}
+                    style={{ padding: "8px 20px", borderRadius: 10, border: "none", background: G, color: "#fff", fontSize: "var(--text-sm)", fontWeight: 700, cursor: newGuestName.trim() ? "pointer" : "not-allowed", fontFamily: "inherit", opacity: newGuestName.trim() ? 1 : 0.5 }}
+                  >Ajouter</button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {guests.length === 0 ? (
             <p style={{ fontSize: "clamp(12px,0.9vw,13px)", color: "var(--dash-text-3,#9a9aaa)", textAlign: "center", padding: "20px 0", margin: 0 }}>
-              Aucun invité. Ajoute-en un ci-dessus.
+              Aucun invité. Utilise le bouton + Invité ci-dessus.
             </p>
           ) : view === "cards" ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%, 240px),1fr))", gap: 12 }}>
@@ -394,10 +421,7 @@ export default function GuestsPage() {
         icon="+"
         disabled={!activeEventId}
         hint={guests.length > 0 ? `${guests.length} invité${guests.length > 1 ? "s" : ""}` : undefined}
-        onClick={() => {
-          guestInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
-          guestInputRef.current?.focus()
-        }}
+        onClick={() => setShowAddModal(true)}
       />
     </DashboardShell>
   )

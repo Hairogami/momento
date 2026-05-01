@@ -66,6 +66,7 @@ export type DashboardData = {
       createdAt?: string
     }>
   }
+  rsvpDiets: Array<{ name: string; diet: string }>
 }
 
 /**
@@ -219,6 +220,15 @@ export async function buildDashboardData(
     })),
   }
 
+  // Régimes RSVP : invités ayant soumis un RSVP avec dietaryNeeds (non dédoublonnés avec guests)
+  const rsvpDiets = rawRsvps
+    .filter(r => r.dietaryNeeds)
+    .filter(r => !guests.some(g =>
+      (g.email && r.guestEmail && g.email.toLowerCase() === r.guestEmail?.toLowerCase()) ||
+      g.name.toLowerCase().trim() === r.guestName.toLowerCase().trim()
+    ))
+    .map(r => ({ name: r.guestName, diet: r.dietaryNeeds! }))
+
   // Format Message[] pour le widget — avatar vide géré par fallback côté widget
   const messages = conversations.map(c => {
     const vendor = vendorMap.get(c.vendorSlug)
@@ -270,5 +280,6 @@ export async function buildDashboardData(
       guestConfirmed,
     },
     rsvpStats,
+    rsvpDiets,
   }
 }

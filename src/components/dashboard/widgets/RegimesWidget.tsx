@@ -10,13 +10,16 @@ const DIET_OPTIONS_LIST = [
   { key: "Allergie",   icon: "⚠️", color: "#ef4444" },
 ]
 
-export default function RegimesWidget({ guests }: { guests: Guest[] }) {
+export default function RegimesWidget({ guests, rsvpDiets = [] }: { guests: Guest[]; rsvpDiets?: { name: string; diet: string }[] }) {
   const [diets, setDiets] = useState<Record<string, string>>(() =>
     Object.fromEntries(guests.filter(g => g.diet).map(g => [g.id, g.diet as string]))
   )
   const [showPopup, setShowPopup] = useState(false)
   const counts: Record<string, number> = {}
+  // Régimes des guests manuels
   Object.values(diets).filter(Boolean).forEach(d => { counts[d] = (counts[d] ?? 0) + 1 })
+  // Régimes des répondants RSVP (non dédoublonnés avec guests)
+  rsvpDiets.forEach(r => { counts[r.diet] = (counts[r.diet] ?? 0) + 1 })
   const total = Object.values(counts).reduce((s, v) => s + v, 0)
   const confirmed = guests.filter(g => g.rsvp === "yes")
   const shown = confirmed.length > 0 ? confirmed : guests

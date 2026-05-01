@@ -483,6 +483,7 @@ type DashboardDataShape = {
     total: number
     recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }>
   }
+  rsvpDiets?: Array<{ name: string; diet: string }>
 }
 
 type DashboardClientProps = {
@@ -914,7 +915,7 @@ export default function DashboardClient({
           case "transport":    return <TransportWidget guests={guests} eventId={activeEventId} />
           case "plantable":    return <PlanTableWidget guests={guests} />
           case "rsvplive":     return <RSVPLiveWidget rsvpStats={dashboardData?.rsvpStats} />
-          case "regimes":      return <RegimesWidget guests={guests} />
+          case "regimes":      return <RegimesWidget guests={guests} rsvpDiets={dashboardData?.rsvpDiets ?? []} />
           case "epargne":      return <ObjectifEpargneWidget budget={edata.budget} budgetSpent={edata.budgetSpent} eventDate={event.date} />
           case "contrats":     return <ContratsWidget bookings={bookings} />
           case "moodboard":    return <MoodboardWidget eventId={activeEventId} />
