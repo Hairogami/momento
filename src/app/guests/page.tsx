@@ -37,9 +37,9 @@ export default function GuestsPage() {
   const [rsvpData, setRsvpData] = useState<RsvpsPayload | null>(null)
   const [view, setView] = useState<GuestsView>("cards")
   const [linkingRsvpId, setLinkingRsvpId] = useState<string | null>(null)
-  const [newGuestName, setNewGuestName] = useState("")
   const [showAddModal, setShowAddModal] = useState(false)
-  const guestInputRef = useRef<HTMLInputElement | null>(null)
+  const [names, setNames] = useState<string[]>([""])
+  const firstInputRef = useRef<HTMLInputElement | null>(null)
 
   function handleEventChange(id: string) {
     setActiveEventId(id)
@@ -89,23 +89,31 @@ export default function GuestsPage() {
 
   const dedupedRsvps = useMemo(() => dedupRsvps(rsvpData?.rsvps ?? []), [rsvpData])
 
-  async function addGuest() {
-    if (!newGuestName.trim() || !activeEventId) return
-    const name = newGuestName.trim()
-    setNewGuestName("")
-    const r = await fetch("/api/guests", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, plannerId: activeEventId }),
-    })
-    if (r.ok) {
-      const created = await r.json()
-      setGuests(g => [{
-        id: created.id, name: created.name,
-        rsvp: created.rsvp ?? "pending",
-        notes: created.notes ?? null,
-        linkedRsvpId: created.linkedRsvpId ?? null,
-      }, ...g])
+  async function handleBatchAdd() {
+    const validNames = names.map(n => n.trim()).filter(Boolean)
+    if (!validNames.length || !activeEventId) return
+    setShowAddModal(false)
+    setNames([""])
+    const results = await Promise.all(
+      validNames.map(name =>
+        fetch("/api/guests", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, plannerId: activeEventId }),
+        }).then(r => r.ok ? r.json() : null)
+      )
+    )
+    const created = results.filter(Boolean)
+    if (created.length > 0) {
+      setGuests(prev => [
+        ...created.map((c: Record<string, unknown>) => ({
+          id: String(c.id), name: String(c.name),
+          rsvp: String(c.rsvp ?? "pending"),
+          notes: typeof c.notes === "string" ? c.notes : null,
+          linkedRsvpId: typeof c.linkedRsvpId === "string" ? c.linkedRsvpId : null,
+        })),
+        ...prev,
+      ])
     }
   }
 
@@ -210,44 +218,66 @@ export default function GuestsPage() {
             >+ Invité</button>
           </div>
 
-          {/* Modal ajout invité */}
+          {/* Modal ajout invités — multi-lignes */}
           {showAddModal && (
             <div
               style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.45)" }}
-              onClick={() => { setShowAddModal(false); setNewGuestName("") }}
+              onClick={() => { setShowAddModal(false); setNames([""]) }}
             >
               <div
                 onClick={e => e.stopPropagation()}
-                style={{ background: "var(--dash-surface,#fff)", borderRadius: 18, padding: "24px 24px 20px", width: "min(90vw,400px)", boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }}
+                style={{ background: "var(--dash-surface,#fff)", borderRadius: 18, padding: "24px 24px 20px", width: "min(92vw,440px)", boxShadow: "0 12px 40px rgba(0,0,0,0.2)" }}
               >
-                <p style={{ margin: "0 0 14px", fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Nouvel invité</p>
-                <input
-                  ref={guestInputRef}
-                  autoFocus
-                  type="text"
-                  autoComplete="off"
-                  value={newGuestName}
-                  onChange={e => setNewGuestName(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === "Enter" && newGuestName.trim()) { void addGuest(); setShowAddModal(false) }
-                    if (e.key === "Escape") { setShowAddModal(false); setNewGuestName("") }
-                  }}
-                  placeholder="ex: Tante Fatima"
-                  style={{
-                    width: "100%", padding: "10px 14px", borderRadius: 10, boxSizing: "border-box",
-                    border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
-                    background: "var(--dash-faint,rgba(183,191,217,0.06))",
-                    color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)",
-                    fontFamily: "inherit", outline: "none",
-                  }}
-                />
-                <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
-                  <button onClick={() => { setShowAddModal(false); setNewGuestName("") }} style={{ padding: "8px 16px", borderRadius: 10, border: "1px solid var(--dash-border)", background: "transparent", color: "var(--dash-text-2)", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Annuler</button>
+                <p style={{ margin: "0 0 4px", fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--dash-text,#121317)" }}>Ajouter des invités</p>
+                <p style={{ margin: "0 0 16px", fontSize: "var(--text-xs)", color: "var(--dash-text-3,#9a9aaa)" }}>Tape Entrée pour passer à la ligne suivante</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: "40vh", overflowY: "auto" }}>
+                  {names.map((name, idx) => (
+                    <div key={idx} style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                      <input
+                        ref={idx === 0 ? firstInputRef : undefined}
+                        autoFocus={idx === 0}
+                        type="text"
+                        autoComplete="off"
+                        value={name}
+                        placeholder={idx === 0 ? "ex: Tante Fatima" : "ex: Oncle Karim"}
+                        onChange={e => setNames(prev => prev.map((n, i) => i === idx ? e.target.value : n))}
+                        onKeyDown={e => {
+                          if (e.key === "Enter") {
+                            e.preventDefault()
+                            setNames(prev => [...prev, ""])
+                            setTimeout(() => document.querySelectorAll<HTMLInputElement>(".guest-batch-input")[idx + 1]?.focus(), 30)
+                          }
+                          if (e.key === "Escape") { setShowAddModal(false); setNames([""]) }
+                        }}
+                        className="guest-batch-input"
+                        style={{
+                          flex: 1, padding: "9px 12px", borderRadius: 10, boxSizing: "border-box",
+                          border: "1px solid var(--dash-border,rgba(183,191,217,0.25))",
+                          background: "var(--dash-faint,rgba(183,191,217,0.06))",
+                          color: "var(--dash-text,#121317)", fontSize: "var(--text-sm)",
+                          fontFamily: "inherit", outline: "none",
+                        }}
+                      />
+                      {names.length > 1 && (
+                        <button
+                          onClick={() => setNames(prev => prev.filter((_, i) => i !== idx))}
+                          style={{ width: 28, height: 28, borderRadius: 8, border: "none", background: "rgba(239,68,68,0.1)", color: "#ef4444", cursor: "pointer", fontSize: "var(--text-xs)", fontWeight: 700, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+                        >✕</button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setNames(prev => [...prev, ""])}
+                  style={{ marginTop: 10, padding: "6px 14px", borderRadius: 99, border: "1.5px dashed var(--dash-border,rgba(183,191,217,0.4))", background: "transparent", color: "var(--g1,#E11D48)", fontSize: "var(--text-xs)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
+                >+ Ajouter une ligne</button>
+                <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 18 }}>
+                  <button onClick={() => { setShowAddModal(false); setNames([""]) }} style={{ padding: "8px 16px", borderRadius: 10, border: "1px solid var(--dash-border)", background: "transparent", color: "var(--dash-text-2)", fontSize: "var(--text-sm)", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Annuler</button>
                   <button
-                    onClick={() => { if (newGuestName.trim()) { void addGuest(); setShowAddModal(false) } }}
-                    disabled={!newGuestName.trim()}
-                    style={{ padding: "8px 20px", borderRadius: 10, border: "none", background: G, color: "#fff", fontSize: "var(--text-sm)", fontWeight: 700, cursor: newGuestName.trim() ? "pointer" : "not-allowed", fontFamily: "inherit", opacity: newGuestName.trim() ? 1 : 0.5 }}
-                  >Ajouter</button>
+                    onClick={() => void handleBatchAdd()}
+                    disabled={!names.some(n => n.trim())}
+                    style={{ padding: "8px 20px", borderRadius: 10, border: "none", background: G, color: "#fff", fontSize: "var(--text-sm)", fontWeight: 700, cursor: names.some(n => n.trim()) ? "pointer" : "not-allowed", fontFamily: "inherit", opacity: names.some(n => n.trim()) ? 1 : 0.5 }}
+                  >{(() => { const c = names.filter(n => n.trim()).length; return c > 1 ? `Ajouter ${c} invités` : "Ajouter" })()}</button>
                 </div>
               </div>
             </div>

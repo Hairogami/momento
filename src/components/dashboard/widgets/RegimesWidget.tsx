@@ -10,6 +10,16 @@ const DIET_OPTIONS_LIST = [
   { key: "Allergie",   icon: "⚠️", color: "#ef4444" },
 ]
 
+function normalizeDiet(d: string): string {
+  const l = d.toLowerCase().trim()
+  if (l.includes("végétar") || l.includes("vegetar")) return "Végétarien"
+  if (l.includes("vegan") || l.includes("végan"))      return "Vegan"
+  if (l.includes("halal"))                             return "Halal"
+  if (l.includes("gluten"))                            return "Sans gluten"
+  if (l.includes("allerg"))                            return "Allergie"
+  return d
+}
+
 export default function RegimesWidget({ guests, rsvpDiets = [] }: { guests: Guest[]; rsvpDiets?: { name: string; diet: string }[] }) {
   const [diets, setDiets] = useState<Record<string, string>>(() =>
     Object.fromEntries(guests.filter(g => g.diet).map(g => [g.id, g.diet as string]))
@@ -17,9 +27,9 @@ export default function RegimesWidget({ guests, rsvpDiets = [] }: { guests: Gues
   const [showPopup, setShowPopup] = useState(false)
   const counts: Record<string, number> = {}
   // Régimes des guests manuels
-  Object.values(diets).filter(Boolean).forEach(d => { counts[d] = (counts[d] ?? 0) + 1 })
+  Object.values(diets).filter(Boolean).forEach(d => { const k = normalizeDiet(d); counts[k] = (counts[k] ?? 0) + 1 })
   // Régimes des répondants RSVP (non dédoublonnés avec guests)
-  rsvpDiets.forEach(r => { counts[r.diet] = (counts[r.diet] ?? 0) + 1 })
+  rsvpDiets.forEach(r => { const k = normalizeDiet(r.diet); counts[k] = (counts[k] ?? 0) + 1 })
   const total = Object.values(counts).reduce((s, v) => s + v, 0)
   const confirmed = guests.filter(g => g.rsvp === "yes")
   const shown = confirmed.length > 0 ? confirmed : guests
