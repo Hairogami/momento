@@ -155,6 +155,38 @@ export async function POST(req: NextRequest) {
 
     await prisma.conversation.update({ where: { id: convId }, data: { updatedAt: new Date() } })
 
+    // Créer un record Notification pour le destinataire (non-bloquant)
+    try {
+      const notifConv = await prisma.conversation.findUnique({
+        where: { id: convId },
+        select: { clientId: true, vendorSlug: true },
+      })
+      if (notifConv) {
+        const isClientSending = notifConv.clientId === session.user.id
+        let recipientId: string | null = null
+        if (isClientSending) {
+          const vendorUser = await prisma.user.findFirst({
+            where: { vendorSlug: notifConv.vendorSlug, role: "vendor" },
+            select: { id: true },
+          })
+          recipientId = vendorUser?.id ?? null
+        } else {
+          recipientId = notifConv.clientId
+        }
+        if (recipientId && recipientId !== session.user.id) {
+          await prisma.notification.create({
+            data: {
+              userId: recipientId,
+              type: "message_new",
+              title: "Nouveau message",
+              body: cleanContent.slice(0, 120),
+              vendorId: notifConv.vendorSlug,
+            },
+          })
+        }
+      }
+    } catch { /* non-bloquant — le message est déjà créé */ }
+
     return NextResponse.json({ message, conversationId: convId }, { status: 201 })
   } catch (err) {
     captureError(err, { route: "/api/messages", method: "POST" })
