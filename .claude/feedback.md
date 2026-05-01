@@ -120,7 +120,14 @@ La règle FIX-EVERYTHING-AS-YOU-GO impose :
 ## 5. Préférences user concrètes
 
 ### Outils
-- **Vercel CLI installée et linkée** — utiliser `vercel ls`, `vercel logs <url>`, `vercel rollback` au lieu de curl/dashboard.
+- **Vercel CLI v52+ installée globalement** (`vercel --version` → 52.0.0). Projet lié : `ngf1/momento` → `momentoevents.app`.
+- **Workflow deploy** : `vercel --prod` (immédiat, ~2 min build). Ne jamais attendre le webhook GitHub seul — lent et peut sauter silencieusement.
+  ```bash
+  git add ... && git commit -m "..."
+  git push origin main          # sync GitHub
+  vercel --prod                 # deploy immédiat production
+  ```
+- **⚠️ Faux positif session-start** : le hook Vercel plugin peut afficher "CLI is not installed" si le PATH est incomplet au démarrage. Ignorer — vérifier avec `vercel --version` si doute.
 - Skills appréciés : `gsd-plan-phase`, `gsd-debug`, `compactreview`, `megaplan`, `pressuretest`, `marketbreakdown`.
 - User a une vraie discipline TDD/security (Vitest 101 tests, SAST audit, security-by-design.md).
 

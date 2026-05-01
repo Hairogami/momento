@@ -45,6 +45,7 @@ npx prisma studio                                 # GUI DB (localhost:5555)
 npx prisma generate                               # après modif schema
 DATABASE_URL=$DIRECT_URL npx prisma db push       # migration schema (DIRECT_URL obligatoire)
 vercel env pull .env.local                        # sync env vars
+vercel --prod                                     # deploy immédiat prod (CLI v52, projet ngf1/momento)
 ```
 
 ## Règles absolues
