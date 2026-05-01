@@ -683,3 +683,15 @@ model RankingConfig {
   label     String   @default("")
   updatedAt DateTime @updatedAt
 }
+
+// ─── CATEGORY PRICE RANGES ───────────────────────────────────────────────────
+// Seuils de prix par catégorie pour afficher $ à $$$$ sur les fiches prestataires.
+// Tier : 1$ = priceMin < tier1Max, 2$ = < tier2Max, 3$ = < tier3Max, 4$ = au-dessus.
+model CategoryPriceRange {
+  id        String   @id @default(cuid())
+  category  String   @unique
+  tier1Max  Float    // < ce seuil = $
+  tier2Max  Float    // < ce seuil = $$
+  tier3Max  Float    // < ce seuil = $$$, au-dessus = $$$$
+  updatedAt DateTime @updatedAt
+}
