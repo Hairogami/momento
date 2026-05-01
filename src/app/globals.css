@@ -796,83 +796,77 @@ summary:focus-visible {
   }
 }
 
-/* ── Flip Countdown (easemize/21st.dev) ─────────────────────────────────── */
+/* ── Flip Countdown (easemize/21st.dev) ───────────────────────────────────────── */
 .flip-unit {
   position: relative;
-  width: 40px;
-  height: 56px;
-  perspective: 200px;
+  width: 52px;
+  height: 76px;
+  perspective: 300px;
+  user-select: none;
 }
+/* font-size = card height so each 50% half clips exactly half the digit */
 .flip-card {
   position: absolute;
   width: 100%;
   height: 50%;
   overflow: hidden;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 76px;
+  line-height: 1;
   font-weight: 900;
-  font-family: monospace;
-  background: var(--flip-card-bg, var(--dash-faint-2, rgba(183,191,217,0.20)));
-  color: var(--flip-card-text, var(--dash-text, #121317));
-  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  background: #1c1e2e;
+  color: #ffffff;
 }
+/* Upper half: flex-start shows the TOP portion of the oversized digit */
 .flip-card__top {
   top: 0;
-  border-radius: 4px 4px 0 0;
-  border-bottom: 1px solid var(--dash-border);
-  align-items: flex-end;
-  padding-bottom: 1px;
+  align-items: flex-start;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
+/* Lower half: flex-end shows the BOTTOM portion of the oversized digit */
 .flip-card__bottom {
   bottom: 0;
-  border-radius: 0 0 4px 4px;
-  align-items: flex-start;
-  padding-top: 1px;
+  align-items: flex-end;
+  border-radius: 0 0 6px 6px;
 }
+/* Container covers top half — children animate independently */
 .flipper {
   position: absolute;
+  top: 0;
   width: 100%;
   height: 50%;
-  top: 0;
   transform-style: preserve-3d;
+  z-index: 2;
 }
-.flipper__top {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 1px;
-  background: var(--flip-card-bg, var(--dash-faint-2, rgba(183,191,217,0.20)));
-  color: var(--flip-card-text, var(--dash-text, #121317));
-  font-size: 1.6rem;
-  font-weight: 900;
-  font-family: monospace;
-  border-radius: 4px 4px 0 0;
-  border-bottom: 1px solid var(--dash-border);
-  backface-visibility: hidden;
-  transform-origin: center bottom;
-}
+/* Both faces fill the flipper (height:100% overrides .flip-card's 50%) */
+.flipper__top,
 .flipper__bottom {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   display: flex;
-  align-items: flex-start;
   justify-content: center;
-  padding-top: 1px;
-  background: var(--flip-card-bg, var(--dash-faint-2, rgba(183,191,217,0.20)));
-  color: var(--flip-card-text, var(--dash-text, #121317));
-  font-size: 1.6rem;
+  align-items: flex-start;
+  font-size: 76px;
+  line-height: 1;
   font-weight: 900;
-  font-family: monospace;
-  border-radius: 0 0 4px 4px;
-  transform: rotateX(-180deg);
+  font-family: 'Courier New', monospace;
+  background: #1c1e2e;
+  color: #ffffff;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   backface-visibility: hidden;
   transform-origin: center bottom;
+}
+/* Back face starts hidden */
+.flipper__bottom {
+  transform: rotateX(-180deg);
 }
 .is-flipping .flipper__top {
   animation: flip-top 0.35s ease-in-out forwards;
