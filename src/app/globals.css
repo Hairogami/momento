@@ -939,3 +939,10 @@ summary:focus-visible {
     padding-bottom: max(120px, calc(96px + env(safe-area-inset-bottom)));
   }
 }
+
+/* StickyCta — masqué sur desktop sauf si alwaysVisible */
+@media (min-width: 768px) {
+  .sticky-cta-bar:not(.sticky-cta-always) {
+    display: none !important;
+  }
+}

@@ -117,13 +117,6 @@ export default function StickyCta({
         {icon}
         {label}
       </button>
-      <style jsx>{`
-        @media (min-width: 768px) {
-          .sticky-cta-bar:not(.sticky-cta-always) {
-            display: none;
-          }
-        }
-      `}</style>
     </div>
   )
 }
