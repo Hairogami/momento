@@ -44,6 +44,7 @@ export default function CloneMessagesPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isMobile = useIsMobile(768)
+  const hasMobileNav = useIsMobile(1024)
   const { events, activeEventId } = usePlanners()
   const [myId, setMyId]     = useState<string | null>(null)
   const [convs, setConvs]   = useState<Conversation[]>([])
@@ -191,9 +192,16 @@ export default function CloneMessagesPage() {
   }
 
   return (
-    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={() => {}}>
+    <DashboardShell events={events} activeEventId={activeEventId} onEventChange={() => {}} noBottomPadding>
 
-      <main className="pb-20 md:pb-0" style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
+      <main style={{
+          flex: 1,
+          display: "flex",
+          height: hasMobileNav
+            ? "calc(100dvh - max(64px, calc(64px + env(safe-area-inset-bottom))))"
+            : "100dvh",
+          overflow: "hidden",
+        }}>
         {/* Liste conversations — full width sur mobile sans active, 300px sur ≥md */}
         <div style={{
           width: isMobile ? "100%" : 300, flexShrink: 0,
