@@ -168,8 +168,11 @@ function RecoSlot({
       style={{
         flexShrink: 0,
         width: 300,
+        height: 420,
         scrollSnapAlign: "start",
         position: "relative",
+        display: "flex",
+        flexDirection: "column",
         transition: "opacity 0.25s ease, transform 0.25s ease",
         opacity: isFading ? 0 : 1,
         transform: isFading ? "scale(0.96) translateY(-4px)" : "scale(1)",
@@ -191,10 +194,12 @@ function RecoSlot({
       </div>
 
       {/* Carte identique à celle des prestataires sélectionnés */}
-      <VendorDiscoverCard vendor={vendor} plannerId={plannerId} hideContactButton />
+      <div style={{ flex: 1, overflow: "hidden", borderRadius: 16 }}>
+        <VendorDiscoverCard vendor={vendor} plannerId={plannerId} hideContactButton />
+      </div>
 
       {/* Actions reco : Sélectionner + Changer */}
-      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+      <div style={{ display: "flex", gap: 8, marginTop: 8, flexShrink: 0 }}>
         <button
           onClick={() => onSelect(vendor)}
           disabled={selecting || changing}
@@ -250,7 +255,7 @@ const skelStyle: React.CSSProperties = {
 }
 
 const emptySlotStyle: React.CSSProperties = {
-  flexShrink: 0, width: 300, minHeight: 260,
+  flexShrink: 0, width: 300, height: 420,
   padding: 18,
   scrollSnapAlign: "start",
   border: "1.5px dashed var(--dash-border, rgba(255,255,255,0.07))",
