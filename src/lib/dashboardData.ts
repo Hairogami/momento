@@ -77,6 +77,20 @@ export type DashboardData = {
  * Server-callable: used both by the API route handler (HTTP refetches)
  * and by the RSC page during SSR (eliminates client-side hydration flash).
  */
+function fmtRelTime(date: Date): string {
+  const now = Date.now()
+  const diff = now - date.getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 1)   return "À l'instant"
+  if (mins < 60)  return `Il y a ${mins}min`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24)   return `Il y a ${hrs}h`
+  const days = Math.floor(hrs / 24)
+  if (days === 1) return "Hier"
+  if (days < 7)   return `Il y a ${days}j`
+  return date.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+}
+
 export async function buildDashboardData(
   plannerId: string,
   userId: string,
@@ -121,6 +135,7 @@ export async function buildDashboardData(
       where: { clientId: userId, OR: [{ plannerId }, { plannerId: null }] },
       include: {
         messages: { orderBy: { createdAt: "desc" }, take: 1 },
+        _count: { select: { messages: { where: { read: false, senderId: { not: userId } } } } },
       },
       orderBy: { updatedAt: "desc" },
       take: 10,
@@ -238,8 +253,8 @@ export async function buildDashboardData(
       id: c.id,
       vendor: vendor?.name ?? c.vendorSlug,
       lastMsg: last?.content?.slice(0, 80) ?? "",
-      time: (last?.createdAt ?? c.updatedAt).toISOString(),
-      unread: isUnread ? 1 : 0,
+      time: fmtRelTime(last?.createdAt ?? c.updatedAt),
+      unread: c._count.messages,
       avatar: "",
     }
   })
