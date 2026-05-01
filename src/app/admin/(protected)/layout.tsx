@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import AdminThemeLock from "@/components/admin/AdminThemeLock"
+import AdminUserMenu from "@/components/admin/AdminUserMenu"
 
 export const metadata = {
   title: "Admin — Momento",
@@ -54,11 +55,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/ranking" style={navLink}>Ranking</Link>
           </nav>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <span style={{ fontSize: "var(--text-xs)", color: C.textDim }}>{user.email}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Link href="/dashboard" style={{ fontSize: "var(--text-xs)", color: C.textMuted, textDecoration: "none" }}>
             ← Retour app
           </Link>
+          <AdminUserMenu email={user.email ?? ""} />
         </div>
       </header>
       {children}

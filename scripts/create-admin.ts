@@ -7,7 +7,6 @@ import { PrismaClient } from "../src/generated/prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
 import * as dotenv from "dotenv"
 import bcrypt from "bcryptjs"
-import * as readline from "readline"
 
 dotenv.config({ path: ".env.local" })
 
@@ -20,29 +19,29 @@ if (!email) {
 
 function askPassword(prompt: string): Promise<string> {
   return new Promise(resolve => {
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-    // Masquer la saisie
-    const stdin = process.openStdin()
     process.stdout.write(prompt)
-    process.stdin.setRawMode?.(true)
+    const stdin = process.stdin as NodeJS.ReadStream & { setRawMode?: (mode: boolean) => void }
+    stdin.setRawMode?.(true)
+    stdin.resume()
+    stdin.setEncoding("utf8")
     let password = ""
-    process.stdin.on("data", (char: Buffer) => {
-      const c = char.toString()
-      if (c === "\r" || c === "\n") {
-        process.stdin.setRawMode?.(false)
+    const onData = (char: string) => {
+      if (char === "\r" || char === "\n") {
+        stdin.setRawMode?.(false)
+        stdin.pause()
+        stdin.removeListener("data", onData)
         process.stdout.write("\n")
-        rl.close()
         resolve(password)
-      } else if (c === "") {
+      } else if (char === "") {
         process.exit()
-      } else if (c === "") {
+      } else if (char === "") {
         password = password.slice(0, -1)
       } else {
-        password += c
+        password += char
         process.stdout.write("*")
       }
-    })
-    process.stdin.resume()
+    }
+    stdin.on("data", onData)
   })
 }
 
@@ -72,9 +71,9 @@ async function main() {
     select: { id: true, email: true, role: true },
   })
 
-  console.log(`✅ Compte admin créé/mis à jour :`)
+  console.log("✅ Compte admin créé/mis à jour :")
   console.log(`   email : ${user.email}`)
-  console.log(`   → Connecte-toi sur /admin/login`)
+  console.log("   → Connecte-toi sur /admin/login")
 }
 
 main().catch(e => { console.error("❌", e); process.exit(1) }).finally(() => prisma.$disconnect())

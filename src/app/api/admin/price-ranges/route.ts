@@ -4,7 +4,10 @@ import { prisma } from "@/lib/prisma"
 
 async function isAdmin() {
   const session = await auth()
-  return (session?.user as { role?: string } | undefined)?.role === "admin"
+  const user = session?.user as { role?: string; email?: string } | undefined
+  if (!user) return false
+  const { isAdminEmail } = await import("@/lib/adminConstants")
+  return user.role === "admin" || isAdminEmail(user.email)
 }
 
 export async function GET() {
