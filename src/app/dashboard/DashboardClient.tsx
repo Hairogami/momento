@@ -484,6 +484,7 @@ type DashboardDataShape = {
     recent: Array<{ id: string; guestName: string; attendingMain: boolean; createdAt?: string }>
   }
   rsvpDiets?: Array<{ name: string; diet: string }>
+  countdownTheme?: string
 }
 
 type DashboardClientProps = {
@@ -896,7 +897,7 @@ export default function DashboardClient({
 
   function renderWidgetContent(id: string) {
     switch (id as WidgetId) {
-      case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
+      case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} plannerId={activeEventId ?? ""} initialTheme={dashboardData?.countdownTheme} />
       case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} onAddExpense={() => setExpenseModalOpen(true)} />
       case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={(cat, slug) => { setSwipeCategory(cat); setSwipeVendorSlug(slug); setSwipeOpen(true) }} onLike={() => setSwipeLikeCount(c => c + 1)} />
       case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} refreshKey={swipeLikeCount} />

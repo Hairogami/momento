@@ -54,6 +54,7 @@ export type DashboardData = {
     guestCount: number
     guestConfirmed: number
   }
+  countdownTheme: string
   rsvpStats: {
     viewCount: number
     confirmed: number
@@ -98,7 +99,7 @@ export async function buildDashboardData(
   // IDOR check : planner doit appartenir au user
   const planner = await prisma.planner.findUnique({
     where: { id: plannerId },
-    select: { id: true, userId: true, budget: true },
+    select: { id: true, userId: true, budget: true, countdownTheme: true },
   })
   if (!planner || planner.userId !== userId) {
     return null
@@ -293,5 +294,6 @@ export async function buildDashboardData(
     },
     rsvpStats,
     rsvpDiets,
+    countdownTheme: planner.countdownTheme ?? "ring",
   }
 }

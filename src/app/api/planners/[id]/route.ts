@@ -91,6 +91,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       coverColor:  typeof body.coverColor === "string" && HEX_COLOR.test(body.coverColor)
         ? body.coverColor
         : undefined,
+      countdownTheme: ["ring","shifting","flip","blocks","minimal","ticket"].includes(body.countdownTheme as string)
+        ? (body.countdownTheme as string)
+        : undefined,
       categories:  categoriesUpdate,
     },
   })
