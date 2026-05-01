@@ -28,7 +28,7 @@ export default function DashboardProgressBanner({ eventLabel, completionPct }: P
       <h1
         style={{
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: "clamp(15px, 2.24vw, 21px)",
+          fontSize: "clamp(18px, 2.69vw, 25px)",
           fontWeight: 500,
           letterSpacing: "-0.015em",
           lineHeight: 1.2,
@@ -47,7 +47,7 @@ export default function DashboardProgressBanner({ eventLabel, completionPct }: P
       </h1>
 
       <div style={{ marginTop: 8, width: "100%" }}>
-        <div style={{ position: "relative", height: 5, background: "var(--dash-faint-2, rgba(183,191,217,0.18))", borderRadius: 999, overflow: "hidden" }}>
+        <div style={{ position: "relative", height: 6, background: "var(--dash-faint-2, rgba(183,191,217,0.18))", borderRadius: 999, overflow: "hidden" }}>
           <div
             style={{
               position: "absolute", top: 0, left: 0, bottom: 0,
@@ -63,7 +63,7 @@ export default function DashboardProgressBanner({ eventLabel, completionPct }: P
               aria-hidden
               style={{
                 position: "absolute", top: "50%", right: -4,
-                width: 10, height: 10, borderRadius: "50%",
+                width: 12, height: 12, borderRadius: "50%",
                 transform: "translateY(-50%)",
                 background: "radial-gradient(circle, rgba(255,255,255,0.8), transparent 70%)",
                 animation: "momento-pulse-dot 1.8s ease-in-out infinite",
