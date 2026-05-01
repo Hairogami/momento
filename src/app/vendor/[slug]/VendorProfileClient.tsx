@@ -294,6 +294,7 @@ export default function VendorProfileClient({
                 {[
                   { label: "Note", value: `${rating.toFixed(1)} / 5` },
                   { label: "Ville", value: city },
+                  { label: "Catégorie", value: category.length > 18 ? category.slice(0, 16) + '…' : category },
                   { label: "Prix", value: priceTier ? '$'.repeat(priceTier) : '—' },
                 ].map(({ label, value }) => (
                   <div key={label} style={{
