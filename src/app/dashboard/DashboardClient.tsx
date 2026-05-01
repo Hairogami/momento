@@ -9,6 +9,7 @@ import DashboardShell from "@/components/dashboard/DashboardShell"
 import { useIsMobile } from "@/hooks/useIsMobile"
 import CountdownWidget from "@/components/clone/dashboard/CountdownWidget"
 import type { BudgetItem } from "@/components/clone/dashboard/BudgetWidget"
+import { BudgetExpenseModal, type BudgetExpenseValues } from "@/components/budget/BudgetExpenseModal"
 import { getEventLabel } from "@/lib/eventLabel"
 import { computeCompletion } from "@/lib/completionScore"
 import NotesWidget from "@/components/dashboard/widgets/NotesWidget"
@@ -20,7 +21,6 @@ import WeatherWidget from "@/components/dashboard/widgets/WeatherWidget"
 import TransportWidget from "@/components/dashboard/widgets/TransportWidget"
 import ContratsWidget from "@/components/dashboard/widgets/ContratsWidget"
 import CitationWidget from "@/components/dashboard/widgets/CitationWidget"
-import DepensesRecentesWidget from "@/components/dashboard/widgets/DepensesRecentesWidget"
 import ObjectifEpargneWidget from "@/components/dashboard/widgets/ObjectifEpargneWidget"
 import RepartitionBudgetWidget from "@/components/dashboard/widgets/RepartitionBudgetWidget"
 import TimelineWidget from "@/components/dashboard/widgets/TimelineWidget"
@@ -131,7 +131,6 @@ const WIDGET_CATALOG = [
   { id: "regimes",      title: "Régimes alimentaires",   category: "Invités"       },
   { id: "cartegeo",     title: "Carte géographique",     category: "Invités"       },
   { id: "envoi",        title: "Envoi faire-part",       category: "Invités"       },
-  { id: "depenses",     title: "Dépenses récentes",      category: "Finance"       },
   { id: "epargne",      title: "Objectif budget",        category: "Finance"       },
   { id: "repartition",  title: "Répartition budget",     category: "Finance"       },
   { id: "contrats",     title: "Contrats à signer",      category: "Prestataires"  },
@@ -575,8 +574,9 @@ export default function DashboardClient({
   const bookings: Booking[]    = dashboardData?.bookings ?? []
   const messages: Message[]    = dashboardData?.messages ?? []
   const budgetItems: BudgetItem[] = dashboardData?.budgetItems ?? []
-  const recentExpenses: BudgetItem[] = dashboardData?.recentExpenses ?? []
   const guests: Guest[]        = dashboardData?.guests ?? []
+  const [expenseModalOpen, setExpenseModalOpen] = useState(false)
+  const [expenseModalBusy, setExpenseModalBusy] = useState(false)
 
   const daysLeft       = event ? Math.max(0, Math.ceil((new Date(event.date).getTime() - Date.now()) / 86400000)) : 0
   const completedTasks = tasks.filter(t => t.done).length
@@ -898,7 +898,7 @@ export default function DashboardClient({
   function renderWidgetContent(id: string) {
     switch (id as WidgetId) {
       case "countdown": return <CountdownWidget name={event.name} date={event.date} guestCount={edata.guestCount} guestConfirmed={edata.guestConfirmed} />
-      case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} />
+      case "budget":    return <BudgetWidget total={edata.budget} spent={edata.budgetSpent} items={budgetItems} onAddExpense={() => setExpenseModalOpen(true)} />
       case "swipe":         return <VendorSwipeWidget plannerId={activeEventId ?? ""} onOpenModal={(cat, slug) => { setSwipeCategory(cat); setSwipeVendorSlug(slug); setSwipeOpen(true) }} onLike={() => setSwipeLikeCount(c => c + 1)} />
       case "prestataires":  return <MesPrestatairesWidget plannerId={activeEventId ?? ""} refreshKey={swipeLikeCount} />
       case "tasks":     return renderTasks()
@@ -917,7 +917,6 @@ export default function DashboardClient({
           case "plantable":    return <PlanTableWidget guests={guests} />
           case "rsvplive":     return <RSVPLiveWidget rsvpStats={dashboardData?.rsvpStats} />
           case "regimes":      return <RegimesWidget guests={guests} />
-          case "depenses":     return <DepensesRecentesWidget budgetItems={recentExpenses} plannerId={activeEventId} />
           case "epargne":      return <ObjectifEpargneWidget budget={edata.budget} budgetSpent={edata.budgetSpent} eventDate={event.date} />
           case "repartition":  return <RepartitionBudgetWidget budgetItems={budgetItems} />
           case "contrats":     return <ContratsWidget bookings={bookings} />
@@ -1216,6 +1215,30 @@ export default function DashboardClient({
           </div>
         </div>
       </main>
+      <BudgetExpenseModal
+        open={expenseModalOpen}
+        mode="add"
+        busy={expenseModalBusy}
+        onCancel={() => setExpenseModalOpen(false)}
+        onSubmit={async (values: BudgetExpenseValues) => {
+          if (!activeEventId) return
+          setExpenseModalBusy(true)
+          try {
+            const res = await fetch(`/api/planners/${activeEventId}/budget-items`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(values),
+            })
+            if (res.ok) {
+              setExpenseModalOpen(false)
+              const dr = await fetch(`/api/planners/${activeEventId}/dashboard-data`)
+              if (dr.ok) setDashboardData(await dr.json())
+            }
+          } finally {
+            setExpenseModalBusy(false)
+          }
+        }}
+      />
     </DashboardShell>
   )
 }

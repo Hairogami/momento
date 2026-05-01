@@ -13,9 +13,10 @@ interface BudgetWidgetProps {
   total: number
   spent: number
   items: BudgetItem[]
+  onAddExpense?: () => void
 }
 
-export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps) {
+export default function BudgetWidget({ total, spent, items, onAddExpense }: BudgetWidgetProps) {
   const totalAllocated = items.reduce((s, i) => s + i.allocated, 0)
   const allocPct = total > 0 ? Math.min(1, totalAllocated / total) : 0
   const isOverBudget = totalAllocated > total
@@ -35,12 +36,25 @@ export default function BudgetWidget({ total, spent, items }: BudgetWidgetProps)
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <span>Budget</span>
-        {isOverBudget && (
-          <span style={{
-            fontSize: "var(--text-2xs)", background: "rgba(239,68,68,0.1)", color: "#ef4444",
-            padding: "2px 7px", borderRadius: 99, fontWeight: 700,
-          }}>DÉPASSÉ</span>
-        )}
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {isOverBudget && (
+            <span style={{
+              fontSize: "var(--text-2xs)", background: "rgba(239,68,68,0.1)", color: "#ef4444",
+              padding: "2px 7px", borderRadius: 99, fontWeight: 700,
+            }}>DÉPASSÉ</span>
+          )}
+          {onAddExpense && (
+            <button
+              onClick={onAddExpense}
+              style={{
+                padding: "2px 10px", borderRadius: 99, border: "none",
+                background: "linear-gradient(135deg, var(--g1,#E11D48), var(--g2,#9333EA))",
+                color: "#fff", fontSize: "var(--text-2xs)", fontWeight: 700,
+                cursor: "pointer", fontFamily: "inherit",
+              }}
+            >+ Dépense</button>
+          )}
+        </div>
       </div>
 
       {/* Donut + totals row */}
