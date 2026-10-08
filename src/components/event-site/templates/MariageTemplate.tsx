@@ -3,7 +3,7 @@
 import HeroSection from "@/components/event-site/ui/HeroSection"
 import ProgramTimeline, { type ProgramStep } from "@/components/event-site/ui/ProgramTimeline"
 import PhotoGallery, { type PhotoItem } from "@/components/event-site/ui/PhotoGallery"
-import RsvpForm from "@/components/event-site/ui/RsvpForm"
+import RsvpForm, { rsvpHeadingColor } from "@/components/event-site/ui/RsvpForm"
 import MapLinks from "@/components/event-site/ui/MapLinks"
 import SiteNav, { type NavItem } from "@/components/event-site/ui/SiteNav"
 import LocationMap from "@/components/event-site/ui/LocationMap"
@@ -277,15 +277,16 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* RSVP — full-bleed background, contenu centré */}
       {isVisible("rsvp") && (
-      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-secondary)", borderTop: "3px solid var(--evt-main)", borderBottom: "3px solid var(--evt-main)", padding: "80px 24px 100px" }}>
+      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-main)", padding: "80px 24px 100px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
-        <h2 style={h2Style}>Confirmez votre présence</h2>
+        <h2 style={{ ...h2Style, color: rsvpHeadingColor(palette.main) }}>Confirmez votre présence</h2>
         <RsvpForm
           slug={slug}
           hasDayAfter={hasDayAfter}
           allowPlusOne={content.rsvp?.allowPlusOne ?? true}
           deadline={content.rsvp?.deadline ?? null}
           accentColor={palette.main}
+          tone="inverted"
         />
         </div>
       </section>
