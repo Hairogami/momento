@@ -5,15 +5,12 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import EventSiteRenderer from "@/components/event-site/EventSiteRenderer"
 
-export const revalidate = 3600 // ISR 1h
-
 /**
- * Pas de pré-rendu au build — on-demand ISR.
- * Chaque site est généré à la première visite puis caché 1h.
+ * Rendu dynamique : la page lit la session + les headers (comptage des vues, exclusion owner/bots)
+ * et doit refléter immédiatement les modifications de l'éditeur. L'ancien ISR (revalidate + generateStaticParams)
+ * faisait planter la page en prod (« static to dynamic at runtime, reason: headers »).
  */
-export async function generateStaticParams() {
-  return []
-}
+export const dynamic = "force-dynamic"
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
