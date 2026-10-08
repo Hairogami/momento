@@ -114,30 +114,40 @@ export function getPalette(id: string): Palette {
 
 export type FontId = "cormorant" | "playfair" | "pjs" | "inter" | "poppins"
 
-export const FONTS: Record<FontId, { label: string; stack: string; googleUrl: string }> = {
+/**
+ * `xHeight` = hauteur des minuscules / taille de police. Sert à compenser optiquement
+ * un texte en police de titres posé à côté du corps de texte (Cormorant à 16px paraît
+ * ~30 % plus petit que Poppins à 16px).
+ */
+export const FONTS: Record<FontId, { label: string; stack: string; googleUrl: string; xHeight: number }> = {
   cormorant: {
     label: "Cormorant Garamond",
     stack: "'Cormorant Garamond', 'Times New Roman', serif",
+    xHeight: 0.40,
     googleUrl: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap",
   },
   playfair: {
     label: "Playfair Display",
     stack: "'Playfair Display', 'Times New Roman', serif",
+    xHeight: 0.51,
     googleUrl: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap",
   },
   pjs: {
     label: "Plus Jakarta Sans",
     stack: "'Plus Jakarta Sans', system-ui, sans-serif",
+    xHeight: 0.52,
     googleUrl: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap",
   },
   inter: {
     label: "Inter",
     stack: "'Inter', system-ui, sans-serif",
+    xHeight: 0.55,
     googleUrl: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
   },
   poppins: {
     label: "Poppins",
     stack: "'Poppins', system-ui, sans-serif",
+    xHeight: 0.55,
     googleUrl: "https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap",
   },
 }

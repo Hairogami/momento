@@ -91,6 +91,8 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
     "--evt-text-muted": palette.textMuted,
     "--evt-font-heading": fontH.stack,
     "--evt-font-body": fontB.stack,
+    // Facteur pour qu'un texte courant en police de titres ait la même taille APPARENTE que le corps
+    "--evt-heading-optical": String(Math.min(1.35, Math.max(1, fontB.xHeight / fontH.xHeight)).toFixed(3)),
     "--evt-gold": goldEnabled ? goldColor : palette.main,
     minHeight: "100dvh",
     background: "var(--evt-bg)",

@@ -85,7 +85,7 @@ export default function RsvpForm({ slug, hasDayAfter = false, allowPlusOne = tru
     {deadline && (
       <p style={{
         fontFamily: "var(--evt-font-body, inherit)",
-        fontSize: "var(--text-sm)", color: t.muted, margin: "0 auto 22px", maxWidth: 460, textAlign: "center",
+        fontSize: "var(--text-base)", color: t.muted, margin: "0 auto 22px", maxWidth: 460, textAlign: "center",
       }}>
         Merci de répondre avant le <strong style={{ color: t.highlight }}>{deadline}</strong>
       </p>

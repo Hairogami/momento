@@ -159,7 +159,7 @@ export default function HeroSection({
         {subtitle && (
           <p style={{
             fontFamily: "var(--evt-font-body)",
-            fontSize: "clamp(0.85rem, 1.4vw, 1rem)",
+            fontSize: "var(--text-sm)",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
             color: overPhoto ? "rgba(255,255,255,0.95)" : "var(--evt-main)",
@@ -175,7 +175,7 @@ export default function HeroSection({
           <p style={{
             fontFamily: "var(--evt-font-heading)",
             fontStyle: "italic",
-            fontSize: "clamp(1rem, 2vw, 1.4rem)",
+            fontSize: "calc(var(--text-base) * var(--evt-heading-optical, 1))",
             color: mutedColor,
             marginTop: 20,
             marginBottom: 0,

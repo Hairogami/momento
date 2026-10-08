@@ -318,7 +318,7 @@ const h2Style: React.CSSProperties = {
 
 const bodyStyle: React.CSSProperties = {
   fontFamily: "var(--evt-font-body)",
-  fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)",
+  fontSize: "var(--text-base)",
   lineHeight: 1.75,
   color: "var(--evt-text-muted)",
   margin: 0,
@@ -334,13 +334,14 @@ function dropcap(text: string): React.ReactNode {
   const rest = text.slice(1)
   return (
     <>
+      {/* Initiale EN LIGNE (pas de float) : les paragraphes sont centrés, une lettrine
+          flottante partirait au bord gauche, loin du reste du mot. */}
       <span style={{
-        float: "left",
         fontFamily: "var(--evt-font-heading)",
-        fontSize: "3.4em",
-        lineHeight: 0.85,
-        paddingRight: "10px",
-        paddingTop: "4px",
+        fontSize: "2.3em",
+        lineHeight: 1,
+        verticalAlign: "baseline",
+        marginRight: "0.02em",
         // Lettrine dorée — or légèrement assombri pour rester lisible (≥ 3:1) sur fond clair
         color: "color-mix(in srgb, var(--evt-gold) 82%, #000)",
         fontWeight: 500,
@@ -353,7 +354,7 @@ function dropcap(text: string): React.ReactNode {
 const welcomeStyle: React.CSSProperties = {
   fontFamily: "var(--evt-font-heading)",
   fontStyle: "italic",
-  fontSize: "clamp(1.1rem, 2vw, 1.4rem)",
+  fontSize: "calc(var(--text-base) * var(--evt-heading-optical, 1))",
   lineHeight: 1.6,
   color: "var(--evt-text)",
   margin: 0,
