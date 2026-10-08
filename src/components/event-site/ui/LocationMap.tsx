@@ -15,7 +15,7 @@ type Props = {
 
 /**
  * Carte interactive minimaliste avec un pin custom au centre.
- * Design éditorial : tuiles OSM en light, pin rond avec pulse, fallback clean si load fail.
+ * Design éditorial : tuiles OSM désaturées, pin rond avec pulse, fallback clean si load fail.
  * Chargement manuel de Leaflet pour éviter les soucis SSR/hydration (pas react-leaflet).
  */
 export default function LocationMap({
@@ -59,10 +59,10 @@ export default function LocationMap({
       })
       mapRef.current = map
 
-      // Tuiles light — Carto positron (lisible, éditorial)
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">Carto</a>',
-        subdomains: "abcd",
+      // Tuiles OSM standard (sans clé API — Carto exige désormais une clé).
+      // Rendu éditorial obtenu via filtre CSS sur .lm-map .leaflet-tile-pane.
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19,
       }).addTo(map)
 
@@ -110,7 +110,7 @@ export default function LocationMap({
         background: "var(--evt-secondary, #f5f0ea)",
       }}
     >
-      <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
+      <div ref={containerRef} className="lm-map" style={{ width: "100%", height: "100%" }} />
       <style>{`
         .lm-pin-wrap { background: transparent; border: none; }
         .lm-pin {
@@ -133,6 +133,8 @@ export default function LocationMap({
           0%   { transform: scale(0.6); opacity: 0.8; }
           100% { transform: scale(1.8); opacity: 0; }
         }
+        /* Tuiles OSM désaturées → rendu sobre proche de Carto positron */
+        .lm-map .leaflet-tile-pane { filter: grayscale(1) contrast(0.92) brightness(1.06); }
         /* Attribution discrète */
         .leaflet-control-attribution { font-size: 9px; opacity: 0.7; }
       `}</style>

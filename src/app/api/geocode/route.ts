@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { parseLocationInput, coordsToGoogleMapsUrl, coordsToWazeUrl } from "@/lib/locationParser"
-import { geocodeAddress } from "@/lib/geocode"
+import {
+  geocodeAddress, isGoogleMapsShortLink, expandGoogleMapsShortLink, placeNameFromGoogleMapsUrl,
+} from "@/lib/geocode"
 
 /**
  * POST /api/geocode
@@ -45,8 +47,33 @@ export async function POST(req: NextRequest) {
     })
   }
 
-  // 2. Sinon, géocode l'adresse texte via Nominatim
-  const geo = await geocodeAddress(input)
+  // 2. Lien court de partage Google Maps (maps.app.goo.gl) → déplier puis re-parser
+  let textToGeocode = input
+  if (isGoogleMapsShortLink(input)) {
+    const longUrl = await expandGoogleMapsShortLink(input)
+    const fromLong = longUrl ? parseLocationInput(longUrl) : null
+    if (fromLong) {
+      return NextResponse.json({
+        lat: fromLong.lat,
+        lng: fromLong.lng,
+        displayName: (longUrl && placeNameFromGoogleMapsUrl(longUrl)) ?? input,
+        mapsUrl: coordsToGoogleMapsUrl(fromLong.lat, fromLong.lng),
+        wazeUrl: coordsToWazeUrl(fromLong.lat, fromLong.lng),
+        source: fromLong.source,
+      })
+    }
+    const placeName = longUrl ? placeNameFromGoogleMapsUrl(longUrl) : null
+    if (!placeName) {
+      return NextResponse.json(
+        { error: "Lien Google Maps illisible. Collez plutôt l'adresse ou les coordonnées (appui long sur le pin)." },
+        { status: 404 },
+      )
+    }
+    textToGeocode = placeName
+  }
+
+  // 3. Sinon, géocode l'adresse texte via Nominatim
+  const geo = await geocodeAddress(textToGeocode)
   if (!geo) {
     return NextResponse.json({ error: "Adresse introuvable." }, { status: 404 })
   }
