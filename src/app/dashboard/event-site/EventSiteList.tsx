@@ -690,12 +690,6 @@ const chipStyle: React.CSSProperties = {
   borderRadius: 99,
 }
 
-const pageStyle: React.CSSProperties = {
-  display: "flex", minHeight: "100dvh",
-  background: "var(--dash-bg,#f7f7fb)",
-  fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-}
-
 const contentStyle: React.CSSProperties = {
   flex: 1, padding: "clamp(16px, 4vw, 32px)", overflowY: "auto",
 }
