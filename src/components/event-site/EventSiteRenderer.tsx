@@ -34,6 +34,19 @@ type EventSite = {
   photos?: { id: string; url: string; caption: string | null }[]
 }
 
+type TemplateContent = Parameters<typeof MariageTemplate>[0]["content"]
+
+/**
+ * Source de vérité unique du nom de lieu : "Lieu principal" (hero.venue).
+ * Le titre de la section localisation reprend ce libellé, sans la préposition
+ * de tête ("à Palais Annakhil" → "Palais Annakhil"). Fallback : ancien mainEvent.venueName.
+ */
+function withVenueFromHero(content: TemplateContent): TemplateContent {
+  const heroVenue = content?.hero?.venue?.trim().replace(/^(?:à|au|aux)\s+/i, "")
+  if (!heroVenue || !content?.mainEvent) return content
+  return { ...content, mainEvent: { ...content.mainEvent, venueName: heroVenue } }
+}
+
 /** Fallback mood par template en attendant que EventSite.mood soit persisté en DB */
 function defaultMood(template: string): MoodId {
   if (template === "mariage") return "decoratif"
@@ -77,7 +90,7 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
     overflow: "hidden",
   }
 
-  const content = site.content as Parameters<typeof MariageTemplate>[0]["content"]
+  const content = withVenueFromHero(site.content as Parameters<typeof MariageTemplate>[0]["content"])
   const photos = site.photos?.map(p => ({ id: p.id, url: p.url, caption: p.caption ?? undefined })) ?? []
 
   return (

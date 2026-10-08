@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState, useMemo } from "react"
+import { useMemo } from "react"
 import { seededRng } from "@/lib/eventSiteSeed"
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion"
 
 type Variant = "petals" | "stars" | "confetti" | "dots"
 
@@ -22,12 +23,7 @@ type Props = {
  * position: fixed, z-index: 0, pointer-events: none → invisible aux interactions.
  */
 export default function FloatingParticles({ seed, variant = "petals", color = "var(--evt-accent)", count = 14, speedSeconds = 25 }: Props) {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setReduced(mq.matches)
-  }, [])
+  const reduced = usePrefersReducedMotion()
 
   const particles = useMemo(() => {
     const rng = seededRng(`particles:${seed}:${variant}`)

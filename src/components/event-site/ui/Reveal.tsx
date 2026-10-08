@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react"
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion"
 
 type Props = {
   children: ReactNode
@@ -18,30 +19,27 @@ type Props = {
  */
 export default function Reveal({ children, delay = 0, as = "div", id, style, distance = 24 }: Props) {
   const ref = useRef<HTMLElement | null>(null)
-  const [visible, setVisible] = useState(false)
-  const [reduced, setReduced] = useState(false)
+  const [inView, setInView] = useState(false)
+  const reduced = usePrefersReducedMotion()
+  // Reduced motion → révélé instantanément, sans observer
+  const visible = inView || reduced
 
   useEffect(() => {
-    if (typeof window === "undefined") return
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setReduced(mq.matches)
-
+    if (reduced) return
     const el = ref.current
     if (!el) return
-
-    if (mq.matches) { setVisible(true); return }
 
     const io = new IntersectionObserver(
       entries => {
         entries.forEach(e => {
-          if (e.isIntersecting) { setVisible(true); io.unobserve(e.target) }
+          if (e.isIntersecting) { setInView(true); io.unobserve(e.target) }
         })
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [])
+  }, [reduced])
 
   const computed: CSSProperties = {
     ...style,

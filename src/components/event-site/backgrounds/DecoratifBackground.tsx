@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import type { DecoratifBgParams } from "@/lib/eventSiteSeed"
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion"
 
 type Props = {
   params: DecoratifBgParams
@@ -24,15 +24,7 @@ type Props = {
 export default function DecoratifBackground({
   params, colorMain, colorAccent, colorBg = "#FAF3E8", intensity = 1, fullPage = false, customOpacity,
 }: Props) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setPrefersReducedMotion(mq.matches)
-    const h = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mq.addEventListener("change", h)
-    return () => mq.removeEventListener("change", h)
-  }, [])
+  const prefersReducedMotion = usePrefersReducedMotion()
 
   // Opacité contrôlée — plus basse si full page
   const rawOpacity = Math.max(0.08, Math.min(0.55, params.opacity * intensity))

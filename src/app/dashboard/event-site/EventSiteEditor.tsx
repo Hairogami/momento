@@ -1,10 +1,10 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { PALETTES, FONTS, MOODS, type FontId } from "@/lib/eventSiteTokens"
+import { PALETTES, FONTS, type FontId } from "@/lib/eventSiteTokens"
 import PatternPicker, { type PatternId } from "./PatternPicker"
 import { compressImage } from "@/lib/imageCompress"
 import { isAdminEmail } from "@/lib/adminConstants"
@@ -43,7 +43,7 @@ const TEMPLATES = [
   { id: "generique",    label: "Générique",       emoji: "✨" },
 ]
 
-export default function EventSiteEditor({ planner, eventSite }: { planner: Planner; eventSite: EventSite }) {
+export default function EventSiteEditor({ eventSite }: { planner: Planner; eventSite: EventSite }) {
   const router = useRouter()
   const [site, setSite] = useState<EventSite>(eventSite)
   const [tab, setTab] = useState<Tab>("content")
@@ -69,37 +69,48 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
   const content = (site.content ?? {}) as Record<string, unknown>
   const hero = (content.hero as Record<string, string> | undefined) ?? {}
 
+  // File d'attente des PATCH : garantit que le serveur reçoit les sauvegardes dans l'ordre
+  // (sinon une requête plus ancienne arrivée en dernier écrase la plus récente).
+  const saveQueueRef = useRef<Promise<void>>(Promise.resolve())
+
   async function patch(partial: Partial<EventSite>) {
     setSite(prev => ({ ...prev, ...partial }))
     if (savedTimerRef.current) clearTimeout(savedTimerRef.current)
     setSaveState("saving")
-    try {
-      const r = await fetch(`/api/event-site/${site.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(partial),
-      })
-      if (!r.ok) throw new Error(`HTTP ${r.status}`)
-      setPreviewKey(k => k + 1)
-      setSaveState("saved")
-      savedTimerRef.current = setTimeout(() => setSaveState("idle"), 2000)
-    } catch {
-      setSaveState("error")
+    const run = async () => {
+      try {
+        const r = await fetch(`/api/event-site/${site.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(partial),
+        })
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        setPreviewKey(k => k + 1)
+        setSaveState("saved")
+        savedTimerRef.current = setTimeout(() => setSaveState("idle"), 2000)
+      } catch {
+        setSaveState("error")
+      }
     }
+    saveQueueRef.current = saveQueueRef.current.then(run)
+    await saveQueueRef.current
   }
 
-  async function updateContent(path: string, value: unknown) {
-    const next = { ...content }
-    // Path simple : "hero.title" → next.hero.title = value
-    const parts = path.split(".")
-    let cursor: Record<string, unknown> = next
-    for (let i = 0; i < parts.length - 1; i++) {
-      const k = parts[i]!
-      if (typeof cursor[k] !== "object" || cursor[k] === null) cursor[k] = {}
-      cursor = cursor[k] as Record<string, unknown>
-    }
-    cursor[parts[parts.length - 1]!] = value
+  // Ref vers le contenu le plus récent : évite qu'une 2e mise à jour rapprochée
+  // reparte d'un état périmé (closure) et écrase la 1re.
+  const contentRef = useRef(content)
+  contentRef.current = content
+
+  /** Applique plusieurs `path → value` immuablement puis envoie UN seul PATCH. */
+  function updateContentMany(updates: [path: string, value: unknown][]) {
+    let next: Record<string, unknown> = contentRef.current
+    for (const [path, value] of updates) next = setPathImmutable(next, path.split("."), value)
+    contentRef.current = next
     patch({ content: next } as Partial<EventSite>)
+  }
+
+  function updateContent(path: string, value: unknown) {
+    updateContentMany([[path, value]])
   }
 
   async function togglePublish() {
@@ -231,7 +242,7 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
 
         <div style={{ padding: "20px", flex: 1 }}>
           {tab === "content" && (
-            <ContentTab content={content} hero={hero} template={site.template} onUpdate={updateContent} />
+            <ContentTab content={content} hero={hero} template={site.template} onUpdate={updateContent} onUpdateMany={updateContentMany} />
           )}
           {tab === "style" && (
             <StyleTab site={site} onPatch={patch} onUpdateContent={updateContent} content={content} />
@@ -341,12 +352,13 @@ export default function EventSiteEditor({ planner, eventSite }: { planner: Plann
 }
 
 function ContentTab({
-  content, hero, template, onUpdate,
+  content, hero, template, onUpdate, onUpdateMany,
 }: {
   content: Record<string, unknown>
   hero: Record<string, string>
   template: string
   onUpdate: (path: string, value: unknown) => void
+  onUpdateMany: (updates: [path: string, value: unknown][]) => void
 }) {
   const main = (content.mainEvent as Record<string, string> | undefined) ?? {}
   const rsvp = (content.rsvp as Record<string, string | boolean> | undefined) ?? {}
@@ -363,26 +375,45 @@ function ContentTab({
         <Input value={hero.date ?? ""} onChange={v => onUpdate("hero.date", v)} placeholder="Ex: 04 avril 2026" />
       </FieldGroup>
 
-      <FieldGroup label="Lieu principal (nom visible)" visible={isVisible("heroVenue")} onToggleVisible={() => toggleVisible("heroVenue")}>
+      <FieldGroup label="Lieu principal (affiché en haut + sur la carte)" visible={isVisible("heroVenue")} onToggleVisible={() => toggleVisible("heroVenue")}>
         <Input value={hero.venue ?? ""} onChange={v => onUpdate("hero.venue", v)} placeholder="Ex: Domaine Terracotta" />
       </FieldGroup>
 
       <FieldGroup label="Localisation" collapsible>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 12 }}>
+          <label style={subLabelStyle}>
+            Heure
+            <Input
+              value={(main.time as string) ?? ""}
+              onChange={v => onUpdate("mainEvent.time", v)}
+              placeholder="Ex : 18h00"
+            />
+          </label>
+          <label style={subLabelStyle}>
+            Description (sous le titre)
+            <Textarea
+              value={(main.description as string) ?? ""}
+              onChange={v => onUpdate("mainEvent.description", v)}
+              placeholder="Ex : La cérémonie débutera à 18h00, suivie de la réception."
+              rows={2}
+            />
+          </label>
+        </div>
         <LocationField
           current={(main.location as string) ?? ""}
           resolved={(main as Record<string, unknown>).locationResolved as { lat: number; lng: number; displayName?: string } | undefined}
-          onResolved={r => {
-            onUpdate("mainEvent.location", r.input)
-            onUpdate("mainEvent.locationResolved", r.resolved)
-            onUpdate("mainEvent.mapsUrl", r.mapsUrl)
-            onUpdate("mainEvent.wazeUrl", r.wazeUrl)
-          }}
-          onClear={() => {
-            onUpdate("mainEvent.location", "")
-            onUpdate("mainEvent.locationResolved", null)
-            onUpdate("mainEvent.mapsUrl", "")
-            onUpdate("mainEvent.wazeUrl", "")
-          }}
+          onResolved={r => onUpdateMany([
+            ["mainEvent.location", r.input],
+            ["mainEvent.locationResolved", r.resolved],
+            ["mainEvent.mapsUrl", r.mapsUrl],
+            ["mainEvent.wazeUrl", r.wazeUrl],
+          ])}
+          onClear={() => onUpdateMany([
+            ["mainEvent.location", ""],
+            ["mainEvent.locationResolved", null],
+            ["mainEvent.mapsUrl", ""],
+            ["mainEvent.wazeUrl", ""],
+          ])}
         />
         <div style={{ padding: "10px 12px", background: "rgba(225,29,72,0.06)", border: "1px solid rgba(225,29,72,0.2)", borderRadius: 9, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", lineHeight: 1.5, marginTop: 10 }}>
           🔒 L&apos;adresse exacte n&apos;est jamais affichée en toutes lettres aux invités. Ils voient une carte + boutons Google Maps / Waze.
@@ -406,6 +437,17 @@ function ContentTab({
           onChange={next => onUpdate("program", next)}
         />
       </FieldGroup>
+
+      {template === "mariage" && (
+        <FieldGroup label="Hébergement (facultatif)" visible={isVisible("travel")} onToggleVisible={() => toggleVisible("travel")} collapsible>
+          <HotelsEditor
+            hotels={((content.travel as { hotels?: HotelData[] } | undefined)?.hotels) ?? []}
+            notes={((content.travel as { notes?: string } | undefined)?.notes) ?? ""}
+            onChangeHotels={next => onUpdate("travel.hotels", next)}
+            onChangeNotes={v => onUpdate("travel.notes", v)}
+          />
+        </FieldGroup>
+      )}
 
       {template === "mariage" && (
         <FieldGroup label="Dress code (facultatif)" visible={isVisible("dressCode")} onToggleVisible={() => toggleVisible("dressCode")}>
@@ -646,6 +688,98 @@ function ProgramEditor({
         }}
       >
         + Ajouter une étape
+      </button>
+    </div>
+  )
+}
+
+type HotelData = {
+  id?: string
+  name: string
+  priceRange?: string
+  mapsUrl?: string
+  promoCode?: string
+}
+
+function HotelsEditor({
+  hotels, notes, onChangeHotels, onChangeNotes,
+}: {
+  hotels: HotelData[]
+  notes: string
+  onChangeHotels: (next: HotelData[]) => void
+  onChangeNotes: (v: string) => void
+}) {
+  function update(idx: number, partial: Partial<HotelData>) {
+    onChangeHotels(hotels.map((h, i) => (i === idx ? { ...h, ...partial } : h)))
+  }
+  function remove(idx: number) {
+    onChangeHotels(hotels.filter((_, i) => i !== idx))
+  }
+  function add() {
+    const id = (globalThis.crypto?.randomUUID?.() ?? `hotel-${Date.now()}`)
+    onChangeHotels([...hotels, { id, name: "" }])
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <Textarea
+        value={notes}
+        onChange={onChangeNotes}
+        placeholder="Mot d'intro (facultatif) — Ex: Quelques adresses à proximité du lieu"
+        rows={2}
+      />
+
+      {hotels.length === 0 && (
+        <div style={{ fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", padding: "8px 2px" }}>
+          Aucun hôtel pour l&apos;instant. Ajoutez le premier ci-dessous.
+        </div>
+      )}
+
+      {hotels.map((h, idx) => (
+        <div
+          key={h.id ?? idx}
+          style={{
+            border: "1px solid var(--dash-border,rgba(183,191,217,0.2))",
+            borderRadius: 10,
+            padding: 10,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            background: "var(--dash-surface,rgba(255,255,255,0.02))",
+          }}
+        >
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div style={{ flex: 1 }}>
+              <Input value={h.name} onChange={v => update(idx, { name: v })} placeholder="Nom de l'hôtel" />
+            </div>
+            <button
+              type="button"
+              onClick={() => remove(idx)}
+              aria-label="Supprimer l'hôtel"
+              style={{ ...miniBtn(false), color: "#dc2626" }}
+            >✕</button>
+          </div>
+          <Input value={h.priceRange ?? ""} onChange={v => update(idx, { priceRange: v || undefined })} placeholder="Distance / prix (facultatif) — Ex: 5 min · dès 900 MAD" />
+          <Input value={h.mapsUrl ?? ""} onChange={v => update(idx, { mapsUrl: v || undefined })} placeholder="Lien Google Maps (facultatif)" />
+          <Input value={h.promoCode ?? ""} onChange={v => update(idx, { promoCode: v || undefined })} placeholder="Code promo (facultatif)" />
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={add}
+        style={{
+          padding: "8px 12px",
+          border: "1px dashed var(--dash-border,rgba(183,191,217,0.35))",
+          borderRadius: 9,
+          background: "transparent",
+          color: "var(--dash-text,#121317)",
+          fontSize: "var(--text-sm)",
+          cursor: "pointer",
+          fontFamily: "inherit",
+        }}
+      >
+        + Ajouter un hôtel
       </button>
     </div>
   )
@@ -1112,13 +1246,8 @@ function PhotosTab({ site, onPatch, onReload }: { site: EventSite; onPatch: (p: 
 
 function ShareBlock({ publicUrl, eventTitle }: { publicUrl: string; eventTitle: string }) {
   const [copied, setCopied] = useState(false)
-  const [fullUrl, setFullUrl] = useState<string>(publicUrl)
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setFullUrl(`${window.location.origin}${publicUrl}`)
-    }
-  }, [publicUrl])
+  const origin = useSyncExternalStore(noopSubscribe, () => window.location.origin, () => "")
+  const fullUrl = `${origin}${publicUrl}`
 
   async function copy() {
     try {
@@ -1330,6 +1459,23 @@ function FontSelector({ current, onChange, preview }: { current: string; onChang
   )
 }
 
+/** "a.b.c" → copie les objets le long du chemin (jamais de mutation de l'état React). */
+function setPathImmutable(obj: Record<string, unknown>, parts: string[], value: unknown): Record<string, unknown> {
+  const [head, ...rest] = parts
+  if (!head) return obj
+  if (rest.length === 0) return { ...obj, [head]: value }
+  const child = obj[head]
+  const childObj = typeof child === "object" && child !== null && !Array.isArray(child) ? child as Record<string, unknown> : {}
+  return { ...obj, [head]: setPathImmutable(childObj, rest, value) }
+}
+
+const noopSubscribe = () => () => {}
+
+const subLabelStyle: React.CSSProperties = {
+  display: "flex", flexDirection: "column", gap: 6,
+  fontSize: "var(--text-xs)", fontWeight: 600, color: "var(--dash-text-2, #6a6a71)",
+}
+
 function FieldGroup({
   label, children, visible, onToggleVisible, collapsible = false, defaultCollapsed = true,
 }: {
@@ -1408,7 +1554,9 @@ function FieldGroup({
 
 function Input({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
   const [local, setLocal] = useState(value)
-  useEffect(() => setLocal(value), [value])
+  // Resync quand la valeur externe change (pattern "ajuster l'état pendant le rendu")
+  const [prevValue, setPrevValue] = useState(value)
+  if (value !== prevValue) { setPrevValue(value); setLocal(value) }
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   function emit(v: string) {
     setLocal(v)
@@ -1434,7 +1582,9 @@ function Input({ value, onChange, placeholder }: { value: string; onChange: (v: 
 
 function Textarea({ value, onChange, placeholder, rows = 3 }: { value: string; onChange: (v: string) => void; placeholder?: string; rows?: number }) {
   const [local, setLocal] = useState(value)
-  useEffect(() => setLocal(value), [value])
+  // Resync quand la valeur externe change (pattern "ajuster l'état pendant le rendu")
+  const [prevValue, setPrevValue] = useState(value)
+  if (value !== prevValue) { setPrevValue(value); setLocal(value) }
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   function emit(v: string) {
     setLocal(v)

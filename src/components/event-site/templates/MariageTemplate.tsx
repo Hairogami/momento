@@ -32,13 +32,13 @@ type MariageContent = {
   }
   program?: ProgramStep[]
   dayAfter?: { enabled?: boolean; date?: string; time?: string; venueName?: string; mapsUrl?: string; wazeUrl?: string; description?: string }
-  travel?: { airports?: string[]; hotels?: { name: string; mapsUrl?: string; promoCode?: string; priceRange?: string }[]; notes?: string }
+  travel?: { airports?: string[]; hotels?: { id?: string; name: string; mapsUrl?: string; promoCode?: string; priceRange?: string }[]; notes?: string }
   registry?: { label: string; url: string }[]
   dressCode?: string
   /** Compte à rebours jusqu'au grand jour. */
   countdown?: { enabled?: boolean; targetDate?: string; variant?: CountdownVariant; label?: string }
   /** Toggles de visibilité (œil user) — si false, la section est masquée sur le site rendu. */
-  visibility?: Partial<Record<"heroDate" | "heroVenue" | "welcomeNote" | "program" | "dressCode" | "rsvp" | "countdown", boolean>>
+  visibility?: Partial<Record<"heroDate" | "heroVenue" | "welcomeNote" | "program" | "dressCode" | "rsvp" | "countdown" | "travel", boolean>>
   welcomeNote?: string
   rsvp?: { deadline?: string; allowPlusOne?: boolean }
   /** Overrides visuels utilisateurs (pattern choisi manuellement dans l'éditeur). */
@@ -67,16 +67,16 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
   const hero = content.hero ?? {}
   const heroTitle = hero.title || "Notre mariage"
   const hasDayAfter = Boolean(content.dayAfter?.enabled)
-  const isVisible = (key: "heroDate" | "heroVenue" | "welcomeNote" | "program" | "dressCode" | "rsvp" | "countdown") =>
+  const isVisible = (key: "heroDate" | "heroVenue" | "welcomeNote" | "program" | "dressCode" | "rsvp" | "countdown" | "travel") =>
     content.visibility?.[key] !== false
 
   const navItems: NavItem[] = [
     { id: "top",       label: "Accueil" },
     ...(content.couple?.story  ? [{ id: "histoire",   label: "Notre histoire" } as NavItem] : []),
-    ...(content.mainEvent && isVisible("heroVenue")       ? [{ id: "ceremonie",  label: "Cérémonie"      } as NavItem] : []),
+    ...(content.mainEvent       ? [{ id: "ceremonie",  label: "Cérémonie"      } as NavItem] : []),
     ...(content.countdown?.enabled && content.countdown?.targetDate && isVisible("countdown") ? [{ id: "countdown", label: "Compte à rebours" } as NavItem] : []),
     ...(content.program?.length && isVisible("program") ? [{ id: "programme",  label: "Programme"      } as NavItem] : []),
-    ...(content.travel?.hotels?.length ? [{ id: "voyage", label: "Voyage"      } as NavItem] : []),
+    ...(content.travel?.hotels?.length && isVisible("travel") ? [{ id: "voyage", label: "Hébergement" } as NavItem] : []),
     ...(isVisible("rsvp") ? [{ id: "rsvp", label: "RSVP" } as NavItem] : []),
   ]
 
@@ -210,7 +210,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
       )}
 
       {/* Voyage & hôtels */}
-      {content.travel?.hotels && content.travel.hotels.length > 0 && (
+      {content.travel?.hotels && content.travel.hotels.length > 0 && isVisible("travel") && (
         <>
           <SectionDivider variant="leaf" />
           <Reveal as="section" id="voyage" style={sectionCentered}>
