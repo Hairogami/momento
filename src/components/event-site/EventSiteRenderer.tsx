@@ -5,10 +5,11 @@ import FeteFamilleTemplate from "./templates/FeteFamilleTemplate"
 import CorporateTemplate from "./templates/CorporateTemplate"
 import ConferenceTemplate from "./templates/ConferenceTemplate"
 import GeneriqueTemplate from "./templates/GeneriqueTemplate"
-import { getPalette, FONTS, type MoodId } from "@/lib/eventSiteTokens"
+import { getPalette, FONTS, DEFAULT_GOLD, type MoodId } from "@/lib/eventSiteTokens"
 import { generateDecoratifParams, overrideDecoratifParams } from "@/lib/eventSiteSeed"
 import DecoratifBackground from "./backgrounds/DecoratifBackground"
 import FloatingParticles from "./backgrounds/FloatingParticles"
+import DoorIntro, { initialsFromTitle } from "./ui/DoorIntro"
 import { getPreset, resolveIntensity } from "@/lib/eventSiteAnimations"
 
 const PARTICLES_VARIANT_BY_TEMPLATE: Record<string, "petals" | "stars" | "confetti" | "dots"> = {
@@ -63,7 +64,15 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
   const palette = customColors && (customColors.main || customColors.accent)
     ? { ...basePalette, main: customColors.main || basePalette.main, accent: customColors.accent || basePalette.accent }
     : basePalette
-  const contentStyle = (site.content as { style?: { patternFullPage?: boolean; animationIntensity?: string; patternOpacity?: number } } | undefined)?.style
+  const contentStyle = (site.content as { style?: {
+    patternFullPage?: boolean; animationIntensity?: string; patternOpacity?: number
+    gold?: { enabled?: boolean; color?: string }; doorIntro?: boolean
+  } } | undefined)?.style
+  // Touche dorée : activée par défaut sur le template Mariage. Désactivée → les accents retombent sur la couleur principale.
+  const goldEnabled = contentStyle?.gold?.enabled ?? site.template === "mariage"
+  const goldColor = /^#[0-9a-f]{6}$/i.test(contentStyle?.gold?.color ?? "") ? contentStyle!.gold!.color! : DEFAULT_GOLD
+  // Porte d'ouverture : Mariage uniquement, activée par défaut.
+  const doorIntro = site.template === "mariage" && contentStyle?.doorIntro !== false
   const patternFullPage = contentStyle?.patternFullPage === true
   const customPatternOpacity = typeof contentStyle?.patternOpacity === "number" ? contentStyle.patternOpacity : undefined
   const mood: MoodId = defaultMood(site.template)
@@ -82,6 +91,7 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
     "--evt-text-muted": palette.textMuted,
     "--evt-font-heading": fontH.stack,
     "--evt-font-body": fontB.stack,
+    "--evt-gold": goldEnabled ? goldColor : palette.main,
     minHeight: "100dvh",
     background: "var(--evt-bg)",
     color: "var(--evt-text)",
@@ -126,6 +136,9 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
             count={animationPreset.particlesCount}
             speedSeconds={animationPreset.particlesSpeed}
           />
+        )}
+        {doorIntro && (
+          <DoorIntro slug={site.slug} initials={initialsFromTitle(content?.hero?.title)} />
         )}
         <div style={{ position: "relative", zIndex: 1 }}>
           {renderTemplate(site.template, { slug: site.slug, mood, palette, content, heroImageUrl: site.heroImageUrl, photos })}

@@ -102,6 +102,9 @@ const PALETTE_ALIASES: Record<string, string> = {
   "bleu-marine": "baby-tiffany",
 }
 
+/** Or par défaut de la « touche dorée » des sites événement (modifiable dans l'éditeur). */
+export const DEFAULT_GOLD = "#C9A24B"
+
 export function getPalette(id: string): Palette {
   const resolved = PALETTE_ALIASES[id] ?? id
   return PALETTES.find(p => p.id === resolved) ?? PALETTES[0]!

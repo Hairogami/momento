@@ -93,7 +93,7 @@ function VariantGrand({ r }: { r: Remaining }) {
           minWidth: 130,
           padding: "26px 18px",
           borderRadius: 14,
-          border: "1px solid color-mix(in srgb, var(--evt-main) 20%, transparent)",
+          border: "1px solid color-mix(in srgb, var(--evt-gold) 60%, transparent)",
           background: "color-mix(in srgb, var(--evt-main) 6%, transparent)",
           textAlign: "center",
         }}>
@@ -156,7 +156,7 @@ function VariantFlip({ r }: { r: Remaining }) {
             fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
             fontWeight: 700,
             fontVariantNumeric: "tabular-nums",
-            boxShadow: "inset 0 -1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(0,0,0,0.15)",
+            boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--evt-gold) 70%, transparent), inset 0 -1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(0,0,0,0.15)",
             letterSpacing: "0.05em",
             position: "relative",
           }}>

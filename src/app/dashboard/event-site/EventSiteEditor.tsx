@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { PALETTES, FONTS, type FontId } from "@/lib/eventSiteTokens"
+import { PALETTES, FONTS, DEFAULT_GOLD, type FontId } from "@/lib/eventSiteTokens"
 import PatternPicker, { type PatternId } from "./PatternPicker"
 import { compressImage } from "@/lib/imageCompress"
 import { isAdminEmail } from "@/lib/adminConstants"
@@ -245,7 +245,13 @@ export default function EventSiteEditor({ eventSite }: { planner: Planner; event
             <ContentTab content={content} hero={hero} template={site.template} onUpdate={updateContent} onUpdateMany={updateContentMany} />
           )}
           {tab === "style" && (
-            <StyleTab site={site} onPatch={patch} onUpdateContent={updateContent} content={content} />
+            <StyleTab
+              site={site} onPatch={patch} onUpdateContent={updateContent} content={content}
+              onReplayDoor={() => {
+                try { sessionStorage.removeItem(`evt-door-opened:${site.slug}`) } catch { /* noop */ }
+                setPreviewKey(k => k + 1)
+              }}
+            />
           )}
           {tab === "photos" && (
             <PhotosTab site={site} onPatch={patch} onReload={() => router.refresh()} />
@@ -843,11 +849,12 @@ function TemplateSection({ site, onPatch }: { site: EventSite; onPatch: (p: Part
   )
 }
 
-function StyleTab({ site, onPatch, onUpdateContent, content }: {
+function StyleTab({ site, onPatch, onUpdateContent, content, onReplayDoor }: {
   site: EventSite
   onPatch: (p: Partial<EventSite>) => void
   onUpdateContent: (path: string, value: unknown) => void
   content: Record<string, unknown>
+  onReplayDoor: () => void
 }) {
   const style = (content.style as { pattern?: string } | undefined) ?? {}
   const currentPalette = PALETTES.find(p => p.id === site.palette)
@@ -978,6 +985,32 @@ function StyleTab({ site, onPatch, onUpdateContent, content }: {
           current={((style as { animationIntensity?: string }).animationIntensity as "none" | "subtle" | "normal" | "festive" | undefined) ?? "none"}
           onChange={v => onUpdateContent("style.animationIntensity", v)}
           accent={currentPalette?.main}
+        />
+        {site.template === "mariage" && (
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 12 }}>
+            <label style={checkboxLabelStyle}>
+              <input
+                type="checkbox"
+                checked={(style as { doorIntro?: boolean }).doorIntro !== false}
+                onChange={e => onUpdateContent("style.doorIntro", e.target.checked)}
+              />
+              <span>Ouverture en porte à l&apos;arrivée</span>
+            </label>
+            {(style as { doorIntro?: boolean }).doorIntro !== false && (
+              <button type="button" onClick={onReplayDoor} style={ghostBtnStyle}>
+                ↻ Revoir
+              </button>
+            )}
+          </div>
+        )}
+      </FieldGroup>
+
+      <FieldGroup label="Touche dorée">
+        <GoldPicker
+          enabled={(style as { gold?: { enabled?: boolean } }).gold?.enabled ?? site.template === "mariage"}
+          color={(style as { gold?: { color?: string } }).gold?.color ?? DEFAULT_GOLD}
+          onToggle={v => onUpdateContent("style.gold.enabled", v)}
+          onColor={v => onUpdateContent("style.gold.color", v)}
         />
       </FieldGroup>
     </div>
@@ -1470,6 +1503,89 @@ function setPathImmutable(obj: Record<string, unknown>, parts: string[], value: 
 }
 
 const noopSubscribe = () => () => {}
+
+const checkboxLabelStyle: React.CSSProperties = {
+  display: "flex", alignItems: "center", gap: 10,
+  fontSize: "var(--text-sm)", color: "var(--dash-text,#121317)", cursor: "pointer",
+}
+
+const ghostBtnStyle: React.CSSProperties = {
+  background: "transparent", color: "var(--dash-text-2,#6a6a71)", border: "none",
+  padding: "6px 12px", fontSize: "var(--text-xs)", cursor: "pointer", fontFamily: "inherit",
+  borderRadius: 8,
+}
+
+/** Préréglages d'or : classique, champagne, or rose, bronze. */
+const GOLD_PRESETS = [
+  { id: "classique", label: "Or", hex: "#C9A24B" },
+  { id: "champagne", label: "Champagne", hex: "#D8BE84" },
+  { id: "rose", label: "Or rose", hex: "#C99A86" },
+  { id: "bronze", label: "Bronze", hex: "#A87A3D" },
+]
+
+function GoldPicker({ enabled, color, onToggle, onColor }: {
+  enabled: boolean
+  color: string
+  onToggle: (v: boolean) => void
+  onColor: (v: string) => void
+}) {
+  // Le color picker natif émet en continu pendant le drag → on debounce la sauvegarde
+  const [local, setLocal] = useState(color)
+  const [prevColor, setPrevColor] = useState(color)
+  if (color !== prevColor) { setPrevColor(color); setLocal(color) }
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  function pickCustom(v: string) {
+    setLocal(v)
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(() => onColor(v), 400)
+  }
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <label style={checkboxLabelStyle}>
+        <input type="checkbox" checked={enabled} onChange={e => onToggle(e.target.checked)} />
+        <span>Ajouter des accents dorés (ornements, filets, porte)</span>
+      </label>
+      {enabled && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          {GOLD_PRESETS.map(g => {
+            const active = g.hex.toLowerCase() === local.toLowerCase()
+            return (
+              <button
+                key={g.id}
+                type="button"
+                onClick={() => onColor(g.hex)}
+                aria-pressed={active}
+                style={{
+                  display: "flex", alignItems: "center", gap: 6,
+                  padding: "6px 12px", borderRadius: 999, cursor: "pointer", fontFamily: "inherit",
+                  fontSize: "var(--text-xs)", color: "var(--dash-text,#121317)",
+                  background: active ? "var(--dash-faint-2)" : "var(--dash-surface,#fff)",
+                  border: active ? "1px solid var(--g1,#E11D48)" : "1px solid var(--dash-border)",
+                }}
+              >
+                <span aria-hidden style={{
+                  width: 14, height: 14, borderRadius: "50%",
+                  background: `linear-gradient(135deg, color-mix(in srgb, ${g.hex} 60%, #fff), ${g.hex})`,
+                }} />
+                {g.label}
+              </button>
+            )
+          })}
+          <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--text-xs)", color: "var(--dash-text-2,#6a6a71)", cursor: "pointer" }}>
+            <input
+              type="color"
+              value={local}
+              onChange={e => pickCustom(e.target.value)}
+              aria-label="Couleur dorée personnalisée"
+              style={{ width: 28, height: 28, border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
+            />
+            Perso
+          </label>
+        </div>
+      )}
+    </div>
+  )
+}
 
 const subLabelStyle: React.CSSProperties = {
   display: "flex", flexDirection: "column", gap: 6,

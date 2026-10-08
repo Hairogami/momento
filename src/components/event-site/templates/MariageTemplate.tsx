@@ -277,7 +277,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* RSVP — full-bleed background, contenu centré */}
       {isVisible("rsvp") && (
-      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-main)", padding: "80px 24px 100px" }}>
+      <section id="rsvp" style={{ marginTop: 40, background: "var(--evt-main)", borderTop: "3px solid var(--evt-gold)", borderBottom: "3px solid var(--evt-gold)", padding: "80px 24px 100px" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
         <h2 style={{ ...h2Style, color: rsvpHeadingColor(palette.main) }}>Confirmez votre présence</h2>
         <RsvpForm
@@ -294,7 +294,7 @@ export default function MariageTemplate({ slug, mood, palette, content, heroImag
 
       {/* Footer minimal */}
       <footer style={{ padding: "32px 24px", textAlign: "center", fontSize: "var(--text-xs)", color: "var(--evt-text-muted)", fontFamily: "var(--evt-font-body)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
-        · créé avec <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Layali</a> ·
+        · créé par <a href="https://momentoevents.app" style={{ color: "var(--evt-main)", textDecoration: "none" }}>Momento</a> ·
       </footer>
     </main>
   )
@@ -341,7 +341,8 @@ function dropcap(text: string): React.ReactNode {
         lineHeight: 0.85,
         paddingRight: "10px",
         paddingTop: "4px",
-        color: "var(--evt-main)",
+        // Lettrine dorée — or légèrement assombri pour rester lisible (≥ 3:1) sur fond clair
+        color: "color-mix(in srgb, var(--evt-gold) 82%, #000)",
         fontWeight: 500,
       }}>{first}</span>
       {rest}

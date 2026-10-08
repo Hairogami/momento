@@ -130,8 +130,11 @@ export default function HeroSection({
             color: mutedColor,
             marginBottom: 18,
             fontWeight: 500,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 14,
           }}>
-            · {date} ·
+            <span aria-hidden style={{ width: 36, height: 1, background: "var(--evt-gold)" }} />
+            {date}
+            <span aria-hidden style={{ width: 36, height: 1, background: "var(--evt-gold)" }} />
           </div>
         )}
 
@@ -146,6 +149,12 @@ export default function HeroSection({
         }}>
           {title}
         </h1>
+
+        <svg aria-hidden width="120" height="16" viewBox="0 0 120 16" style={{ display: "block", margin: "18px auto 0" }}>
+          <line x1="0" y1="8" x2="48" y2="8" stroke="var(--evt-gold)" strokeWidth="1" />
+          <line x1="72" y1="8" x2="120" y2="8" stroke="var(--evt-gold)" strokeWidth="1" />
+          <path d="M60,2 L66,8 L60,14 L54,8 Z" fill="var(--evt-gold)" />
+        </svg>
 
         {subtitle && (
           <p style={{
