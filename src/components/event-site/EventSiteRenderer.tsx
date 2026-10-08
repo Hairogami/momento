@@ -94,6 +94,9 @@ export default function EventSiteRenderer({ site }: { site: EventSite }) {
     // Facteur pour qu'un texte courant en police de titres ait la même taille APPARENTE que le corps
     "--evt-heading-optical": String(Math.min(1.35, Math.max(1, fontB.xHeight / fontH.xHeight)).toFixed(3)),
     "--evt-gold": goldEnabled ? goldColor : palette.main,
+    // Les anneaux de focus globaux (globals.css) utilisent --g1 (rose Momento) :
+    // sur le site invité, ils prennent la couleur de l'événement.
+    "--g1": "var(--evt-gold)",
     minHeight: "100dvh",
     background: "var(--evt-bg)",
     color: "var(--evt-text)",
