@@ -54,8 +54,10 @@ const nextConfig: NextConfig = {
         ],
       },
       // Override APRÈS pour la preview iframe (Next.js : la dernière règle gagne)
+      // + pages invité /evt/:slug : encadrables par NOTRE domaine uniquement ('self') —
+      // aperçu mobile (éditeur, outil local). Les sites tiers restent bloqués (anti-clickjacking).
       {
-        source: "/evt/preview/:path*",
+        source: "/evt/:path*",
         headers: [
           ...commonHeaders,
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
